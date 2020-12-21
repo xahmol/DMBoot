@@ -509,7 +509,14 @@ changeDir(const BYTE context, const BYTE device, const char *dirname, const BYTE
     }
   else
     {
-      strcpy(linebuffer, "cd//");
+      if (devicetype[device] == VICE || devicetype[device] == U64)
+      {
+        strcpy(linebuffer, "cd://");
+      }
+      else
+      {
+        strcpy(linebuffer, "cd//");
+      }
     }
   ret = cmd(device, linebuffer);
   if (ret == 0)
