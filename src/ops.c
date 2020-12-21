@@ -143,28 +143,20 @@ execute(char * prg, BYTE device, BYTE boot)
   // prepare the screen with the basic command to load the next program
   exitScreen();
 
+  gotoxy(0,2);
   if (boot == 0)
   {
-    gotoxy(0,2);
-    cprintf("load\"%s\",%i,1", prg, device);
-  }
-
-  gotoxy(0,7);
-  
-  if (boot == 1)
-  {
-    cprintf("boot u%i", device);
+    cprintf("run\"%s\",u%i", prg, device);
   }
   else
   {
-    cputs("run");
+    cprintf("boot u%i", device);
   }
 
 #if defined(KBCHARS)
-  // put two CR in keyboard buffer
+  // put one CR in keyboard buffer
   *((unsigned char *)KBCHARS)=13;
-  *((unsigned char *)KBCHARS+1)=13;
-  *((unsigned char *)KBNUM)=2;
+  *((unsigned char *)KBNUM)=1;
 #endif
 
   // exit DraCopy, which will execute the BASIC LOAD above

@@ -72,12 +72,15 @@ void
 mainLoopBrowse(void)
 {
   Directory * cwd = NULL;
+  char path[8][20];
+  unsigned int depth = 1;
   DirElement * current = NULL;
   unsigned int pos = 0;
   BYTE lastpage = 0;
   BYTE nextpage = 0;
   BYTE context = 0;
   BYTE num_windows;
+  BYTE trace = 0;
 
   DIR1H = DIR2H = SCREENH-2;
   dirs[0] = dirs[1] = NULL;
@@ -187,6 +190,18 @@ mainLoopBrowse(void)
           printDir(context, DIRX+1, DIRY);
           break;
 
+        case 'd':
+          if (trace == 0)
+          {
+            trace = 1;
+            changeDir(context, devices[context], "", sorted);
+          }
+          else
+          {
+            trace = 0;
+            depth = 1;
+          }
+
         case 'b':
           cwd=GETCWD;
           current = cwd->firstelement;
@@ -281,6 +296,10 @@ mainLoopBrowse(void)
           cwd=GETCWD;
           if (cwd->selected)
             {
+              if (trace == 1)
+              {
+                strcpy(path[depth++],cwd->selected->dirent.name);
+              }
               changeDir(context, devices[context], cwd->selected->dirent.name, sorted);
             }
           break;
@@ -288,10 +307,18 @@ mainLoopBrowse(void)
           // --- leave directory
         case CH_DEL:
         case CH_CURS_LEFT:
+          if (trace == 1)
+          {
+            --depth;
+          }
           changeDir(context, devices[context], "\xff", sorted);
           break;
 
         case CH_UARROW:
+          if (trace == 1)
+          {
+            --depth;
+          }
           changeDir(context, devices[context], NULL, sorted);
           break;
 
