@@ -50,6 +50,7 @@ updateMenu(void)
   cputsxy(MENUXT+1,++menuy,"F2 DEVICE");
   cputsxy(MENUXT+1,++menuy,"F3 HEX");
   cputsxy(MENUXT+1,++menuy,"F4 ASC");
+  cputsxy(MENUXT+1,++menuy,"F5 BOOT");
   cputsxy(MENUXT+1,++menuy,"F7 RUN");
   cputsxy(MENUXT+1,++menuy,"CR RUN/CD");
   cputsxy(MENUXT+1,++menuy,"BS DIR UP");
@@ -58,6 +59,7 @@ updateMenu(void)
   cputsxy(MENUXT+1,++menuy," T TOP");
   cputsxy(MENUXT+1,++menuy," B BOTTOM");
   cputsxy(MENUXT+1,++menuy," S SORT");
+  cputsxy(MENUXT+1,++menuy," D DIRTRACE");
   cputsxy(MENUXT+1,++menuy," @ DOScmd");
   cputsxy(MENUXT+1,++menuy," Q QUIT");
   if (SCREENW == 80 )
@@ -170,6 +172,13 @@ mainLoopBrowse(void)
           updateScreen(context, num_windows);
           break;
 
+        // --- boot directory
+        case '5':
+        case CH_F5:
+          cwd=GETCWD;
+          execute(dirs[context]->selected->dirent.name,devices[context], 1);
+          break;
+
         case 't':
         case CH_HOME:
           cwd=GETCWD;
@@ -264,7 +273,7 @@ mainLoopBrowse(void)
           cwd=GETCWD;
           if (cwd->selected && cwd->selected->dirent.type==CBM_T_PRG)
             {
-              execute(dirs[context]->selected->dirent.name,devices[context]);
+              execute(dirs[context]->selected->dirent.name,devices[context], 0);
             }
           // else fallthrough to CURS_RIGHT
 
@@ -291,10 +300,13 @@ mainLoopBrowse(void)
         case CH_ESC:
         case CH_LARROW:  // arrow left
           {
-            const BYTE prev_context = context;
-            context = context ^ 1;
-            drawDirFrame(context, context);
-            drawDirFrame(prev_context, context);
+            if (SCREENW == 80 )
+            {
+              const BYTE prev_context = context;
+              context = context ^ 1;
+              drawDirFrame(context, context);
+              drawDirFrame(prev_context, context);
+            }
           }
           break;
         }

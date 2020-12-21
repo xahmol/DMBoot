@@ -30,7 +30,7 @@
 #include "dir.h"
 
 int cmd(const BYTE device, const char *cmd);
-void execute(char * prg, BYTE device);
+void execute(char * prg, BYTE device, BYTE boot);
 void updateScreen(const BYTE context, BYTE num_dirs);
 void updateMenu(void);
 void about(const char *progname);

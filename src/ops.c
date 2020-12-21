@@ -138,16 +138,27 @@ cmd(const BYTE device, const char *cmd)
 }
 
 void
-execute(char * prg, BYTE device)
+execute(char * prg, BYTE device, BYTE boot)
 {
   // prepare the screen with the basic command to load the next program
   exitScreen();
 
-  gotoxy(0,2);
-  cprintf("load\"%s\",%i,1", prg, device);
-  gotoxy(0,7);
-  cputs("run");
+  if (boot == 0)
+  {
+    gotoxy(0,2);
+    cprintf("load\"%s\",%i,1", prg, device);
+  }
 
+  gotoxy(0,7);
+  
+  if (boot == 1)
+  {
+    cprintf("boot u%i", device);
+  }
+  else
+  {
+    cputs("run");
+  }
 
 #if defined(KBCHARS)
   // put two CR in keyboard buffer
@@ -483,6 +494,12 @@ changeDir(const BYTE context, const BYTE device, const char *dirname, const BYTE
           else if ((dirname[l-3] == 'd' || dirname[l-3] == 'D') &&
                    (dirname[l-2] == '7' || dirname[l-2] == '8') &&
                    (dirname[l-1] == '1'))
+            {
+              mount = 1;
+            }
+          else if ((dirname[l-3] == 'd' || dirname[l-3] == 'D') &&
+                   (dirname[l-2] == 'n' || dirname[l-2] == 'N') &&
+                   (dirname[l-1] == 'p' || dirname[l-1] == 'P'))
             {
               mount = 1;
             }

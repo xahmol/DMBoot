@@ -19,7 +19,7 @@ endif
 
 %.o: %.c
 	$(CC) -c $(CFLAGS) -o $@ $<
-
+  
 $(PROGRAM): $(SOURCES:.c=.o)
 	$(CC) $(LDFLAGS) -o $@ $^
 
