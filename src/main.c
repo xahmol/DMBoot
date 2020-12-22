@@ -14,11 +14,17 @@
 #include "base.h"
 #include "cat.h"
 
+#ifndef min
+#define min(a,b) ( (a) < (b) ? (a) : (b) )
+#endif
+
 //Functions
 void checkdmdevices();
 const char* deviceidtext (int id);
 void std_write(unsigned char * file_name);
 void std_read(unsigned char * file_name);
+void mid(const char *src, size_t start, size_t length, char *dst, size_t dstlen);
+char* pathconcat();
 
 //Variables
 BYTE DIR1H;
@@ -31,7 +37,15 @@ unsigned int DIR2X;
 unsigned int DIR2Y;
 unsigned int validdriveid;
 unsigned int idnr[30];
+char path[8][20];
+BYTE depth = 1;
+BYTE trace = 0;
+char menupath[10][100];
+char menuname[10][20];
+char menufile[10][20];
+unsigned int menurunboot[10];
 char spaces[81] = "                                                                                ";
+char spacedest[81];
 char data1[12] = "Test Data 1";
 char data2[12] = "Test Data 2";
 char data3[12] = "\0";
@@ -39,7 +53,8 @@ char data4[12] = "\0";
 
 //Main program
 int main() {
-
+    int x;    
+    
     //Check column width of present screen
     if ( PEEK(0xee) == 79) //Memory position $ee is present screen width
     {
@@ -62,19 +77,36 @@ int main() {
     
     initScreen(DC_COLOR_BORDER, DC_COLOR_BG, DC_COLOR_TEXT);
 
-    printf("%c%cDMBoot 128: Welcome to your C128.%s\n\n",18,30);
+    gotoxy(0,0);
+    mid(spaces,1,SCREENW,spacedest, sizeof(spacedest));
+    revers(1);
+    cprintf("%s",18,30,spacedest);
+    gotoxy(0,0);  
+    cprintf("DMBoot 128: Welcome to your C128.\n\n\r",18,30);
+    revers(0);
 
     textcolor(DC_COLOR_TEXT);
 
-    printf("Hello, World!\n");
-    printf("Screenwidth = %u\n", SCREENW);
+    cputs("Hello, World!\n\r");
+    cprintf("Screenwidth = %u\n\r", SCREENW);
     checkdmdevices();
     waitKey(0);
 
     mainLoopBrowse();
 
     clrscr();
-    printf("File operations test");
+    cputs("Trace test\n\r");
+    cprintf("Trace: %u Depth: %u\n\r",trace,depth);
+    for (x = 1; x < depth ; ++x )
+    {
+        cprintf("%u: %s\n\r",x,path[x]);
+    }
+    cputs("\n\n\rFull path:\n\r");
+    cprintf("%s\n\r", pathconcat());
+    waitKey(0);
+
+    clrscr();
+    cputs("File operations test\n\r");
 
     // File read & write with stdio functions
     cputs("Writing with stido.h\n\r");
@@ -216,4 +248,26 @@ void std_read(unsigned char * file_name)
     {
         cputs("File could not be opened\n\r");
     }
+}
+
+void mid(const char *src, size_t start, size_t length, char *dst, size_t dstlen)
+{       size_t len = min( dstlen - 1, length);
+ 
+        strncpy(dst, src + start, len);
+        // zero terminate because strncpy() didn't ? 
+        if(len < length)
+                dst[dstlen-1] = 0;
+}
+
+char* pathconcat()
+{
+    char concat[100] ="";
+    int x;
+
+    for (x=1 ; x < depth ; ++x)
+    {
+        strcat( concat, path[x] );
+        strcat( concat, "/");
+    }
+    return concat;
 }

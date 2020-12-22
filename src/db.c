@@ -59,28 +59,39 @@ updateMenu(void)
   cputsxy(MENUXT+1,++menuy," T TOP");
   cputsxy(MENUXT+1,++menuy," B BOTTOM");
   cputsxy(MENUXT+1,++menuy," S SORT");
-  cputsxy(MENUXT+1,++menuy," D DIRTRACE");
+  cputsxy(MENUXT+1,++menuy," D DIRTRAC");
   cputsxy(MENUXT+1,++menuy," @ DOScmd");
   cputsxy(MENUXT+1,++menuy," Q QUIT");
   if (SCREENW == 80 )
   {
     cputsxy(MENUXT+1,++menuy," \xff SW WIN");
   }
+  if (trace == 1)
+  {
+    ++menuy;
+    cputsxy(MENUXT,++menuy," TRACE ON ");
+  }
+  else
+  {
+    ++menuy;
+    cputsxy(MENUXT,++menuy," TRACE OFF");
+  }
+  
 }
 
 void
 mainLoopBrowse(void)
 {
   Directory * cwd = NULL;
-  char path[8][20];
-  unsigned int depth = 1;
   DirElement * current = NULL;
   unsigned int pos = 0;
   BYTE lastpage = 0;
   BYTE nextpage = 0;
   BYTE context = 0;
   BYTE num_windows;
-  BYTE trace = 0;
+
+  trace = 0;
+  depth = 1;
 
   DIR1H = DIR2H = SCREENH-2;
   dirs[0] = dirs[1] = NULL;
@@ -194,13 +205,15 @@ mainLoopBrowse(void)
           if (trace == 0)
           {
             trace = 1;
-            changeDir(context, devices[context], "", sorted);
+            changeDir(context, devices[context], NULL, sorted);
           }
           else
           {
             trace = 0;
             depth = 1;
           }
+          updateMenu();
+          break;
 
         case 'b':
           cwd=GETCWD;
@@ -317,7 +330,7 @@ mainLoopBrowse(void)
         case CH_UARROW:
           if (trace == 1)
           {
-            --depth;
+            depth = 1;
           }
           changeDir(context, devices[context], NULL, sorted);
           break;
@@ -333,6 +346,9 @@ mainLoopBrowse(void)
               context = context ^ 1;
               drawDirFrame(context, context);
               drawDirFrame(prev_context, context);
+              trace = 0;
+              depth = 1;
+              updateMenu();
             }
           }
           break;

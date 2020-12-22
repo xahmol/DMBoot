@@ -1,6 +1,6 @@
 SOURCES = src/main.c src/screen.c src/cat.c src/dir.c src/base.c src/ops.c src/db.c
 
-PROGRAM = dmboot
+PROGRAM = autostart.128.prg
 
 CC65_TARGET = c128
 CC = cl65

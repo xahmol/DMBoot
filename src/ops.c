@@ -143,20 +143,28 @@ execute(char * prg, BYTE device, BYTE boot)
   // prepare the screen with the basic command to load the next program
   exitScreen();
 
-  gotoxy(0,2);
   if (boot == 0)
   {
-    cprintf("run\"%s\",u%i", prg, device);
+    gotoxy(0,2);
+    cprintf("load\"%s\",%i,1", prg, device);
   }
-  else
+
+  gotoxy(0,7);
+  
+  if (boot == 1)
   {
     cprintf("boot u%i", device);
   }
+  else
+  {
+    cputs("run");
+  }
 
 #if defined(KBCHARS)
-  // put one CR in keyboard buffer
+  // put two CR in keyboard buffer
   *((unsigned char *)KBCHARS)=13;
-  *((unsigned char *)KBNUM)=1;
+  *((unsigned char *)KBCHARS+1)=13;
+  *((unsigned char *)KBNUM)=2;
 #endif
 
   // exit DraCopy, which will execute the BASIC LOAD above
@@ -506,17 +514,14 @@ changeDir(const BYTE context, const BYTE device, const char *dirname, const BYTE
         {
           sprintf(linebuffer, "cd/%s/", dirname);
         }
+      if (trace == 1 )
+        {
+          strcpy(path[depth], dirname);
+        }
     }
   else
     {
-      if (devicetype[device] == VICE || devicetype[device] == U64)
-      {
-        strcpy(linebuffer, "cd://");
-      }
-      else
-      {
-        strcpy(linebuffer, "cd//");
-      }
+      strcpy(linebuffer, "cd//");
     }
   ret = cmd(device, linebuffer);
   if (ret == 0)

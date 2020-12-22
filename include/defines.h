@@ -73,6 +73,13 @@ extern unsigned int MENUXT;
 extern unsigned int MENUW;
 extern unsigned int DIR2X;
 extern unsigned int DIR2Y;
+extern char path[8][20];
+extern char menupath[10][100];
+extern char menuname[10][20];
+extern char menufile[10][20];
+extern unsigned int menurunboot[10];
+extern BYTE depth;
+extern BYTE trace;
 
 // keyboard buffer
 #define KBCHARS 842
