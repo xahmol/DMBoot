@@ -1,368 +1,370 @@
 Modules list:
 -------------
 main.o:
-    CODE              Offs=000000  Size=0005F7  Align=00001  Fill=0000
-    RODATA            Offs=000000  Size=000284  Align=00001  Fill=0000
-    BSS               Offs=000000  Size=0006C9  Align=00001  Fill=0000
-    DATA              Offs=000000  Size=000083  Align=00001  Fill=0000
+    CODE              Offs=000000  Size=00099F  Align=00001  Fill=0000
+    RODATA            Offs=000000  Size=0002D6  Align=00001  Fill=0000
+    BSS               Offs=000000  Size=0006FD  Align=00001  Fill=0000
+    DATA              Offs=000000  Size=0000D4  Align=00001  Fill=0000
 screen.o:
-    CODE              Offs=0005F7  Size=00022D  Align=00001  Fill=0000
-    BSS               Offs=0006C9  Size=000003  Align=00001  Fill=0000
+    CODE              Offs=00099F  Size=00022D  Align=00001  Fill=0000
+    BSS               Offs=0006FD  Size=000003  Align=00001  Fill=0000
 cat.o:
-    CODE              Offs=000824  Size=000366  Align=00001  Fill=0000
-    RODATA            Offs=000284  Size=00001C  Align=00001  Fill=0000
+    CODE              Offs=000BCC  Size=000366  Align=00001  Fill=0000
+    RODATA            Offs=0002D6  Size=00001C  Align=00001  Fill=0000
 dir.o:
-    CODE              Offs=000B8A  Size=000AFE  Align=00001  Fill=0000
-    RODATA            Offs=0002A0  Size=000030  Align=00001  Fill=0000
+    CODE              Offs=000F32  Size=000AFE  Align=00001  Fill=0000
+    RODATA            Offs=0002F2  Size=000030  Align=00001  Fill=0000
 base.o:
-    CODE              Offs=001688  Size=000031  Align=00001  Fill=0000
-    RODATA            Offs=0002D0  Size=000024  Align=00001  Fill=0000
+    CODE              Offs=001A30  Size=000031  Align=00001  Fill=0000
+    RODATA            Offs=000322  Size=000024  Align=00001  Fill=0000
 ops.o:
-    CODE              Offs=0016B9  Size=001217  Align=00001  Fill=0000
-    RODATA            Offs=0002F4  Size=0003C7  Align=00001  Fill=0000
-    BSS               Offs=0006CC  Size=0000DA  Align=00001  Fill=0000
-    DATA              Offs=000083  Size=0000D4  Align=00001  Fill=0000
+    CODE              Offs=001A61  Size=001217  Align=00001  Fill=0000
+    RODATA            Offs=000346  Size=0003C7  Align=00001  Fill=0000
+    BSS               Offs=000700  Size=0000DA  Align=00001  Fill=0000
+    DATA              Offs=0000D4  Size=0000D4  Align=00001  Fill=0000
 db.o:
-    CODE              Offs=0028D0  Size=000BF4  Align=00001  Fill=0000
-    RODATA            Offs=0006BB  Size=0000C7  Align=00001  Fill=0000
-    DATA              Offs=000157  Size=000001  Align=00001  Fill=0000
+    CODE              Offs=002C78  Size=000C55  Align=00001  Fill=0000
+    RODATA            Offs=00070D  Size=0000CB  Align=00001  Fill=0000
+    DATA              Offs=0001A8  Size=000001  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(_afailed.o):
-    CODE              Offs=0034C4  Size=000032  Align=00001  Fill=0000
-    RODATA            Offs=000782  Size=00001C  Align=00001  Fill=0000
+    CODE              Offs=0038CD  Size=000032  Align=00001  Fill=0000
+    RODATA            Offs=0007D8  Size=00001C  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(_cursor.o):
-    BSS               Offs=0007A6  Size=000001  Align=00001  Fill=0000
+    BSS               Offs=0007DA  Size=000001  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(_directerrno.o):
-    CODE              Offs=0034F6  Size=00000A  Align=00001  Fill=0000
+    CODE              Offs=0038FF  Size=00000A  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(_fdesc.o):
-    CODE              Offs=003500  Size=00001D  Align=00001  Fill=0000
+    CODE              Offs=003909  Size=00001D  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(_file.o):
-    DATA              Offs=000158  Size=00001E  Align=00001  Fill=0000
+    DATA              Offs=0001A9  Size=00001E  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(_fopen.o):
-    CODE              Offs=00351D  Size=00007B  Align=00001  Fill=0000
-    BSS               Offs=0007A7  Size=000002  Align=00001  Fill=0000
+    CODE              Offs=003926  Size=00007B  Align=00001  Fill=0000
+    BSS               Offs=0007DB  Size=000002  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(_heap.o):
-    DATA              Offs=000176  Size=00000A  Align=00001  Fill=0000
+    DATA              Offs=0001C7  Size=00000A  Align=00001  Fill=0000
     ONCE              Offs=000000  Size=000010  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(_hextab.o):
-    RODATA            Offs=00079E  Size=000010  Align=00001  Fill=0000
+    RODATA            Offs=0007F4  Size=000010  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(_longminstr.o):
-    RODATA            Offs=0007AE  Size=00000C  Align=00001  Fill=0000
+    RODATA            Offs=000804  Size=00000C  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(_mappederrno.o):
-    CODE              Offs=003598  Size=000010  Align=00001  Fill=0000
+    CODE              Offs=0039A1  Size=000010  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(_oserror.o):
-    BSS               Offs=0007A9  Size=000001  Align=00001  Fill=0000
+    BSS               Offs=0007DD  Size=000001  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(_printf.o):
-    CODE              Offs=0035A8  Size=0003A5  Align=00001  Fill=0000
-    BSS               Offs=0007AA  Size=00002B  Align=00001  Fill=0000
-    DATA              Offs=000180  Size=000003  Align=00001  Fill=0000
+    CODE              Offs=0039B1  Size=0003A5  Align=00001  Fill=0000
+    BSS               Offs=0007DE  Size=00002B  Align=00001  Fill=0000
+    DATA              Offs=0001D1  Size=000003  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(_seterrno.o):
-    CODE              Offs=00394D  Size=000009  Align=00001  Fill=0000
+    CODE              Offs=003D56  Size=000009  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(add.o):
-    CODE              Offs=003956  Size=00001C  Align=00001  Fill=0000
+    CODE              Offs=003D5F  Size=00001C  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(addeqsp.o):
-    CODE              Offs=003972  Size=000011  Align=00001  Fill=0000
+    CODE              Offs=003D7B  Size=000011  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(addysp.o):
-    CODE              Offs=003983  Size=00000E  Align=00001  Fill=0000
+    CODE              Offs=003D8C  Size=00000E  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(aslax1.o):
-    CODE              Offs=003991  Size=000008  Align=00001  Fill=0000
+    CODE              Offs=003D9A  Size=000008  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(atoi.o):
-    CODE              Offs=003999  Size=000091  Align=00001  Fill=0000
+    CODE              Offs=003DA2  Size=000091  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(axlong.o):
-    CODE              Offs=003A2A  Size=00000D  Align=00001  Fill=0000
+    CODE              Offs=003E33  Size=00000D  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(bneg.o):
-    CODE              Offs=003A37  Size=00000E  Align=00001  Fill=0000
+    CODE              Offs=003E40  Size=00000E  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(c_basin.o):
-    CODE              Offs=003A45  Size=000006  Align=00001  Fill=0000
+    CODE              Offs=003E4E  Size=000006  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(c_chkin.o):
-    CODE              Offs=003A4B  Size=00000A  Align=00001  Fill=0000
+    CODE              Offs=003E54  Size=00000A  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(c_close.o):
-    CODE              Offs=003A55  Size=000004  Align=00001  Fill=0000
+    CODE              Offs=003E5E  Size=000004  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(c_clrch.o):
 /mnt/l/cc65/lib/c128.lib(c_open.o):
-    CODE              Offs=003A59  Size=000009  Align=00001  Fill=0000
+    CODE              Offs=003E62  Size=000009  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(c_readst.o):
-    CODE              Offs=003A62  Size=000006  Align=00001  Fill=0000
+    CODE              Offs=003E6B  Size=000006  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(c_setlfs.o):
-    CODE              Offs=003A68  Size=00000E  Align=00001  Fill=0000
+    CODE              Offs=003E71  Size=00000E  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(c_setnam.o):
-    CODE              Offs=003A76  Size=000013  Align=00001  Fill=0000
+    CODE              Offs=003E7F  Size=000013  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(callmain.o):
-    CODE              Offs=003A89  Size=000017  Align=00001  Fill=0000
-    DATA              Offs=000183  Size=000004  Align=00001  Fill=0000
+    CODE              Offs=003E92  Size=000017  Align=00001  Fill=0000
+    DATA              Offs=0001D4  Size=000004  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(calloc.o):
-    CODE              Offs=003AA0  Size=000021  Align=00001  Fill=0000
-    BSS               Offs=0007D5  Size=000002  Align=00001  Fill=0000
+    CODE              Offs=003EA9  Size=000021  Align=00001  Fill=0000
+    BSS               Offs=000809  Size=000002  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(cbm_close.o):
 /mnt/l/cc65/lib/c128.lib(cbm_dir.o):
-    CODE              Offs=003AC1  Size=000287  Align=00001  Fill=0000
-    RODATA            Offs=0007BA  Size=00000E  Align=00001  Fill=0000
+    CODE              Offs=003ECA  Size=000287  Align=00001  Fill=0000
+    RODATA            Offs=000810  Size=00000E  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(cbm_filetype.o):
-    CODE              Offs=003D48  Size=000013  Align=00001  Fill=0000
-    RODATA            Offs=0007C8  Size=000014  Align=00001  Fill=0000
+    CODE              Offs=004151  Size=000013  Align=00001  Fill=0000
+    RODATA            Offs=00081E  Size=000014  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(cbm_open.o):
-    CODE              Offs=003D5B  Size=000016  Align=00001  Fill=0000
+    CODE              Offs=004164  Size=000016  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(cbm_read.o):
-    CODE              Offs=003D71  Size=00005D  Align=00001  Fill=0000
+    CODE              Offs=00417A  Size=00005D  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(cclear.o):
-    CODE              Offs=003DCE  Size=000015  Align=00001  Fill=0000
+    CODE              Offs=0041D7  Size=000015  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(cgetc.o):
-    CODE              Offs=003DE3  Size=000030  Align=00001  Fill=0000
+    CODE              Offs=0041EC  Size=000030  Align=00001  Fill=0000
     INIT              Offs=000000  Size=000002  Align=00001  Fill=0000
     ONCE              Offs=000010  Size=000013  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(chline.o):
-    CODE              Offs=003E13  Size=000015  Align=00001  Fill=0000
+    CODE              Offs=00421C  Size=000015  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(clinechars.o):
 /mnt/l/cc65/lib/c128.lib(close.o):
-    CODE              Offs=003E28  Size=000038  Align=00001  Fill=0000
+    CODE              Offs=004231  Size=000038  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(clrscr.o):
 /mnt/l/cc65/lib/c128.lib(color.o):
-    CODE              Offs=003E60  Size=000060  Align=00001  Fill=0000
+    CODE              Offs=004269  Size=000060  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(condes.o):
-    CODE              Offs=003EC0  Size=00000C  Align=00001  Fill=0000
-    DATA              Offs=000187  Size=000025  Align=00001  Fill=0000
+    CODE              Offs=0042C9  Size=00000C  Align=00001  Fill=0000
+    DATA              Offs=0001D8  Size=000025  Align=00001  Fill=0000
     ONCE              Offs=000023  Size=00000C  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(conio.o):
 /mnt/l/cc65/lib/c128.lib(cprintf.o):
-    CODE              Offs=003ECC  Size=00002A  Align=00001  Fill=0000
-    BSS               Offs=0007D7  Size=000001  Align=00001  Fill=0000
+    CODE              Offs=0042D5  Size=00002A  Align=00001  Fill=0000
+    BSS               Offs=00080B  Size=000001  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(cputc.o):
-    CODE              Offs=003EF6  Size=000049  Align=00001  Fill=0000
+    CODE              Offs=0042FF  Size=000049  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(cputhex.o):
-    CODE              Offs=003F3F  Size=00001C  Align=00001  Fill=0000
+    CODE              Offs=004348  Size=00001C  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(cputs.o):
-    CODE              Offs=003F5B  Size=000023  Align=00001  Fill=0000
+    CODE              Offs=004364  Size=000023  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(crt0.o):
-    BSS               Offs=0007D8  Size=000002  Align=00001  Fill=0000
+    BSS               Offs=00080C  Size=000002  Align=00001  Fill=0000
     STARTUP           Offs=000000  Size=000051  Align=00001  Fill=0000
     INIT              Offs=000002  Size=00001A  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(ctype.o):
-    RODATA            Offs=0007DC  Size=00008B  Align=00001  Fill=0000
+    RODATA            Offs=000832  Size=00008B  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(ctypemask.o):
-    CODE              Offs=003F7E  Size=00001E  Align=00001  Fill=0000
+    CODE              Offs=004387  Size=00001E  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(cursor.o):
-    CODE              Offs=003F9C  Size=00000A  Align=00001  Fill=0000
+    CODE              Offs=0043A5  Size=00000A  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(cvline.o):
-    CODE              Offs=003FA6  Size=000018  Align=00001  Fill=0000
+    CODE              Offs=0043AF  Size=000018  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(decax1.o):
-    CODE              Offs=003FBE  Size=000007  Align=00001  Fill=0000
+    CODE              Offs=0043C7  Size=000007  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(decax2.o):
-    CODE              Offs=003FC5  Size=000007  Align=00001  Fill=0000
+    CODE              Offs=0043CE  Size=000007  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(decax3.o):
-    CODE              Offs=003FCC  Size=000007  Align=00001  Fill=0000
+    CODE              Offs=0043D5  Size=000007  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(decax4.o):
-    CODE              Offs=003FD3  Size=000007  Align=00001  Fill=0000
+    CODE              Offs=0043DC  Size=000007  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(decaxy.o):
-    CODE              Offs=003FDA  Size=000009  Align=00001  Fill=0000
+    CODE              Offs=0043E3  Size=000009  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(decsp1.o):
-    CODE              Offs=003FE3  Size=000009  Align=00001  Fill=0000
+    CODE              Offs=0043EC  Size=000009  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(decsp2.o):
-    CODE              Offs=003FEC  Size=00000D  Align=00001  Fill=0000
+    CODE              Offs=0043F5  Size=00000D  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(decsp3.o):
-    CODE              Offs=003FF9  Size=00000D  Align=00001  Fill=0000
+    CODE              Offs=004402  Size=00000D  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(decsp4.o):
-    CODE              Offs=004006  Size=00000D  Align=00001  Fill=0000
+    CODE              Offs=00440F  Size=00000D  Align=00001  Fill=0000
+/mnt/l/cc65/lib/c128.lib(decsp5.o):
+    CODE              Offs=00441C  Size=00000D  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(decsp6.o):
-    CODE              Offs=004013  Size=00000D  Align=00001  Fill=0000
+    CODE              Offs=004429  Size=00000D  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(devnum.o):
 /mnt/l/cc65/lib/c128.lib(diskcmd.o):
-    CODE              Offs=004020  Size=0000C4  Align=00001  Fill=0000
-    BSS               Offs=0007DA  Size=000017  Align=00001  Fill=0000
+    CODE              Offs=004436  Size=0000C4  Align=00001  Fill=0000
+    BSS               Offs=00080E  Size=000017  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(div.o):
-    CODE              Offs=0040E4  Size=000015  Align=00001  Fill=0000
+    CODE              Offs=0044FA  Size=000015  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(enter.o):
-    CODE              Offs=0040F9  Size=00000E  Align=00001  Fill=0000
+    CODE              Offs=00450F  Size=00000E  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(errno.o):
-    BSS               Offs=0007F1  Size=000002  Align=00001  Fill=0000
+    BSS               Offs=000825  Size=000002  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(exehdr.o):
     EXEHDR            Offs=000000  Size=00000C  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(fclose.o):
-    CODE              Offs=004107  Size=000022  Align=00001  Fill=0000
+    CODE              Offs=00451D  Size=000022  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(filedes.o):
-    CODE              Offs=004129  Size=00000E  Align=00001  Fill=0000
-    DATA              Offs=0001AC  Size=000010  Align=00001  Fill=0000
+    CODE              Offs=00453F  Size=00000E  Align=00001  Fill=0000
+    DATA              Offs=0001FD  Size=000010  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(filename.o):
-    CODE              Offs=004137  Size=0000A0  Align=00001  Fill=0000
-    BSS               Offs=0007F3  Size=000003  Align=00001  Fill=0000
-    DATA              Offs=0001BC  Size=000024  Align=00001  Fill=0000
+    CODE              Offs=00454D  Size=0000A0  Align=00001  Fill=0000
+    BSS               Offs=000827  Size=000003  Align=00001  Fill=0000
+    DATA              Offs=00020D  Size=000024  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(filetype.o):
-    DATA              Offs=0001E0  Size=000001  Align=00001  Fill=0000
+    DATA              Offs=000231  Size=000001  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(filevars.o):
     INIT              Offs=00001C  Size=000001  Align=00001  Fill=0000
     ONCE              Offs=00002F  Size=00000C  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(fopen.o):
-    CODE              Offs=0041D7  Size=000018  Align=00001  Fill=0000
+    CODE              Offs=0045ED  Size=000018  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(fprintf.o):
-    CODE              Offs=0041EF  Size=00002B  Align=00001  Fill=0000
-    BSS               Offs=0007F6  Size=000001  Align=00001  Fill=0000
+    CODE              Offs=004605  Size=00002B  Align=00001  Fill=0000
+    BSS               Offs=00082A  Size=000001  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(fread.o):
-    CODE              Offs=00421A  Size=0000D3  Align=00001  Fill=0000
-    BSS               Offs=0007F7  Size=000003  Align=00001  Fill=0000
+    CODE              Offs=004630  Size=0000D3  Align=00001  Fill=0000
+    BSS               Offs=00082B  Size=000003  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(free.o):
-    CODE              Offs=0042ED  Size=0001D3  Align=00001  Fill=0000
+    CODE              Offs=004703  Size=0001D3  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(fwrite.o):
-    CODE              Offs=0044C0  Size=00007B  Align=00001  Fill=0000
-    BSS               Offs=0007FA  Size=000002  Align=00001  Fill=0000
+    CODE              Offs=0048D6  Size=00007B  Align=00001  Fill=0000
+    BSS               Offs=00082E  Size=000002  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(gotoxy.o):
-    CODE              Offs=00453B  Size=00000D  Align=00001  Fill=0000
+    CODE              Offs=004951  Size=00000D  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(icmp.o):
-    CODE              Offs=004548  Size=00002E  Align=00001  Fill=0000
+    CODE              Offs=00495E  Size=00002E  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(incax1.o):
-    CODE              Offs=004576  Size=000007  Align=00001  Fill=0000
+    CODE              Offs=00498C  Size=000007  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(incax2.o):
-    CODE              Offs=00457D  Size=000007  Align=00001  Fill=0000
+    CODE              Offs=004993  Size=000007  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(incax3.o):
-    CODE              Offs=004584  Size=000005  Align=00001  Fill=0000
+    CODE              Offs=00499A  Size=000005  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(incaxy.o):
-    CODE              Offs=004589  Size=00000B  Align=00001  Fill=0000
+    CODE              Offs=00499F  Size=00000B  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(incsp1.o):
-    CODE              Offs=004594  Size=000007  Align=00001  Fill=0000
+    CODE              Offs=0049AA  Size=000007  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(incsp2.o):
-    CODE              Offs=00459B  Size=000016  Align=00001  Fill=0000
+    CODE              Offs=0049B1  Size=000016  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(incsp3.o):
-    CODE              Offs=0045B1  Size=000005  Align=00001  Fill=0000
+    CODE              Offs=0049C7  Size=000005  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(incsp4.o):
-    CODE              Offs=0045B6  Size=000005  Align=00001  Fill=0000
+    CODE              Offs=0049CC  Size=000005  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(incsp5.o):
-    CODE              Offs=0045BB  Size=000005  Align=00001  Fill=0000
+    CODE              Offs=0049D1  Size=000005  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(incsp6.o):
-    CODE              Offs=0045C0  Size=000005  Align=00001  Fill=0000
+    CODE              Offs=0049D6  Size=000005  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(incsp7.o):
-    CODE              Offs=0045C5  Size=000005  Align=00001  Fill=0000
+    CODE              Offs=0049DB  Size=000005  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(incsp8.o):
-    CODE              Offs=0045CA  Size=000005  Align=00001  Fill=0000
+    CODE              Offs=0049E0  Size=000005  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(isprint.o):
-    CODE              Offs=0045CF  Size=00000A  Align=00001  Fill=0000
+    CODE              Offs=0049E5  Size=00000A  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(jmpvec.o):
-    DATA              Offs=0001E1  Size=000003  Align=00001  Fill=0000
+    DATA              Offs=000232  Size=000003  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(kernal.o):
 /mnt/l/cc65/lib/c128.lib(ldaxi.o):
-    CODE              Offs=0045D9  Size=00000D  Align=00001  Fill=0000
+    CODE              Offs=0049EF  Size=00000D  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(ldaxsp.o):
-    CODE              Offs=0045E6  Size=000009  Align=00001  Fill=0000
+    CODE              Offs=0049FC  Size=000009  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(leaaxsp.o):
-    CODE              Offs=0045EF  Size=00000C  Align=00001  Fill=0000
+    CODE              Offs=004A05  Size=00000C  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(leave.o):
-    CODE              Offs=0045FB  Size=00001D  Align=00001  Fill=0000
+    CODE              Offs=004A11  Size=00001D  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(lneg.o):
-    CODE              Offs=004618  Size=00001E  Align=00001  Fill=0000
+    CODE              Offs=004A2E  Size=00001E  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(loadaddr.o):
     LOADADDR          Offs=000000  Size=000002  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(lpush.o):
-    CODE              Offs=004636  Size=000021  Align=00001  Fill=0000
+    CODE              Offs=004A4C  Size=000021  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(ltoa.o):
-    CODE              Offs=004657  Size=000095  Align=00001  Fill=0000
+    CODE              Offs=004A6D  Size=000095  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(makebool.o):
-    CODE              Offs=0046EC  Size=00002C  Align=00001  Fill=0000
+    CODE              Offs=004B02  Size=00002C  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(malloc.o):
-    CODE              Offs=004718  Size=00010E  Align=00001  Fill=0000
+    CODE              Offs=004B2E  Size=00010E  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(memcpy.o):
-    CODE              Offs=004826  Size=00003C  Align=00001  Fill=0000
+    CODE              Offs=004C3C  Size=00003C  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(memset.o):
-    CODE              Offs=004862  Size=00005D  Align=00001  Fill=0000
+    CODE              Offs=004C78  Size=00005D  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(mul.o):
-    CODE              Offs=0048BF  Size=000045  Align=00001  Fill=0000
+    CODE              Offs=004CD5  Size=000045  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(mul8.o):
-    CODE              Offs=004904  Size=00003A  Align=00001  Fill=0000
+    CODE              Offs=004D1A  Size=00003A  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(mulax10.o):
-    CODE              Offs=00493E  Size=000019  Align=00001  Fill=0000
+    CODE              Offs=004D54  Size=000019  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(negabs.o):
-    CODE              Offs=004957  Size=000012  Align=00001  Fill=0000
+    CODE              Offs=004D6D  Size=000012  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(open.o):
-    CODE              Offs=004969  Size=0000BE  Align=00001  Fill=0000
+    CODE              Offs=004D7F  Size=0000BE  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(or.o):
-    CODE              Offs=004A27  Size=000012  Align=00001  Fill=0000
+    CODE              Offs=004E3D  Size=000012  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(oserror.o):
-    CODE              Offs=004A39  Size=000016  Align=00001  Fill=0000
-    RODATA            Offs=000867  Size=00005A  Align=00001  Fill=0000
+    CODE              Offs=004E4F  Size=000016  Align=00001  Fill=0000
+    RODATA            Offs=0008BD  Size=00005A  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(popa.o):
-    CODE              Offs=004A4F  Size=00000C  Align=00001  Fill=0000
+    CODE              Offs=004E65  Size=00000C  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(popptr1.o):
-    CODE              Offs=004A5B  Size=00000E  Align=00001  Fill=0000
+    CODE              Offs=004E71  Size=00000E  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(printf.o):
-    CODE              Offs=004A69  Size=000033  Align=00001  Fill=0000
-    BSS               Offs=0007FC  Size=000001  Align=00001  Fill=0000
+    CODE              Offs=004E7F  Size=000033  Align=00001  Fill=0000
+    BSS               Offs=000830  Size=000001  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(push1.o):
-    CODE              Offs=004A9C  Size=000005  Align=00001  Fill=0000
+    CODE              Offs=004EB2  Size=000005  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(pusha.o):
-    CODE              Offs=004AA1  Size=000016  Align=00001  Fill=0000
+    CODE              Offs=004EB7  Size=000016  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(pushax.o):
-    CODE              Offs=004AB7  Size=00001A  Align=00001  Fill=0000
+    CODE              Offs=004ECD  Size=00001A  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(pushw.o):
-    CODE              Offs=004AD1  Size=00000F  Align=00001  Fill=0000
+    CODE              Offs=004EE7  Size=00000F  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(pushwsp.o):
-    CODE              Offs=004AE0  Size=00001C  Align=00001  Fill=0000
+    CODE              Offs=004EF6  Size=00001C  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(raise.o):
-    CODE              Offs=004AFC  Size=00002B  Align=00001  Fill=0000
+    CODE              Offs=004F12  Size=00002B  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(read.o):
-    CODE              Offs=004B27  Size=00007E  Align=00001  Fill=0000
-    BSS               Offs=0007FD  Size=000001  Align=00001  Fill=0000
+    CODE              Offs=004F3D  Size=00007E  Align=00001  Fill=0000
+    BSS               Offs=000831  Size=000001  Align=00001  Fill=0000
     ONCE              Offs=00003B  Size=00000C  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(regswap2.o):
-    CODE              Offs=004BA5  Size=000016  Align=00001  Fill=0000
+    CODE              Offs=004FBB  Size=000016  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(return0.o):
-    CODE              Offs=004BBB  Size=000004  Align=00001  Fill=0000
+    CODE              Offs=004FD1  Size=000004  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(revers.o):
-    CODE              Offs=004BBF  Size=000014  Align=00001  Fill=0000
+    CODE              Offs=004FD5  Size=000014  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(rwcommon.o):
-    CODE              Offs=004BD3  Size=00001C  Align=00001  Fill=0000
+    CODE              Offs=004FE9  Size=00001C  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(scratch.o):
-    CODE              Offs=004BEF  Size=000019  Align=00001  Fill=0000
+    CODE              Offs=005005  Size=000019  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(shelp.o):
-    CODE              Offs=004C08  Size=000020  Align=00001  Fill=0000
+    CODE              Offs=00501E  Size=000020  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(signal.o):
-    CODE              Offs=004C28  Size=000030  Align=00001  Fill=0000
+    CODE              Offs=00503E  Size=000030  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(sigtable.o):
-    DATA              Offs=0001E4  Size=00000C  Align=00001  Fill=0000
+    DATA              Offs=000235  Size=00000C  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(sprintf.o):
-    CODE              Offs=004C58  Size=00002B  Align=00001  Fill=0000
-    BSS               Offs=0007FE  Size=000001  Align=00001  Fill=0000
+    CODE              Offs=00506E  Size=00002B  Align=00001  Fill=0000
+    BSS               Offs=000832  Size=000001  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(staspidx.o):
-    CODE              Offs=004C83  Size=000016  Align=00001  Fill=0000
+    CODE              Offs=005099  Size=000016  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(status.o):
 /mnt/l/cc65/lib/c128.lib(staxsp.o):
-    CODE              Offs=004C99  Size=00000B  Align=00001  Fill=0000
+    CODE              Offs=0050AF  Size=00000B  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(staxspi.o):
-    CODE              Offs=004CA4  Size=00001B  Align=00001  Fill=0000
+    CODE              Offs=0050BA  Size=00001B  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(strcat.o):
-    CODE              Offs=004CBF  Size=000031  Align=00001  Fill=0000
+    CODE              Offs=0050D5  Size=000031  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(strcpy.o):
-    CODE              Offs=004CF0  Size=00001F  Align=00001  Fill=0000
+    CODE              Offs=005106  Size=00001F  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(strlen.o):
-    CODE              Offs=004D0F  Size=000016  Align=00001  Fill=0000
+    CODE              Offs=005125  Size=000016  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(strlower.o):
-    CODE              Offs=004D25  Size=000027  Align=00001  Fill=0000
+    CODE              Offs=00513B  Size=000027  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(strncmp.o):
-    CODE              Offs=004D4C  Size=000039  Align=00001  Fill=0000
+    CODE              Offs=005162  Size=000039  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(strncpy.o):
-    CODE              Offs=004D85  Size=000044  Align=00001  Fill=0000
+    CODE              Offs=00519B  Size=000044  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(strstr.o):
-    CODE              Offs=004DC9  Size=000052  Align=00001  Fill=0000
+    CODE              Offs=0051DF  Size=000052  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(sub.o):
-    CODE              Offs=004E1B  Size=000015  Align=00001  Fill=0000
+    CODE              Offs=005231  Size=000015  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(subeqsp.o):
-    CODE              Offs=004E30  Size=000015  Align=00001  Fill=0000
+    CODE              Offs=005246  Size=000015  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(subysp.o):
-    CODE              Offs=004E45  Size=00000D  Align=00001  Fill=0000
+    CODE              Offs=00525B  Size=00000D  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(udiv.o):
-    CODE              Offs=004E52  Size=00004F  Align=00001  Fill=0000
+    CODE              Offs=005268  Size=00004F  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(vcprintf.o):
-    CODE              Offs=004EA1  Size=00007A  Align=00001  Fill=0000
-    DATA              Offs=0001F0  Size=000008  Align=00001  Fill=0000
+    CODE              Offs=0052B7  Size=00007A  Align=00001  Fill=0000
+    DATA              Offs=000241  Size=000008  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(vfprintf.o):
-    CODE              Offs=004F1B  Size=000061  Align=00001  Fill=0000
-    DATA              Offs=0001F8  Size=000008  Align=00001  Fill=0000
+    CODE              Offs=005331  Size=000061  Align=00001  Fill=0000
+    DATA              Offs=000249  Size=000008  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(vsnprintf.o):
-    CODE              Offs=004F7C  Size=0000DA  Align=00001  Fill=0000
-    DATA              Offs=000200  Size=000008  Align=00001  Fill=0000
+    CODE              Offs=005392  Size=0000DA  Align=00001  Fill=0000
+    DATA              Offs=000251  Size=000008  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(vsprintf.o):
-    CODE              Offs=005056  Size=000012  Align=00001  Fill=0000
+    CODE              Offs=00546C  Size=000012  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(wherey.o):
-    CODE              Offs=005068  Size=000005  Align=00001  Fill=0000
+    CODE              Offs=00547E  Size=000005  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(write.o):
-    CODE              Offs=00506D  Size=000054  Align=00001  Fill=0000
+    CODE              Offs=005483  Size=000054  Align=00001  Fill=0000
     ONCE              Offs=000047  Size=000011  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(zerobss.o):
-    CODE              Offs=0050C1  Size=000023  Align=00001  Fill=0000
+    CODE              Offs=0054D7  Size=000023  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(zeropage.o):
     ZEROPAGE          Offs=000000  Size=00001A  Align=00001  Fill=0000
 
@@ -376,11 +378,11 @@ LOADADDR              001BFF  001C00  000002  00001
 EXEHDR                001C01  001C0C  00000C  00001
 STARTUP               001C0D  001C5D  000051  00001
 ONCE                  001C5E  001CBF  000062  00001
-CODE                  001CC0  006DA3  0050E4  00001
-RODATA                006DA4  007668  0008C5  00001
-DATA                  007669  007870  000208  00001
-INIT                  007871  00788D  00001D  00001
-BSS                   00788E  00808C  0007FF  00001
+CODE                  001CC0  0071B9  0054FA  00001
+RODATA                0071BA  007AD4  00091B  00001
+DATA                  007AD5  007D2D  000259  00001
+INIT                  007D2E  007D4A  00001D  00001
+BSS                   007D4B  00857D  000833  00001
 
 
 Exports list by name:
@@ -391,143 +393,145 @@ CLOSE                     00FFC3 RLA    CLRCH                     00FFCC RLA
 CURS_X                    0000EC RLZ    CURS_Y                    0000EB RLZ    
 OPEN                      00FFC0 RLA    READST                    00FFB7 RLA    
 SETLFS                    00FFBA RLA    SETNAM                    00FFBD RLA    
-ST                        000090 RLZ    _DIR1H                    00788E RLA    
-_DIR2H                    00788F RLA    _DIR2X                    007898 RLA    
-_DIR2Y                    00789A RLA    _MENUW                    007896 RLA    
-_MENUX                    007892 RLA    _MENUXT                   007894 RLA    
-_SCREENW                  007890 RLA    __BSS_RUN__               00788E RLA    
-__BSS_SIZE__              0007FF REA    __CONSTRUCTOR_COUNT__     000005 REA    
+ST                        000090 RLZ    _DIR1H                    007D4B RLA    
+_DIR2H                    007D4C RLA    _DIR2X                    007D55 RLA    
+_DIR2Y                    007D57 RLA    _MENUW                    007D53 RLA    
+_MENUX                    007D4F RLA    _MENUXT                   007D51 RLA    
+_SCREENW                  007D4D RLA    __BSS_RUN__               007D4B RLA    
+__BSS_SIZE__              000833 REA    __CONSTRUCTOR_COUNT__     000005 REA    
 __CONSTRUCTOR_TABLE__     001CB6 RLA    __DESTRUCTOR_COUNT__      000002 REA    
-__DESTRUCTOR_TABLE__      007665 RLA    __EXEHDR__                000001 REA    
+__DESTRUCTOR_TABLE__      007AD1 RLA    __EXEHDR__                000001 REA    
 __LOADADDR__              000001 REA    __MAIN_SIZE__             009BF3 REA    
 __MAIN_START__            001C0D RLA    __STACKSIZE__             000800 REA    
-__STARTUP__               000001 REA    __afailed                 005184 RLA    
-__bzero                   006522 RLA    __cbm_filetype            005A08 RLA    
-__ctype                   007580 RLA    __ctypeidx                00758B RLA    
-__directerrno             0051B6 RLA    __errno                   00807F RLA    
-__fdesc                   0051C0 RLA    __filetab                 0077C1 RLA    
-__filetype                007849 RLA    __fopen                   0051DD RLA    
-__heapend                 0077E3 RLA    __heapfirst               0077E5 RLA    
-__heaplast                0077E7 RLA    __heapptr                 0077E1 RLA    
-__hextab                  007542 RLA    __longminstr              007552 RLA    
-__mappederrno             005258 RLA    __oserror                 008037 RLA    
-__osmaperrno              0066F9 RLA    __printf                  00535B RLA    
-__seterrno                00560D RLA    __sig_dfl                 006917 RLA    
-_about                    00344B RLA    _atoi                     005659 RLA    
-_bgcolor                  005B49 RLA    _bordercolor              005B6F RLA    
-_calloc                   005760 RLA    _catasc                   0026A1 RLA    
-_cathex                   0024E4 RLA    _cbm_close                005715 REA    
-_cbm_closedir             0059FB RLA    _cbm_k_basin              005705 RLA    
-_cbm_k_chkin              00570B RLA    _cbm_k_close              005715 RLA    
-_cbm_k_clrch              00FFCC REA    _cbm_k_open               005719 RLA    
-_cbm_k_readst             005722 RLA    _cbm_k_setlfs             005728 RLA    
-_cbm_k_setnam             005736 RLA    _cbm_open                 005A1B RLA    
-_cbm_opendir              005781 RLA    _cbm_read                 005A31 RLA    
-_cclear                   005A93 RLA    _cclearxy                 005A8E RLA    
-_cgetc                    005AA3 RLA    _changeDir                003A5B RLA    
-_chline                   005AD8 RLA    _clearArea                0022B7 RLA    
-_close                    005AE8 RLA    _clrscr                   00C142 REA    
-_cprintf                  005B8C RLA    _cputc                    005BBB RLA    
-_cputcxy                  005BB6 RLA    _cputhex16                005BFF RLA    
-_cputhex8                 005C05 RLA    _cputs                    005C25 RLA    
-_cputsxy                  005C1B RLA    _cursor                   005C5C RLA    
-_cvlinexy                 005C66 RLA    _debugu                   004447 RLA    
-_depth                    007669 RLA    _devices                  0076F2 RLA    
-_devicetype               007F5A RLA    _dirs                     0076EE RLA    
-_doDOScommand             004328 RLA    _drawDirFrame             003E87 RLA    
-_drawFrame                0023B3 RLA    _execute                  003398 RLA    
-_exit                     001C42 RLA    _exitScreen               0024CF RLA    
-_fclose                   005DC7 RLA    _fopen                    005E97 RLA    
-_fprintf                  005EAF RLA    _fread                    005EDA RLA    
-_free                     005FAD RLA    _freeDir                  00284A RLA    
-_fwrite                   006180 RLA    _getDeviceType            003F88 RLA    
-_gotoxy                   0061FE RLA    _initScreen               0024A8 RLA    
-_isprint                  00628F RLA    _linebuffer               007F66 RLA    
-_linebuffer2              007FB7 RLA    _ltoa                     00632F RLA    
-_main                     0020B1 RLA    _mainLoopBrowse           0047EA RLA    
-_malloc                   0063D8 RLA    _memcpy                   0064E6 RLA    
-_newscreen                0022FF RLA    _open                     00663D RLA    
-_path                     00789C RLA    _printDir                 00362B RLA    
-_printElement             003815 RLA    _printf                   006729 RLA    
-_raise                    0067BC RLA    _read                     0067E7 RLA    
-_readDir                  002920 RLA    _revers                   00687F RLA    
-_showDir                  003536 RLA    _sprintf                  006918 RLA    
-_stderr                   0077DD RLA    _stdout                   0077DB RLA    
-_strcat                   00697F RLA    _strcpy                   0069B0 RLA    
-_strlen                   0069CF RLA    _strlower                 0069E5 RLA    
-_strncmp                  006A0C RLA    _strncpy                  006A45 RLA    
-_strstr                   006A89 RLA    _textcolor                005B20 RLA    
-_trace                    00766A RLA    _ultoa                    006370 RLA    
-_updateMenu               004590 RLA    _updateScreen             003410 RLA    
-_vcprintf                 006BAB RLA    _vfprintf                 006C13 RLA    
-_vsprintf                 006D16 RLA    _waitKey                  003348 RLA    
-_wherey                   006D28 RLA    _write                    006D2D RLA    
-addeq0sp                  005632 RLA    addeqysp                  005634 RLA    
-addysp                    005644 RLA    addysp1                   005643 RLA    
-aslax1                    005651 RLA    axlong                    0056EA RLA    
-axulong                   0056F0 RLA    bnega                     0056FB RLA    
-booleq                    0063B2 RLA    callmain                  005749 RLA    
-chlinechar                000040 REZ    closeallfiles             006629  LAI   
-closecmdchannel           005D16 RLA    cputdirect                005BD7 RLA    
-ctypemask                 005C3E RLA    ctypemaskdirect           005C42 RLA    
-cursor                    008034 RLA    curunit                   00788D RLA    
-cvlinechar                00005D REZ    decax1                    005C7E RLA    
-decax2                    005C85 RLA    decax3                    005C8C RLA    
-decax4                    005C93 RLA    decaxy                    005C9A RLA    
-decsp1                    005CA3 RLA    decsp2                    005CAC RLA    
-decsp3                    005CB9 RLA    decsp4                    005CC6 RLA    
-decsp6                    005CD3 RLA    devnum                    0000BA RLZ    
-donecgetc                 005AC4  LAI   donelib                   005B80 RLA    
-enter                     005DB9 RLA    fdtab                     007815 RLA    
-fnaddmode                 005E86 RLA    fncmd                     007825 RLA    
-fncomplete                005E7E RLA    fnisfile                  008083 RLA    
-fnlen                     008082 RLA    fnparse                   005E12 RLA    
-fnset                     005E74 RLA    fnunit                    008081 RLA    
-freefd                    005DE9 RLA    gotoxy                    0061FB RLA    
-incax1                    006236 RLA    incax2                    00623D RLA    
-incax3                    006244 RLA    incax4                    006249 RLA    
-incaxy                    00624B RLA    incsp1                    006254 RLA    
-incsp2                    006263 RLA    incsp3                    006271 RLA    
-incsp4                    006276 RLA    incsp5                    00627B RLA    
-incsp6                    006280 RLA    incsp7                    006285 RLA    
-incsp8                    00628A RLA    initcgetc                 001C6E  LAI   
-initcurunit               001C8D  LAI   initheap                  001C5E  LAI   
-initlib                   001C81 RLA    initstdin                 001C99  LAI   
-initstdout                001CA5  LAI   jmpvec                    00784A RLA    
-ldax0sp                   0062A6 RLA    ldaxi                     006299 RLA    
-ldaxidx                   00629B RLA    ldaxysp                   0062A8 RLA    
-leaa0sp                   0062AF RLA    leavey                    0062C5 RLA    
-mul8x16                   0065C6 RLA    mul8x16a                  0065D0 RLA    
-mulax10                   0065FE RLA    negax                     00661B RLA    
-negeax                    0062D8 RLA    newline                   00C363 REA    
-opencmdchannel            005CE9 RLA    plot                      005BF7 RLA    
-popa                      00670F RLA    popax                     00625B RLA    
-popptr1                   00671B RLA    popsargsudiv16            0068C8 RLA    
-ptr1                      00000A RLZ    ptr2                      00000C RLZ    
-ptr3                      00000E RLZ    ptr4                      000010 RLZ    
-push0                     006777 RLA    push1                     00675C RLA    
-pusha                     006765 RLA    pusha0                    006779 RLA    
-pushax                    00677B RLA    pusheax                   0062FF RLA    
-pushw                     006791 RLA    pushw0sp                  0067A0 RLA    
-pushwidx                  006793 RLA    pushwysp                  0067A2 RLA    
-putchar                   00CC2F REA    readdiskerror             005D31 RLA    
-regbank                   000016 RLZ    regswap2                  006865 RLA    
-return0                   00687B RLA    rwcommon                  006893 RLA    
-scratch                   0068AF RLA    sigtable                  00784D RLA    
-sp                        000002 RLZ    sreg                      000004 RLZ    
-staspidx                  006943 RLA    stax0sp                   006959 RLA    
-staxspidx                 006964 RLA    staxysp                   00695B RLA    
-subeqysp                  006AF2 RLA    subysp                    006B05 RLA    
-tmp1                      000012 RLZ    tmp2                      000013 RLZ    
-tmp3                      000014 RLZ    tosaddax                  005618 RLA    
-tosdiva0                  005DA4 RLA    tosicmp                   00620A RLA    
-tosicmp0                  006208 RLA    tosmula0                  0065C4 RLA    
-tosorax                   0066E9 RLA    tossubax                  006ADD RLA    
-tosudiva0                 006B12 RLA    tosudivax                 006B14 RLA    
-tosumulax                 00657F RLA    udiv16                    006B23 RLA    
-unittab                   00781D RLA    vsnprintf                 006C3F RLA    
-writefndiskcmd            005D69 RLA    zerobss                   006D81 RLA    
-
+__STARTUP__               000001 REA    __afailed                 00558D RLA    
+__bzero                   006938 RLA    __cbm_filetype            005E11 RLA    
+__ctype                   0079EC RLA    __ctypeidx                0079F7 RLA    
+__directerrno             0055BF RLA    __errno                   008570 RLA    
+__fdesc                   0055C9 RLA    __filetab                 007C7E RLA    
+__filetype                007D06 RLA    __fopen                   0055E6 RLA    
+__heapend                 007CA0 RLA    __heapfirst               007CA2 RLA    
+__heaplast                007CA4 RLA    __heapptr                 007C9E RLA    
+__hextab                  0079AE RLA    __longminstr              0079BE RLA    
+__mappederrno             005661 RLA    __oserror                 008528 RLA    
+__osmaperrno              006B0F RLA    __printf                  005764 RLA    
+__seterrno                005A16 RLA    __sig_dfl                 006D2D RLA    
+_about                    0037F3 RLA    _atoi                     005A62 RLA    
+_bgcolor                  005F52 RLA    _bordercolor              005F78 RLA    
+_calloc                   005B69 RLA    _catasc                   002A49 RLA    
+_cathex                   00288C RLA    _cbm_close                005B1E REA    
+_cbm_closedir             005E04 RLA    _cbm_k_basin              005B0E RLA    
+_cbm_k_chkin              005B14 RLA    _cbm_k_close              005B1E RLA    
+_cbm_k_clrch              00FFCC REA    _cbm_k_open               005B22 RLA    
+_cbm_k_readst             005B2B RLA    _cbm_k_setlfs             005B31 RLA    
+_cbm_k_setnam             005B3F RLA    _cbm_open                 005E24 RLA    
+_cbm_opendir              005B8A RLA    _cbm_read                 005E3A RLA    
+_cclear                   005E9C RLA    _cclearxy                 005E97 RLA    
+_cgetc                    005EAC RLA    _changeDir                003E03 RLA    
+_chline                   005EE1 RLA    _clearArea                00265F RLA    
+_close                    005EF1 RLA    _clrscr                   00C142 REA    
+_cprintf                  005F95 RLA    _cputc                    005FC4 RLA    
+_cputcxy                  005FBF RLA    _cputhex16                006008 RLA    
+_cputhex8                 00600E RLA    _cputs                    00602E RLA    
+_cputsxy                  006024 RLA    _cursor                   006065 RLA    
+_cvlinexy                 00606F RLA    _debugu                   0047EF RLA    
+_depth                    007AD5 RLA    _devices                  007BAF RLA    
+_devicetype               00844B RLA    _dirs                     007BAB RLA    
+_doDOScommand             0046D0 RLA    _drawDirFrame             00422F RLA    
+_drawFrame                00275B RLA    _execute                  003740 RLA    
+_exit                     001C42 RLA    _exitScreen               002877 RLA    
+_fclose                   0061DD RLA    _fopen                    0062AD RLA    
+_fprintf                  0062C5 RLA    _fread                    0062F0 RLA    
+_free                     0063C3 RLA    _freeDir                  002BF2 RLA    
+_fwrite                   006596 RLA    _getDeviceType            004330 RLA    
+_gotoxy                   006614 RLA    _initScreen               002850 RLA    
+_isprint                  0066A5 RLA    _linebuffer               008457 RLA    
+_linebuffer2              0084A8 RLA    _ltoa                     006745 RLA    
+_main                     0023F1 RLA    _mainLoopBrowse           004B92 RLA    
+_malloc                   0067EE RLA    _memcpy                   0068FC RLA    
+_newscreen                0026A7 RLA    _open                     006A53 RLA    
+_path                     007D59 RLA    _pathdevice               007DF9 RLA    
+_pathfile                 007DFA RLA    _pathrunboot              007E0E RLA    
+_printDir                 0039D3 RLA    _printElement             003BBD RLA    
+_printf                   006B3F RLA    _raise                    006BD2 RLA    
+_read                     006BFD RLA    _readDir                  002CC8 RLA    
+_revers                   006C95 RLA    _showDir                  0038DE RLA    
+_sprintf                  006D2E RLA    _stderr                   007C9A RLA    
+_stdout                   007C98 RLA    _strcat                   006D95 RLA    
+_strcpy                   006DC6 RLA    _strlen                   006DE5 RLA    
+_strlower                 006DFB RLA    _strncmp                  006E22 RLA    
+_strncpy                  006E5B RLA    _strstr                   006E9F RLA    
+_textInput                004415 RLA    _textcolor                005F29 RLA    
+_trace                    007AD6 RLA    _ultoa                    006786 RLA    
+_updateMenu               004938 RLA    _updateScreen             0037B8 RLA    
+_vcprintf                 006FC1 RLA    _vfprintf                 007029 RLA    
+_vsprintf                 00712C RLA    _waitKey                  0036F0 RLA    
+_wherey                   00713E RLA    _write                    007143 RLA    
+addeq0sp                  005A3B RLA    addeqysp                  005A3D RLA    
+addysp                    005A4D RLA    addysp1                   005A4C RLA    
+aslax1                    005A5A RLA    axlong                    005AF3 RLA    
+axulong                   005AF9 RLA    bnega                     005B04 RLA    
+booleq                    0067C8 RLA    callmain                  005B52 RLA    
+chlinechar                000040 REZ    closeallfiles             006A3F  LAI   
+closecmdchannel           00612C RLA    cputdirect                005FE0 RLA    
+ctypemask                 006047 RLA    ctypemaskdirect           00604B RLA    
+cursor                    008525 RLA    curunit                   007D4A RLA    
+cvlinechar                00005D REZ    decax1                    006087 RLA    
+decax2                    00608E RLA    decax3                    006095 RLA    
+decax4                    00609C RLA    decaxy                    0060A3 RLA    
+decsp1                    0060AC RLA    decsp2                    0060B5 RLA    
+decsp3                    0060C2 RLA    decsp4                    0060CF RLA    
+decsp5                    0060DC RLA    decsp6                    0060E9 RLA    
+devnum                    0000BA RLZ    donecgetc                 005ECD  LAI   
+donelib                   005F89 RLA    enter                     0061CF RLA    
+fdtab                     007CD2 RLA    fnaddmode                 00629C RLA    
+fncmd                     007CE2 RLA    fncomplete                006294 RLA    
+fnisfile                  008574 RLA    fnlen                     008573 RLA    
+fnparse                   006228 RLA    fnset                     00628A RLA    
+fnunit                    008572 RLA    freefd                    0061FF RLA    
+gotoxy                    006611 RLA    incax1                    00664C RLA    
+incax2                    006653 RLA    incax3                    00665A RLA    
+incax4                    00665F RLA    incaxy                    006661 RLA    
+incsp1                    00666A RLA    incsp2                    006679 RLA    
+incsp3                    006687 RLA    incsp4                    00668C RLA    
+incsp5                    006691 RLA    incsp6                    006696 RLA    
+incsp7                    00669B RLA    incsp8                    0066A0 RLA    
+initcgetc                 001C6E  LAI   initcurunit               001C8D  LAI   
+initheap                  001C5E  LAI   initlib                   001C81 RLA    
+initstdin                 001C99  LAI   initstdout                001CA5  LAI   
+jmpvec                    007D07 RLA    ldax0sp                   0066BC RLA    
+ldaxi                     0066AF RLA    ldaxidx                   0066B1 RLA    
+ldaxysp                   0066BE RLA    leaa0sp                   0066C5 RLA    
+leavey                    0066DB RLA    mul8x16                   0069DC RLA    
+mul8x16a                  0069E6 RLA    mulax10                   006A14 RLA    
+negax                     006A31 RLA    negeax                    0066EE RLA    
+newline                   00C363 REA    opencmdchannel            0060FF RLA    
+plot                      006000 RLA    popa                      006B25 RLA    
+popax                     006671 RLA    popptr1                   006B31 RLA    
+popsargsudiv16            006CDE RLA    ptr1                      00000A RLZ    
+ptr2                      00000C RLZ    ptr3                      00000E RLZ    
+ptr4                      000010 RLZ    push0                     006B8D RLA    
+push1                     006B72 RLA    pusha                     006B7B RLA    
+pusha0                    006B8F RLA    pushax                    006B91 RLA    
+pusheax                   006715 RLA    pushw                     006BA7 RLA    
+pushw0sp                  006BB6 RLA    pushwidx                  006BA9 RLA    
+pushwysp                  006BB8 RLA    putchar                   00CC2F REA    
+readdiskerror             006147 RLA    regbank                   000016 RLZ    
+regswap2                  006C7B RLA    return0                   006C91 RLA    
+rwcommon                  006CA9 RLA    scratch                   006CC5 RLA    
+sigtable                  007D0A RLA    sp                        000002 RLZ    
+sreg                      000004 RLZ    staspidx                  006D59 RLA    
+stax0sp                   006D6F RLA    staxspidx                 006D7A RLA    
+staxysp                   006D71 RLA    subeqysp                  006F08 RLA    
+subysp                    006F1B RLA    tmp1                      000012 RLZ    
+tmp2                      000013 RLZ    tmp3                      000014 RLZ    
+tosaddax                  005A21 RLA    tosdiva0                  0061BA RLA    
+tosicmp                   006620 RLA    tosicmp0                  00661E RLA    
+tosmula0                  0069DA RLA    tosorax                   006AFF RLA    
+tossubax                  006EF3 RLA    tosudiva0                 006F28 RLA    
+tosudivax                 006F2A RLA    tosumulax                 006995 RLA    
+udiv16                    006F39 RLA    unittab                   007CDA RLA    
+vsnprintf                 007055 RLA    writefndiskcmd            00617F RLA    
+zerobss                   007197 RLA    
 
 
 Exports list by value:
@@ -542,139 +546,141 @@ tmp2                      000013 RLZ    tmp3                      000014 RLZ
 regbank                   000016 RLZ    chlinechar                000040 REZ    
 cvlinechar                00005D REZ    ST                        000090 RLZ    
 devnum                    0000BA RLZ    CURS_Y                    0000EB RLZ    
-CURS_X                    0000EC RLZ    __BSS_SIZE__              0007FF REA    
-__STACKSIZE__             000800 REA    __MAIN_START__            001C0D RLA    
+CURS_X                    0000EC RLZ    __STACKSIZE__             000800 REA    
+__BSS_SIZE__              000833 REA    __MAIN_START__            001C0D RLA    
 _exit                     001C42 RLA    initheap                  001C5E  LAI   
 initcgetc                 001C6E  LAI   initlib                   001C81 RLA    
 initcurunit               001C8D  LAI   initstdin                 001C99  LAI   
 initstdout                001CA5  LAI   __CONSTRUCTOR_TABLE__     001CB6 RLA    
-_main                     0020B1 RLA    _clearArea                0022B7 RLA    
-_newscreen                0022FF RLA    _drawFrame                0023B3 RLA    
-_initScreen               0024A8 RLA    _exitScreen               0024CF RLA    
-_cathex                   0024E4 RLA    _catasc                   0026A1 RLA    
-_freeDir                  00284A RLA    _readDir                  002920 RLA    
-_waitKey                  003348 RLA    _execute                  003398 RLA    
-_updateScreen             003410 RLA    _about                    00344B RLA    
-_showDir                  003536 RLA    _printDir                 00362B RLA    
-_printElement             003815 RLA    _changeDir                003A5B RLA    
-_drawDirFrame             003E87 RLA    _getDeviceType            003F88 RLA    
-_doDOScommand             004328 RLA    _debugu                   004447 RLA    
-_updateMenu               004590 RLA    _mainLoopBrowse           0047EA RLA    
-__afailed                 005184 RLA    __directerrno             0051B6 RLA    
-__fdesc                   0051C0 RLA    __fopen                   0051DD RLA    
-__mappederrno             005258 RLA    __printf                  00535B RLA    
-__seterrno                00560D RLA    tosaddax                  005618 RLA    
-addeq0sp                  005632 RLA    addeqysp                  005634 RLA    
-addysp1                   005643 RLA    addysp                    005644 RLA    
-aslax1                    005651 RLA    _atoi                     005659 RLA    
-axlong                    0056EA RLA    axulong                   0056F0 RLA    
-bnega                     0056FB RLA    _cbm_k_basin              005705 RLA    
-_cbm_k_chkin              00570B RLA    _cbm_close                005715 REA    
-_cbm_k_close              005715 RLA    _cbm_k_open               005719 RLA    
-_cbm_k_readst             005722 RLA    _cbm_k_setlfs             005728 RLA    
-_cbm_k_setnam             005736 RLA    callmain                  005749 RLA    
-_calloc                   005760 RLA    _cbm_opendir              005781 RLA    
-_cbm_closedir             0059FB RLA    __cbm_filetype            005A08 RLA    
-_cbm_open                 005A1B RLA    _cbm_read                 005A31 RLA    
-_cclearxy                 005A8E RLA    _cclear                   005A93 RLA    
-_cgetc                    005AA3 RLA    donecgetc                 005AC4  LAI   
-_chline                   005AD8 RLA    _close                    005AE8 RLA    
-_textcolor                005B20 RLA    _bgcolor                  005B49 RLA    
-_bordercolor              005B6F RLA    donelib                   005B80 RLA    
-_cprintf                  005B8C RLA    _cputcxy                  005BB6 RLA    
-_cputc                    005BBB RLA    cputdirect                005BD7 RLA    
-plot                      005BF7 RLA    _cputhex16                005BFF RLA    
-_cputhex8                 005C05 RLA    _cputsxy                  005C1B RLA    
-_cputs                    005C25 RLA    ctypemask                 005C3E RLA    
-ctypemaskdirect           005C42 RLA    _cursor                   005C5C RLA    
-_cvlinexy                 005C66 RLA    decax1                    005C7E RLA    
-decax2                    005C85 RLA    decax3                    005C8C RLA    
-decax4                    005C93 RLA    decaxy                    005C9A RLA    
-decsp1                    005CA3 RLA    decsp2                    005CAC RLA    
-decsp3                    005CB9 RLA    decsp4                    005CC6 RLA    
-decsp6                    005CD3 RLA    opencmdchannel            005CE9 RLA    
-closecmdchannel           005D16 RLA    readdiskerror             005D31 RLA    
-writefndiskcmd            005D69 RLA    tosdiva0                  005DA4 RLA    
-enter                     005DB9 RLA    _fclose                   005DC7 RLA    
-freefd                    005DE9 RLA    fnparse                   005E12 RLA    
-fnset                     005E74 RLA    fncomplete                005E7E RLA    
-fnaddmode                 005E86 RLA    _fopen                    005E97 RLA    
-_fprintf                  005EAF RLA    _fread                    005EDA RLA    
-_free                     005FAD RLA    _fwrite                   006180 RLA    
-gotoxy                    0061FB RLA    _gotoxy                   0061FE RLA    
-tosicmp0                  006208 RLA    tosicmp                   00620A RLA    
-incax1                    006236 RLA    incax2                    00623D RLA    
-incax3                    006244 RLA    incax4                    006249 RLA    
-incaxy                    00624B RLA    incsp1                    006254 RLA    
-popax                     00625B RLA    incsp2                    006263 RLA    
-incsp3                    006271 RLA    incsp4                    006276 RLA    
-incsp5                    00627B RLA    incsp6                    006280 RLA    
-incsp7                    006285 RLA    incsp8                    00628A RLA    
-_isprint                  00628F RLA    ldaxi                     006299 RLA    
-ldaxidx                   00629B RLA    ldax0sp                   0062A6 RLA    
-ldaxysp                   0062A8 RLA    leaa0sp                   0062AF RLA    
-leavey                    0062C5 RLA    negeax                    0062D8 RLA    
-pusheax                   0062FF RLA    _ltoa                     00632F RLA    
-_ultoa                    006370 RLA    booleq                    0063B2 RLA    
-_malloc                   0063D8 RLA    _memcpy                   0064E6 RLA    
-__bzero                   006522 RLA    tosumulax                 00657F RLA    
-tosmula0                  0065C4 RLA    mul8x16                   0065C6 RLA    
-mul8x16a                  0065D0 RLA    mulax10                   0065FE RLA    
-negax                     00661B RLA    closeallfiles             006629  LAI   
-_open                     00663D RLA    tosorax                   0066E9 RLA    
-__osmaperrno              0066F9 RLA    popa                      00670F RLA    
-popptr1                   00671B RLA    _printf                   006729 RLA    
-push1                     00675C RLA    pusha                     006765 RLA    
-push0                     006777 RLA    pusha0                    006779 RLA    
-pushax                    00677B RLA    pushw                     006791 RLA    
-pushwidx                  006793 RLA    pushw0sp                  0067A0 RLA    
-pushwysp                  0067A2 RLA    _raise                    0067BC RLA    
-_read                     0067E7 RLA    regswap2                  006865 RLA    
-return0                   00687B RLA    _revers                   00687F RLA    
-rwcommon                  006893 RLA    scratch                   0068AF RLA    
-popsargsudiv16            0068C8 RLA    __sig_dfl                 006917 RLA    
-_sprintf                  006918 RLA    staspidx                  006943 RLA    
-stax0sp                   006959 RLA    staxysp                   00695B RLA    
-staxspidx                 006964 RLA    _strcat                   00697F RLA    
-_strcpy                   0069B0 RLA    _strlen                   0069CF RLA    
-_strlower                 0069E5 RLA    _strncmp                  006A0C RLA    
-_strncpy                  006A45 RLA    _strstr                   006A89 RLA    
-tossubax                  006ADD RLA    subeqysp                  006AF2 RLA    
-subysp                    006B05 RLA    tosudiva0                 006B12 RLA    
-tosudivax                 006B14 RLA    udiv16                    006B23 RLA    
-_vcprintf                 006BAB RLA    _vfprintf                 006C13 RLA    
-vsnprintf                 006C3F RLA    _vsprintf                 006D16 RLA    
-_wherey                   006D28 RLA    _write                    006D2D RLA    
-zerobss                   006D81 RLA    __hextab                  007542 RLA    
-__longminstr              007552 RLA    __ctype                   007580 RLA    
-__ctypeidx                00758B RLA    __DESTRUCTOR_TABLE__      007665 RLA    
-_depth                    007669 RLA    _trace                    00766A RLA    
-_dirs                     0076EE RLA    _devices                  0076F2 RLA    
-__filetab                 0077C1 RLA    _stdout                   0077DB RLA    
-_stderr                   0077DD RLA    __heapptr                 0077E1 RLA    
-__heapend                 0077E3 RLA    __heapfirst               0077E5 RLA    
-__heaplast                0077E7 RLA    fdtab                     007815 RLA    
-unittab                   00781D RLA    fncmd                     007825 RLA    
-__filetype                007849 RLA    jmpvec                    00784A RLA    
-sigtable                  00784D RLA    curunit                   00788D RLA    
-_DIR1H                    00788E RLA    __BSS_RUN__               00788E RLA    
-_DIR2H                    00788F RLA    _SCREENW                  007890 RLA    
-_MENUX                    007892 RLA    _MENUXT                   007894 RLA    
-_MENUW                    007896 RLA    _DIR2X                    007898 RLA    
-_DIR2Y                    00789A RLA    _path                     00789C RLA    
-_devicetype               007F5A RLA    _linebuffer               007F66 RLA    
-_linebuffer2              007FB7 RLA    cursor                    008034 RLA    
-__oserror                 008037 RLA    __errno                   00807F RLA    
-fnunit                    008081 RLA    fnlen                     008082 RLA    
-fnisfile                  008083 RLA    __MAIN_SIZE__             009BF3 REA    
-_clrscr                   00C142 REA    newline                   00C363 REA    
-putchar                   00CC2F REA    READST                    00FFB7 RLA    
-SETLFS                    00FFBA RLA    SETNAM                    00FFBD RLA    
-OPEN                      00FFC0 RLA    CLOSE                     00FFC3 RLA    
-CHKIN                     00FFC6 RLA    CKOUT                     00FFC9 RLA    
-CLRCH                     00FFCC RLA    _cbm_k_clrch              00FFCC REA    
-BASIN                     00FFCF RLA    BSOUT                     00FFD2 RLA    
-
+_main                     0023F1 RLA    _clearArea                00265F RLA    
+_newscreen                0026A7 RLA    _drawFrame                00275B RLA    
+_initScreen               002850 RLA    _exitScreen               002877 RLA    
+_cathex                   00288C RLA    _catasc                   002A49 RLA    
+_freeDir                  002BF2 RLA    _readDir                  002CC8 RLA    
+_waitKey                  0036F0 RLA    _execute                  003740 RLA    
+_updateScreen             0037B8 RLA    _about                    0037F3 RLA    
+_showDir                  0038DE RLA    _printDir                 0039D3 RLA    
+_printElement             003BBD RLA    _changeDir                003E03 RLA    
+_drawDirFrame             00422F RLA    _getDeviceType            004330 RLA    
+_textInput                004415 RLA    _doDOScommand             0046D0 RLA    
+_debugu                   0047EF RLA    _updateMenu               004938 RLA    
+_mainLoopBrowse           004B92 RLA    __afailed                 00558D RLA    
+__directerrno             0055BF RLA    __fdesc                   0055C9 RLA    
+__fopen                   0055E6 RLA    __mappederrno             005661 RLA    
+__printf                  005764 RLA    __seterrno                005A16 RLA    
+tosaddax                  005A21 RLA    addeq0sp                  005A3B RLA    
+addeqysp                  005A3D RLA    addysp1                   005A4C RLA    
+addysp                    005A4D RLA    aslax1                    005A5A RLA    
+_atoi                     005A62 RLA    axlong                    005AF3 RLA    
+axulong                   005AF9 RLA    bnega                     005B04 RLA    
+_cbm_k_basin              005B0E RLA    _cbm_k_chkin              005B14 RLA    
+_cbm_close                005B1E REA    _cbm_k_close              005B1E RLA    
+_cbm_k_open               005B22 RLA    _cbm_k_readst             005B2B RLA    
+_cbm_k_setlfs             005B31 RLA    _cbm_k_setnam             005B3F RLA    
+callmain                  005B52 RLA    _calloc                   005B69 RLA    
+_cbm_opendir              005B8A RLA    _cbm_closedir             005E04 RLA    
+__cbm_filetype            005E11 RLA    _cbm_open                 005E24 RLA    
+_cbm_read                 005E3A RLA    _cclearxy                 005E97 RLA    
+_cclear                   005E9C RLA    _cgetc                    005EAC RLA    
+donecgetc                 005ECD  LAI   _chline                   005EE1 RLA    
+_close                    005EF1 RLA    _textcolor                005F29 RLA    
+_bgcolor                  005F52 RLA    _bordercolor              005F78 RLA    
+donelib                   005F89 RLA    _cprintf                  005F95 RLA    
+_cputcxy                  005FBF RLA    _cputc                    005FC4 RLA    
+cputdirect                005FE0 RLA    plot                      006000 RLA    
+_cputhex16                006008 RLA    _cputhex8                 00600E RLA    
+_cputsxy                  006024 RLA    _cputs                    00602E RLA    
+ctypemask                 006047 RLA    ctypemaskdirect           00604B RLA    
+_cursor                   006065 RLA    _cvlinexy                 00606F RLA    
+decax1                    006087 RLA    decax2                    00608E RLA    
+decax3                    006095 RLA    decax4                    00609C RLA    
+decaxy                    0060A3 RLA    decsp1                    0060AC RLA    
+decsp2                    0060B5 RLA    decsp3                    0060C2 RLA    
+decsp4                    0060CF RLA    decsp5                    0060DC RLA    
+decsp6                    0060E9 RLA    opencmdchannel            0060FF RLA    
+closecmdchannel           00612C RLA    readdiskerror             006147 RLA    
+writefndiskcmd            00617F RLA    tosdiva0                  0061BA RLA    
+enter                     0061CF RLA    _fclose                   0061DD RLA    
+freefd                    0061FF RLA    fnparse                   006228 RLA    
+fnset                     00628A RLA    fncomplete                006294 RLA    
+fnaddmode                 00629C RLA    _fopen                    0062AD RLA    
+_fprintf                  0062C5 RLA    _fread                    0062F0 RLA    
+_free                     0063C3 RLA    _fwrite                   006596 RLA    
+gotoxy                    006611 RLA    _gotoxy                   006614 RLA    
+tosicmp0                  00661E RLA    tosicmp                   006620 RLA    
+incax1                    00664C RLA    incax2                    006653 RLA    
+incax3                    00665A RLA    incax4                    00665F RLA    
+incaxy                    006661 RLA    incsp1                    00666A RLA    
+popax                     006671 RLA    incsp2                    006679 RLA    
+incsp3                    006687 RLA    incsp4                    00668C RLA    
+incsp5                    006691 RLA    incsp6                    006696 RLA    
+incsp7                    00669B RLA    incsp8                    0066A0 RLA    
+_isprint                  0066A5 RLA    ldaxi                     0066AF RLA    
+ldaxidx                   0066B1 RLA    ldax0sp                   0066BC RLA    
+ldaxysp                   0066BE RLA    leaa0sp                   0066C5 RLA    
+leavey                    0066DB RLA    negeax                    0066EE RLA    
+pusheax                   006715 RLA    _ltoa                     006745 RLA    
+_ultoa                    006786 RLA    booleq                    0067C8 RLA    
+_malloc                   0067EE RLA    _memcpy                   0068FC RLA    
+__bzero                   006938 RLA    tosumulax                 006995 RLA    
+tosmula0                  0069DA RLA    mul8x16                   0069DC RLA    
+mul8x16a                  0069E6 RLA    mulax10                   006A14 RLA    
+negax                     006A31 RLA    closeallfiles             006A3F  LAI   
+_open                     006A53 RLA    tosorax                   006AFF RLA    
+__osmaperrno              006B0F RLA    popa                      006B25 RLA    
+popptr1                   006B31 RLA    _printf                   006B3F RLA    
+push1                     006B72 RLA    pusha                     006B7B RLA    
+push0                     006B8D RLA    pusha0                    006B8F RLA    
+pushax                    006B91 RLA    pushw                     006BA7 RLA    
+pushwidx                  006BA9 RLA    pushw0sp                  006BB6 RLA    
+pushwysp                  006BB8 RLA    _raise                    006BD2 RLA    
+_read                     006BFD RLA    regswap2                  006C7B RLA    
+return0                   006C91 RLA    _revers                   006C95 RLA    
+rwcommon                  006CA9 RLA    scratch                   006CC5 RLA    
+popsargsudiv16            006CDE RLA    __sig_dfl                 006D2D RLA    
+_sprintf                  006D2E RLA    staspidx                  006D59 RLA    
+stax0sp                   006D6F RLA    staxysp                   006D71 RLA    
+staxspidx                 006D7A RLA    _strcat                   006D95 RLA    
+_strcpy                   006DC6 RLA    _strlen                   006DE5 RLA    
+_strlower                 006DFB RLA    _strncmp                  006E22 RLA    
+_strncpy                  006E5B RLA    _strstr                   006E9F RLA    
+tossubax                  006EF3 RLA    subeqysp                  006F08 RLA    
+subysp                    006F1B RLA    tosudiva0                 006F28 RLA    
+tosudivax                 006F2A RLA    udiv16                    006F39 RLA    
+_vcprintf                 006FC1 RLA    _vfprintf                 007029 RLA    
+vsnprintf                 007055 RLA    _vsprintf                 00712C RLA    
+_wherey                   00713E RLA    _write                    007143 RLA    
+zerobss                   007197 RLA    __hextab                  0079AE RLA    
+__longminstr              0079BE RLA    __ctype                   0079EC RLA    
+__ctypeidx                0079F7 RLA    __DESTRUCTOR_TABLE__      007AD1 RLA    
+_depth                    007AD5 RLA    _trace                    007AD6 RLA    
+_dirs                     007BAB RLA    _devices                  007BAF RLA    
+__filetab                 007C7E RLA    _stdout                   007C98 RLA    
+_stderr                   007C9A RLA    __heapptr                 007C9E RLA    
+__heapend                 007CA0 RLA    __heapfirst               007CA2 RLA    
+__heaplast                007CA4 RLA    fdtab                     007CD2 RLA    
+unittab                   007CDA RLA    fncmd                     007CE2 RLA    
+__filetype                007D06 RLA    jmpvec                    007D07 RLA    
+sigtable                  007D0A RLA    curunit                   007D4A RLA    
+_DIR1H                    007D4B RLA    __BSS_RUN__               007D4B RLA    
+_DIR2H                    007D4C RLA    _SCREENW                  007D4D RLA    
+_MENUX                    007D4F RLA    _MENUXT                   007D51 RLA    
+_MENUW                    007D53 RLA    _DIR2X                    007D55 RLA    
+_DIR2Y                    007D57 RLA    _path                     007D59 RLA    
+_pathdevice               007DF9 RLA    _pathfile                 007DFA RLA    
+_pathrunboot              007E0E RLA    _devicetype               00844B RLA    
+_linebuffer               008457 RLA    _linebuffer2              0084A8 RLA    
+cursor                    008525 RLA    __oserror                 008528 RLA    
+__errno                   008570 RLA    fnunit                    008572 RLA    
+fnlen                     008573 RLA    fnisfile                  008574 RLA    
+__MAIN_SIZE__             009BF3 REA    _clrscr                   00C142 REA    
+newline                   00C363 REA    putchar                   00CC2F REA    
+READST                    00FFB7 RLA    SETLFS                    00FFBA RLA    
+SETNAM                    00FFBD RLA    OPEN                      00FFC0 RLA    
+CLOSE                     00FFC3 RLA    CHKIN                     00FFC6 RLA    
+CKOUT                     00FFC9 RLA    CLRCH                     00FFCC RLA    
+_cbm_k_clrch              00FFCC REA    BASIN                     00FFCF RLA    
+BSOUT                     00FFD2 RLA    
 
 
 Imports list:
@@ -813,7 +819,7 @@ __filetab (_file.o):
     _fdesc.o                  /mnt/l/cc65/asminc/_file.inc(25)
 __filetype (filetype.o):
     filename.o                cbm/filename.s(11)
-    main.o                    src/main.s(21)
+    main.o                    src/main.s(23)
 __fopen (_fopen.o):
     fopen.o                   common/fopen.s(10)
 __heapend (_heap.o):
@@ -866,7 +872,7 @@ __sig_dfl (signal.o):
     sigtable.o                /mnt/l/cc65/asminc/signal.inc(53)
     raise.o                   /mnt/l/cc65/asminc/signal.inc(53)
 _about (ops.o):
-    db.o                      src/db.s(39)
+    db.o                      src/db.s(42)
 _atoi (atoi.o):
     ops.o                     src/ops.s(74)
 _bgcolor (color.o):
@@ -876,16 +882,16 @@ _bordercolor (color.o):
 _calloc (calloc.o):
     dir.o                     src/dir.s(14)
 _catasc (cat.o):
-    db.o                      src/db.s(33)
+    db.o                      src/db.s(36)
 _cathex (cat.o):
-    db.o                      src/db.s(32)
+    db.o                      src/db.s(35)
 _cbm_close (cbm_close.o):
     cbm_dir.o                 ../libwrk/c128/cbm_dir.s(19)
-    db.o                      src/db.s(26)
+    db.o                      src/db.s(29)
     ops.o                     src/ops.s(23)
     cat.o                     src/cat.s(14)
 _cbm_closedir (cbm_dir.o):
-    db.o                      src/db.s(27)
+    db.o                      src/db.s(30)
     dir.o                     src/dir.s(25)
 _cbm_k_basin (c_basin.o):
     cbm_dir.o                 ../libwrk/c128/cbm_dir.s(14)
@@ -922,11 +928,12 @@ _cclear (cclear.o):
 _cclearxy (cclear.o):
     screen.o                  src/screen.s(23)
 _cgetc (cgetc.o):
-    db.o                      src/db.s(29)
+    db.o                      src/db.s(32)
     ops.o                     src/ops.s(65)
     base.o                    src/base.s(15)
+    main.o                    src/main.s(28)
 _changeDir (ops.o):
-    db.o                      src/db.s(44)
+    db.o                      src/db.s(47)
 _chline (chline.o):
     screen.o                  src/screen.s(21)
 _clearArea (screen.o):
@@ -938,11 +945,11 @@ _clrscr (clrscr.o):
     ops.o                     src/ops.s(58)
     cat.o                     src/cat.s(16)
     screen.o                  src/screen.s(13)
-    main.o                    src/main.s(22)
+    main.o                    src/main.s(24)
 _cprintf (cprintf.o):
     ops.o                     src/ops.s(64)
     dir.o                     src/dir.s(28)
-    main.o                    src/main.s(25)
+    main.o                    src/main.s(27)
 _cputc (cputc.o):
     vcprintf.o                conio/vcprintf.s(9)
     cputs.o                   conio/cputs.s(9)
@@ -962,9 +969,9 @@ _cputs (cputs.o):
     base.o                    src/base.s(14)
     cat.o                     src/cat.s(20)
     screen.o                  src/screen.s(16)
-    main.o                    src/main.s(24)
+    main.o                    src/main.s(26)
 _cputsxy (cputs.o):
-    db.o                      src/db.s(28)
+    db.o                      src/db.s(31)
     ops.o                     src/ops.s(63)
 _cursor (cursor.o):
     ops.o                     src/ops.s(66)
@@ -973,29 +980,30 @@ _cvlinexy (cvline.o):
 _debugu (ops.o):
     dir.o                     src/dir.s(39)
 _depth (main.o):
-    db.o                      src/db.s(23)
+    db.o                      src/db.s(26)
     ops.o                     src/ops.s(20)
 _devices (ops.o):
-    db.o                      src/db.s(49)
+    db.o                      src/db.s(52)
 _devicetype (ops.o):
-    db.o                      src/db.s(48)
+    db.o                      src/db.s(51)
+    main.o                    src/main.s(52)
 _dirs (ops.o):
-    db.o                      src/db.s(50)
+    db.o                      src/db.s(53)
 _doDOScommand (ops.o):
-    db.o                      src/db.s(47)
+    db.o                      src/db.s(50)
 _drawDirFrame (ops.o):
-    db.o                      src/db.s(45)
+    db.o                      src/db.s(48)
 _drawFrame (screen.o):
-    db.o                      src/db.s(25)
+    db.o                      src/db.s(28)
     ops.o                     src/ops.s(55)
 _execute (ops.o):
-    db.o                      src/db.s(36)
+    db.o                      src/db.s(39)
 _exit (crt0.o):
     _afailed.o                ../libwrk/c128/_afailed.s(16)
     ops.o                     src/ops.s(75)
 _exitScreen (screen.o):
     ops.o                     src/ops.s(56)
-    main.o                    src/main.s(45)
+    main.o                    src/main.s(54)
 _fclose (fclose.o):
     main.o                    src/main.s(14)
 _fopen (fopen.o):
@@ -1007,20 +1015,20 @@ _fread (fread.o):
 _free (free.o):
     dir.o                     src/dir.s(15)
 _freeDir (dir.o):
-    db.o                      src/db.s(34)
+    db.o                      src/db.s(37)
 _fwrite (fwrite.o):
     vfprintf.o                common/vfprintf.s(10)
     main.o                    src/main.s(17)
 _getDeviceType (ops.o):
-    db.o                      src/db.s(46)
+    db.o                      src/db.s(49)
 _gotoxy (gotoxy.o):
     ops.o                     src/ops.s(59)
     dir.o                     src/dir.s(26)
     cat.o                     src/cat.s(17)
     screen.o                  src/screen.s(14)
-    main.o                    src/main.s(23)
+    main.o                    src/main.s(25)
 _initScreen (screen.o):
-    main.o                    src/main.s(44)
+    main.o                    src/main.s(53)
 _isprint (isprint.o):
     ops.o                     src/ops.s(77)
 _linebuffer (ops.o):
@@ -1032,7 +1040,7 @@ _ltoa (ltoa.o):
 _main (main.o):
     callmain.o                runtime/callmain.s(11)
 _mainLoopBrowse (db.o):
-    main.o                    src/main.s(43)
+    main.o                    src/main.s(50)
 _malloc (malloc.o):
     calloc.o                  common/calloc.s(10)
 _memcpy (memcpy.o):
@@ -1045,10 +1053,16 @@ _open (open.o):
 _path (main.o):
     db.o                      src/db.s(22)
     ops.o                     src/ops.s(19)
+_pathdevice (main.o):
+    db.o                      src/db.s(23)
+_pathfile (main.o):
+    db.o                      src/db.s(24)
+_pathrunboot (main.o):
+    db.o                      src/db.s(25)
 _printDir (ops.o):
-    db.o                      src/db.s(42)
+    db.o                      src/db.s(45)
 _printElement (ops.o):
-    db.o                      src/db.s(43)
+    db.o                      src/db.s(46)
 _printf (printf.o):
     main.o                    src/main.s(18)
 _raise (raise.o):
@@ -1056,17 +1070,17 @@ _raise (raise.o):
 _read (read.o):
     fread.o                   common/fread.s(10)
 _readDir (dir.o):
-    db.o                      src/db.s(35)
+    db.o                      src/db.s(38)
     ops.o                     src/ops.s(25)
 _revers (revers.o):
-    db.o                      src/db.s(30)
+    db.o                      src/db.s(33)
     ops.o                     src/ops.s(67)
     base.o                    src/base.s(16)
     dir.o                     src/dir.s(29)
     screen.o                  src/screen.s(17)
-    main.o                    src/main.s(26)
+    main.o                    src/main.s(29)
 _showDir (ops.o):
-    db.o                      src/db.s(40)
+    db.o                      src/db.s(43)
 _sprintf (sprintf.o):
     ops.o                     src/ops.s(70)
 _stderr (_file.o):
@@ -1079,34 +1093,38 @@ _strcpy (strcpy.o):
     db.o                      src/db.s(13)
     ops.o                     src/ops.s(71)
     dir.o                     src/dir.s(16)
+    main.o                    src/main.s(20)
 _strlen (strlen.o):
     _printf.o                 common/_printf.s(13)
     ops.o                     src/ops.s(72)
     screen.o                  src/screen.s(24)
+    main.o                    src/main.s(21)
 _strlower (strlower.o):
     _printf.o                 common/_printf.s(13)
 _strncmp (strncmp.o):
     dir.o                     src/dir.s(17)
 _strncpy (strncpy.o):
-    main.o                    src/main.s(20)
+    main.o                    src/main.s(22)
 _strstr (strstr.o):
     ops.o                     src/ops.s(73)
+_textInput (ops.o):
+    main.o                    src/main.s(51)
 _textcolor (color.o):
-    db.o                      src/db.s(31)
+    db.o                      src/db.s(34)
     ops.o                     src/ops.s(68)
     base.o                    src/base.s(17)
     cat.o                     src/cat.s(21)
     screen.o                  src/screen.s(18)
-    main.o                    src/main.s(27)
+    main.o                    src/main.s(30)
 _trace (main.o):
-    db.o                      src/db.s(24)
+    db.o                      src/db.s(27)
     ops.o                     src/ops.s(21)
 _ultoa (ltoa.o):
     _printf.o                 common/_printf.s(12)
 _updateMenu (db.o):
     ops.o                     src/ops.s(29)
 _updateScreen (ops.o):
-    db.o                      src/db.s(37)
+    db.o                      src/db.s(40)
 _vcprintf (vcprintf.o):
     cprintf.o                 conio/cprintf.s(8)
 _vfprintf (vfprintf.o):
@@ -1117,7 +1135,7 @@ _vsprintf (vsprintf.o):
 _waitKey (base.o):
     ops.o                     src/ops.s(57)
     cat.o                     src/cat.s(27)
-    main.o                    src/main.s(46)
+    main.o                    src/main.s(55)
 _wherey (wherey.o):
     cat.o                     src/cat.s(18)
 _write (write.o):
@@ -1125,15 +1143,16 @@ _write (write.o):
 addeq0sp (addeqsp.o):
     ops.o                     src/ops.s(2864)
     ops.o                     src/ops.s(2864)
-    main.o                    src/main.s(988)
-    main.o                    src/main.s(988)
-    main.o                    src/main.s(988)
+    main.o                    src/main.s(1499)
+    main.o                    src/main.s(1499)
+    main.o                    src/main.s(1499)
 addeqysp (addeqsp.o):
-    db.o                      src/db.s(1526)
+    db.o                      src/db.s(1579)
     ops.o                     src/ops.s(2864)
     cat.o                     src/cat.s(476)
     cat.o                     src/cat.s(476)
     screen.o                  src/screen.s(360)
+    main.o                    src/main.s(1499)
 addysp (addysp.o):
     open.o                    cbm/open.s(10)
     sprintf.o                 common/sprintf.s(8)
@@ -1148,27 +1167,29 @@ addysp (addysp.o):
     fwrite.o                  common/fwrite.s(11)
     fprintf.o                 common/fprintf.s(8)
     cprintf.o                 conio/cprintf.s(8)
-    db.o                      src/db.s(1526)
+    db.o                      src/db.s(1579)
     ops.o                     src/ops.s(2864)
     ops.o                     src/ops.s(2864)
     ops.o                     src/ops.s(2864)
     dir.o                     src/dir.s(1476)
     cat.o                     src/cat.s(476)
     cat.o                     src/cat.s(476)
-    main.o                    src/main.s(988)
-    main.o                    src/main.s(988)
+    main.o                    src/main.s(1499)
+    main.o                    src/main.s(1499)
 addysp1 (addysp.o):
     sub.o                     runtime/sub.s(8)
     or.o                      runtime/or.s(9)
 aslax1 (aslax1.o):
-    main.o                    src/main.s(988)
+    main.o                    src/main.s(1499)
+    main.o                    src/main.s(1499)
 axlong (axlong.o):
     _printf.o                 common/_printf.s(11)
 axulong (axlong.o):
     _printf.o                 common/_printf.s(11)
 bnega (bneg.o):
-    db.o                      src/db.s(1526)
+    db.o                      src/db.s(1579)
     cat.o                     src/cat.s(476)
+    main.o                    src/main.s(1499)
 booleq (makebool.o):
     ops.o                     src/ops.s(2864)
 callmain (callmain.o):
@@ -1195,10 +1216,12 @@ curunit (filevars.o):
 cvlinechar (clinechars.o):
     cvline.o                  cbm/cvline.s(10)
 decax1 (decax1.o):
-    db.o                      src/db.s(1526)
+    db.o                      src/db.s(1579)
     ops.o                     src/ops.s(2864)
     dir.o                     src/dir.s(1476)
-    main.o                    src/main.s(988)
+    main.o                    src/main.s(1499)
+    main.o                    src/main.s(1499)
+    main.o                    src/main.s(1499)
 decax2 (decax2.o):
     ops.o                     src/ops.s(2864)
     dir.o                     src/dir.s(1476)
@@ -1211,13 +1234,15 @@ decax4 (decax4.o):
 decaxy (decaxy.o):
     ops.o                     src/ops.s(2864)
     cat.o                     src/cat.s(476)
+    main.o                    src/main.s(1499)
 decsp1 (decsp1.o):
     cbm_dir.o                 ../libwrk/c128/cbm_dir.s(374)
-    db.o                      src/db.s(1526)
+    db.o                      src/db.s(1579)
     ops.o                     src/ops.s(2864)
     ops.o                     src/ops.s(2864)
     dir.o                     src/dir.s(1476)
     screen.o                  src/screen.s(360)
+    main.o                    src/main.s(1499)
 decsp2 (decsp2.o):
     cbm_dir.o                 ../libwrk/c128/cbm_dir.s(374)
     ops.o                     src/ops.s(2864)
@@ -1230,17 +1255,19 @@ decsp2 (decsp2.o):
     dir.o                     src/dir.s(1476)
     cat.o                     src/cat.s(476)
     cat.o                     src/cat.s(476)
-    main.o                    src/main.s(988)
-    main.o                    src/main.s(988)
-    main.o                    src/main.s(988)
+    main.o                    src/main.s(1499)
+    main.o                    src/main.s(1499)
+    main.o                    src/main.s(1499)
 decsp3 (decsp3.o):
-    main.o                    src/main.s(988)
-    main.o                    src/main.s(988)
+    main.o                    src/main.s(1499)
+    main.o                    src/main.s(1499)
 decsp4 (decsp4.o):
     lpush.o                   runtime/lpush.s(12)
     sprintf.o                 common/sprintf.s(8)
     fprintf.o                 common/fprintf.s(8)
     dir.o                     src/dir.s(1476)
+decsp5 (decsp5.o):
+    main.o                    src/main.s(1499)
 decsp6 (decsp6.o):
     _printf.o                 common/_printf.s(11)
 devnum (devnum.o):
@@ -1282,12 +1309,13 @@ gotoxy (gotoxy.o):
     chline.o                  cbm/chline.s(9)
     cclear.o                  cbm/cclear.s(9)
 incax1 (incax1.o):
-    db.o                      src/db.s(1526)
+    db.o                      src/db.s(1579)
     ops.o                     src/ops.s(2864)
-    main.o                    src/main.s(988)
+    main.o                    src/main.s(1499)
+    main.o                    src/main.s(1499)
 incax2 (incax2.o):
     ops.o                     src/ops.s(2864)
-    main.o                    src/main.s(988)
+    main.o                    src/main.s(1499)
 incax3 (incax3.o):
     cbm_dir.o                 ../libwrk/c128/cbm_dir.s(374)
 incax4 (incaxy.o):
@@ -1299,8 +1327,8 @@ incaxy (incaxy.o):
     cat.o                     src/cat.s(476)
 incsp1 (incsp1.o):
     cbm_dir.o                 ../libwrk/c128/cbm_dir.s(374)
-    db.o                      src/db.s(1526)
-    db.o                      src/db.s(1526)
+    db.o                      src/db.s(1579)
+    db.o                      src/db.s(1579)
     ops.o                     src/ops.s(2864)
     ops.o                     src/ops.s(2864)
     ops.o                     src/ops.s(2864)
@@ -1323,8 +1351,9 @@ incsp2 (incsp2.o):
     ops.o                     src/ops.s(2864)
     dir.o                     src/dir.s(1476)
     dir.o                     src/dir.s(1476)
-    main.o                    src/main.s(988)
-    main.o                    src/main.s(988)
+    main.o                    src/main.s(1499)
+    main.o                    src/main.s(1499)
+    main.o                    src/main.s(1499)
 incsp3 (incsp3.o):
     ops.o                     src/ops.s(2864)
     ops.o                     src/ops.s(2864)
@@ -1336,12 +1365,12 @@ incsp4 (incsp4.o):
     _afailed.o                ../libwrk/c128/_afailed.s(57)
     ops.o                     src/ops.s(2864)
     screen.o                  src/screen.s(360)
-    main.o                    src/main.s(988)
+    main.o                    src/main.s(1499)
 incsp5 (incsp5.o):
     ops.o                     src/ops.s(2864)
     screen.o                  src/screen.s(360)
-    main.o                    src/main.s(988)
-    main.o                    src/main.s(988)
+    main.o                    src/main.s(1499)
+    main.o                    src/main.s(1499)
 incsp6 (incsp6.o):
     vsnprintf.o               common/vsnprintf.s(9)
     vfprintf.o                common/vfprintf.s(9)
@@ -1352,6 +1381,7 @@ incsp6 (incsp6.o):
     ops.o                     src/ops.s(2864)
     dir.o                     src/dir.s(1476)
     dir.o                     src/dir.s(1476)
+    main.o                    src/main.s(1499)
 incsp7 (incsp7.o):
     cbm_dir.o                 ../libwrk/c128/cbm_dir.s(374)
     ops.o                     src/ops.s(2864)
@@ -1376,21 +1406,21 @@ ldax0sp (ldaxsp.o):
     dir.o                     src/dir.s(1476)
     dir.o                     src/dir.s(1476)
     screen.o                  src/screen.s(360)
-    main.o                    src/main.s(988)
-    main.o                    src/main.s(988)
-    main.o                    src/main.s(988)
-    main.o                    src/main.s(988)
-    main.o                    src/main.s(988)
+    main.o                    src/main.s(1499)
+    main.o                    src/main.s(1499)
+    main.o                    src/main.s(1499)
+    main.o                    src/main.s(1499)
+    main.o                    src/main.s(1499)
 ldaxi (ldaxi.o):
     cbm_dir.o                 ../libwrk/c128/cbm_dir.s(374)
-    db.o                      src/db.s(1526)
+    db.o                      src/db.s(1579)
     ops.o                     src/ops.s(2864)
     ops.o                     src/ops.s(2864)
     ops.o                     src/ops.s(2864)
     dir.o                     src/dir.s(1476)
-    main.o                    src/main.s(988)
+    main.o                    src/main.s(1499)
 ldaxidx (ldaxi.o):
-    db.o                      src/db.s(1526)
+    db.o                      src/db.s(1579)
     ops.o                     src/ops.s(2864)
     ops.o                     src/ops.s(2864)
     ops.o                     src/ops.s(2864)
@@ -1403,7 +1433,7 @@ ldaxysp (ldaxsp.o):
     fwrite.o                  common/fwrite.s(11)
     fread.o                   common/fread.s(13)
     cbm_dir.o                 ../libwrk/c128/cbm_dir.s(374)
-    db.o                      src/db.s(1526)
+    db.o                      src/db.s(1579)
     ops.o                     src/ops.s(2864)
     ops.o                     src/ops.s(2864)
     ops.o                     src/ops.s(2864)
@@ -1421,16 +1451,18 @@ ldaxysp (ldaxsp.o):
     cat.o                     src/cat.s(476)
     screen.o                  src/screen.s(360)
     screen.o                  src/screen.s(360)
-    main.o                    src/main.s(988)
-    main.o                    src/main.s(988)
-    main.o                    src/main.s(988)
-    main.o                    src/main.s(988)
+    main.o                    src/main.s(1499)
+    main.o                    src/main.s(1499)
+    main.o                    src/main.s(1499)
+    main.o                    src/main.s(1499)
+    main.o                    src/main.s(1499)
+    main.o                    src/main.s(1499)
 leaa0sp (leaaxsp.o):
     cbm_dir.o                 ../libwrk/c128/cbm_dir.s(374)
     dir.o                     src/dir.s(1476)
     cat.o                     src/cat.s(476)
     cat.o                     src/cat.s(476)
-    main.o                    src/main.s(988)
+    main.o                    src/main.s(1499)
 leavey (leave.o):
     cbm_dir.o                 ../libwrk/c128/cbm_dir.s(374)
 mul8x16 (mul8.o):
@@ -1579,7 +1611,7 @@ ptr4 (zeropage.o):
     mul.o                     runtime/mul.s(10)
     free.o                    common/free.s(62)
 push0 (pushax.o):
-    db.o                      src/db.s(1526)
+    db.o                      src/db.s(1579)
     ops.o                     src/ops.s(2864)
     ops.o                     src/ops.s(2864)
     dir.o                     src/dir.s(1476)
@@ -1592,8 +1624,8 @@ pusha (pusha.o):
     cbm_dir.o                 ../libwrk/c128/cbm_dir.s(374)
     cbm_dir.o                 ../libwrk/c128/cbm_dir.s(374)
     cbm_dir.o                 ../libwrk/c128/cbm_dir.s(374)
-    db.o                      src/db.s(1526)
-    db.o                      src/db.s(1526)
+    db.o                      src/db.s(1579)
+    db.o                      src/db.s(1579)
     ops.o                     src/ops.s(2864)
     ops.o                     src/ops.s(2864)
     ops.o                     src/ops.s(2864)
@@ -1624,11 +1656,13 @@ pusha (pusha.o):
     screen.o                  src/screen.s(360)
     screen.o                  src/screen.s(360)
     screen.o                  src/screen.s(360)
-    main.o                    src/main.s(988)
+    main.o                    src/main.s(1499)
+    main.o                    src/main.s(1499)
+    main.o                    src/main.s(1499)
 pusha0 (pushax.o):
     push1.o                   runtime/push1.s(8)
     fread.o                   common/fread.s(11)
-    db.o                      src/db.s(1526)
+    db.o                      src/db.s(1579)
     ops.o                     src/ops.s(2864)
     ops.o                     src/ops.s(2864)
     ops.o                     src/ops.s(2864)
@@ -1638,10 +1672,11 @@ pusha0 (pushax.o):
     dir.o                     src/dir.s(1476)
     screen.o                  src/screen.s(360)
     screen.o                  src/screen.s(360)
-    main.o                    src/main.s(988)
-    main.o                    src/main.s(988)
-    main.o                    src/main.s(988)
-    main.o                    src/main.s(988)
+    main.o                    src/main.s(1499)
+    main.o                    src/main.s(1499)
+    main.o                    src/main.s(1499)
+    main.o                    src/main.s(1499)
+    main.o                    src/main.s(1499)
 pushax (pushax.o):
     callmain.o                runtime/callmain.s(11)
     _printf.o                 common/_printf.s(11)
@@ -1656,8 +1691,8 @@ pushax (pushax.o):
     cbm_dir.o                 ../libwrk/c128/cbm_dir.s(374)
     calloc.o                  common/calloc.s(11)
     _afailed.o                ../libwrk/c128/_afailed.s(57)
-    db.o                      src/db.s(1526)
-    db.o                      src/db.s(1526)
+    db.o                      src/db.s(1579)
+    db.o                      src/db.s(1579)
     ops.o                     src/ops.s(2864)
     ops.o                     src/ops.s(2864)
     ops.o                     src/ops.s(2864)
@@ -1679,17 +1714,18 @@ pushax (pushax.o):
     cat.o                     src/cat.s(476)
     screen.o                  src/screen.s(360)
     screen.o                  src/screen.s(360)
-    main.o                    src/main.s(988)
-    main.o                    src/main.s(988)
-    main.o                    src/main.s(988)
-    main.o                    src/main.s(988)
-    main.o                    src/main.s(988)
-    main.o                    src/main.s(988)
-    main.o                    src/main.s(988)
+    main.o                    src/main.s(1499)
+    main.o                    src/main.s(1499)
+    main.o                    src/main.s(1499)
+    main.o                    src/main.s(1499)
+    main.o                    src/main.s(1499)
+    main.o                    src/main.s(1499)
+    main.o                    src/main.s(1499)
+    main.o                    src/main.s(1499)
 pusheax (lpush.o):
     _printf.o                 common/_printf.s(11)
 pushw (pushw.o):
-    db.o                      src/db.s(1526)
+    db.o                      src/db.s(1579)
     ops.o                     src/ops.s(2864)
     ops.o                     src/ops.s(2864)
     ops.o                     src/ops.s(2864)
@@ -1699,8 +1735,9 @@ pushw0sp (pushwsp.o):
     vsprintf.o                common/vsprintf.s(8)
     ops.o                     src/ops.s(2864)
     dir.o                     src/dir.s(1476)
+    main.o                    src/main.s(1499)
 pushwidx (pushw.o):
-    db.o                      src/db.s(1526)
+    db.o                      src/db.s(1579)
     ops.o                     src/ops.s(2864)
     ops.o                     src/ops.s(2864)
     dir.o                     src/dir.s(1476)
@@ -1710,7 +1747,7 @@ pushwysp (pushwsp.o):
     fwrite.o                  common/fwrite.s(11)
     fread.o                   common/fread.s(14)
     _afailed.o                ../libwrk/c128/_afailed.s(57)
-    db.o                      src/db.s(1526)
+    db.o                      src/db.s(1579)
     ops.o                     src/ops.s(2864)
     ops.o                     src/ops.s(2864)
     ops.o                     src/ops.s(2864)
@@ -1723,12 +1760,13 @@ pushwysp (pushwsp.o):
     ops.o                     src/ops.s(2864)
     dir.o                     src/dir.s(1476)
     dir.o                     src/dir.s(1476)
-    main.o                    src/main.s(988)
-    main.o                    src/main.s(988)
-    main.o                    src/main.s(988)
-    main.o                    src/main.s(988)
-    main.o                    src/main.s(988)
-    main.o                    src/main.s(988)
+    main.o                    src/main.s(1499)
+    main.o                    src/main.s(1499)
+    main.o                    src/main.s(1499)
+    main.o                    src/main.s(1499)
+    main.o                    src/main.s(1499)
+    main.o                    src/main.s(1499)
+    main.o                    src/main.s(1499)
 putchar (cputc.o):
     cvline.o                  cbm/cvline.s(9)
 readdiskerror (diskcmd.o):
@@ -1788,6 +1826,7 @@ sp (zeropage.o):
     fread.o                   common/fread.s(17)
     fprintf.o                 common/fprintf.s(9)
     enter.o                   runtime/enter.s(8)
+    decsp5.o                  runtime/decsp5.s(8)
     decsp4.o                  runtime/decsp4.s(8)
     decsp3.o                  runtime/decsp3.s(8)
     decsp2.o                  runtime/decsp2.s(8)
@@ -1830,18 +1869,18 @@ stax0sp (staxsp.o):
     ops.o                     src/ops.s(2864)
     dir.o                     src/dir.s(1476)
     dir.o                     src/dir.s(1476)
-    main.o                    src/main.s(988)
-    main.o                    src/main.s(988)
-    main.o                    src/main.s(988)
+    main.o                    src/main.s(1499)
+    main.o                    src/main.s(1499)
+    main.o                    src/main.s(1499)
 staxspidx (staxspi.o):
     cbm_dir.o                 ../libwrk/c128/cbm_dir.s(374)
-    db.o                      src/db.s(1526)
+    db.o                      src/db.s(1579)
     ops.o                     src/ops.s(2864)
     dir.o                     src/dir.s(1476)
 staxysp (staxsp.o):
     vsprintf.o                common/vsprintf.s(8)
     cbm_dir.o                 ../libwrk/c128/cbm_dir.s(374)
-    db.o                      src/db.s(1526)
+    db.o                      src/db.s(1579)
     ops.o                     src/ops.s(2864)
     ops.o                     src/ops.s(2864)
     ops.o                     src/ops.s(2864)
@@ -1849,16 +1888,17 @@ staxysp (staxsp.o):
     dir.o                     src/dir.s(1476)
     cat.o                     src/cat.s(476)
     cat.o                     src/cat.s(476)
-    main.o                    src/main.s(988)
-    main.o                    src/main.s(988)
-    main.o                    src/main.s(988)
+    main.o                    src/main.s(1499)
+    main.o                    src/main.s(1499)
+    main.o                    src/main.s(1499)
+    main.o                    src/main.s(1499)
 subeqysp (subeqsp.o):
     cbm_dir.o                 ../libwrk/c128/cbm_dir.s(374)
     ops.o                     src/ops.s(2864)
 subysp (subysp.o):
     cat.o                     src/cat.s(476)
     cat.o                     src/cat.s(476)
-    main.o                    src/main.s(988)
+    main.o                    src/main.s(1499)
 tmp1 (zeropage.o):
     ltoa.o                    common/ltoa.s(11)
     filename.o                cbm/filename.s(12)
@@ -1903,8 +1943,8 @@ tmp3 (zeropage.o):
     read.o                    cbm/read.s(13)
 tosaddax (add.o):
     screen.o                  src/screen.s(360)
-    main.o                    src/main.s(988)
-    main.o                    src/main.s(988)
+    main.o                    src/main.s(1499)
+    main.o                    src/main.s(1499)
 tosdiva0 (div.o):
     ops.o                     src/ops.s(2864)
     ops.o                     src/ops.s(2864)
@@ -1917,12 +1957,13 @@ tosicmp (icmp.o):
 tosicmp0 (icmp.o):
     ops.o                     src/ops.s(2864)
 tosmula0 (mul8.o):
-    db.o                      src/db.s(1526)
+    db.o                      src/db.s(1579)
     ops.o                     src/ops.s(2864)
     ops.o                     src/ops.s(2864)
     ops.o                     src/ops.s(2864)
-    main.o                    src/main.s(988)
-    main.o                    src/main.s(988)
+    main.o                    src/main.s(1499)
+    main.o                    src/main.s(1499)
+    main.o                    src/main.s(1499)
 tosorax (or.o):
     cbm_dir.o                 ../libwrk/c128/cbm_dir.s(374)
     dir.o                     src/dir.s(1476)
@@ -1930,7 +1971,7 @@ tossubax (sub.o):
     ops.o                     src/ops.s(2864)
     ops.o                     src/ops.s(2864)
 tosudiva0 (udiv.o):
-    db.o                      src/db.s(1526)
+    db.o                      src/db.s(1579)
 tosudivax (udiv.o):
     fwrite.o                  common/fwrite.s(12)
     fread.o                   common/fread.s(15)

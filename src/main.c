@@ -25,6 +25,8 @@ void std_write(unsigned char * file_name);
 void std_read(unsigned char * file_name);
 void mid(const char *src, size_t start, size_t length, char *dst, size_t dstlen);
 char* pathconcat();
+char getkey(BYTE mask);
+void pickmenuslot();
 
 //Variables
 BYTE DIR1H;
@@ -38,13 +40,18 @@ unsigned int DIR2Y;
 unsigned int validdriveid;
 unsigned int idnr[30];
 char path[8][20];
+char pathfile[20];
+BYTE pathdevice;
+BYTE pathrunboot;
 BYTE depth = 1;
 BYTE trace = 0;
 char menupath[10][100];
-char menuname[10][20];
+char menuname[10][21];
 char menufile[10][20];
 unsigned int menurunboot[10];
-char spaces[81] = "                                                                                ";
+unsigned int menudevice[10];
+char spaces[81]    = "                                                                                ";
+char underline[81] = "________________________________________________________________________________";
 char spacedest[81];
 char data1[12] = "Test Data 1";
 char data2[12] = "Test Data 2";
@@ -80,9 +87,9 @@ int main() {
     gotoxy(0,0);
     mid(spaces,1,SCREENW,spacedest, sizeof(spacedest));
     revers(1);
-    cprintf("%s",18,30,spacedest);
+    cprintf("%s",spacedest);
     gotoxy(0,0);  
-    cprintf("DMBoot 128: Welcome to your C128.\n\n\r",18,30);
+    cprintf("DMBoot 128: Welcome to your C128.\n\n\r");
     revers(0);
 
     textcolor(DC_COLOR_TEXT);
@@ -103,21 +110,47 @@ int main() {
     }
     cputs("\n\n\rFull path:\n\r");
     cprintf("%s\n\r", pathconcat());
+    cprintf("Filename: %s\n\r",pathfile);
+    cprintf("Device: %i\n\r",pathdevice);
+    cprintf("Run/boot flag: %i\n\r", pathrunboot);
     waitKey(0);
+
+    if (trace == 1)
+    {
+        pickmenuslot();
+    }
 
     clrscr();
-    cputs("File operations test\n\r");
+    cputs("Present menu slots:\n\n\r");
+    for ( x=1 ; x<11 ; ++x )
+    {
+        revers(1);
+        cprintf(" %i ",x-1);
+        revers(0);
+        if ( strlen(menuname[x]) == 0 )
+        {
+            cputs(" <EMPTY>\n\r");
+        }
+        else
+        {
+            cprintf(" %s\n\r",menuname[x]);
+        }
+    }
+    waitKey(0);
+
+    //clrscr();
+    //cputs("File operations test\n\r");
 
     // File read & write with stdio functions
-    cputs("Writing with stido.h\n\r");
-    std_write("testfile");
-    cputs("\n\rReading with stido.h\n\r");
-    std_read("testfile");
-    cprintf("\n\rdata3 : %s\n\r",data3);
-    cprintf("data4 : %s\n\r",data4);
-    cprintf("\n\r");
+    //cputs("Writing with stido.h\n\r");
+    //std_write("testfile");
+    //cputs("\n\rReading with stido.h\n\r");
+    //std_read("testfile");
+    //cprintf("\n\rdata3 : %s\n\r",data3);
+    //cprintf("data4 : %s\n\r",data4);
+    //cprintf("\n\r");
 
-    waitKey(0);
+    //waitKey(0);
    
     exitScreen();
     return 0;
@@ -126,7 +159,8 @@ int main() {
 //User defined functions
 
 void checkdmdevices() {
-//Read memory for devices recognised by Device Manager Rom
+    //Read memory for devices recognised by Device Manager Rom
+
     unsigned int checksum = 0x42; // Set base value for checksum
     unsigned int x;
 
@@ -157,6 +191,8 @@ void checkdmdevices() {
 
 const char* deviceidtext (int id)
 {
+    // Function to return device ID string based on ID value
+
     switch( id )
     {
         case 0:
@@ -251,23 +287,108 @@ void std_read(unsigned char * file_name)
 }
 
 void mid(const char *src, size_t start, size_t length, char *dst, size_t dstlen)
-{       size_t len = min( dstlen - 1, length);
+{       
+    // Function to provide MID$ equivalent
+
+    size_t len = min( dstlen - 1, length);
  
-        strncpy(dst, src + start, len);
-        // zero terminate because strncpy() didn't ? 
-        if(len < length)
-                dst[dstlen-1] = 0;
+    strncpy(dst, src + start, len);
+    // zero terminate because strncpy() didn't ? 
+    if(len < length)
+        dst[dstlen-1] = 0;
 }
 
 char* pathconcat()
 {
+    // Function to concatinate the path strings
+
     char concat[100] ="";
     int x;
 
+    if ( devicetype[pathdevice] == VICE || devicetype[pathdevice] == U64)
+    {
+        strcat( concat, "cd:/");
+    }
+    else
+    {
+        strcat( concat, "cd/");
+    }
     for (x=1 ; x < depth ; ++x)
     {
         strcat( concat, path[x] );
         strcat( concat, "/");
     }
     return concat;
+}
+
+char getkey(BYTE mask)
+{
+    // Funnction to wait for key within input validation mask
+    // Mask values for input validation (adds up for combinations):
+    // 00000001 =   1 = Numeric
+    // 00000010 =   2 = Alpha lowercase
+    // 00000100 =   4 = Alpha uppercase
+    // 00001000 =   8 = Up and down
+    // 00010000 =  16 = Left and right
+    // 00100000 =  32 = Delete and insert
+    // 01000000 =  64 = Return
+    // 10000000 = 128 = Y and N
+
+    BYTE keychar;
+
+    do
+    {
+        keychar = cgetc();
+    } while ( !(mask&1 && keychar > 47 && keychar < 58) && !(mask&2 && keychar > 31 && keychar < 96) && !(mask&4 && keychar > 95 && keychar < 128) && !(mask&8 && (keychar == 29 || keychar == 157)) && !(mask&16 && (keychar == 17 || keychar == 145)) && !(mask&32 && (keychar == 20 || keychar == 148)) && !(mask&64 && keychar == 13) && !(mask&128 && (keychar == 78 || keychar == 89)) );
+    return keychar;    
+}
+
+void pickmenuslot()
+{
+    int x;
+    int menuslot;
+    BYTE yesno;
+    BYTE selected = 0;
+    
+    clrscr();
+    cputs("Present menu slots:\n\n\r");
+    for ( x=1 ; x<11 ; ++x )
+    {
+        revers(1);
+        cprintf(" %i ",x-1);
+        revers(0);
+        if ( strlen(menuname[x]) == 0 )
+        {
+            cputs(" <EMPTY>\n\r");
+        }
+        else
+        {
+            cprintf(" %s\n\r",menuname[x]);
+        }
+    }
+    cputs("\nChoose slot by pressing number: ");
+    menuslot = getkey(1) - 48;
+    selected = 1 ;
+    cprintf("%i\n\r", menuslot);
+    if ( strlen(menuname[menuslot+1]) != 0 )
+    {
+        cprintf("Slot not empty. Are you sure? Y/N ");
+        yesno = getkey(128);
+        cprintf("%c\n\r", yesno);
+        if ( yesno = 78 )
+        {
+            selected = 0;
+        }
+    }
+    if ( selected == 1)
+    {
+        gotoxy(0,15);
+        cputs("Choose name for slot:");
+        strcpy(menuname[menuslot],pathfile);
+        textInput(0,16,menuname[menuslot],20);
+        menudevice[menuslot] = pathdevice;
+        strcpy(menufile[menuslot],pathfile);
+        strcpy(menupath[menuslot],pathconcat());
+        menurunboot[menuslot] = pathrunboot;
+    }
 }

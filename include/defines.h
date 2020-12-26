@@ -74,10 +74,14 @@ extern unsigned int MENUW;
 extern unsigned int DIR2X;
 extern unsigned int DIR2Y;
 extern char path[8][20];
+extern BYTE pathdevice;
+extern char pathfile[20];
+extern BYTE pathrunboot;
 extern char menupath[10][100];
-extern char menuname[10][20];
+extern char menuname[10][21];
 extern char menufile[10][20];
 extern unsigned int menurunboot[10];
+extern unsigned int menudevice[10];
 extern BYTE depth;
 extern BYTE trace;
 

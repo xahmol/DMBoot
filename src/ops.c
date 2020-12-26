@@ -700,9 +700,7 @@ doDOScommand(const BYTE context, const BYTE sorted, const BYTE use_linebuffer)
   int i;
   const BYTE device = devices[context];
   newscreen("DOS command");
-#if !defined(__PET__)
   cprintf("\n\rsend DOS command to device %i:", device);
-#endif
   linebuffer[use_linebuffer ? SCREENW : 0] = 0;
   i = textInput(0, 3, linebuffer, SCREENW);
   if (i > 0)

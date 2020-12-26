@@ -190,7 +190,16 @@ mainLoopBrowse(void)
         case '5':
         case CH_F5:
           cwd=GETCWD;
-          execute(dirs[context]->selected->dirent.name,devices[context], 1);
+          if (trace == 0)
+          {
+            execute(dirs[context]->selected->dirent.name,devices[context], 1);
+          }
+          else
+          {
+            strcpy(pathfile, "" );
+            pathrunboot = 1;
+            goto done;
+          }   
           break;
 
         case 't':
@@ -205,6 +214,7 @@ mainLoopBrowse(void)
           if (trace == 0)
           {
             trace = 1;
+            pathdevice = devices[context];
             changeDir(context, devices[context], NULL, sorted);
           }
           else
@@ -237,6 +247,7 @@ mainLoopBrowse(void)
           break;
 
         case 'q':
+          trace = 0;
           goto done;
 
         case '.':
@@ -301,7 +312,16 @@ mainLoopBrowse(void)
           cwd=GETCWD;
           if (cwd->selected && cwd->selected->dirent.type==CBM_T_PRG)
             {
-              execute(dirs[context]->selected->dirent.name,devices[context], 0);
+              if (trace == 0)
+              {
+                execute(dirs[context]->selected->dirent.name,devices[context], 0);
+              }
+              else
+              {
+                strcpy(pathfile, dirs[context]->selected->dirent.name );
+                pathrunboot = 0;
+                goto done;
+              }             
             }
           // else fallthrough to CURS_RIGHT
 
