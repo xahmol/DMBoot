@@ -8,6 +8,10 @@ https://github.com/xahmol/DMBoot
 
 https://www.idreamtin8bits.com/
 
+### Screenshot
+
+![](DMBoot Screenshot.jpg)
+
 ### Credits
 Based on DraBrowse:  
 DraBrowse (db*) is a simple file browser, originally created 2009 by Sascha Bader.
