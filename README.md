@@ -10,7 +10,7 @@ https://www.idreamtin8bits.com/
 
 ### Screenshot
 
-![](DMBoot Screenshot.jpg)
+![](https://github.com/xahmol/DMBoot/raw/main/DMBoot%20Screenshot.jpg)
 
 ### Credits
 Based on DraBrowse:  
