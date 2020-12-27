@@ -1,4 +1,4 @@
-#DMBoot 128
+<h1>DMBoot 128</h1>
 
 Device Manager Boot Menu for the Commodore 128
 Written in 2020 by Xander Mol
