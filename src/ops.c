@@ -140,16 +140,25 @@ cmd(const BYTE device, const char *cmd)
 void
 execute(char * prg, BYTE device, BYTE boot)
 {
-  // prepare the screen with the basic command to load the next program
-  getDeviceType(device);
+  // Routine to execute or boot chosen file or dir
+  // Input:
+  // prg:     Filename
+  // device:  device number
+  // boot:    flag to boot or execute, with or without drive set to 8
+  //          0: Run without drive set to 8
+  //          1: Boot from dir without drive set to 8
+  //          3: Run without drive set to 8
+  //          4: Boot from dir without drive set to 8
   
-  exitScreen();
+  getDeviceType(device);  // Recognise drive type of device
+  
+  exitScreen(); // prepare the screen with the basic command to load the next program
 
   gotoxy(0,2);
   
   if ( boot == 2 || boot == 3 )
   {
-    cputs("poke 673,8");
+    cputs("poke 673,8");  // Set SoftIEC to device ID 8 if needed
     gotoxy(0,5);
   }
 
