@@ -6,7 +6,7 @@ Written in 2020 by Xander Mol
 
 https://github.com/xahmol/DMBoot
 
-<h3>Credits,/h3>
+<h3>Credits,</h3>
 Based on DraBrowse:
   
 DraBrowse (db*) is a simple file browser, originally created 2009 by Sascha Bader.
