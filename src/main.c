@@ -2,6 +2,7 @@
 // Device Manager Boot Menu for the Commodore 128
 // Written in 2020 by Xander Mol
 // https://github.com/xahmol/DMBoot
+// https://www.idreamtin8bits.com/
 //
 // Based on DraBrowse:
 // DraBrowse (db*) is a simple file browser.
@@ -58,6 +59,7 @@ char mainmenu();
 void runbootfrommenu(int select);
 void commandfrommenu(char * command, int confirm);
 void bootfromfloppy();
+void information();
 
 //Variables
 BYTE DIR1H;
@@ -152,6 +154,11 @@ int main() {
         case 'b':
             // Boot from floppy
             bootfromfloppy();
+            break;
+
+        case 'i':
+            // Information and credits
+            information();
             break;
         
         default:
@@ -476,12 +483,12 @@ char mainmenu()
     textcolor(DC_COLOR_TEXT);
     cputs(" Boot from floppy\n\r");
 
-    //revers(1);
-    //textcolor(COLOR_CYAN);
-    //cputs(" I ");
-    //revers(0);
-    //textcolor(DC_COLOR_TEXT);
-    //cputs(" Information\n\r");
+    revers(1);
+    textcolor(COLOR_CYAN);
+    cputs(" I ");
+    revers(0);
+    textcolor(DC_COLOR_TEXT);
+    cputs(" Information\n\r");
 
     cputs("\nMake your choice.");
 
@@ -536,7 +543,7 @@ void commandfrommenu(char * command, int confirm)
     if (confirm == 1)  // if confirm is 1 also put 'y'+CR in buffer
     {
         *((unsigned char *)KBCHARS+1)=89;  // place 'y'
-        *((unsigned char *)KBCHARS+1)=13;  // place CR
+        *((unsigned char *)KBCHARS+2)=13;  // place CR
         *((unsigned char *)KBNUM)=3;
     }
     else
@@ -613,4 +620,27 @@ void bootfromfloppy()
 
     sprintf(command,"boot u%i",devvalue);
     commandfrommenu(command,0);
+}
+
+void information()
+{
+    clrscr();
+    headertext("Information and credits");
+
+    cputs("DMBoot 128:\n\r");
+    cputs("Device Manager Boot Menu for the C128\n\r");
+    cputs("Written in 2020 by Xander Mol.\n\n\r");
+    cputs("Based on DraBrowse:\n\r");
+    cputs("DraBrowse is a simple file browser.\n\r");
+    cputs("Originally created 2009 by Sascha Bader.\n\r");
+    cputs("Used version adapted by Dirk Jagdmann.\n\n\r");
+    cputs("Requires and made possible by:\n\n\r");
+    cputs("The C128 Device Manager ROM,\n\r");
+    cputs("Created by Bart van Leeuwen.\n\n\r");
+    cputs("The Ultimate II+ cartridge,\n\r");
+    cputs("Created by Gideon Zweijtzer.\n\n\r");
+
+    cputs("Press a key to coninue.");
+
+    getkey(2);    
 }
