@@ -10,7 +10,7 @@ https://www.idreamtin8bits.com/
 
 ### Screenshot
 
-![](DM Boot Screenshot.jpg)
+![](DMBoot Screenshot.jpg)
 
 ### Credits
 Based on DraBrowse:  
