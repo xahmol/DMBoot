@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <ctype.h>
+#include <device.h>
 #include "defines.h"
 #include "ops.h"
 #include "screen.h"
@@ -27,6 +28,10 @@ void mid(const char *src, size_t start, size_t length, char *dst, size_t dstlen)
 char* pathconcat();
 char getkey(BYTE mask);
 void pickmenuslot();
+void headertext(char* subtitle);
+char mainmenu();
+void runbootfrommenu(int select);
+void commandfrommenu(char * command);
 
 //Variables
 BYTE DIR1H;
@@ -43,7 +48,7 @@ char path[8][20];
 char pathfile[20];
 BYTE pathdevice;
 BYTE pathrunboot;
-BYTE depth = 1;
+BYTE depth = 0;
 BYTE trace = 0;
 char menupath[10][100];
 char menuname[10][21];
@@ -51,16 +56,12 @@ char menufile[10][20];
 unsigned int menurunboot[10];
 unsigned int menudevice[10];
 char spaces[81]    = "                                                                                ";
-char underline[81] = "________________________________________________________________________________";
 char spacedest[81];
-char data1[12] = "Test Data 1";
-char data2[12] = "Test Data 2";
-char data3[12] = "\0";
-char data4[12] = "\0";
+BYTE bootdevice;
 
 //Main program
 int main() {
-    int x;    
+    int menuselect;    
     
     //Check column width of present screen
     if ( PEEK(0xee) == 79) //Memory position $ee is present screen width
@@ -81,77 +82,48 @@ int main() {
         DIR2X = 0;
         DIR2Y = (DIR1Y+2+DIR1H);
     }
+
+    bootdevice = getcurrentdevice();
+    std_read("dmbootconf");
     
     initScreen(DC_COLOR_BORDER, DC_COLOR_BG, DC_COLOR_TEXT);
 
-    gotoxy(0,0);
-    mid(spaces,1,SCREENW,spacedest, sizeof(spacedest));
-    revers(1);
-    cprintf("%s",spacedest);
-    gotoxy(0,0);  
-    cprintf("DMBoot 128: Welcome to your C128.\n\n\r");
-    revers(0);
-
-    textcolor(DC_COLOR_TEXT);
-
-    cputs("Hello, World!\n\r");
-    cprintf("Screenwidth = %u\n\r", SCREENW);
-    checkdmdevices();
-    waitKey(0);
-
-    mainLoopBrowse();
-
-    clrscr();
-    cputs("Trace test\n\r");
-    cprintf("Trace: %u Depth: %u\n\r",trace,depth);
-    for (x = 1; x < depth ; ++x )
+    do
     {
-        cprintf("%u: %s\n\r",x,path[x]);
-    }
-    cputs("\n\n\rFull path:\n\r");
-    cprintf("%s\n\r", pathconcat());
-    cprintf("Filename: %s\n\r",pathfile);
-    cprintf("Device: %i\n\r",pathdevice);
-    cprintf("Run/boot flag: %i\n\r", pathrunboot);
-    waitKey(0);
+        menuselect = mainmenu();
 
-    if (trace == 1)
-    {
-        pickmenuslot();
-    }
-
-    clrscr();
-    cputs("Present menu slots:\n\n\r");
-    for ( x=1 ; x<11 ; ++x )
-    {
-        revers(1);
-        cprintf(" %i ",x-1);
-        revers(0);
-        if ( strlen(menuname[x]) == 0 )
+        switch (menuselect)
         {
-            cputs(" <EMPTY>\n\r");
+        case 'f':
+            mainLoopBrowse();
+            if (trace == 1)
+            {
+                pickmenuslot();
+            }
+            break;
+
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+            runbootfrommenu(menuselect - 48);
+            break;
+        
+        case 'c':
+            commandfrommenu("go 64");
+            break;
+        
+        default:
+            break;
         }
-        else
-        {
-            cprintf(" %s\n\r",menuname[x]);
-        }
-    }
-    waitKey(0);
+    } while (menuselect != 'q');
 
-    //clrscr();
-    //cputs("File operations test\n\r");
-
-    // File read & write with stdio functions
-    //cputs("Writing with stido.h\n\r");
-    //std_write("testfile");
-    //cputs("\n\rReading with stido.h\n\r");
-    //std_read("testfile");
-    //cprintf("\n\rdata3 : %s\n\r",data3);
-    //cprintf("data4 : %s\n\r",data4);
-    //cprintf("\n\r");
-
-    //waitKey(0);
-   
     exitScreen();
     return 0;
 }
@@ -233,56 +205,40 @@ const char* deviceidtext (int id)
 void std_write(unsigned char * file_name)
 {
     FILE *file;
-    unsigned char n;
-    cputs("Opening data file...\n\r");
+    int x;
+
+    cmd(bootdevice,"cd:/usb*/11");
     _filetype = 's';
     if(file = fopen(file_name, "w"))
+        for (x=0 ; x<10 ; ++x)
         {
-            cputs("Writing...\n\r");
-            n = fwrite(data1, sizeof(unsigned char)*11, 1, file);
-            n = n + fwrite(data2, sizeof(unsigned char)*11, 1, file);
-            if(n != 2)
-            {
-                cputs("Error: File could not be written.\n\r");
-                fclose(file);
-            }
-            else
-            {
-                cputs("Done.\n\r");
-                fclose(file);       
-            }
+            fwrite(menuname[x], sizeof(menuname[x]),1, file);
+            fwrite(menupath[x], sizeof(menupath[x]),1, file);
+            fwrite(menufile[x], sizeof(menufile[x]),1, file);
+            fputc(menudevice[x], file);
+            fputc(menurunboot[x], file);
         }
-    else
-        {
-            cputs("File could not be opened\n\r");
-        }
+        fclose(file);
 }
 
 void std_read(unsigned char * file_name)
 {
     FILE *file;
-    unsigned char n;
-    cputs("Opening data file...\n\r");
+    int x;
+
+    cmd(bootdevice,"cd:/usb*/11");
     _filetype = 's';
     if(file = fopen(file_name, "r"))
     {
-        cputs("Reading...\n\r");
-        n = fread(data3, sizeof(unsigned char)*11, 1, file);
-        n = n + fread(data4, sizeof(unsigned char)*11, 1, file);
-        if(n != 2)
+        for (x=0 ; x<10 ; ++x)
         {
-            cputs("Error while reading!\n\r");
-            fclose(file);
+            fread(menuname[x], sizeof(menuname[x]),1, file);
+            fread(menupath[x], sizeof(menupath[x]),1, file);
+            fread(menufile[x], sizeof(menufile[x]),1, file);
+            menudevice[x] = fgetc(file);
+            menurunboot[x] = fgetc(file);
         }
-        else
-        {
-            cprintf("Done.\n\r");
-            fclose(file);
-        }
-    }
-    else
-    {
-        cputs("File could not be opened\n\r");
+        fclose(file);
     }
 }
 
@@ -311,9 +267,9 @@ char* pathconcat()
     }
     else
     {
-        strcat( concat, "cd/");
+        strcat( concat, "cd//");
     }
-    for (x=1 ; x < depth ; ++x)
+    for (x=0 ; x < depth ; ++x)
     {
         strcat( concat, path[x] );
         strcat( concat, "/");
@@ -351,12 +307,15 @@ void pickmenuslot()
     BYTE selected = 0;
     
     clrscr();
+    headertext("Choose menuslot for chosen start option.");
     cputs("Present menu slots:\n\n\r");
-    for ( x=1 ; x<11 ; ++x )
+    for ( x=0 ; x<10 ; ++x )
     {
         revers(1);
-        cprintf(" %i ",x-1);
+        textcolor(COLOR_CYAN);
+        cprintf(" %i ",x);
         revers(0);
+        textcolor(DC_COLOR_TEXT);
         if ( strlen(menuname[x]) == 0 )
         {
             cputs(" <EMPTY>\n\r");
@@ -370,25 +329,164 @@ void pickmenuslot()
     menuslot = getkey(1) - 48;
     selected = 1 ;
     cprintf("%i\n\r", menuslot);
-    if ( strlen(menuname[menuslot+1]) != 0 )
+    if ( strlen(menuname[menuslot]) != 0 )
     {
         cprintf("Slot not empty. Are you sure? Y/N ");
         yesno = getkey(128);
         cprintf("%c\n\r", yesno);
-        if ( yesno = 78 )
+        if ( yesno == 78 )
         {
             selected = 0;
         }
     }
     if ( selected == 1)
     {
-        gotoxy(0,15);
+        gotoxy(0,18);
         cputs("Choose name for slot:");
         strcpy(menuname[menuslot],pathfile);
-        textInput(0,16,menuname[menuslot],20);
+        textInput(0,19,menuname[menuslot],20);
+
         menudevice[menuslot] = pathdevice;
         strcpy(menufile[menuslot],pathfile);
         strcpy(menupath[menuslot],pathconcat());
         menurunboot[menuslot] = pathrunboot;
+
+        if ( devicetype[pathdevice] == U64)
+        {
+            gotoxy(0,20);
+            cputs("Device ID = 8 required? Y/N ");
+            yesno = getkey(128);
+            cprintf("%c\n\r", yesno);
+            if ( yesno == 89 )
+            {
+                menurunboot[menuslot] = pathrunboot + 2;
+            }
+        }
+
+        std_write("dmbootconf");
     }
+}
+
+void headertext(char* subtitle)
+{
+    mid(spaces,1,SCREENW,spacedest, sizeof(spacedest));
+    revers(1);
+    textcolor(COLOR_GREEN);
+    gotoxy(0,0);
+    cprintf("%s\n",spacedest);
+    gotoxy(0,0);  
+    cprintf("DMBoot 128: Device Manager Boot Menu");
+    textcolor(COLOR_LIGHTGREEN);
+    gotoxy(0,1);
+    cprintf("%s\n",spacedest);
+    gotoxy(0,1);
+    cprintf("%s\n\n\r", subtitle);
+    revers(0);
+    textcolor(DC_COLOR_TEXT);
+}
+
+char mainmenu()
+{
+    int x;
+    int select = 0;
+    char key;
+
+    clrscr();
+    headertext("Welcome to your Commodore 128.");
+
+    for ( x=0 ; x<10 ; ++x )
+    {
+        if ( strlen(menuname[x]) != 0 )
+        {
+            revers(1);
+            textcolor(COLOR_CYAN);
+            cprintf(" %i ",x);
+            revers(0);
+            textcolor(DC_COLOR_TEXT);
+            cprintf(" %s\n\r",menuname[x]);
+        }
+    }
+
+    revers(1);
+    textcolor(COLOR_CYAN);
+    cputs(" F ");
+    revers(0);
+    textcolor(DC_COLOR_TEXT);
+    cputs(" Filebrowser\n\r");
+
+    revers(1);
+    textcolor(COLOR_CYAN);
+    cputs(" Q ");
+    revers(0);
+    textcolor(DC_COLOR_TEXT);
+    cputs(" Quit to C128 Basic\n\r");
+
+    revers(1);
+    textcolor(COLOR_CYAN);
+    cputs(" C ");
+    revers(0);
+    textcolor(DC_COLOR_TEXT);
+    cputs(" C64 mode\n\r");
+
+    //revers(1);
+    //textcolor(COLOR_CYAN);
+    //cputs(" B ");
+    //revers(0);
+    //textcolor(DC_COLOR_TEXT);
+    //cputs(" Boot from floppy\n\r");
+
+    //revers(1);
+    //textcolor(COLOR_CYAN);
+    //cputs(" I ");
+    //revers(0);
+    //textcolor(DC_COLOR_TEXT);
+    //cputs(" Information\n\r");
+
+    cputs("\nMake your choice.");
+
+    do
+    {
+        key = getkey(2);
+        if (key == 'f' || key == 'q' || key == 'c' || key == 'b' || key == 'i')
+        {
+            select = 1;
+        }
+        else
+        {
+            if(key>47 && key<58)
+            {
+                if(strlen(menuname[key-48]) != 0)
+                {
+                    select = 1;
+                }
+            }
+        }
+    } while (select == 0);
+    return key;    
+}
+
+void runbootfrommenu(int select)
+{
+    cmd(menudevice[select],menupath[select]);
+    execute(menufile[select],menudevice[select],menurunboot[select]);
+}
+
+void commandfrommenu(char * command)
+{
+  // prepare the screen with the basic command to load the next program
+  exitScreen();
+
+  gotoxy(0,2);
+  
+  cprintf("%s",command);
+  
+#if defined(KBCHARS)
+  // put two CR in keyboard buffer
+  *((unsigned char *)KBCHARS)=13;
+  *((unsigned char *)KBNUM)=1;
+#endif
+
+  // exit DraCopy, which will execute the BASIC LOAD above
+  gotoxy(0,0);
+  exit(0);
 }

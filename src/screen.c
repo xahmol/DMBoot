@@ -115,8 +115,8 @@ initScreen(const BYTE border, const BYTE bg, const BYTE text)
 void
 exitScreen(void)
 {
-  bordercolor(screen_borderc);
-  bgcolor(screen_bgc);
-  textcolor(screen_textc);
+  bordercolor(COLOR_BLACK);
+  bgcolor(COLOR_BLACK);
+  textcolor(COLOR_YELLOW);
   clrscr();
 }

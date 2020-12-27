@@ -91,7 +91,7 @@ mainLoopBrowse(void)
   BYTE num_windows;
 
   trace = 0;
-  depth = 1;
+  depth = 0;
 
   DIR1H = DIR2H = SCREENH-2;
   dirs[0] = dirs[1] = NULL;
@@ -220,7 +220,7 @@ mainLoopBrowse(void)
           else
           {
             trace = 0;
-            depth = 1;
+            depth = 0;
           }
           updateMenu();
           break;
@@ -350,7 +350,7 @@ mainLoopBrowse(void)
         case CH_UARROW:
           if (trace == 1)
           {
-            depth = 1;
+            depth = 0;
           }
           changeDir(context, devices[context], NULL, sorted);
           break;
@@ -367,7 +367,7 @@ mainLoopBrowse(void)
               drawDirFrame(context, context);
               drawDirFrame(prev_context, context);
               trace = 0;
-              depth = 1;
+              depth = 0;
               updateMenu();
             }
           }

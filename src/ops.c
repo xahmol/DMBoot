@@ -65,7 +65,7 @@ char DOSstatus[40];
 
 /// string descriptions of enum drive_e
 const char* drivetype[LAST_DRIVE_E] = {"", "1540", "1541", "1551", "1570", "1571", "1581", "1001", "2031", "8040", "sd2iec", "cmd", "vice", "u64"};
-/// enum drive_e value for each device 0-11.
+/// enum drive_e value for each device 0-19.
 BYTE devicetype[12];
 
 const char*
@@ -141,32 +141,39 @@ void
 execute(char * prg, BYTE device, BYTE boot)
 {
   // prepare the screen with the basic command to load the next program
+  getDeviceType(device);
+  
   exitScreen();
 
-  if (boot == 0)
+  gotoxy(0,2);
+  
+  if ( boot == 2 || boot == 3 )
   {
-    gotoxy(0,2);
-    cprintf("load\"%s\",%i,1", prg, device);
+    cputs("poke 673,8");
+    gotoxy(0,5);
   }
 
-  gotoxy(0,7);
-  
-  if (boot == 1)
+  if (boot == 0 || boot == 2 )
   {
-    cprintf("boot u%i", device);
+    cprintf("run\"%s\",u%i", prg, device);
   }
   else
   {
-    cputs("run");
+    cprintf("boot u%i", device);
   }
-
-#if defined(KBCHARS)
-  // put two CR in keyboard buffer
+  
+  // put CRs in keyboard buffer
   *((unsigned char *)KBCHARS)=13;
-  *((unsigned char *)KBCHARS+1)=13;
-  *((unsigned char *)KBNUM)=2;
-#endif
-
+  if ( devicetype[device] == U64)
+  {
+    *((unsigned char *)KBCHARS+1)=13;
+    *((unsigned char *)KBNUM)=2;
+  }
+  else
+  {
+    *((unsigned char *)KBNUM)=1;
+  }
+  
   // exit DraCopy, which will execute the BASIC LOAD above
   gotoxy(0,0);
   exit(0);
