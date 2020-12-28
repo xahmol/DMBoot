@@ -245,6 +245,7 @@ void std_write(unsigned char * file_name)
     int x;
 
     cmd(bootdevice,"cd:/usb*/11");  // Set working dir to 11 dir at SoftIEC
+
     _filetype = 's';
     if(file = fopen(file_name, "w"))
         for (x=0 ; x<10 ; ++x)
@@ -267,6 +268,7 @@ void std_read(unsigned char * file_name)
     int x;
 
     cmd(bootdevice,"cd:/usb*/11");  // Set working dir to 11 dir at SoftIEC
+
     _filetype = 's';
     if(file = fopen(file_name, "r"))
     {
@@ -628,7 +630,9 @@ void information()
     headertext("Information and credits");
 
     cputs("DMBoot 128:\n\r");
-    cputs("Device Manager Boot Menu for the C128\n\r");
+    cputs("Device Manager Boot Menu for the C128\n\n\r");
+    cprintf("Version: %s\n\r", DMBOOT_VERNUM);
+    cprintf("Build date and time: %s %s\n\n\r", __DATE__, __TIME__);
     cputs("Written in 2020 by Xander Mol.\n\n\r");
     cputs("Based on DraBrowse:\n\r");
     cputs("DraBrowse is a simple file browser.\n\r");
