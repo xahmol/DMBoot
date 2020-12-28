@@ -1,4 +1,5 @@
 SOURCES = src/main.c src/screen.c src/cat.c src/dir.c src/base.c src/ops.c src/db.c
+TIMESTAMP= v099-$(shell date "+%Y%m%d-%H%M").prg
 
 PROGRAM = autostart.128.prg
 
@@ -22,6 +23,7 @@ endif
   
 $(PROGRAM): $(SOURCES:.c=.o)
 	$(CC) $(LDFLAGS) -o $@ $^
+	cp $@ $@_$(TIMESTAMP)
 
 clean:
 	$(RM) $(SOURCES:.c=.o) $(SOURCES:.c=.d) $(PROGRAM) $(PROGRAM).map

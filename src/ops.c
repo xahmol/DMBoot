@@ -155,25 +155,36 @@ execute(char * prg, BYTE device, BYTE boot)
   exitScreen(); // prepare the screen with the basic command to load the next program
 
   gotoxy(0,2);
-  
-  if ( boot == 2 || boot == 3 )
-  {
-    cputs("poke 673,8");  // Set SoftIEC to device ID 8 if needed
-    gotoxy(0,5);
-  }
 
-  if (boot == 0 || boot == 2 )
+  switch (boot)
   {
+  case 0:
     cprintf("run\"%s\",u%i", prg, device);
-  }
-  else
-  {
+    break;
+
+  case 1:
     cprintf("boot u%i", device);
+    break;
+
+  case 2:
+    cputs("poke 673,8");
+    gotoxy(0,5);
+    cprintf("run\"%s\",u%i", prg, 8);
+    break;
+  
+  case 3:
+    cputs("poke 673,8");
+    gotoxy(0,5);
+    cprintf("boot u%i", 8);
+    break;
+  
+  default:
+    break;
   }
   
   // put CRs in keyboard buffer
   *((unsigned char *)KBCHARS)=13;
-  if ( devicetype[device] == U64)
+  if ( boot == 2 || boot == 3)
   {
     *((unsigned char *)KBCHARS+1)=13;
     *((unsigned char *)KBNUM)=2;

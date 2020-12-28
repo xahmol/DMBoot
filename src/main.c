@@ -60,6 +60,11 @@ void runbootfrommenu(int select);
 void commandfrommenu(char * command, int confirm);
 void bootfromfloppy();
 void information();
+char* completeVersion();
+void editmenuoptions();
+void presentmenuslots();
+int deletemenuslot();
+int renamemenuslot();
 
 //Variables
 BYTE DIR1H;
@@ -161,6 +166,11 @@ int main() {
             information();
             break;
         
+        case 'e':
+            // Edit / re-order and delete menuslots
+            editmenuoptions();
+            break;
+        
         default:
             break;
         }
@@ -248,6 +258,7 @@ void std_write(unsigned char * file_name)
 
     _filetype = 's';
     if(file = fopen(file_name, "w"))
+    {
         for (x=0 ; x<10 ; ++x)
         {
             fwrite(menuname[x], sizeof(menuname[x]),1, file);
@@ -257,6 +268,9 @@ void std_write(unsigned char * file_name)
             fputc(menurunboot[x], file);
         }
         fclose(file);
+    }
+    
+    cmd(bootdevice, "cd:\xff");
 }
 
 void std_read(unsigned char * file_name)
@@ -282,6 +296,8 @@ void std_read(unsigned char * file_name)
         }
         fclose(file);
     }
+
+    cmd(bootdevice, "cd:\xff");
 }
 
 void mid(const char *src, size_t start, size_t length, char *dst, size_t dstlen)
@@ -345,30 +361,13 @@ void pickmenuslot()
 {
     // Routine to pick a slot to store the chosen dir trace path
     
-    int x;
     int menuslot;
     BYTE yesno;
     BYTE selected = 0;
     
     clrscr();
     headertext("Choose menuslot for chosen start option.");
-    cputs("Present menu slots:\n\n\r");
-    for ( x=0 ; x<10 ; ++x )
-    {
-        revers(1);
-        textcolor(COLOR_CYAN);
-        cprintf(" %i ",x);
-        revers(0);
-        textcolor(DC_COLOR_TEXT);
-        if ( strlen(menuname[x]) == 0 )
-        {
-            cputs(" <EMPTY>\n\r");
-        }
-        else
-        {
-            cprintf(" %s\n\r",menuname[x]);
-        }
-    }
+    presentmenuslots();
     cputs("\nChoose slot by pressing number: ");
     menuslot = getkey(1) - 48;
     selected = 1 ;
@@ -487,6 +486,13 @@ char mainmenu()
 
     revers(1);
     textcolor(COLOR_CYAN);
+    cputs(" E ");
+    revers(0);
+    textcolor(DC_COLOR_TEXT);
+    cputs(" Edit/Reorder/Delete menuoptions\n\r");
+
+    revers(1);
+    textcolor(COLOR_CYAN);
     cputs(" I ");
     revers(0);
     textcolor(DC_COLOR_TEXT);
@@ -497,7 +503,7 @@ char mainmenu()
     do
     {
         key = getkey(2);    // obtain alphanumeric key
-        if (key == 'f' || key == 'q' || key == 'c' || key == 'b' || key == 'i')
+        if (key == 'f' || key == 'q' || key == 'c' || key == 'b' || key == 'i' || key == 'e')
         {
             select = 1;
         }
@@ -626,17 +632,21 @@ void bootfromfloppy()
 
 void information()
 {
+    // Routine for version information and credits
+
     clrscr();
     headertext("Information and credits");
 
     cputs("DMBoot 128:\n\r");
     cputs("Device Manager Boot Menu for the C128\n\n\r");
-    cprintf("Version: %s\n\r", DMBOOT_VERNUM);
-    cprintf("Build date and time: %s %s\n\n\r", __DATE__, __TIME__);
+    cprintf("Version: v%i%i-", VERSION_MAJOR, VERSION_MINOR);
+    cprintf("%c%c%c%c", BUILD_YEAR_CH0, BUILD_YEAR_CH1, BUILD_YEAR_CH2, BUILD_YEAR_CH3);
+    cprintf("%c%c%c%c-", BUILD_MONTH_CH0, BUILD_MONTH_CH1, BUILD_DAY_CH0, BUILD_DAY_CH1);
+    cprintf("%c%c%c%c\n\r", BUILD_HOUR_CH0, BUILD_HOUR_CH1, BUILD_MIN_CH0, BUILD_MIN_CH1);
     cputs("Written in 2020 by Xander Mol.\n\n\r");
     cputs("Based on DraBrowse:\n\r");
     cputs("DraBrowse is a simple file browser.\n\r");
-    cputs("Originally created 2009 by Sascha Bader.\n\r");
+    cputs("Original 2009 by Sascha Bader.\n\r");
     cputs("Used version adapted by Dirk Jagdmann.\n\n\r");
     cputs("Requires and made possible by:\n\n\r");
     cputs("The C128 Device Manager ROM,\n\r");
@@ -647,4 +657,198 @@ void information()
     cputs("Press a key to coninue.");
 
     getkey(2);    
+}
+
+void editmenuoptions()
+{
+    // Routine for edit / re-order / delete menu slots
+
+    int changesmade = 0;
+    int select = 0;
+    char key;
+
+    do
+    {
+        clrscr();
+        headertext("Edit/Re-order/Delete menu slots");
+
+        presentmenuslots();
+
+        cputs("\nChoose:\n\r");
+        revers(1);
+        textcolor(COLOR_CYAN);
+        cprintf(" E ");
+        revers(0);
+        textcolor(DC_COLOR_TEXT);
+        cputs(" Edit menuslot name\n\r");
+        revers(1);
+        textcolor(COLOR_CYAN);
+        cprintf(" R ");
+        revers(0);
+        textcolor(DC_COLOR_TEXT);
+        cputs(" Re-order menuslot\n\r");
+        revers(1);
+        textcolor(COLOR_CYAN);
+        cprintf(" D ");
+        revers(0);
+        textcolor(DC_COLOR_TEXT);
+        cputs(" Delete menuslot\n\r");
+        revers(1);
+        textcolor(COLOR_CYAN);
+        cprintf(" Q ");
+        revers(0);
+        textcolor(DC_COLOR_TEXT);
+        cputs(" Quit to main menu\n\r");
+
+        do
+        {
+            key = getkey(2);    // obtain alphanumeric key
+            if (key == 'e' || key == 'r' || key == 'd' || key == 'q')
+            {
+                select = 1;
+            }
+        } while (select == 0);
+
+        switch (key)
+        {
+        case 'd':
+            changesmade = deletemenuslot();
+            break;
+
+        case 'e':
+            changesmade = renamemenuslot();
+            break;
+        
+        default:
+            break;
+        }
+
+    } while (key != 'q');
+    
+    if (changesmade == 1)
+    {
+        cputs("Saving. Please wait.");
+        std_write("dmbootconf");
+    } 
+}
+
+void presentmenuslots()
+{
+    // Routine to show the present menu slots
+    
+    int x;
+
+    cputs("Present menu slots:\n\n\r");
+    for ( x=0 ; x<10 ; ++x )
+    {
+        revers(1);
+        textcolor(COLOR_CYAN);
+        cprintf(" %i ",x);
+        revers(0);
+        textcolor(DC_COLOR_TEXT);
+        if ( strlen(menuname[x]) == 0 )
+        {
+            cputs(" <EMPTY>\n\r");
+        }
+        else
+        {
+            cprintf(" %s\n\r",menuname[x]);
+        }
+    }
+}
+
+int deletemenuslot()
+{
+    // Routine to delete a chosen menu slot
+    // Returns 1 if something has been deleted, else 0
+
+    int menuslot;
+    int changesmade =0;
+    BYTE yesno;
+    BYTE selected = 0;
+
+    clrscr();
+    headertext("Delete menu slots");
+
+    presentmenuslots();
+
+    cputs("Choose menu slot to be deleted. (0=9)");
+
+    menuslot = getkey(1) - 48;
+    selected = 1 ;
+    cprintf("%i\n\r", menuslot);
+    if ( strlen(menuname[menuslot]) != 0 )
+    {
+        cprintf("Are you sure? Y/N ");
+        yesno = getkey(128);
+        cprintf("%c\n\r", yesno);
+        if ( yesno == 78 )
+        {
+            selected = 0;
+        }
+    }
+    else
+    {
+        cprintf("Slot is already empty. Press key.");
+        getkey(2);
+        selected = 0;
+    }
+    if (selected == 1)
+    {
+        strcpy(menuname[menuslot],"");
+        strcpy(menufile[menuslot],"");
+        strcpy(menupath[menuslot],"");
+        menurunboot[menuslot] = 0;
+        menudevice[menuslot] = 0;
+        changesmade = 1;
+    }
+    
+    return changesmade;
+}
+
+int renamemenuslot()
+{
+    // Routine to rename a chosen menu slot
+    // Returns 1 if something has been deleted, else 0
+
+    int menuslot;
+    int changesmade =0;
+    BYTE yesno;
+    BYTE selected = 0;
+
+    clrscr();
+    headertext("Rename menu slots");
+
+    presentmenuslots();
+
+    cputs("Choose menu slot to be renamed. (0=9)");
+
+    menuslot = getkey(1) - 48;
+    selected = 1 ;
+    cprintf("%i\n\r", menuslot);
+    if ( strlen(menuname[menuslot]) != 0 )
+    {
+        cprintf("Are you sure? Y/N ");
+        yesno = getkey(128);
+        cprintf("%c\n\r", yesno);
+        if ( yesno == 78 )
+        {
+            selected = 0;
+        }
+    }
+    else
+    {
+        cprintf("Slot is empty. Press key.");
+        getkey(2);
+        selected = 0;
+    }
+    if (selected == 1)
+    {
+        gotoxy(0,18);
+        cputs("Choose name for slot:");
+        textInput(0,19,menuname[menuslot],20);
+        changesmade = 1;
+    }
+    
+    return changesmade;
 }

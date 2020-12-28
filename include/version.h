@@ -4,7 +4,8 @@
 #define DRA_VERNUM "1.0doj"
 #define DRA_VERDATE "2020-06-17"
 
-#define DMBOOT_VERNUM "0.99"
+#define VERSION_MAJOR 0
+#define VERSION_MINOR 99
 
 #if defined(KERBEROS)
 #define DRA_VEREXTRA "-kerberos"
