@@ -26,6 +26,7 @@
 #include <stdio.h>
 #include <conio.h>
 #include <string.h>
+#include <accelerator.h>
 #include "defines.h"
 
 static unsigned char screen_bgc;
@@ -119,4 +120,5 @@ exitScreen(void)
   bgcolor(COLOR_BLACK);
   textcolor(COLOR_YELLOW);
   clrscr();
+  set_c128_speed(SPEED_SLOW);
 }

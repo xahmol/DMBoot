@@ -37,6 +37,9 @@
 #define DC_COLOR_GRAY COLOR_GRAY2
 #define DC_COLOR_GRAYBRIGHT COLOR_GRAY3
 #define DC_COLOR_WAITKEY COLOR_GREEN
+#define DMB_COLOR_SELECT COLOR_CYAN
+#define DMB_COLOR_HEADER1 COLOR_GREEN
+#define DMB_COLOR_HEADER2 COLOR_LIGHTGREEN
 
 typedef unsigned char BYTE;
 
@@ -84,6 +87,8 @@ extern unsigned int menurunboot[10];
 extern unsigned int menudevice[10];
 extern BYTE depth;
 extern BYTE trace;
+extern BYTE forceeight;
+extern BYTE fastflag;
 
 // keyboard buffer
 #define KBCHARS 842

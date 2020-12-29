@@ -149,6 +149,7 @@ execute(char * prg, BYTE device, BYTE boot)
   //          1: Boot from dir without drive set to 8
   //          3: Run without drive set to 8
   //          4: Boot from dir without drive set to 8
+  //          Add 10 to option to execute in FAST mode
   
   getDeviceType(device);  // Recognise drive type of device
   
@@ -177,6 +178,26 @@ execute(char * prg, BYTE device, BYTE boot)
     gotoxy(0,5);
     cprintf("boot u%i", 8);
     break;
+
+  case 10:
+    cprintf("fast:run\"%s\",u%i", prg, device);
+    break;
+
+  case 11:
+    cprintf("fast:boot u%i", device);
+    break;
+
+  case 12:
+    cputs("fast:poke 673,8");
+    gotoxy(0,5);
+    cprintf("run\"%s\",u%i", prg, 8);
+    break;
+  
+  case 13:
+    cputs("fast:poke 673,8");
+    gotoxy(0,5);
+    cprintf("boot u%i", 8);
+    break;
   
   default:
     break;
@@ -184,7 +205,7 @@ execute(char * prg, BYTE device, BYTE boot)
   
   // put CRs in keyboard buffer
   *((unsigned char *)KBCHARS)=13;
-  if ( boot == 2 || boot == 3)
+  if ( boot == 2 || boot == 3 || boot == 12 || boot == 13)
   {
     *((unsigned char *)KBCHARS+1)=13;
     *((unsigned char *)KBNUM)=2;
@@ -210,105 +231,6 @@ updateScreen(const BYTE context, BYTE num_dirs)
       const BYTE other_context = context^1;
       showDir(other_context, context);
     }
-}
-
-static const char* helpcontent[] = {
-  "F1", "read dir",
-  "F2", "change dev",
-  "F3", "view hex",
-  "F4", "view ASCII",
-  "F5", "copy files",
-  "F6", "delete file",
-  "F7", "run PRG",
-  "F8", "disk copy",
-
-  "","",
-  "0", "switch win",
-  "\xff", "switch win", // CH_LARROW
-  "w", "window size",
-
-  "CR", "chg dir/run",
-  "DL", "parent dir",
-  "\x5e", "parent dir", // CH_UARROW
-
-  // middle column
-  "m", "make dir",
-  "", "",
-
-  "@", "DOS command",
-  "\xfc", "chg dev id", // CH_POUND
-  "", "",
-  "", "",
-  "", "",
-
-  "i", "disk image",
-  "f", "format disk",
-  "l", "relabel disk",
-  "d", "optimized diskcopy",
-  "r", "rename file",
-  "c", "copy file on same dev",
-  "SP", "select file",
-  "*", "invert selection",
-
-  // right column
-  "HO", "goto top",
-  "t", "goto top",
-  "b", "goto bott",
-  "n", "next page",
-  "p", "prev page",
-
-  "", "",
-
-  ".", "help",
-  "q", "quit",
-  NULL
-};
-
-void
-about(const char *progname)
-{
-  BYTE x = 0;
-  BYTE y = 10;
-  const char* *h = helpcontent;
-  sprintf(linebuffer, "%s " DRA_VER, progname);
-  newscreen(linebuffer);
-
-  textcolor(DC_COLOR_DIM);
-  cputs("Copyright 2009 by Draco and others\n\r"
-        "https://github.com/doj/dracopy\n\r"
-        "\n\r"
-        "THIS PROGRAM IS DISTRIBUTED IN THE HOPE\n\r"
-        "THAT IT WILL BE USEFUL.\n\r"
-        "IT IS PROVIDED WITH NO WARRANTY OF ANY\n\r"
-        "KIND. USE IT AT YOUR OWN RISK!\n\r"
-        );
-
-  while(*h)
-    {
-      // print key
-      textcolor(DC_COLOR_TEXT);
-      cputsxy(x + 2 - strlen(*h), y, *h);
-      ++h;
-
-      // print description
-      textcolor(DC_COLOR_DIM);
-      cputsxy(x+3, y, *h);
-      ++h;
-
-      if (++y == SCREENH)
-        {
-          if (SCREENW == 80)
-          {
-            x += 23;
-          }
-          else
-          {
-            x += 14;
-          }
-          y = 10;
-        }
-    }
-  cgetc();
 }
 
 void

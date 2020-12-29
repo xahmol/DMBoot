@@ -43,7 +43,7 @@ updateMenu(void)
 
   revers(0);
   textcolor(DC_COLOR_TEXT);
-  drawFrame(" " DRA_VERNUM " ",MENUX,MENUY,MENUW,MENUH,NULL);
+  drawFrame(" DMBoot ",MENUX,MENUY,MENUW,MENUH,NULL);
 
   ++menuy;
   cputsxy(MENUXT+1,++menuy,"F1 DIR");
@@ -55,26 +55,42 @@ updateMenu(void)
   cputsxy(MENUXT+1,++menuy,"CR RUN/CD");
   cputsxy(MENUXT+1,++menuy,"BS DIR UP");
   cputsxy(MENUXT+1,++menuy," \x5e PAR DIR");
-  cputsxy(MENUXT+1,++menuy," . ABOUT");
   cputsxy(MENUXT+1,++menuy," T TOP");
   cputsxy(MENUXT+1,++menuy," B BOTTOM");
   cputsxy(MENUXT+1,++menuy," S SORT");
   cputsxy(MENUXT+1,++menuy," D DIRTRAC");
+  cputsxy(MENUXT+1,++menuy," 8 FORCE 8");
+  cputsxy(MENUXT+1,++menuy," F FAST");
   cputsxy(MENUXT+1,++menuy," @ DOScmd");
   cputsxy(MENUXT+1,++menuy," Q QUIT");
   if (SCREENW == 80 )
   {
     cputsxy(MENUXT+1,++menuy," \xff SW WIN");
   }
+  ++menuy;
   if (trace == 1)
   {
-    ++menuy;
     cputsxy(MENUXT,++menuy," TRACE ON ");
   }
   else
   {
-    ++menuy;
     cputsxy(MENUXT,++menuy," TRACE OFF");
+  }
+  if (forceeight == 1)
+  {
+    cputsxy(MENUXT,++menuy," Frc 8 ON ");
+  }
+  else
+  {
+    cputsxy(MENUXT,++menuy," Frc 8 OFF");
+  }
+  if (fastflag == 1)
+  {
+    cputsxy(MENUXT,++menuy," FAST  ON ");
+  }
+  else
+  {
+    cputsxy(MENUXT,++menuy," FAST  OFF");
   }
   
 }
@@ -192,12 +208,12 @@ mainLoopBrowse(void)
           cwd=GETCWD;
           if (trace == 0)
           {
-            execute(dirs[context]->selected->dirent.name,devices[context], 1);
+            execute(dirs[context]->selected->dirent.name,devices[context], 1 + 2*forceeight + 10*fastflag);
           }
           else
           {
             strcpy(pathfile, "" );
-            pathrunboot = 1;
+            pathrunboot = 1 + 2*forceeight + 10*fastflag;
             goto done;
           }   
           break;
@@ -221,6 +237,30 @@ mainLoopBrowse(void)
           {
             trace = 0;
             depth = 0;
+          }
+          updateMenu();
+          break;
+
+        case '8':
+          if (forceeight == 0)
+          {
+            forceeight = 1;
+          }
+          else
+          {
+            forceeight = 0;
+          }
+          updateMenu();
+          break;
+        
+        case 'f':
+          if (fastflag == 0)
+          {
+            fastflag = 1;
+          }
+          else
+          {
+            fastflag = 0;
           }
           updateMenu();
           break;
@@ -249,11 +289,6 @@ mainLoopBrowse(void)
         case 'q':
           trace = 0;
           goto done;
-
-        case '.':
-          about("DraBrowse");
-          updateScreen(context, num_windows);
-          break;
 
         case '@':
           doDOScommand(context, sorted, 0);
@@ -314,12 +349,12 @@ mainLoopBrowse(void)
             {
               if (trace == 0)
               {
-                execute(dirs[context]->selected->dirent.name,devices[context], 0);
+                execute(dirs[context]->selected->dirent.name,devices[context], 0 + 2*forceeight + 10*fastflag);
               }
               else
               {
                 strcpy(pathfile, dirs[context]->selected->dirent.name );
-                pathrunboot = 0;
+                pathrunboot = 0 + 2*forceeight + 10*fastflag;
                 goto done;
               }             
             }
