@@ -85,7 +85,46 @@ https://www.idreamtin8bits.com/
 
   **Q** Quit to main menu (altered function compared to DraBrowse)
 
+**Q: Quit to C128 Basic**
 
+* Exit the bootmenu to the C128 BASIC Ready prompt. Memory will be erased on exit, SLOW mode will be selected also in 80 column mode for compatibility purposes.
+
+**C: C64 mode**
+
+* Go to C64 mode (no confirmation will be asked)
+
+**B: Boot from floppy**
+
+* Boot from a floppy selected by the user
+* Selection of this option lists all devices detected (if device detection was successful, otherwise nothing is shown)
+* User is prompted to enter requested device ID (number of 8 to 30)
+* Boot is initiated from this device ID
+
+**E: Edit / re-order / delete**
+
+* Enables to rename menuslots, re-order the slots or delete a slot. Selecting provides this menu:
+  ![](https://github.com/xahmol/DMBoot/raw/main/pictures/dmboot%20-%20editreorderdelete.png)
+
+* **E** enables renaming a menuslot
+  ![](https://github.com/xahmol/DMBoot/raw/main/pictures/dmboot%20-%20rename.png)
+
+  Choose slot to be renamed by pressing **0-9**. Enter new name. Enter to confirm.
+
+* **R** enables re-ordering menu slots
+  ![](https://github.com/xahmol/DMBoot/raw/main/pictures/dmboot%20-%20reorder.png)
+
+  Choose slot to be re-ordered by pressing **0-9**. Selected menu slot is highlighted white. Move option by pressing **UP** or **DOWN**. Confirm by **ENTER**. Cancel with **Q**.
+
+* **D** enables deleting a menu slot
+  ![](https://github.com/xahmol/DMBoot/raw/main/pictures/dmboot%20-%20delete.png)
+  Choose slot to be re-ordered by pressing **0-9**. Confirm by pressing **Y** for yes, or **N** for no.
+
+* **Q** takes you back to main menu. Changes made are saved only now.
+
+**I: Information**
+
+* Shows information screen. Press key to return to main menu.
+  ![](https://github.com/xahmol/DMBoot/raw/main/pictures/dmboot%20-%20information%20screen.png)
 
 ### Screenshot from real device
 
