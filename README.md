@@ -39,7 +39,9 @@ https://www.idreamtin8bits.com/
 * Select your desired drive target as highlighted (white border) by switching to the correct column (only applicable for 80 column mode) by the **<-** (left arrow) key and/or pressing **F2** until the desired device number is selected.
 * Refresh directory by **F1** if needed (empty column)
 * Start a directory trace by pressing **D**
+  
   ![](https://github.com/xahmol/DMBoot/raw/main/pictures/dmboot%20-%20highlightdirtrace.png)
+  
   This starts a trace of your movements through the directory tree, starting from the root directory of your device. You should see the directory refreshing to this root directory.
   You should also see the TRACE toggle switched to ON in the lower right corner of the screen.
   So from this ![](https://github.com/xahmol/DMBoot/raw/main/pictures/dmboot%20-%20filebrowsertoggles.png) to this ![](https://github.com/xahmol/DMBoot/raw/main/pictures/dmboot%20-%20toggledirtraceon.png).
@@ -106,19 +108,22 @@ https://www.idreamtin8bits.com/
   ![](https://github.com/xahmol/DMBoot/raw/main/pictures/dmboot%20-%20editreorderdelete.png)
 
 * **E** enables renaming a menuslot
-  ![](https://github.com/xahmol/DMBoot/raw/main/pictures/dmboot%20-%20rename.png)
-
-  Choose slot to be renamed by pressing **0-9**. Enter new name. Enter to confirm.
-
+  
+![](https://github.com/xahmol/DMBoot/raw/main/pictures/dmboot%20-%20rename.png)
+  
+Choose slot to be renamed by pressing **0-9**. Enter new name. Enter to confirm.
+  
 * **R** enables re-ordering menu slots
-  ![](https://github.com/xahmol/DMBoot/raw/main/pictures/dmboot%20-%20reorder.png)
-
-  Choose slot to be re-ordered by pressing **0-9**. Selected menu slot is highlighted white. Move option by pressing **UP** or **DOWN**. Confirm by **ENTER**. Cancel with **Q**.
-
+  
+![](https://github.com/xahmol/DMBoot/raw/main/pictures/dmboot%20-%20reorder.png)
+  
+Choose slot to be re-ordered by pressing **0-9**. Selected menu slot is highlighted white. Move option by pressing **UP** or **DOWN**. Confirm by **ENTER**. Cancel with **Q**.
+  
 * **D** enables deleting a menu slot
+  
   ![](https://github.com/xahmol/DMBoot/raw/main/pictures/dmboot%20-%20delete.png)
-  Choose slot to be re-ordered by pressing **0-9**. Confirm by pressing **Y** for yes, or **N** for no.
-
+Choose slot to be re-ordered by pressing **0-9**. Confirm by pressing **Y** for yes, or **N** for no.
+  
 * **Q** takes you back to main menu. Changes made are saved only now.
 
 **I: Information**
