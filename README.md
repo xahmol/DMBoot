@@ -61,29 +61,29 @@ https://www.idreamtin8bits.com/
 
 * The filebrowser is actually a slightly adapted DraBrowse program from https://github.com/doj/dracopy
   ![](https://github.com/xahmol/DMBoot/raw/main/pictures/dmboot%20-%20filebrowsermenu.png)
-
 * Menu options are mostly the same, with some changes/additions.
 
-* **F1 / 1 **Read directory in current window
-  **F2 / 2** Select the next device for the current window
-  **F3 / 3** View current file as hex dump
-  **F4 / 4** View current file as ASCII text
-  **F5 / 5** Boot from present directory / image (*added compared to DraBrowse*)
-  **F7 / 7** Run the selected program
-  **← (left arrow) , ESC, 0** Switch window (only in 80 column mode)
-  **RETURN** Enter directory or run the selected program
-  **RIGHT** Enter directory
-  **DEL / LEFT** Go to parent directory
-  **↑ (Up arrow)** Go to root directory
-  **S** Show directory entries sorted
-  **HOME / T** Move cursor to top row of first page in current window
-  **B** Go to bottom row in current window
-  **@** Send a DOS command to the device in current window
-  **D** Toggle Dirtrace: traces the directory movements from root directory to select menuslot option
-  **8** Toggle Force 8, forcing device ID 8 on program execution or boot. Works for menuslot option as well as directly from filebrowser.
-  **F** Toggle FAST, enabling this makes file execution or boot start in FAST mode. Works for menuslot option as well as directly from filebrowser.
-
-  **Q** Quit to main menu (altered function compared to DraBrowse)
+| Key            | Function                                                     |
+| ---- | ------------------------------------------- |
+| **F1 / 1**  | Read directory in current window |
+| **F2 / 2** | Select the next device for the current window |
+| **F3 / 3** | View current file as hex dump |
+| **F4 / 4** | View current file as ASCII text |
+| **F5 / 5** | Boot from present directory / image (*added compared to DraBrowse*) |
+| **F7 / 7** | Run the selected program |
+| **← , ESC, 0** | Switch window (only in 80 column mode) |
+| **RETURN** | Enter directory or run the selected program |
+| **RIGHT** | Enter directory |
+| **DEL / LEFT** | Go to parent directory |
+| ↑ | Go to root directory |
+| **S** | Show directory entries sorted |
+| **HOME / T** | Move cursor to top row of first page in current window |
+| **B** | Go to bottom row in current window |
+| **@** | Send a DOS command to the device in current window |
+| **D** | Toggle Dirtrace: traces the directory movements from root directory to select menuslot option |
+| **8** | Toggle Force 8, forcing device ID 8 on program execution or boot. Works for menuslot option as well as directly from filebrowser. |
+| **F** | Toggle FAST, enabling this makes file execution or boot start in FAST mode. Works for menuslot option as well as directly from filebrowser. |
+| **Q** | Quit to main menu (*altered function compared to DraBrowse*) |
 
 **Q: Quit to C128 Basic**
 
