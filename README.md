@@ -8,9 +8,88 @@ https://github.com/xahmol/DMBoot
 
 https://www.idreamtin8bits.com/
 
-### Screenshot
+### Instructions
 
-![](https://github.com/xahmol/DMBoot/raw/main/DMBoot%20Screenshot.jpg)
+**NB:** Instruction screenshots are taken from VICE emulator for practical reasons, so not showing real devices.
+
+**Prerequisites:**
+
+* UltimateII+ (U2+) cartridge installed, with firmware at version 3.9 or higher
+  (link to firmware page, scroll down for U2 firmware: https://ultimate64.com/Firmware )
+* 128 Device Manager ROM installed as Cartridge ROM on the U2+, version 1.99 or higher.
+  (link: https://www.bartsplace.net/content/publications/devicemanager128.shtml )
+
+**Installation:**
+
+* Create a directory called '11' on your usb stick, and put the autostart.128.prg file there. It doesn't really matter if the usb stick is usb0 or usb1 or such, but what is important is the 'default path' setting in the Software IEC menu of the U2+ cartridge is pointing to the proper path for your usb stick.
+  While it doesn't matter if the usb stick is usb0/1 etc, the names of the directory and file are important.
+
+**First run:**
+
+* At first run no configuration file is present yet for the menu, so only the default menu options are visible:
+  ![](https://github.com/xahmol/DMBoot/raw/main/pictures/dmboot%20-%20firstrunmenu.png)
+* For instructions of the menu options: see below.
+
+**Add start options via the Filebrowser**
+
+* Start options can be added to menuslots 0-9 via the Filebrowser. This can be either running an executable program, or booting a specific disk image.
+* For this, first choose **F** for filebrowser.  You will get a screen like this:
+  ![](https://github.com/xahmol/DMBoot/raw/main/pictures/dmboot%20-%20filebrowsermenu.png)
+* Full instructions for the filebrowser are below. Here only the quick instructions to add an option to the startmenu.
+* Select your desired drive target as highlighted (white border) by switching to the correct column (only applicable for 80 column mode) by the **<-** (left arrow) key and/or pressing **F2** until the desired device number is selected.
+* Refresh directory by **F1** if needed (empty column)
+* Start a directory trace by pressing **D**
+  ![](https://github.com/xahmol/DMBoot/raw/main/pictures/dmboot%20-%20highlightdirtrace.png)
+  This starts a trace of your movements through the directory tree, starting from the root directory of your device. You should see the directory refreshing to this root directory.
+  You should also see the TRACE toggle switched to ON in the lower right corner of the screen.
+  So from this ![](https://github.com/xahmol/DMBoot/raw/main/pictures/dmboot%20-%20filebrowsertoggles.png) to this ![](https://github.com/xahmol/DMBoot/raw/main/pictures/dmboot%20-%20toggledirtraceon.png).
+* Also note the other two toggles Frc 8 and FAST: these are toggled by pressing the **8** and **F** keys.
+  ![](https://github.com/xahmol/DMBoot/raw/main/pictures/dmboot%20-%20highlightforce8andfast.png)
+* Force 8: This forces the device ID to be loaded from to 8 regardless of the device ID the target is located at. Only works for the U2+ Software IEC drive (identified as U64 in the lowest line of the directory column). This enables loading software that is not supporting other parts of the program from other device IDs as 8
+* FAST: this starts the program in FAST mode. Only use if the target is started in 80 column mode and the target supports it.
+* Browse to your desired target via the **Cursor keys**: **UP/DOWN** to move within the directory, **ENTER or RIGHT** on a directory or disk image to enter the selected directory or image, **DEL / LEFT** to change to parent directory.
+* To choose to have a program executed from the menuslot, select **ENTER** or **F7** on the desired executable
+* To choose to boot the image you are now in from the menuslot, select **F5**.
+* You should than get this screen to select the menuslot position:
+  ![](https://github.com/xahmol/DMBoot/raw/main/pictures/dmboot%20-%20choosemenuslot.png)
+* Choose **0-9** key to choose the desired slot.
+* Enter the desired name for the menuslot and press **ENTER**
+* You now return to the main menu where you should see the menu option appearing.
+* Repeat until you have selected all desired menuslot options
+
+**F: Filebrowse menu**
+
+* The filebrowser is actually a slightly adapted DraBrowse program from https://github.com/doj/dracopy
+  ![](https://github.com/xahmol/DMBoot/raw/main/pictures/dmboot%20-%20filebrowsermenu.png)
+
+* Menu options are mostly the same, with some changes/additions.
+
+* **F1 / 1 **Read directory in current window
+  **F2 / 2** Select the next device for the current window
+  **F3 / 3** View current file as hex dump
+  **F4 / 4** View current file as ASCII text
+  **F5 / 5** Boot from present directory / image (*added compared to DraBrowse*)
+  **F7 / 7** Run the selected program
+  **← (left arrow) , ESC, 0** Switch window (only in 80 column mode)
+  **RETURN** Enter directory or run the selected program
+  **RIGHT** Enter directory
+  **DEL / LEFT** Go to parent directory
+  **↑ (Up arrow)** Go to root directory
+  **S** Show directory entries sorted
+  **HOME / T** Move cursor to top row of first page in current window
+  **B** Go to bottom row in current window
+  **@** Send a DOS command to the device in current window
+  **D** Toggle Dirtrace: traces the directory movements from root directory to select menuslot option
+  **8** Toggle Force 8, forcing device ID 8 on program execution or boot. Works for menuslot option as well as directly from filebrowser.
+  **F** Toggle FAST, enabling this makes file execution or boot start in FAST mode. Works for menuslot option as well as directly from filebrowser.
+
+  **Q** Quit to main menu (altered function compared to DraBrowse)
+
+
+
+### Screenshot from real device
+
+![](https://github.com/xahmol/DMBoot/raw/main/pictures/dmboot%20-%20real%20screen.jpg)
 
 ### Credits
 Based on DraBrowse:  
