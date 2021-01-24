@@ -26,7 +26,7 @@ endif
 	$(CC) -c $(CFLAGS) -o $@ $<
   
 $(PROGRAM): $(SOURCES:.c=.o)
-	$(CC) $(LDFLAGS) -o $@ $^
+	$(CC) $(LDFLAGS) -o $@ $^ c128-ram.o 
 
 $(UPDATE): $(SOURCESUPD:.c=.o)
 	$(CC) $(LDFLAGSUPD) -o $@ $^

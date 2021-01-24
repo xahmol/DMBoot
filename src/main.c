@@ -71,6 +71,7 @@ int reordermenuslot();
 void printnewmenuslot(int pos, int color, char* name);
 void getslotfromem(int slotnumber);
 void putslottoem(int slotnumber);
+char menuslotkey(int slotnumber);
 
 //Variables
 BYTE DIR1H;
@@ -101,8 +102,8 @@ struct SlotStruct {
     BYTE command;
 };
 struct SlotStruct Slot;
-char newmenuname[10][21];
-unsigned int newmenuoldslot[10];
+char newmenuname[36][21];
+unsigned int newmenuoldslot[36];
 char spaces[81]    = "                                                                                ";
 char spacedest[81];
 BYTE bootdevice;
@@ -135,7 +136,7 @@ int main() {
     checkdmdevices();
     bootdevice = getcurrentdevice();    // Get device number program started from
 
-    em_load_driver("c128-ram.emd"); // Load extended memory driver
+    em_install(&c128_ram); // Load extended memory driver
 
     std_read("dmbootconf"); // Read config file
     
@@ -147,7 +148,7 @@ int main() {
 
         switch (menuselect)
         {
-        case 'f':
+        case CH_F1:
             // Filebrowser
             mainLoopBrowse();
             if (trace == 1)
@@ -170,22 +171,22 @@ int main() {
             runbootfrommenu(menuselect - 48);
             break;
         
-        case 'c':
+        case CH_F5:
             // Go to C64 mode
             commandfrommenu("go 64", 1);
             break;
 
-        case 'b':
+        case CH_F4:
             // Boot from floppy
             bootfromfloppy();
             break;
 
-        case 'i':
+        case CH_F2:
             // Information and credits
             information();
             break;
         
-        case 'e':
+        case CH_F7:
             // Edit / re-order and delete menuslots
             editmenuoptions();
             break;
@@ -193,7 +194,7 @@ int main() {
         default:
             break;
         }
-    } while (menuselect != 'q');
+    } while (menuselect != CH_F3);
 
     exitScreen();
     commandfrommenu("scnclr:new",0);    // Erase memory and clear screen on exit
@@ -468,66 +469,128 @@ char mainmenu()
 
     for ( x=0 ; x<10 ; ++x )
     {
+        if (SCREENW==40 && x>13)
+        {
+            break;
+        }
+        if (x>17)
+        {
+            gotoxy(40,x-15);
+        }
+        else
+        {
+            gotoxy(0,x+3);
+        }
+        
         getslotfromem(x);
         if ( strlen(Slot.menu) != 0 )
         {
             revers(1);
             textcolor(DMB_COLOR_SELECT);
-            cprintf(" %i ",x);
+            cprintf(" %2c ",menuslotkey(x));
             revers(0);
             textcolor(DC_COLOR_TEXT);
-            cprintf(" %s\n\r",Slot.menu);
+            cprintf(" %s",Slot.menu);
         }
     }
 
+    if(SCREENW==80)
+    {
+        gotoxy(0,21);
+    }
+    else
+    {
+        gotoxy(0,18);
+    }    
     revers(1);
     textcolor(DMB_COLOR_SELECT);
-    cputs(" F ");
+    cputs(" F1 ");
     revers(0);
     textcolor(DC_COLOR_TEXT);
-    cputs(" Filebrowser\n\r");
+    cputs(" Filebrowser");
 
+    
+    if(SCREENW==80)
+    {
+        gotoxy(40,21);
+    }
+    else
+    {
+        gotoxy(0,19);
+    }
     revers(1);
     textcolor(DMB_COLOR_SELECT);
-    cputs(" Q ");
+    cputs(" F2 ");
     revers(0);
     textcolor(DC_COLOR_TEXT);
-    cputs(" Quit to C128 Basic\n\r");
+    cputs(" Information");
 
+    if(SCREENW==80)
+    {
+        gotoxy(0,22);
+    }
+    else
+    {
+        gotoxy(0,20);
+    }
     revers(1);
     textcolor(DMB_COLOR_SELECT);
-    cputs(" C ");
+    cputs(" F3 ");
     revers(0);
     textcolor(DC_COLOR_TEXT);
-    cputs(" C64 mode\n\r");
-
+    cputs(" Quit to C128 Basic");
+    
+    if(SCREENW==80)
+    {
+        gotoxy(40,22);
+    }
+    else
+    {
+        gotoxy(0,21);
+    }
     revers(1);
     textcolor(DMB_COLOR_SELECT);
-    cputs(" B ");
+    cputs(" F4 ");
     revers(0);
     textcolor(DC_COLOR_TEXT);
-    cputs(" Boot from floppy\n\r");
+    cputs(" Boot from floppy");
 
+    if(SCREENW==80)
+    {
+        gotoxy(0,23);
+    }
+    else
+    {
+        gotoxy(0,22);
+    }
     revers(1);
     textcolor(DMB_COLOR_SELECT);
-    cputs(" E ");
+    cputs(" F5 ");
     revers(0);
     textcolor(DC_COLOR_TEXT);
-    cputs(" Edit/Reorder/Delete menuoptions\n\r");
+    cputs(" C64 mode");
 
+    if(SCREENW==80)
+    {
+        gotoxy(40,23);
+    }
+    else
+    {
+        gotoxy(0,23);
+    }
     revers(1);
     textcolor(DMB_COLOR_SELECT);
-    cputs(" I ");
+    cputs(" F7 ");
     revers(0);
     textcolor(DC_COLOR_TEXT);
-    cputs(" Information\n\r");
+    cputs(" Edit/Reorder/Delete menu");
 
-    cputs("\nMake your choice.");
+    cputsxy(0,24,"Make your choice.");
 
     do
     {
-        key = getkey(2);    // obtain alphanumeric key
-        if (key == 'f' || key == 'q' || key == 'c' || key == 'b' || key == 'i' || key == 'e')
+        key = cgetc();
+        if (key == CH_F1 || key == CH_F2 || key == CH_F3 || key == CH_F4 || key == CH_F5 || key == CH_F7)
         {
             select = 1;
         }
@@ -1146,4 +1209,20 @@ void putslottoem(int slotnumber)
     page++;
     *page = Slot.command;  
     em_commit();
+}
+
+char menuslotkey(int slotnumber)
+{
+    // Routine to convert numerical slotnumber to key in menu
+    // Input: Slotnumber = menu slot number
+    // Output: Corresponding 0-9, a-z key
+
+    if(slotnumber<10)
+    {
+        return slotnumber+48; // Numbers 0-9
+    }
+    else
+    {
+        return slotnumber+97; // Letters a-z
+    }
 }

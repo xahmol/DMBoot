@@ -84,6 +84,7 @@ extern BYTE depth;
 extern BYTE trace;
 extern BYTE forceeight;
 extern BYTE fastflag;
+extern char c128_ram;
 
 // keyboard buffer
 #define KBCHARS 842

@@ -454,103 +454,104 @@ _doDOScommand             00407C RLA    _drawDirFrame             003BDB RLA
 _drawFrame                002115 RLA    _em_commit                007532 REA    
 _em_drv                   007A17 RLA    _em_install               00738A RLA    
 _em_load_driver           005C66 RLA    _em_map                   00752C REA    
-_em_unload                005CC0 RLA    _em_use                   00752F REA    
-_execute                  0030FF RLA    _exit                     001C42 RLA    
-_exitScreen               002231 RLA    _fastflag                 007442 RLA    
-_fclose                   005CE9 RLA    _fgetc                    005D0B RLA    
-_fopen                    005E43 RLA    _forceeight               007441 RLA    
-_fprintf                  005E5B RLA    _fputc                    005E86 RLA    
-_fread                    005EDD RLA    _free                     005FB0 RLA    
-_freeDir                  0025B1 RLA    _fwrite                   006183 RLA    
-_getDeviceType            003CDC RLA    _getcurrentdevice         005B10 RLA    
-_gotoxy                   006201 RLA    _isprint                  00628B RLA    
-_linebuffer               0078FE RLA    _linebuffer2              00794F RLA    
-_ltoa                     00632B RLA    _main                     001FD1 RLA    
-_malloc                   0063D4 RLA    _memcpy                   0064E2 RLA    
-_mod_free                 005FB0 REA    _mod_load                 006656 RLA    
-_newscreen                002061 RLA    _open                     00683E RLA    
-_path                     0075CF RLA    _pathdevice               00766F RLA    
-_pathfile                 007670 RLA    _pathrunboot              007684 RLA    
-_printDir                 00337F RLA    _printElement             003569 RLA    
-_raise                    00698A RLA    _read                     0069B5 RLA    
-_readDir                  002687 RLA    _revers                   006A4D RLA    
-_set_c128_speed           0054C2 RLA    _showDir                  00328A RLA    
-_sprintf                  006AE6 RLA    _stderr                   0074EB RLA    
-_strcpy                   006B4D RLA    _strlen                   006B6C RLA    
-_strlower                 006B82 RLA    _strncmp                  006BA9 RLA    
-_strstr                   006BE2 RLA    _textcolor                0059D4 RLA    
-_trace                    007440 RLA    _ultoa                    00636C RLA    
-_updateMenu               0042E4 RLA    _updateScreen             00324F RLA    
-_vcprintf                 006D04 RLA    _vfprintf                 006D6C RLA    
-_vsprintf                 006E6F RLA    _waitKey                  0030AF RLA    
-_wherey                   006E81 RLA    _write                    006E86 RLA    
-addeq0sp                  0054EE RLA    addeqysp                  0054F0 RLA    
-addysp                    005500 RLA    addysp1                   0054FF RLA    
-axlong                    00559E RLA    axulong                   0055A4 RLA    
-bnega                     0055AF RLA    booleq                    0063AE RLA    
-callmain                  0055FD RLA    chlinechar                000040 REZ    
-closeallfiles             00682A  LAI   closecmdchannel           005BC3 RLA    
-cputdirect                005A8B RLA    ctypemask                 005AF2 RLA    
-ctypemaskdirect           005AF6 RLA    cursor                    0079CC RLA    
-curunit                   0075C0 RLA    cvlinechar                00005D REZ    
-decax1                    005B38 RLA    decax2                    005B3F RLA    
-decax3                    005B46 RLA    decax4                    005B4D RLA    
-decaxy                    005B54 RLA    decsp1                    005B5D RLA    
-decsp2                    005B66 RLA    decsp4                    005B73 RLA    
-decsp6                    005B80 RLA    devnum                    0000BA RLZ    
-donecgetc                 005978  LAI   donelib                   005A34 RLA    
-em_clear_ptr              0073CD RLA    em_libref                 001C42 RLA    
-emd_commit                007532 RLA    emd_map                   00752C RLA    
-emd_uninstall             007526 RLA    emd_use                   00752F RLA    
-enter                     005CDB RLA    fdtab                     007545 RLA    
-fnaddmode                 005E32 RLA    fncmd                     007555 RLA    
-fncomplete                005E2A RLA    fnisfile                  007A1D RLA    
-fnlen                     007A1C RLA    fnparse                   005DBE RLA    
-fnset                     005E20 RLA    fnunit                    007A1B RLA    
-freefd                    005D95 RLA    gotoxy                    0061FE RLA    
-incax1                    006239 RLA    incax3                    006240 RLA    
-incax4                    006245 RLA    incaxy                    006247 RLA    
-incsp1                    006250 RLA    incsp2                    00625F RLA    
-incsp3                    00626D RLA    incsp4                    006272 RLA    
-incsp5                    006277 RLA    incsp6                    00627C RLA    
-incsp7                    006281 RLA    incsp8                    006286 RLA    
-initcgetc                 001C6E  LAI   initcurunit               001C8D  LAI   
-initheap                  001C5E  LAI   initlib                   001C81 RLA    
-initstdin                 001C99  LAI   initstdout                001CA5  LAI   
-jmpvec                    00757A RLA    ldax0sp                   0062A2 RLA    
-ldaxi                     006295 RLA    ldaxidx                   006297 RLA    
-ldaxysp                   0062A4 RLA    leaa0sp                   0062AB RLA    
-leavey                    0062C1 RLA    mul8x16                   0067C7 RLA    
-mul8x16a                  0067D1 RLA    mulax10                   0067FF RLA    
-negax                     00681C RLA    negeax                    0062D4 RLA    
-newline                   00C363 REA    opencmdchannel            005B96 RLA    
-plot                      005AAB RLA    popa                      006910 RLA    
-popax                     006257 RLA    popptr1                   00691C RLA    
-popsargsudiv16            006A96 RLA    ptr1                      00000A RLZ    
-ptr2                      00000C RLZ    ptr3                      00000E RLZ    
-ptr4                      000010 RLZ    push0                     006945 RLA    
-push1                     00692A RLA    pusha                     006933 RLA    
-pusha0                    006947 RLA    pushax                    006949 RLA    
-pusheax                   0062FB RLA    pushw                     00695F RLA    
-pushw0sp                  00696E RLA    pushwidx                  006961 RLA    
-pushwysp                  006970 RLA    putchar                   00CC2F REA    
-readdiskerror             005BDE RLA    regbank                   000016 RLZ    
-regswap2                  006A33 RLA    return0                   006A49 RLA    
-rwcommon                  006A61 RLA    scratch                   006A7D RLA    
-sigtable                  007580 RLA    sp                        000002 RLZ    
-sreg                      000004 RLZ    staspidx                  006B11 RLA    
-stax0sp                   006B27 RLA    staxspidx                 006B32 RLA    
-staxysp                   006B29 RLA    subeqysp                  006C4B RLA    
-subysp                    006C5E RLA    tmp1                      000012 RLZ    
-tmp2                      000013 RLZ    tmp3                      000014 RLZ    
-tosaddax                  0054D4 RLA    tosdiva0                  005C51 RLA    
-tosicmp                   00620D RLA    tosicmp0                  00620B RLA    
-tosmula0                  0067C5 RLA    tosorax                   0068EA RLA    
-tossubax                  006C36 RLA    tosudiva0                 006C6B RLA    
-tosudivax                 006C6D RLA    tosumulax                 006780 RLA    
-udiv16                    006C7C RLA    unittab                   00754D RLA    
-vsnprintf                 006D98 RLA    writefndiskcmd            005C16 RLA    
-zerobss                   006EDA RLA    
+_em_uninstall             0073CA RLA    _em_unload                005CC0 RLA    
+_em_use                   00752F REA    _execute                  0030FF RLA    
+_exit                     001C42 RLA    _exitScreen               002231 RLA    
+_fastflag                 007442 RLA    _fclose                   005CE9 RLA    
+_fgetc                    005D0B RLA    _fopen                    005E43 RLA    
+_forceeight               007441 RLA    _fprintf                  005E5B RLA    
+_fputc                    005E86 RLA    _fread                    005EDD RLA    
+_free                     005FB0 RLA    _freeDir                  0025B1 RLA    
+_fwrite                   006183 RLA    _getDeviceType            003CDC RLA    
+_getcurrentdevice         005B10 RLA    _gotoxy                   006201 RLA    
+_isprint                  00628B RLA    _linebuffer               0078FE RLA    
+_linebuffer2              00794F RLA    _ltoa                     00632B RLA    
+_main                     001FD1 RLA    _malloc                   0063D4 RLA    
+_memcpy                   0064E2 RLA    _mod_free                 005FB0 REA    
+_mod_load                 006656 RLA    _newscreen                002061 RLA    
+_open                     00683E RLA    _path                     0075CF RLA    
+_pathdevice               00766F RLA    _pathfile                 007670 RLA    
+_pathrunboot              007684 RLA    _printDir                 00337F RLA    
+_printElement             003569 RLA    _raise                    00698A RLA    
+_read                     0069B5 RLA    _readDir                  002687 RLA    
+_revers                   006A4D RLA    _set_c128_speed           0054C2 RLA    
+_showDir                  00328A RLA    _sprintf                  006AE6 RLA    
+_stderr                   0074EB RLA    _strcpy                   006B4D RLA    
+_strlen                   006B6C RLA    _strlower                 006B82 RLA    
+_strncmp                  006BA9 RLA    _strstr                   006BE2 RLA    
+_textcolor                0059D4 RLA    _trace                    007440 RLA    
+_ultoa                    00636C RLA    _updateMenu               0042E4 RLA    
+_updateScreen             00324F RLA    _vcprintf                 006D04 RLA    
+_vfprintf                 006D6C RLA    _vsprintf                 006E6F RLA    
+_waitKey                  0030AF RLA    _wherey                   006E81 RLA    
+_write                    006E86 RLA    addeq0sp                  0054EE RLA    
+addeqysp                  0054F0 RLA    addysp                    005500 RLA    
+addysp1                   0054FF RLA    axlong                    00559E RLA    
+axulong                   0055A4 RLA    bnega                     0055AF RLA    
+booleq                    0063AE RLA    callmain                  0055FD RLA    
+chlinechar                000040 REZ    closeallfiles             00682A  LAI   
+closecmdchannel           005BC3 RLA    cputdirect                005A8B RLA    
+ctypemask                 005AF2 RLA    ctypemaskdirect           005AF6 RLA    
+cursor                    0079CC RLA    curunit                   0075C0 RLA    
+cvlinechar                00005D REZ    decax1                    005B38 RLA    
+decax2                    005B3F RLA    decax3                    005B46 RLA    
+decax4                    005B4D RLA    decaxy                    005B54 RLA    
+decsp1                    005B5D RLA    decsp2                    005B66 RLA    
+decsp4                    005B73 RLA    decsp6                    005B80 RLA    
+devnum                    0000BA RLZ    donecgetc                 005978  LAI   
+donelib                   005A34 RLA    em_clear_ptr              0073CD RLA    
+em_libref                 001C42 RLA    emd_commit                007532 RLA    
+emd_map                   00752C RLA    emd_uninstall             007526 RLA    
+emd_use                   00752F RLA    enter                     005CDB RLA    
+fdtab                     007545 RLA    fnaddmode                 005E32 RLA    
+fncmd                     007555 RLA    fncomplete                005E2A RLA    
+fnisfile                  007A1D RLA    fnlen                     007A1C RLA    
+fnparse                   005DBE RLA    fnset                     005E20 RLA    
+fnunit                    007A1B RLA    freefd                    005D95 RLA    
+gotoxy                    0061FE RLA    incax1                    006239 RLA    
+incax3                    006240 RLA    incax4                    006245 RLA    
+incaxy                    006247 RLA    incsp1                    006250 RLA    
+incsp2                    00625F RLA    incsp3                    00626D RLA    
+incsp4                    006272 RLA    incsp5                    006277 RLA    
+incsp6                    00627C RLA    incsp7                    006281 RLA    
+incsp8                    006286 RLA    initcgetc                 001C6E  LAI   
+initcurunit               001C8D  LAI   initheap                  001C5E  LAI   
+initlib                   001C81 RLA    initstdin                 001C99  LAI   
+initstdout                001CA5  LAI   jmpvec                    00757A RLA    
+ldax0sp                   0062A2 RLA    ldaxi                     006295 RLA    
+ldaxidx                   006297 RLA    ldaxysp                   0062A4 RLA    
+leaa0sp                   0062AB RLA    leavey                    0062C1 RLA    
+mul8x16                   0067C7 RLA    mul8x16a                  0067D1 RLA    
+mulax10                   0067FF RLA    negax                     00681C RLA    
+negeax                    0062D4 RLA    newline                   00C363 REA    
+opencmdchannel            005B96 RLA    plot                      005AAB RLA    
+popa                      006910 RLA    popax                     006257 RLA    
+popptr1                   00691C RLA    popsargsudiv16            006A96 RLA    
+ptr1                      00000A RLZ    ptr2                      00000C RLZ    
+ptr3                      00000E RLZ    ptr4                      000010 RLZ    
+push0                     006945 RLA    push1                     00692A RLA    
+pusha                     006933 RLA    pusha0                    006947 RLA    
+pushax                    006949 RLA    pusheax                   0062FB RLA    
+pushw                     00695F RLA    pushw0sp                  00696E RLA    
+pushwidx                  006961 RLA    pushwysp                  006970 RLA    
+putchar                   00CC2F REA    readdiskerror             005BDE RLA    
+regbank                   000016 RLZ    regswap2                  006A33 RLA    
+return0                   006A49 RLA    rwcommon                  006A61 RLA    
+scratch                   006A7D RLA    sigtable                  007580 RLA    
+sp                        000002 RLZ    sreg                      000004 RLZ    
+staspidx                  006B11 RLA    stax0sp                   006B27 RLA    
+staxspidx                 006B32 RLA    staxysp                   006B29 RLA    
+subeqysp                  006C4B RLA    subysp                    006C5E RLA    
+tmp1                      000012 RLZ    tmp2                      000013 RLZ    
+tmp3                      000014 RLZ    tosaddax                  0054D4 RLA    
+tosdiva0                  005C51 RLA    tosicmp                   00620D RLA    
+tosicmp0                  00620B RLA    tosmula0                  0067C5 RLA    
+tosorax                   0068EA RLA    tossubax                  006C36 RLA    
+tosudiva0                 006C6B RLA    tosudivax                 006C6D RLA    
+tosumulax                 006780 RLA    udiv16                    006C7C RLA    
+unittab                   00754D RLA    vsnprintf                 006D98 RLA    
+writefndiskcmd            005C16 RLA    zerobss                   006EDA RLA    
+
 
 
 Exports list by value:
@@ -672,40 +673,41 @@ _vsprintf                 006E6F RLA    _wherey                   006E81 RLA
 _write                    006E86 RLA    zerobss                   006EDA RLA    
 __hextab                  0072BD RLA    __longminstr              0072CD RLA    
 __ctype                   0072FB RLA    __ctypeidx                007306 RLA    
-_em_install               00738A RLA    em_clear_ptr              0073CD RLA    
-__DESTRUCTOR_TABLE__      00743B RLA    _depth                    00743F RLA    
-_trace                    007440 RLA    _forceeight               007441 RLA    
-_fastflag                 007442 RLA    _dirs                     007496 RLA    
-_devices                  00749A RLA    __filetab                 0074CF RLA    
-_stderr                   0074EB RLA    __heapptr                 0074EF RLA    
-__heapend                 0074F1 RLA    __heapfirst               0074F3 RLA    
-__heaplast                0074F5 RLA    emd_uninstall             007526 RLA    
-_em_map                   00752C REA    emd_map                   00752C RLA    
-_em_use                   00752F REA    emd_use                   00752F RLA    
-_em_commit                007532 REA    emd_commit                007532 RLA    
-fdtab                     007545 RLA    unittab                   00754D RLA    
-fncmd                     007555 RLA    __filetype                007579 RLA    
-jmpvec                    00757A RLA    sigtable                  007580 RLA    
-curunit                   0075C0 RLA    _DIR1H                    0075C1 RLA    
-__BSS_RUN__               0075C1 RLA    _DIR2H                    0075C2 RLA    
-_SCREENW                  0075C3 RLA    _MENUX                    0075C5 RLA    
-_MENUXT                   0075C7 RLA    _MENUW                    0075C9 RLA    
-_DIR2X                    0075CB RLA    _DIR2Y                    0075CD RLA    
-_path                     0075CF RLA    _pathdevice               00766F RLA    
-_pathfile                 007670 RLA    _pathrunboot              007684 RLA    
-_devicetype               0078F2 RLA    _linebuffer               0078FE RLA    
-_linebuffer2              00794F RLA    cursor                    0079CC RLA    
-__oserror                 0079CF RLA    _em_drv                   007A17 RLA    
-__errno                   007A19 RLA    fnunit                    007A1B RLA    
-fnlen                     007A1C RLA    fnisfile                  007A1D RLA    
-__MAIN_SIZE__             009BF3 REA    _clrscr                   00C142 REA    
-newline                   00C363 REA    putchar                   00CC2F REA    
-READST                    00FFB7 RLA    SETLFS                    00FFBA RLA    
-SETNAM                    00FFBD RLA    OPEN                      00FFC0 RLA    
-CLOSE                     00FFC3 RLA    CHKIN                     00FFC6 RLA    
-CKOUT                     00FFC9 RLA    CLRCH                     00FFCC RLA    
-_cbm_k_clrch              00FFCC REA    BASIN                     00FFCF RLA    
-BSOUT                     00FFD2 RLA    
+_em_install               00738A RLA    _em_uninstall             0073CA RLA    
+em_clear_ptr              0073CD RLA    __DESTRUCTOR_TABLE__      00743B RLA    
+_depth                    00743F RLA    _trace                    007440 RLA    
+_forceeight               007441 RLA    _fastflag                 007442 RLA    
+_dirs                     007496 RLA    _devices                  00749A RLA    
+__filetab                 0074CF RLA    _stderr                   0074EB RLA    
+__heapptr                 0074EF RLA    __heapend                 0074F1 RLA    
+__heapfirst               0074F3 RLA    __heaplast                0074F5 RLA    
+emd_uninstall             007526 RLA    _em_map                   00752C REA    
+emd_map                   00752C RLA    _em_use                   00752F REA    
+emd_use                   00752F RLA    _em_commit                007532 REA    
+emd_commit                007532 RLA    fdtab                     007545 RLA    
+unittab                   00754D RLA    fncmd                     007555 RLA    
+__filetype                007579 RLA    jmpvec                    00757A RLA    
+sigtable                  007580 RLA    curunit                   0075C0 RLA    
+_DIR1H                    0075C1 RLA    __BSS_RUN__               0075C1 RLA    
+_DIR2H                    0075C2 RLA    _SCREENW                  0075C3 RLA    
+_MENUX                    0075C5 RLA    _MENUXT                   0075C7 RLA    
+_MENUW                    0075C9 RLA    _DIR2X                    0075CB RLA    
+_DIR2Y                    0075CD RLA    _path                     0075CF RLA    
+_pathdevice               00766F RLA    _pathfile                 007670 RLA    
+_pathrunboot              007684 RLA    _devicetype               0078F2 RLA    
+_linebuffer               0078FE RLA    _linebuffer2              00794F RLA    
+cursor                    0079CC RLA    __oserror                 0079CF RLA    
+_em_drv                   007A17 RLA    __errno                   007A19 RLA    
+fnunit                    007A1B RLA    fnlen                     007A1C RLA    
+fnisfile                  007A1D RLA    __MAIN_SIZE__             009BF3 REA    
+_clrscr                   00C142 REA    newline                   00C363 REA    
+putchar                   00CC2F REA    READST                    00FFB7 RLA    
+SETLFS                    00FFBA RLA    SETNAM                    00FFBD RLA    
+OPEN                      00FFC0 RLA    CLOSE                     00FFC3 RLA    
+CHKIN                     00FFC6 RLA    CKOUT                     00FFC9 RLA    
+CLRCH                     00FFCC RLA    _cbm_k_clrch              00FFCC REA    
+BASIN                     00FFCF RLA    BSOUT                     00FFD2 RLA    
+
 
 
 Imports list:
@@ -1034,8 +1036,9 @@ _em_load_driver (em_load.o):
     dmb-confupd-1-2.o         src/dmb-confupd-1-2.s(25)
 _em_map (em_map.o):
     dmb-confupd-1-2.o         src/dmb-confupd-1-2.s(27)
-_em_unload (em_unload.o):
+_em_uninstall (em-kernel.o):
     screen.o                  src/screen.s(26)
+_em_unload (em_unload.o):
     dmb-confupd-1-2.o         src/dmb-confupd-1-2.s(26)
 _em_use (em_use.o):
     dmb-confupd-1-2.o         src/dmb-confupd-1-2.s(28)
@@ -1553,7 +1556,6 @@ ptr1 (zeropage.o):
     strlower.o                common/strlower.s(13)
     ltoa.o                    common/ltoa.s(11)
     filename.o                cbm/filename.s(12)
-    em-kernel.o               em/em-kernel.s(8)
     diskcmd.o                 cbm/diskcmd.s(15)
     c_setnam.o                cbm/c_setnam.s(10)
     _printf.o                 /mnt/l/cc65/asminc/zeropage.inc(12)
@@ -1586,6 +1588,7 @@ ptr1 (zeropage.o):
     fread.o                   common/fread.s(17)
     fprintf.o                 common/fprintf.s(9)
     fclose.o                  common/fclose.s(11)
+    em-kernel.o               em/em-kernel.s(8)
     div.o                     runtime/div.s(12)
     cputs.o                   conio/cputs.s(10)
     cprintf.o                 conio/cprintf.s(9)
@@ -1801,9 +1804,9 @@ regswap2 (regswap2.o):
     fgetc.o                   ../libwrk/c128/fgetc.s(95)
     cbm_dir.o                 ../libwrk/c128/cbm_dir.s(374)
 return0 (return0.o):
-    em-kernel.o               em/em-kernel.s(7)
     _fopen.o                  common/_fopen.s(11)
     _fdesc.o                  common/_fdesc.s(9)
+    em-kernel.o               em/em-kernel.s(7)
     color.o                   c128/color.s(10)
 rwcommon (rwcommon.o):
     write.o                   cbm/write.s(10)

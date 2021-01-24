@@ -122,5 +122,5 @@ exitScreen(void)
   textcolor(COLOR_YELLOW);
   clrscr();
   set_c128_speed(SPEED_SLOW);
-  em_unload();
+  em_uninstall();
 }
