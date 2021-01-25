@@ -1,9 +1,8 @@
 SOURCES = src/main.c src/screen.c src/cat.c src/dir.c src/base.c src/ops.c src/db.c
-SOURCESUPD = src/dmb-confupd-1-2.c src/screen.c src/cat.c src/dir.c src/base.c src/ops.c src/db.c
+SOURCESUPD = src/dmb-confupd-1-2.c
 ZIP = DMBoot-v199-$(shell date "+%Y%m%d-%H%M").zip
 
 PROGRAM = autostart.128.prg
-DRIVER = c128-ram.emd
 UPDATE = dmb-confupd-1-2.prg
 
 CC65_TARGET = c128
@@ -29,9 +28,9 @@ $(PROGRAM): $(SOURCES:.c=.o)
 	$(CC) $(LDFLAGS) -o $@ $^ c128-ram.o 
 
 $(UPDATE): $(SOURCESUPD:.c=.o)
-	$(CC) $(LDFLAGSUPD) -o $@ $^
+	$(CC) $(LDFLAGSUPD) -o $@ $^ c128-ram.o 
 
-$(ZIP): $(PROGRAM) $(DRIVER) $(UPDATE)
+$(ZIP): $(PROGRAM) $(UPDATE)
 	zip $@ $^
 
 clean:

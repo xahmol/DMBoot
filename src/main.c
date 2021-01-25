@@ -72,6 +72,7 @@ void printnewmenuslot(int pos, int color, char* name);
 void getslotfromem(int slotnumber);
 void putslottoem(int slotnumber);
 char menuslotkey(int slotnumber);
+int keytomenuslot(char keypress);
 
 //Variables
 BYTE DIR1H;
@@ -133,6 +134,8 @@ int main() {
         DIR2Y = (DIR1Y+2+DIR1H);
     }
 
+    cputs("Starting: Reading config file.");
+
     checkdmdevices();
     bootdevice = getcurrentdevice();    // Get device number program started from
 
@@ -146,6 +149,12 @@ int main() {
     {
         menuselect = mainmenu();
 
+        if((menuselect>47 && menuselect<58) || (menuselect>64 && menuselect<91))
+        // Menuslots 0-9, a-z
+        {
+            runbootfrommenu(keytomenuslot(menuselect));
+        }
+
         switch (menuselect)
         {
         case CH_F1:
@@ -155,20 +164,6 @@ int main() {
             {
                 pickmenuslot();
             }
-            break;
-
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-            // Menuslots 0-9
-            runbootfrommenu(menuselect - 48);
             break;
         
         case CH_F5:
@@ -279,7 +274,7 @@ void std_write(unsigned char * file_name)
     _filetype = 's';
     if(file = fopen(file_name, "w"))
     {
-        for (x=0 ; x<10 ; ++x)
+        for (x=0 ; x<36 ; ++x)
         {
             getslotfromem(x);
             fwrite(Slot.menu, sizeof(Slot.menu),1, file);
@@ -309,7 +304,7 @@ void std_read(unsigned char * file_name)
     _filetype = 's';
     if(file = fopen(file_name, "r"))
     {
-        for (x=0 ; x<10 ; ++x)
+        for (x=0 ; x<36 ; ++x)
         {
             fread(Slot.menu, sizeof(Slot.menu),1, file);
             fread(Slot.path, sizeof(Slot.path),1, file);
@@ -322,7 +317,21 @@ void std_read(unsigned char * file_name)
         }
         fclose(file);
     }
-
+    else
+    {
+        for(x=0; x<36; ++x)
+        {
+            strcpy(Slot.menu,"");
+            strcpy(Slot.path,"");
+            strcpy(Slot.file,"");
+            strcpy(Slot.cmd,"");
+            Slot.device = 0;
+            Slot.runboot = 0;
+            Slot.command = 0;
+            putslottoem(x);
+        }
+    }
+    
     cmd(bootdevice, "cd:\xff");
 }
 
@@ -467,7 +476,7 @@ char mainmenu()
     clrscr();
     headertext("Welcome to your Commodore 128.");
 
-    for ( x=0 ; x<10 ; ++x )
+    for ( x=0 ; x<36 ; ++x )
     {
         if (SCREENW==40 && x>13)
         {
@@ -596,9 +605,9 @@ char mainmenu()
         }
         else
         {
-            if(key>47 && key<58)    // If keys 0 - 9
+            if((key>47 && key<58) || (key>64 && key<91))    // If keys 0 - 9 or a - z
             {
-                getslotfromem(key-48);
+                getslotfromem(keytomenuslot(key));
                 if(strlen(Slot.menu) != 0)   // Check if menslot is empty
                 {
                     select = 1;
@@ -1224,5 +1233,21 @@ char menuslotkey(int slotnumber)
     else
     {
         return slotnumber+97; // Letters a-z
+    }
+}
+
+int keytomenuslot(char keypress)
+{
+    // Routine to convert keypress to numerical slotnumber
+    // Input: keypress = ASCII value of key pressed 0-9 or a-z
+    // Output: Corresponding menuslotnumber
+
+    if(keypress>64)
+    {
+        return keypress - 55;
+    }
+    else
+    {
+        return keypress - 48;
     }
 }

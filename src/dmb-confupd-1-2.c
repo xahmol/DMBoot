@@ -8,7 +8,6 @@
 #include <device.h>
 #include <em.h>
 #include "defines.h"
-#include "ops.h"
 
 void std_write(unsigned char * file_name);
 void std_read(unsigned char * file_name);
@@ -55,14 +54,14 @@ int main() {
     clrscr();
     cputs("DM Boot: Upgrade config from 0.99 to 1.99 \n\r");
     cputs("Loading extended memory driver...\n\r");
-    em_load_driver("c128-ram.emd"); // Load extended memory driver 
+    em_install(&c128_ram); ; // Load extended memory driver 
     cputs("Read old config....\n\r");
     std_read("dmbootconf"); // Read config file old format
     cputs("Write in new format...\n\r");
     std_write("dmbootconf"); // Write config new format
     cputs("Finished.\n\r");
 
-    em_unload();
+    em_uninstall();
     return 0;
 }
 
@@ -74,12 +73,10 @@ void std_write(unsigned char * file_name)
     FILE *file;
     int x;
 
-    cmd(bootdevice,"cd:/usb*/11");  // Set working dir to 11 dir at SoftIEC
-
     _filetype = 's';
     if(file = fopen(file_name, "w"))
     {
-        for (x=0 ; x<10 ; ++x)
+        for (x=0 ; x<36 ; ++x)
         {
             getslotfromem(x);
             fwrite(Slot.menu, sizeof(Slot.menu),1, file);
@@ -102,7 +99,17 @@ void std_read(unsigned char * file_name)
     FILE *file;
     int x;
 
-    cmd(bootdevice,"cd:/usb*/11");  // Set working dir to 11 dir at SoftIEC
+    for(x=0; x<36; ++x)
+    {
+        strcpy(Slot.menu,"");
+        strcpy(Slot.path,"");
+        strcpy(Slot.file,"");
+        strcpy(Slot.cmd,"");
+        Slot.device = 0;
+        Slot.runboot = 0;
+        Slot.command = 0;
+        putslottoem(x);
+    }
 
     _filetype = 's';
     if(file = fopen(file_name, "r"))
