@@ -3,24 +3,23 @@ Modules list:
 dmb-confupd-1-2.o:
     CODE              Offs=000000  Size=0003A6  Align=00001  Fill=0000
     RODATA            Offs=000000  Size=00009B  Align=00001  Fill=0000
-    BSS               Offs=000000  Size=00032E  Align=00001  Fill=0000
-    DATA              Offs=000000  Size=000055  Align=00001  Fill=0000
+    BSS               Offs=000000  Size=0000F5  Align=00001  Fill=0000
 c128-ram.o:
     CODE              Offs=0003A6  Size=00012B  Align=00001  Fill=0000
-    BSS               Offs=00032E  Size=000102  Align=00001  Fill=0000
+    BSS               Offs=0000F5  Size=000102  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(_directerrno.o):
     CODE              Offs=0004D1  Size=00000A  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(_fdesc.o):
     CODE              Offs=0004DB  Size=00001D  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(_file.o):
-    DATA              Offs=000055  Size=00001E  Align=00001  Fill=0000
+    DATA              Offs=000000  Size=00001E  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(_fopen.o):
     CODE              Offs=0004F8  Size=00007B  Align=00001  Fill=0000
-    BSS               Offs=000430  Size=000002  Align=00001  Fill=0000
+    BSS               Offs=0001F7  Size=000002  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(_mappederrno.o):
     CODE              Offs=000573  Size=000010  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(_oserror.o):
-    BSS               Offs=000432  Size=000001  Align=00001  Fill=0000
+    BSS               Offs=0001F9  Size=000001  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(_seterrno.o):
     CODE              Offs=000583  Size=000009  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(addeqsp.o):
@@ -29,13 +28,13 @@ c128-ram.o:
     CODE              Offs=00059D  Size=00000E  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(callmain.o):
     CODE              Offs=0005AB  Size=000017  Align=00001  Fill=0000
-    DATA              Offs=000073  Size=000004  Align=00001  Fill=0000
+    DATA              Offs=00001E  Size=000004  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(close.o):
     CODE              Offs=0005C2  Size=000038  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(clrscr.o):
 /mnt/l/cc65/lib/c128.lib(condes.o):
     CODE              Offs=0005FA  Size=00000C  Align=00001  Fill=0000
-    DATA              Offs=000077  Size=000025  Align=00001  Fill=0000
+    DATA              Offs=000022  Size=000025  Align=00001  Fill=0000
     ONCE              Offs=000000  Size=00000C  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(conio.o):
 /mnt/l/cc65/lib/c128.lib(cputc.o):
@@ -43,7 +42,7 @@ c128-ram.o:
 /mnt/l/cc65/lib/c128.lib(cputs.o):
     CODE              Offs=00064F  Size=000023  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(crt0.o):
-    BSS               Offs=000433  Size=000002  Align=00001  Fill=0000
+    BSS               Offs=0001FA  Size=000002  Align=00001  Fill=0000
     STARTUP           Offs=000000  Size=000051  Align=00001  Fill=0000
     INIT              Offs=000000  Size=00001A  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(curdevice.o):
@@ -55,16 +54,16 @@ c128-ram.o:
 /mnt/l/cc65/lib/c128.lib(devnum.o):
 /mnt/l/cc65/lib/c128.lib(diskcmd.o):
     CODE              Offs=00068E  Size=0000C4  Align=00001  Fill=0000
-    BSS               Offs=000435  Size=000017  Align=00001  Fill=0000
+    BSS               Offs=0001FC  Size=000017  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(em-kernel.o):
     RODATA            Offs=00009B  Size=000051  Align=00001  Fill=0000
-    BSS               Offs=00044C  Size=000002  Align=00001  Fill=0000
-    DATA              Offs=00009C  Size=000018  Align=00001  Fill=0000
+    BSS               Offs=000213  Size=000002  Align=00001  Fill=0000
+    DATA              Offs=000047  Size=000018  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(em_commit.o):
 /mnt/l/cc65/lib/c128.lib(em_map.o):
 /mnt/l/cc65/lib/c128.lib(em_use.o):
 /mnt/l/cc65/lib/c128.lib(errno.o):
-    BSS               Offs=00044E  Size=000002  Align=00001  Fill=0000
+    BSS               Offs=000215  Size=000002  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(exehdr.o):
     EXEHDR            Offs=000000  Size=00000C  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(fclose.o):
@@ -73,13 +72,13 @@ c128-ram.o:
     CODE              Offs=000774  Size=00008A  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(filedes.o):
     CODE              Offs=0007FE  Size=00000E  Align=00001  Fill=0000
-    DATA              Offs=0000B4  Size=000010  Align=00001  Fill=0000
+    DATA              Offs=00005F  Size=000010  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(filename.o):
     CODE              Offs=00080C  Size=0000A0  Align=00001  Fill=0000
-    BSS               Offs=000450  Size=000003  Align=00001  Fill=0000
-    DATA              Offs=0000C4  Size=000024  Align=00001  Fill=0000
+    BSS               Offs=000217  Size=000003  Align=00001  Fill=0000
+    DATA              Offs=00006F  Size=000024  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(filetype.o):
-    DATA              Offs=0000E8  Size=000001  Align=00001  Fill=0000
+    DATA              Offs=000093  Size=000001  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(filevars.o):
     INIT              Offs=00001A  Size=000001  Align=00001  Fill=0000
     ONCE              Offs=00000C  Size=00000C  Align=00001  Fill=0000
@@ -90,10 +89,10 @@ c128-ram.o:
     RODATA            Offs=0000EC  Size=000002  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(fread.o):
     CODE              Offs=00091B  Size=0000D3  Align=00001  Fill=0000
-    BSS               Offs=000453  Size=000003  Align=00001  Fill=0000
+    BSS               Offs=00021A  Size=000003  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(fwrite.o):
     CODE              Offs=0009EE  Size=00007B  Align=00001  Fill=0000
-    BSS               Offs=000456  Size=000002  Align=00001  Fill=0000
+    BSS               Offs=00021D  Size=000002  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(gotoxy.o):
     CODE              Offs=000A69  Size=00000D  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(incaxy.o):
@@ -133,7 +132,7 @@ c128-ram.o:
     CODE              Offs=000C42  Size=00001C  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(read.o):
     CODE              Offs=000C5E  Size=00007E  Align=00001  Fill=0000
-    BSS               Offs=000458  Size=000001  Align=00001  Fill=0000
+    BSS               Offs=00021F  Size=000001  Align=00001  Fill=0000
     ONCE              Offs=000018  Size=00000C  Align=00001  Fill=0000
 /mnt/l/cc65/lib/c128.lib(regswap2.o):
     CODE              Offs=000CDC  Size=000016  Align=00001  Fill=0000
@@ -170,9 +169,9 @@ STARTUP               001C0D  001C5D  000051  00001
 ONCE                  001C5E  001C98  00003B  00001
 CODE                  001C99  002AB3  000E1B  00001
 RODATA                002AB4  002BFD  00014A  00001
-DATA                  002BFE  002CE6  0000E9  00001
-INIT                  002CE7  002D01  00001B  00001
-BSS                   002D02  00315A  000459  00001
+DATA                  002BFE  002C91  000094  00001
+INIT                  002C92  002CAC  00001B  00001
+BSS                   002CAD  002ECC  000220  00001
 
 
 Exports list by name:
@@ -183,23 +182,23 @@ CLOSE                     00FFC3 RLA    CLRCH                     00FFCC RLA
 CURS_X                    0000EC RLZ    CURS_Y                    0000EB RLZ    
 OPEN                      00FFC0 RLA    READST                    00FFB7 RLA    
 SETLFS                    00FFBA RLA    SETNAM                    00FFBD RLA    
-ST                        000090 RLZ    __BSS_RUN__               002D02 RLA    
-__BSS_SIZE__              000459 REA    __CONSTRUCTOR_COUNT__     000003 REA    
+ST                        000090 RLZ    __BSS_RUN__               002CAD RLA    
+__BSS_SIZE__              000220 REA    __CONSTRUCTOR_COUNT__     000003 REA    
 __CONSTRUCTOR_TABLE__     001C93 RLA    __DESTRUCTOR_COUNT__      000001 REA    
 __DESTRUCTOR_TABLE__      002BFC RLA    __EXEHDR__                000001 REA    
 __LOADADDR__              000001 REA    __MAIN_SIZE__             009BF3 REA    
 __MAIN_START__            001C0D RLA    __STACKSIZE__             000800 REA    
 __STARTUP__               000001 REA    __ZP_START__              000002 RLA    
-__directerrno             00216A RLA    __errno                   003150 RLA    
-__fdesc                   002174 RLA    __filetab                 002C53 RLA    
-__filetype                002CE6 RLA    __fopen                   002191 RLA    
-__mappederrno             00220C RLA    __oserror                 003134 RLA    
+__directerrno             00216A RLA    __errno                   002EC2 RLA    
+__fdesc                   002174 RLA    __filetab                 002BFE RLA    
+__filetype                002C91 RLA    __fopen                   002191 RLA    
+__mappederrno             00220C RLA    __oserror                 002EA6 RLA    
 __osmaperrno              002891 RLA    __seterrno                00221C RLA    
 _c128_ram                 00203F RLA    _close                    00225B RLA    
 _clrscr                   00C142 REA    _cputc                    0022A4 RLA    
-_cputs                    0022F2 RLA    _em_commit                002CA9 REA    
-_em_install               002B53 RLA    _em_map                   002CA3 REA    
-_em_uninstall             002B93 RLA    _em_use                   002CA6 REA    
+_cputs                    0022F2 RLA    _em_commit                002C54 REA    
+_em_install               002B53 RLA    _em_map                   002C4E REA    
+_em_uninstall             002B93 RLA    _em_use                   002C51 REA    
 _exit                     001C42 RLA    _fclose                   0023EB RLA    
 _fgetc                    00240D RLA    _fopen                    002545 RLA    
 _fputc                    00255D RLA    _fread                    0025B4 RLA    
@@ -209,15 +208,15 @@ _read                     0028F7 RLA    _strcpy                   0029CF RLA
 _write                    002A3D RLA    addeq0sp                  002225 RLA    
 addysp                    002237 RLA    callmain                  002244 RLA    
 closeallfiles             0027D3  LAI   closecmdchannel           00235D RLA    
-curunit                   002D01 RLA    decsp1                    002311 RLA    
+curunit                   002CAC RLA    decsp1                    002311 RLA    
 decsp4                    00231A RLA    devnum                    0000BA RLZ    
 donelib                   002293 RLA    em_libref                 001C42 RLA    
-emd_commit                002CA9 RLA    emd_map                   002CA3 RLA    
-emd_use                   002CA6 RLA    fdtab                     002CB2 RLA    
-fnaddmode                 002534 RLA    fncmd                     002CC2 RLA    
-fncomplete                00252C RLA    fnisfile                  003154 RLA    
-fnlen                     003153 RLA    fnparse                   0024C0 RLA    
-fnset                     002522 RLA    fnunit                    003152 RLA    
+emd_commit                002C54 RLA    emd_map                   002C4E RLA    
+emd_use                   002C51 RLA    fdtab                     002C5D RLA    
+fnaddmode                 002534 RLA    fncmd                     002C6D RLA    
+fncomplete                00252C RLA    fnisfile                  002EC6 RLA    
+fnlen                     002EC5 RLA    fnparse                   0024C0 RLA    
+fnset                     002522 RLA    fnunit                    002EC4 RLA    
 freefd                    002497 RLA    gotoxy                    002702 RLA    
 incaxy                    002711 RLA    incsp2                    002722 RLA    
 incsp3                    002730 RLA    incsp4                    002735 RLA    
@@ -240,7 +239,7 @@ sreg                      000004 RLZ    stax0sp                   0029C4 RLA
 staxysp                   0029C6 RLA    tmp1                      000012 RLZ    
 tmp2                      000013 RLZ    tmp3                      000014 RLZ    
 tosudivax                 0029F0 RLA    tosumulax                 002754 RLA    
-unittab                   002CBA RLA    writefndiskcmd            0023B0 RLA    
+unittab                   002C65 RLA    writefndiskcmd            0023B0 RLA    
 zerobss                   002A91 RLA    
 
 
@@ -256,7 +255,7 @@ tmp1                      000012 RLZ    tmp2                      000013 RLZ
 tmp3                      000014 RLZ    regbank                   000016 RLZ    
 ST                        000090 RLZ    devnum                    0000BA RLZ    
 CURS_Y                    0000EB RLZ    CURS_X                    0000EC RLZ    
-__BSS_SIZE__              000459 REA    __STACKSIZE__             000800 REA    
+__BSS_SIZE__              000220 REA    __STACKSIZE__             000800 REA    
 __MAIN_START__            001C0D RLA    _exit                     001C42 RLA    
 em_libref                 001C42 RLA    initlib                   001C5E RLA    
 initcurunit               001C6A  LAI   initstdin                 001C76  LAI   
@@ -295,16 +294,16 @@ stax0sp                   0029C4 RLA    staxysp                   0029C6 RLA
 _strcpy                   0029CF RLA    tosudivax                 0029F0 RLA    
 _write                    002A3D RLA    zerobss                   002A91 RLA    
 _em_install               002B53 RLA    _em_uninstall             002B93 RLA    
-__DESTRUCTOR_TABLE__      002BFC RLA    __filetab                 002C53 RLA    
-_em_map                   002CA3 REA    emd_map                   002CA3 RLA    
-_em_use                   002CA6 REA    emd_use                   002CA6 RLA    
-_em_commit                002CA9 REA    emd_commit                002CA9 RLA    
-fdtab                     002CB2 RLA    unittab                   002CBA RLA    
-fncmd                     002CC2 RLA    __filetype                002CE6 RLA    
-curunit                   002D01 RLA    __BSS_RUN__               002D02 RLA    
-__oserror                 003134 RLA    __errno                   003150 RLA    
-fnunit                    003152 RLA    fnlen                     003153 RLA    
-fnisfile                  003154 RLA    __MAIN_SIZE__             009BF3 REA    
+__DESTRUCTOR_TABLE__      002BFC RLA    __filetab                 002BFE RLA    
+_em_map                   002C4E REA    emd_map                   002C4E RLA    
+_em_use                   002C51 REA    emd_use                   002C51 RLA    
+_em_commit                002C54 REA    emd_commit                002C54 RLA    
+fdtab                     002C5D RLA    unittab                   002C65 RLA    
+fncmd                     002C6D RLA    __filetype                002C91 RLA    
+curunit                   002CAC RLA    __BSS_RUN__               002CAD RLA    
+__oserror                 002EA6 RLA    __errno                   002EC2 RLA    
+fnunit                    002EC4 RLA    fnlen                     002EC5 RLA    
+fnisfile                  002EC6 RLA    __MAIN_SIZE__             009BF3 REA    
 _clrscr                   00C142 REA    READST                    00FFB7 RLA    
 SETLFS                    00FFBA RLA    SETNAM                    00FFBD RLA    
 OPEN                      00FFC0 RLA    CLOSE                     00FFC3 RLA    
@@ -424,7 +423,7 @@ __seterrno (_seterrno.o):
     fopen.o                   /mnt/l/cc65/asminc/errno.inc(9)
     fclose.o                  /mnt/l/cc65/asminc/errno.inc(9)
 _c128_ram (c128-ram.o):
-    dmb-confupd-1-2.o         src/dmb-confupd-1-2.s(46)
+    dmb-confupd-1-2.o         src/dmb-confupd-1-2.s(30)
 _close (close.o):
     open.o                    cbm/open.s(14)
     fclose.o                  common/fclose.s(10)
@@ -473,10 +472,10 @@ _write (write.o):
     fwrite.o                  common/fwrite.s(10)
     fputc.o                   ../libwrk/c128/fputc.s(14)
 addeq0sp (addeqsp.o):
-    dmb-confupd-1-2.o         src/dmb-confupd-1-2.s(588)
-    dmb-confupd-1-2.o         src/dmb-confupd-1-2.s(588)
-    dmb-confupd-1-2.o         src/dmb-confupd-1-2.s(588)
-    dmb-confupd-1-2.o         src/dmb-confupd-1-2.s(588)
+    dmb-confupd-1-2.o         src/dmb-confupd-1-2.s(514)
+    dmb-confupd-1-2.o         src/dmb-confupd-1-2.s(514)
+    dmb-confupd-1-2.o         src/dmb-confupd-1-2.s(514)
+    dmb-confupd-1-2.o         src/dmb-confupd-1-2.s(514)
 addysp (addysp.o):
     open.o                    cbm/open.s(10)
     incsp6.o                  runtime/incsp6.s(8)
@@ -495,8 +494,8 @@ curunit (filevars.o):
 decsp1 (decsp1.o):
     fgetc.o                   ../libwrk/c128/fgetc.s(95)
 decsp4 (decsp4.o):
-    dmb-confupd-1-2.o         src/dmb-confupd-1-2.s(588)
-    dmb-confupd-1-2.o         src/dmb-confupd-1-2.s(588)
+    dmb-confupd-1-2.o         src/dmb-confupd-1-2.s(514)
+    dmb-confupd-1-2.o         src/dmb-confupd-1-2.s(514)
 devnum (devnum.o):
     filevars.o                cbm/filevars.s(9)
 donelib (condes.o):
@@ -539,8 +538,8 @@ gotoxy (gotoxy.o):
     cputc.o                   c128/cputc.s(11)
     cputs.o                   conio/cputs.s(9)
 incaxy (incaxy.o):
-    dmb-confupd-1-2.o         src/dmb-confupd-1-2.s(588)
-    dmb-confupd-1-2.o         src/dmb-confupd-1-2.s(588)
+    dmb-confupd-1-2.o         src/dmb-confupd-1-2.s(514)
+    dmb-confupd-1-2.o         src/dmb-confupd-1-2.s(514)
 incsp2 (incsp2.o):
     popptr1.o                 runtime/popptr1.s(8)
 incsp3 (incsp3.o):
@@ -549,27 +548,27 @@ incsp4 (incsp4.o):
     _fopen.o                  common/_fopen.s(11)
     fread.o                   common/fread.s(12)
     fputc.o                   ../libwrk/c128/fputc.s(75)
-    dmb-confupd-1-2.o         src/dmb-confupd-1-2.s(588)
-    dmb-confupd-1-2.o         src/dmb-confupd-1-2.s(588)
+    dmb-confupd-1-2.o         src/dmb-confupd-1-2.s(514)
+    dmb-confupd-1-2.o         src/dmb-confupd-1-2.s(514)
 incsp6 (incsp6.o):
     fwrite.o                  common/fwrite.s(11)
     fread.o                   common/fread.s(12)
-    dmb-confupd-1-2.o         src/dmb-confupd-1-2.s(588)
-    dmb-confupd-1-2.o         src/dmb-confupd-1-2.s(588)
+    dmb-confupd-1-2.o         src/dmb-confupd-1-2.s(514)
+    dmb-confupd-1-2.o         src/dmb-confupd-1-2.s(514)
 initlib (condes.o):
     crt0.o                    c128/crt0.s(7)
 ldax0sp (ldaxsp.o):
     fread.o                   common/fread.s(13)
-    dmb-confupd-1-2.o         src/dmb-confupd-1-2.s(588)
-    dmb-confupd-1-2.o         src/dmb-confupd-1-2.s(588)
-    dmb-confupd-1-2.o         src/dmb-confupd-1-2.s(588)
-    dmb-confupd-1-2.o         src/dmb-confupd-1-2.s(588)
+    dmb-confupd-1-2.o         src/dmb-confupd-1-2.s(514)
+    dmb-confupd-1-2.o         src/dmb-confupd-1-2.s(514)
+    dmb-confupd-1-2.o         src/dmb-confupd-1-2.s(514)
+    dmb-confupd-1-2.o         src/dmb-confupd-1-2.s(514)
 ldaxysp (ldaxsp.o):
     fwrite.o                  common/fwrite.s(11)
     fread.o                   common/fread.s(13)
-    dmb-confupd-1-2.o         src/dmb-confupd-1-2.s(588)
-    dmb-confupd-1-2.o         src/dmb-confupd-1-2.s(588)
-    dmb-confupd-1-2.o         src/dmb-confupd-1-2.s(588)
+    dmb-confupd-1-2.o         src/dmb-confupd-1-2.s(514)
+    dmb-confupd-1-2.o         src/dmb-confupd-1-2.s(514)
+    dmb-confupd-1-2.o         src/dmb-confupd-1-2.s(514)
 leaa0sp (leaaxsp.o):
     fputc.o                   ../libwrk/c128/fputc.s(75)
     fgetc.o                   ../libwrk/c128/fgetc.s(95)
@@ -628,8 +627,8 @@ pusha0 (pushax.o):
     fread.o                   common/fread.s(11)
     fputc.o                   ../libwrk/c128/fputc.s(75)
     fgetc.o                   ../libwrk/c128/fgetc.s(95)
-    dmb-confupd-1-2.o         src/dmb-confupd-1-2.s(588)
-    dmb-confupd-1-2.o         src/dmb-confupd-1-2.s(588)
+    dmb-confupd-1-2.o         src/dmb-confupd-1-2.s(514)
+    dmb-confupd-1-2.o         src/dmb-confupd-1-2.s(514)
 pushax (pushax.o):
     callmain.o                runtime/callmain.s(11)
     fwrite.o                  common/fwrite.s(11)
@@ -637,17 +636,17 @@ pushax (pushax.o):
     fputc.o                   ../libwrk/c128/fputc.s(75)
     fopen.o                   common/fopen.s(11)
     fgetc.o                   ../libwrk/c128/fgetc.s(95)
-    dmb-confupd-1-2.o         src/dmb-confupd-1-2.s(588)
-    dmb-confupd-1-2.o         src/dmb-confupd-1-2.s(588)
-    dmb-confupd-1-2.o         src/dmb-confupd-1-2.s(588)
-    dmb-confupd-1-2.o         src/dmb-confupd-1-2.s(588)
+    dmb-confupd-1-2.o         src/dmb-confupd-1-2.s(514)
+    dmb-confupd-1-2.o         src/dmb-confupd-1-2.s(514)
+    dmb-confupd-1-2.o         src/dmb-confupd-1-2.s(514)
+    dmb-confupd-1-2.o         src/dmb-confupd-1-2.s(514)
 pushw0sp (pushwsp.o):
-    dmb-confupd-1-2.o         src/dmb-confupd-1-2.s(588)
+    dmb-confupd-1-2.o         src/dmb-confupd-1-2.s(514)
 pushwysp (pushwsp.o):
     fwrite.o                  common/fwrite.s(11)
     fread.o                   common/fread.s(14)
-    dmb-confupd-1-2.o         src/dmb-confupd-1-2.s(588)
-    dmb-confupd-1-2.o         src/dmb-confupd-1-2.s(588)
+    dmb-confupd-1-2.o         src/dmb-confupd-1-2.s(514)
+    dmb-confupd-1-2.o         src/dmb-confupd-1-2.s(514)
 readdiskerror (diskcmd.o):
     open.o                    cbm/open.s(12)
     close.o                   cbm/close.s(9)
@@ -690,13 +689,13 @@ sp (zeropage.o):
 sreg (zeropage.o):
     udiv.o                    runtime/udiv.s(10)
 stax0sp (staxsp.o):
-    dmb-confupd-1-2.o         src/dmb-confupd-1-2.s(588)
-    dmb-confupd-1-2.o         src/dmb-confupd-1-2.s(588)
-    dmb-confupd-1-2.o         src/dmb-confupd-1-2.s(588)
-    dmb-confupd-1-2.o         src/dmb-confupd-1-2.s(588)
+    dmb-confupd-1-2.o         src/dmb-confupd-1-2.s(514)
+    dmb-confupd-1-2.o         src/dmb-confupd-1-2.s(514)
+    dmb-confupd-1-2.o         src/dmb-confupd-1-2.s(514)
+    dmb-confupd-1-2.o         src/dmb-confupd-1-2.s(514)
 staxysp (staxsp.o):
-    dmb-confupd-1-2.o         src/dmb-confupd-1-2.s(588)
-    dmb-confupd-1-2.o         src/dmb-confupd-1-2.s(588)
+    dmb-confupd-1-2.o         src/dmb-confupd-1-2.s(514)
+    dmb-confupd-1-2.o         src/dmb-confupd-1-2.s(514)
 tmp1 (zeropage.o):
     filename.o                cbm/filename.s(12)
     diskcmd.o                 cbm/diskcmd.s(15)

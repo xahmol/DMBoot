@@ -14,24 +14,6 @@ void std_read(unsigned char * file_name);
 void getslotfromem(int slotnumber);
 void putslottoem(int slotnumber);
 
-BYTE DIR1H;
-BYTE DIR2H;
-unsigned int SCREENW;
-unsigned int MENUX;
-unsigned int MENUXT;
-unsigned int MENUW;
-unsigned int DIR2X;
-unsigned int DIR2Y;
-unsigned int validdriveid;
-unsigned int idnr[30];
-char path[8][20];
-char pathfile[20];
-BYTE pathdevice;
-BYTE pathrunboot;
-BYTE depth = 0;
-BYTE trace = 0;
-BYTE forceeight = 0;
-BYTE fastflag = 0;
 struct SlotStruct {
     char path[100];
     char menu[21];
@@ -42,10 +24,6 @@ struct SlotStruct {
     BYTE command;
 };
 struct SlotStruct Slot;
-char newmenuname[10][21];
-unsigned int newmenuoldslot[10];
-char spaces[81]    = "                                                                                ";
-char spacedest[81];
 BYTE bootdevice;
 
 int main() {
