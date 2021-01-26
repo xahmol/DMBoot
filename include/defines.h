@@ -80,15 +80,11 @@ extern char path[8][20];
 extern BYTE pathdevice;
 extern char pathfile[20];
 extern BYTE pathrunboot;
-extern char menupath[10][100];
-extern char menuname[10][21];
-extern char menufile[10][20];
-extern unsigned int menurunboot[10];
-extern unsigned int menudevice[10];
 extern BYTE depth;
 extern BYTE trace;
 extern BYTE forceeight;
 extern BYTE fastflag;
+extern char c128_ram;
 
 // keyboard buffer
 #define KBCHARS 842

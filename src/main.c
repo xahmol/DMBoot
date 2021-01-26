@@ -35,6 +35,7 @@
 #include <ctype.h>
 #include <device.h>
 #include <accelerator.h>
+#include <em.h>
 #include "defines.h"
 #include "ops.h"
 #include "screen.h"
@@ -68,6 +69,10 @@ int deletemenuslot();
 int renamemenuslot();
 int reordermenuslot();
 void printnewmenuslot(int pos, int color, char* name);
+void getslotfromem(int slotnumber);
+void putslottoem(int slotnumber);
+char menuslotkey(int slotnumber);
+int keytomenuslot(char keypress);
 
 //Variables
 BYTE DIR1H;
@@ -88,17 +93,18 @@ BYTE depth = 0;
 BYTE trace = 0;
 BYTE forceeight = 0;
 BYTE fastflag = 0;
-char menupath[10][100];
-char menuname[10][21];
-char menufile[10][20];
-unsigned int menurunboot[10];
-unsigned int menudevice[10];
-char newmenuname[10][21];
-char newmenupath[10][100];
-char newmenufile[10][20];
-unsigned int newmenurunboot[10];
-unsigned int newmenudevice[10];
-unsigned int newmenuoldslot[10];
+struct SlotStruct {
+    char path[100];
+    char menu[21];
+    char file[20];
+    char cmd[100];
+    BYTE runboot;
+    BYTE device;
+    BYTE command;
+};
+struct SlotStruct Slot;
+char newmenuname[36][21];
+unsigned int newmenuoldslot[36];
 char spaces[81]    = "                                                                                ";
 char spacedest[81];
 BYTE bootdevice;
@@ -128,8 +134,13 @@ int main() {
         DIR2Y = (DIR1Y+2+DIR1H);
     }
 
+    cputs("Starting: Reading config file.");
+
     checkdmdevices();
     bootdevice = getcurrentdevice();    // Get device number program started from
+
+    em_install(&c128_ram); // Load extended memory driver
+
     std_read("dmbootconf"); // Read config file
     
     initScreen(DC_COLOR_BORDER, DC_COLOR_BG, DC_COLOR_TEXT);
@@ -138,9 +149,15 @@ int main() {
     {
         menuselect = mainmenu();
 
+        if((menuselect>47 && menuselect<58) || (menuselect>64 && menuselect<91))
+        // Menuslots 0-9, a-z
+        {
+            runbootfrommenu(keytomenuslot(menuselect));
+        }
+
         switch (menuselect)
         {
-        case 'f':
+        case CH_F1:
             // Filebrowser
             mainLoopBrowse();
             if (trace == 1)
@@ -148,37 +165,23 @@ int main() {
                 pickmenuslot();
             }
             break;
-
-        case '0':
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-            // Menuslots 0-9
-            runbootfrommenu(menuselect - 48);
-            break;
         
-        case 'c':
+        case CH_F5:
             // Go to C64 mode
             commandfrommenu("go 64", 1);
             break;
 
-        case 'b':
+        case CH_F4:
             // Boot from floppy
             bootfromfloppy();
             break;
 
-        case 'i':
+        case CH_F2:
             // Information and credits
             information();
             break;
         
-        case 'e':
+        case CH_F7:
             // Edit / re-order and delete menuslots
             editmenuoptions();
             break;
@@ -186,7 +189,7 @@ int main() {
         default:
             break;
         }
-    } while (menuselect != 'q');
+    } while (menuselect != CH_F3);
 
     exitScreen();
     commandfrommenu("scnclr:new",0);    // Erase memory and clear screen on exit
@@ -271,13 +274,16 @@ void std_write(unsigned char * file_name)
     _filetype = 's';
     if(file = fopen(file_name, "w"))
     {
-        for (x=0 ; x<10 ; ++x)
+        for (x=0 ; x<36 ; ++x)
         {
-            fwrite(menuname[x], sizeof(menuname[x]),1, file);
-            fwrite(menupath[x], sizeof(menupath[x]),1, file);
-            fwrite(menufile[x], sizeof(menufile[x]),1, file);
-            fputc(menudevice[x], file);
-            fputc(menurunboot[x], file);
+            getslotfromem(x);
+            fwrite(Slot.menu, sizeof(Slot.menu),1, file);
+            fwrite(Slot.path, sizeof(Slot.path),1, file);
+            fwrite(Slot.file, sizeof(Slot.file),1, file);
+            fwrite(Slot.cmd, sizeof(Slot.cmd),1, file);
+            fputc(Slot.device, file);
+            fputc(Slot.runboot, file);
+            fputc(Slot.command, file);
         }
         fclose(file);
     }
@@ -298,17 +304,34 @@ void std_read(unsigned char * file_name)
     _filetype = 's';
     if(file = fopen(file_name, "r"))
     {
-        for (x=0 ; x<10 ; ++x)
+        for (x=0 ; x<36 ; ++x)
         {
-            fread(menuname[x], sizeof(menuname[x]),1, file);
-            fread(menupath[x], sizeof(menupath[x]),1, file);
-            fread(menufile[x], sizeof(menufile[x]),1, file);
-            menudevice[x] = fgetc(file);
-            menurunboot[x] = fgetc(file);
+            fread(Slot.menu, sizeof(Slot.menu),1, file);
+            fread(Slot.path, sizeof(Slot.path),1, file);
+            fread(Slot.file, sizeof(Slot.file),1, file);
+            fread(Slot.cmd, sizeof(Slot.cmd),1, file);
+            Slot.device = fgetc(file);
+            Slot.runboot = fgetc(file);
+            Slot.command = fgetc(file);
+            putslottoem(x);
         }
         fclose(file);
     }
-
+    else
+    {
+        for(x=0; x<36; ++x)
+        {
+            strcpy(Slot.menu,"");
+            strcpy(Slot.path,"");
+            strcpy(Slot.file,"");
+            strcpy(Slot.cmd,"");
+            Slot.device = 0;
+            Slot.runboot = 0;
+            Slot.command = 0;
+            putslottoem(x);
+        }
+    }
+    
     cmd(bootdevice, "cd:\xff");
 }
 
@@ -382,9 +405,10 @@ void pickmenuslot()
     presentmenuslots();
     cputs("\nChoose slot by pressing number: ");
     menuslot = getkey(1) - 48;
-    selected = 1 ;
+    selected = 1;
+    getslotfromem(menuslot);
     cprintf("%i\n\r", menuslot);
-    if ( strlen(menuname[menuslot]) != 0 )
+    if ( strlen(Slot.menu) != 0 )
     {
         cprintf("Slot not empty. Are you sure? Y/N ");
         yesno = getkey(128);
@@ -398,18 +422,22 @@ void pickmenuslot()
     {
         gotoxy(0,18);
         cputs("Choose name for slot:");
-        strcpy(menuname[menuslot],pathfile);
-        textInput(0,19,menuname[menuslot],20);
+        strcpy(Slot.menu, pathfile);
+        textInput(0,19,Slot.menu,20);
 
-        menudevice[menuslot] = pathdevice;
-        strcpy(menufile[menuslot],pathfile);
-        strcpy(menupath[menuslot],pathconcat());
-        menurunboot[menuslot] = pathrunboot;
+        Slot.device = pathdevice;
+        strcpy(Slot.file, pathfile);
+        strcpy(Slot.path, pathconcat());
+        strcpy(Slot.cmd, "");
+        Slot.runboot = pathrunboot;
+        Slot.command = 0;
 
         if ( devicetype[pathdevice] != U64 && (pathrunboot == 2 || pathrunboot == 3 || pathrunboot == 12 || pathrunboot == 13))
         {
-            menurunboot[menuslot] = pathrunboot - 2;
+            Slot.runboot = pathrunboot - 2;
         }
+
+        putslottoem(menuslot);
 
         std_write("dmbootconf");
     }
@@ -448,75 +476,139 @@ char mainmenu()
     clrscr();
     headertext("Welcome to your Commodore 128.");
 
-    for ( x=0 ; x<10 ; ++x )
+    for ( x=0 ; x<36 ; ++x )
     {
-        if ( strlen(menuname[x]) != 0 )
+        if (SCREENW==40 && x>13)
+        {
+            break;
+        }
+        if (x>17)
+        {
+            gotoxy(40,x-15);
+        }
+        else
+        {
+            gotoxy(0,x+3);
+        }
+        
+        getslotfromem(x);
+        if ( strlen(Slot.menu) != 0 )
         {
             revers(1);
             textcolor(DMB_COLOR_SELECT);
-            cprintf(" %i ",x);
+            cprintf(" %2c ",menuslotkey(x));
             revers(0);
             textcolor(DC_COLOR_TEXT);
-            cprintf(" %s\n\r",menuname[x]);
+            cprintf(" %s",Slot.menu);
         }
     }
 
+    if(SCREENW==80)
+    {
+        gotoxy(0,21);
+    }
+    else
+    {
+        gotoxy(0,18);
+    }    
     revers(1);
     textcolor(DMB_COLOR_SELECT);
-    cputs(" F ");
+    cputs(" F1 ");
     revers(0);
     textcolor(DC_COLOR_TEXT);
-    cputs(" Filebrowser\n\r");
+    cputs(" Filebrowser");
 
+    
+    if(SCREENW==80)
+    {
+        gotoxy(40,21);
+    }
+    else
+    {
+        gotoxy(0,19);
+    }
     revers(1);
     textcolor(DMB_COLOR_SELECT);
-    cputs(" Q ");
+    cputs(" F2 ");
     revers(0);
     textcolor(DC_COLOR_TEXT);
-    cputs(" Quit to C128 Basic\n\r");
+    cputs(" Information");
 
+    if(SCREENW==80)
+    {
+        gotoxy(0,22);
+    }
+    else
+    {
+        gotoxy(0,20);
+    }
     revers(1);
     textcolor(DMB_COLOR_SELECT);
-    cputs(" C ");
+    cputs(" F3 ");
     revers(0);
     textcolor(DC_COLOR_TEXT);
-    cputs(" C64 mode\n\r");
-
+    cputs(" Quit to C128 Basic");
+    
+    if(SCREENW==80)
+    {
+        gotoxy(40,22);
+    }
+    else
+    {
+        gotoxy(0,21);
+    }
     revers(1);
     textcolor(DMB_COLOR_SELECT);
-    cputs(" B ");
+    cputs(" F4 ");
     revers(0);
     textcolor(DC_COLOR_TEXT);
-    cputs(" Boot from floppy\n\r");
+    cputs(" Boot from floppy");
 
+    if(SCREENW==80)
+    {
+        gotoxy(0,23);
+    }
+    else
+    {
+        gotoxy(0,22);
+    }
     revers(1);
     textcolor(DMB_COLOR_SELECT);
-    cputs(" E ");
+    cputs(" F5 ");
     revers(0);
     textcolor(DC_COLOR_TEXT);
-    cputs(" Edit/Reorder/Delete menuoptions\n\r");
+    cputs(" C64 mode");
 
+    if(SCREENW==80)
+    {
+        gotoxy(40,23);
+    }
+    else
+    {
+        gotoxy(0,23);
+    }
     revers(1);
     textcolor(DMB_COLOR_SELECT);
-    cputs(" I ");
+    cputs(" F7 ");
     revers(0);
     textcolor(DC_COLOR_TEXT);
-    cputs(" Information\n\r");
+    cputs(" Edit/Reorder/Delete menu");
 
-    cputs("\nMake your choice.");
+    cputsxy(0,24,"Make your choice.");
 
     do
     {
-        key = getkey(2);    // obtain alphanumeric key
-        if (key == 'f' || key == 'q' || key == 'c' || key == 'b' || key == 'i' || key == 'e')
+        key = cgetc();
+        if (key == CH_F1 || key == CH_F2 || key == CH_F3 || key == CH_F4 || key == CH_F5 || key == CH_F7)
         {
             select = 1;
         }
         else
         {
-            if(key>47 && key<58)    // If keys 0 - 9
+            if((key>47 && key<58) || (key>64 && key<91))    // If keys 0 - 9 or a - z
             {
-                if(strlen(menuname[key-48]) != 0)   // Check if menslot is empty
+                getslotfromem(keytomenuslot(key));
+                if(strlen(Slot.menu) != 0)   // Check if menslot is empty
                 {
                     select = 1;
                 }
@@ -531,10 +623,12 @@ void runbootfrommenu(int select)
     // Function to execute selected boot option choice slot 0-9
     // Input: select: chosen menuslot 0-9
 
+    getslotfromem(select);
+
     // Enter correct directory path on correct device number
-    cmd(menudevice[select],menupath[select]);
+    cmd(Slot.device,Slot.path);
     // Execute or boot
-    execute(menufile[select],menudevice[select],menurunboot[select]);
+    execute(Slot.file,Slot.device,Slot.runboot);
 }
 
 void commandfrommenu(char * command, int confirm)
@@ -751,18 +845,20 @@ void presentmenuslots()
     cputs("Present menu slots:\n\n\r");
     for ( x=0 ; x<10 ; ++x )
     {
+        getslotfromem(x);
+
         revers(1);
         textcolor(DMB_COLOR_SELECT);
         cprintf(" %i ",x);
         revers(0);
         textcolor(DC_COLOR_TEXT);
-        if ( strlen(menuname[x]) == 0 )
+        if ( strlen(Slot.menu) == 0 )
         {
             cputs(" <EMPTY>\n\r");
         }
         else
         {
-            cprintf(" %s\n\r",menuname[x]);
+            cprintf(" %s\n\r",Slot.menu);
         }
     }
 }
@@ -786,8 +882,11 @@ int deletemenuslot()
 
     menuslot = getkey(1) - 48;
     selected = 1 ;
+
+    getslotfromem(menuslot);
+
     cprintf("%i\n\r", menuslot);
-    if ( strlen(menuname[menuslot]) != 0 )
+    if ( strlen(Slot.menu) != 0 )
     {
         cprintf("Are you sure? Y/N ");
         yesno = getkey(128);
@@ -805,12 +904,15 @@ int deletemenuslot()
     }
     if (selected == 1)
     {
-        strcpy(menuname[menuslot],"");
-        strcpy(menufile[menuslot],"");
-        strcpy(menupath[menuslot],"");
-        menurunboot[menuslot] = 0;
-        menudevice[menuslot] = 0;
+        strcpy(Slot.menu,"");
+        strcpy(Slot.file,"");
+        strcpy(Slot.path,"");
+        strcpy(Slot.cmd,"");
+        Slot.runboot = 0;
+        Slot.device = 0;
+        Slot.command = 0;
         changesmade = 1;
+        putslottoem(menuslot);
     }
     
     return changesmade;
@@ -835,8 +937,9 @@ int renamemenuslot()
 
     menuslot = getkey(1) - 48;
     selected = 1 ;
+    getslotfromem(menuslot);
     cprintf("%i\n\r", menuslot);
-    if ( strlen(menuname[menuslot]) != 0 )
+    if ( strlen(Slot.menu) != 0 )
     {
         cprintf("Are you sure? Y/N ");
         yesno = getkey(128);
@@ -856,7 +959,8 @@ int renamemenuslot()
     {
         gotoxy(0,18);
         cputs("Choose name for slot:");
-        textInput(0,19,menuname[menuslot],20);
+        textInput(0,19,Slot.menu,20);
+        putslottoem(menuslot);
         changesmade = 1;
     }
     
@@ -880,7 +984,7 @@ int reordermenuslot()
     do
     {
         clrscr();
-        headertext("Rename menu slots");
+        headertext("Re-order menu slots");
 
         presentmenuslots();
 
@@ -904,7 +1008,8 @@ int reordermenuslot()
             {
                 if(key>47 && key<58)    // If keys 0 - 9
                 {
-                    if(strlen(menuname[key-48]) != 0)   // Check if menslot is empty
+                    getslotfromem(key-48);
+                    if(strlen(Slot.menu) != 0)   // Check if menslot is empty
                     {
                         select = 1;
                     }
@@ -916,12 +1021,13 @@ int reordermenuslot()
         {
             clearArea(0,16,40,2);
             menuslot = key - 48;
+            getslotfromem(menuslot);
             gotoxy(0,menuslot+5);
             revers(1);
             textcolor(DC_COLOR_HIGHLIGHT);
             cprintf(" %i ",menuslot);
             revers(0);
-            cprintf(" %s\n\r",menuname[menuslot]);
+            cprintf(" %s\n\r",Slot.menu);
             gotoxy(0,16);
             textcolor(DC_COLOR_TEXT);
             cputs("Move slot up or down by ");
@@ -937,11 +1043,9 @@ int reordermenuslot()
 
             for (x=0;x<10;x++)
             {
-                strcpy(newmenuname[x],menuname[x]);
-                strcpy(newmenufile[x],menufile[x]);
-                strcpy(newmenupath[x],menupath[x]);
-                newmenudevice[x] = menudevice[x];
-                newmenurunboot[x] = menurunboot[x];
+                getslotfromem(x);
+                putslottoem(x+40);
+                strcpy(newmenuname[x],Slot.menu);
                 newmenuoldslot[x] = x;
             }
 
@@ -1019,18 +1123,14 @@ int reordermenuslot()
                 changesmade = 1;
                 for (x=0;x<10;x++)
                 {
-                    strcpy(newmenufile[x], menufile[newmenuoldslot[x]]);
-                    strcpy(newmenupath[x], menupath[newmenuoldslot[x]]);
-                    newmenudevice[x] = menudevice[newmenuoldslot[x]];
-                    newmenurunboot[x] = menurunboot[newmenuoldslot[x]];
+                    getslotfromem(newmenuoldslot[x]);
+                    strcpy(Slot.menu,newmenuname[x]);
+                    putslottoem(x+40);
                 }
                 for (x=0;x<10;x++)
                 {
-                    strcpy(menuname[x], newmenuname[x]);
-                    strcpy(menufile[x], newmenufile[x]);
-                    strcpy(menupath[x], newmenupath[x]);
-                    menudevice[x] = newmenudevice[x];
-                    menurunboot[x] = newmenurunboot[x];
+                    getslotfromem(x+40);
+                    putslottoem(x);
                 }
             }
         }
@@ -1074,5 +1174,80 @@ void printnewmenuslot(int pos, int color, char* name)
     else
     {
         cprintf(" %s",name);
+    }
+}
+
+void getslotfromem(int slotnumber)
+{
+    // Routine to read a menu option from extended memory page
+    // Input: Slotnumber = pagenumber
+
+    char* page = em_map(slotnumber);
+    strcpy(Slot.path, page);
+    page = page + 100;
+    strcpy(Slot.menu, page);
+    page = page + 21;
+    strcpy(Slot.file, page);
+    page = page + 20;
+    strcpy(Slot.cmd, page);
+    page = page + 100;
+    Slot.runboot = *page;
+    page++;
+    Slot.device = *page;
+    page++;
+    Slot.command  = *page;  
+}
+
+void putslottoem(int slotnumber)
+{
+    // Routine to write a menu option to extended memory page
+    // Input: Slotnumber = pagenumber
+
+    char* page = em_use(slotnumber);
+    strcpy(page, Slot.path);
+    page = page + 100;
+    strcpy(page, Slot.menu);
+    page = page + 21;
+    strcpy(page, Slot.file);
+    page = page + 20;
+    strcpy(page, Slot.cmd);
+    page = page + 100;
+    *page = Slot.runboot;
+    page++;
+    *page = Slot.device;
+    page++;
+    *page = Slot.command;  
+    em_commit();
+}
+
+char menuslotkey(int slotnumber)
+{
+    // Routine to convert numerical slotnumber to key in menu
+    // Input: Slotnumber = menu slot number
+    // Output: Corresponding 0-9, a-z key
+
+    if(slotnumber<10)
+    {
+        return slotnumber+48; // Numbers 0-9
+    }
+    else
+    {
+        return slotnumber+97; // Letters a-z
+    }
+}
+
+int keytomenuslot(char keypress)
+{
+    // Routine to convert keypress to numerical slotnumber
+    // Input: keypress = ASCII value of key pressed 0-9 or a-z
+    // Output: Corresponding menuslotnumber
+
+    if(keypress>64)
+    {
+        return keypress - 55;
+    }
+    else
+    {
+        return keypress - 48;
     }
 }
