@@ -208,7 +208,7 @@ mainLoopBrowse(void)
           cwd=GETCWD;
           if (trace == 0)
           {
-            execute(dirs[context]->selected->dirent.name,devices[context], 1 + 2*forceeight + 10*fastflag);
+            execute(dirs[context]->selected->dirent.name,devices[context], 1 + 2*forceeight + 10*fastflag, "");
           }
           else
           {
@@ -349,7 +349,7 @@ mainLoopBrowse(void)
             {
               if (trace == 0)
               {
-                execute(dirs[context]->selected->dirent.name,devices[context], 0 + 2*forceeight + 10*fastflag);
+                execute(dirs[context]->selected->dirent.name,devices[context], 0 + 2*forceeight + 10*fastflag, "");
               }
               else
               {

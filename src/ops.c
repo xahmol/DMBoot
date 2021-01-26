@@ -138,7 +138,7 @@ cmd(const BYTE device, const char *cmd)
 }
 
 void
-execute(char * prg, BYTE device, BYTE boot)
+execute(char * prg, BYTE device, BYTE boot, char * command)
 {
   // Routine to execute or boot chosen file or dir
   // Input:
@@ -150,12 +150,26 @@ execute(char * prg, BYTE device, BYTE boot)
   //          3: Run without drive set to 8
   //          4: Boot from dir without drive set to 8
   //          Add 10 to option to execute in FAST mode
+  // command: User defined command to be executed before execution.
+  //          Empty is no command.
+
+  int ypos = 2;
+  int numberenter =1;
+  int x;
   
   getDeviceType(device);  // Recognise drive type of device
   
   exitScreen(); // prepare the screen with the basic command to load the next program
 
-  gotoxy(0,2);
+  gotoxy(0,ypos);
+
+  if (strlen(command) != 0)
+  {
+    cprintf("%s", command);
+    ypos = ypos + (strlen(command)/SCREENW) + 3;
+    gotoxy(0,ypos);
+    numberenter++;
+  }
 
   switch (boot)
   {
@@ -169,14 +183,16 @@ execute(char * prg, BYTE device, BYTE boot)
 
   case 2:
     cputs("poke 673,8");
-    gotoxy(0,5);
+    gotoxy(0,ypos+3);
     cprintf("run\"%s\",u%i", prg, 8);
+    numberenter++;
     break;
   
   case 3:
     cputs("poke 673,8");
-    gotoxy(0,5);
+    gotoxy(0,ypos+3);
     cprintf("boot u%i", 8);
+    numberenter++;
     break;
 
   case 10:
@@ -189,32 +205,29 @@ execute(char * prg, BYTE device, BYTE boot)
 
   case 12:
     cputs("fast:poke 673,8");
-    gotoxy(0,5);
+    gotoxy(0,ypos+3);
     cprintf("run\"%s\",u%i", prg, 8);
+    numberenter++;
     break;
   
   case 13:
     cputs("fast:poke 673,8");
-    gotoxy(0,5);
+    gotoxy(0,ypos+3);
     cprintf("boot u%i", 8);
+    numberenter++;
     break;
   
   default:
     break;
   }
-  
+
   // put CRs in keyboard buffer
-  *((unsigned char *)KBCHARS)=13;
-  if ( boot == 2 || boot == 3 || boot == 12 || boot == 13)
+  for(x=0;x<numberenter;x++)
   {
-    *((unsigned char *)KBCHARS+1)=13;
-    *((unsigned char *)KBNUM)=2;
+    *((unsigned char *)KBCHARS+x)=13;
   }
-  else
-  {
-    *((unsigned char *)KBNUM)=1;
-  }
-  
+  *((unsigned char *)KBNUM)=numberenter;
+    
   // exit DraCopy, which will execute the BASIC LOAD above
   gotoxy(0,0);
   exit(0);
