@@ -8,6 +8,17 @@ https://github.com/xahmol/DMBoot
 
 https://www.idreamtin8bits.com/
 
+### Changelog
+
+**Version v199-20210125-2234 :**
+
+Link to build of version: 
+
+* Menuslots now are stored in bank 1 memory, giving much more available memory, enabling all other changes below
+* Increased possible number of memory slots from 10 to 36, accessable via 0-9 and a-z keys (suggested by Bart van Leeuwen ). Visible in two columns in 80 column mode, in 40 column mode only the first 15 options are shown (did not go for scrolling, at least not yet). Suggest to use therefore the right column for 80 column suported programs.
+* Made the other options available via Function-keys (as the letter keys are now taken by the extra menu slots)
+* Added option to add a user defined command to each menuslot (e.g. a partition change, a POKE or anything else you can imagine as long as it runs from the BASIC prompt with one enter, fits in 100 chars and does not give screen output other than the READY prompt (suggested by Bob Grimes) 
+
 ### Instructions
 
 **NB:** Instruction screenshots are taken from VICE emulator for practical reasons, so not showing real devices.
@@ -109,16 +120,18 @@ https://www.idreamtin8bits.com/
 
 * **E** enables renaming a menuslot
   
+
 ![](https://github.com/xahmol/DMBoot/raw/main/pictures/dmboot%20-%20rename.png)
-  
+
 Choose slot to be renamed by pressing **0-9**. Enter new name. Enter to confirm.
-  
+
 * **R** enables re-ordering menu slots
   
+
 ![](https://github.com/xahmol/DMBoot/raw/main/pictures/dmboot%20-%20reorder.png)
-  
+
 Choose slot to be re-ordered by pressing **0-9**. Selected menu slot is highlighted white. Move option by pressing **UP** or **DOWN**. Confirm by **ENTER**. Cancel with **Q**.
-  
+
 * **D** enables deleting a menu slot
   
   ![](https://github.com/xahmol/DMBoot/raw/main/pictures/dmboot%20-%20delete.png)

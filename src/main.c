@@ -761,7 +761,7 @@ void information()
     cputs("The Ultimate II+ cartridge,\n\r");
     cputs("Created by Gideon Zweijtzer.\n\n\r");
 
-    cputs("Press a key to coninue.");
+    cputs("Press a key to continue.");
 
     getkey(2);    
 }
