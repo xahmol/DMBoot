@@ -12,12 +12,23 @@ https://www.idreamtin8bits.com/
 
 **Version v199-20210125-2234 :**
 
-Link to build of version: 
+ [Link to build of version](https://github.com/xahmol/DMBoot/raw/main/DMBoot-v199-20210125-2234.zip)
 
 * Menuslots now are stored in bank 1 memory, giving much more available memory, enabling all other changes below
 * Increased possible number of memory slots from 10 to 36, accessable via 0-9 and a-z keys (suggested by Bart van Leeuwen ). Visible in two columns in 80 column mode, in 40 column mode only the first 15 options are shown (did not go for scrolling, at least not yet). Suggest to use therefore the right column for 80 column suported programs.
 * Made the other options available via Function-keys (as the letter keys are now taken by the extra menu slots)
 * Added option to add a user defined command to each menuslot (e.g. a partition change, a POKE or anything else you can imagine as long as it runs from the BASIC prompt with one enter, fits in 100 chars and does not give screen output other than the READY prompt (suggested by Bob Grimes) 
+
+**Upgrade instructions from version 0.99 to 1.99:**
+
+- If you want to be able to revert to the old version (and also in all other cases as backing up is always a good idea), please backup your present config file as it will be altered/overwritten to the updated format unreadable by the old version.
+- In the ZIP are two files: next to the autostart.128.prg also an utility dmb-confupd-1-2.prg to update your present config file to the new format.
+- Unzip the ZIP file and transfer first dmb-confupd-1-2.prg to the 11 dir of your UII+ USB drive.
+- On your C128, move to the 11 dir and run dmb-confupd-1-2.prg to upgrade the config file.
+  Of course you can also opt to start clean: in that case just delete the dmbootconf.seq file and a new empty one will be created on start of the new DMBoot version.
+  Starting the new DMBoot version with the old config file however gives unexpected results as I did not program a check on the config file version.
+- Only then transfer the new autostart.128.prg to the 11 dir of your USB stick.
+- You can now reboot as normal. The upgraded config file should be read correctly now.
 
 ### Instructions
 
@@ -43,8 +54,8 @@ Link to build of version:
 
 **Add start options via the Filebrowser**
 
-* Start options can be added to menuslots 0-9 via the Filebrowser. This can be either running an executable program, or booting a specific disk image.
-* For this, first choose **F** for filebrowser.  You will get a screen like this:
+* Start options can be added to menuslots 0-9 and A-Z via the Filebrowser. This can be either running an executable program, or booting a specific disk image.
+* For this, first choose **F1** for filebrowser.  You will get a screen like this:
   ![](https://github.com/xahmol/DMBoot/raw/main/pictures/dmboot%20-%20filebrowsermenu.png)
 * Full instructions for the filebrowser are below. Here only the quick instructions to add an option to the startmenu.
 * Select your desired drive target as highlighted (white border) by switching to the correct column (only applicable for 80 column mode) by the **<-** (left arrow) key and/or pressing **F2** until the desired device number is selected.
@@ -65,7 +76,7 @@ Link to build of version:
 * To choose to boot the image you are now in from the menuslot, select **F5**.
 * You should than get this screen to select the menuslot position:
   ![](https://github.com/xahmol/DMBoot/raw/main/pictures/dmboot%20-%20choosemenuslot.png)
-* Choose **0-9** key to choose the desired slot.
+* Choose **0-9** or **A-Z** key to choose the desired slot.
 * Enter the desired name for the menuslot and press **ENTER**
 * You now return to the main menu where you should see the menu option appearing.
 * Repeat until you have selected all desired menuslot options
@@ -98,48 +109,46 @@ Link to build of version:
 | **F** | Toggle FAST, enabling this makes file execution or boot start in FAST mode. Works for menuslot option as well as directly from filebrowser. |
 | **Q** | Quit to main menu (*altered function compared to DraBrowse*) |
 
-**Q: Quit to C128 Basic**
+**F3: Quit to C128 Basic**
 
 * Exit the bootmenu to the C128 BASIC Ready prompt. Memory will be erased on exit, SLOW mode will be selected also in 80 column mode for compatibility purposes.
 
-**C: C64 mode**
+**F5: C64 mode**
 
 * Go to C64 mode (no confirmation will be asked)
 
-**B: Boot from floppy**
+**F4: Boot from floppy**
 
 * Boot from a floppy selected by the user
 * Selection of this option lists all devices detected (if device detection was successful, otherwise nothing is shown)
 * User is prompted to enter requested device ID (number of 8 to 30)
 * Boot is initiated from this device ID
 
-**E: Edit / re-order / delete**
+**F7: Edit / re-order / delete**
 
 * Enables to rename menuslots, re-order the slots or delete a slot. Selecting provides this menu:
   ![](https://github.com/xahmol/DMBoot/raw/main/pictures/dmboot%20-%20editreorderdelete.png)
 
-* **E** enables renaming a menuslot
-  
+* **F1** enables renaming a menuslot
 
 ![](https://github.com/xahmol/DMBoot/raw/main/pictures/dmboot%20-%20rename.png)
 
-Choose slot to be renamed by pressing **0-9**. Enter new name. Enter to confirm.
+Choose slot to be renamed by pressing **0-9** or **A-Z**. Enter new name. Enter to confirm.
 
-* **R** enables re-ordering menu slots
-  
+* **F3** enables re-ordering menu slots
 
 ![](https://github.com/xahmol/DMBoot/raw/main/pictures/dmboot%20-%20reorder.png)
 
-Choose slot to be re-ordered by pressing **0-9**. Selected menu slot is highlighted white. Move option by pressing **UP** or **DOWN**. Confirm by **ENTER**. Cancel with **Q**.
+Choose slot to be re-ordered by pressing **0-9** or **A-Z**. Selected menu slot is highlighted white. Move option by pressing **UP** or **DOWN**. Confirm by **ENTER**. Cancel with **F7**.
 
-* **D** enables deleting a menu slot
+* **F5** enables deleting a menu slot
   
   ![](https://github.com/xahmol/DMBoot/raw/main/pictures/dmboot%20-%20delete.png)
-Choose slot to be re-ordered by pressing **0-9**. Confirm by pressing **Y** for yes, or **N** for no.
+Choose slot to be re-ordered by pressing **0-9** or **A_Z**. Confirm by pressing **Y** for yes, or **N** for no.
   
-* **Q** takes you back to main menu. Changes made are saved only now.
+* **F7** takes you back to main menu. Changes made are saved only now.
 
-**I: Information**
+**F2: Information**
 
 * Shows information screen. Press key to return to main menu.
   ![](https://github.com/xahmol/DMBoot/raw/main/pictures/dmboot%20-%20information%20screen.png)
