@@ -50,8 +50,8 @@
 //Functions
 void checkdmdevices();
 const char* deviceidtext (int id);
-void std_write(unsigned char * file_name);
-void std_read(unsigned char * file_name);
+void std_write(char * file_name);
+void std_read(char * file_name);
 void mid(const char *src, size_t start, size_t length, char *dst, size_t dstlen);
 char* pathconcat();
 char getkey(BYTE mask);
@@ -262,7 +262,7 @@ const char* deviceidtext (int id)
     }
 }
 
-void std_write(unsigned char * file_name)
+void std_write(char * file_name)
 {
     // Function to write config file
     // Input: file_name is the name of the config file
@@ -292,7 +292,7 @@ void std_write(unsigned char * file_name)
     cmd(bootdevice, "cd:\xff");
 }
 
-void std_read(unsigned char * file_name)
+void std_read(char * file_name)
 {
     // Function to read config file
     // Input: file_name is the name of the config file

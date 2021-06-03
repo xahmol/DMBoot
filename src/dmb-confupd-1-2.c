@@ -9,8 +9,8 @@
 #include <em.h>
 #include "defines.h"
 
-void std_write(unsigned char * file_name);
-void std_read(unsigned char * file_name);
+void std_write(char * file_name);
+void std_read(char * file_name);
 void getslotfromem(int slotnumber);
 void putslottoem(int slotnumber);
 
@@ -43,7 +43,7 @@ int main() {
     return 0;
 }
 
-void std_write(unsigned char * file_name)
+void std_write(char * file_name)
 {
     // Function to write config file
     // Input: file_name is the name of the config file
@@ -69,7 +69,7 @@ void std_write(unsigned char * file_name)
     }
 }
 
-void std_read(unsigned char * file_name)
+void std_read(char * file_name)
 {
     // Function to read config file
     // Input: file_name is the name of the config file
