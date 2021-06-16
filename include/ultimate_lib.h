@@ -160,6 +160,6 @@ void uii_get_drive_b_power(void);
 void uii_get_time(void);
 void uii_set_time(char*);
 
-void uii_load_reu(void);
+void uii_load_reu(unsigned char size);
 
 #endif

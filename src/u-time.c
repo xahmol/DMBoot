@@ -1,3 +1,36 @@
+// DMBoot 128:
+// Device Manager Boot Menu for the Commodore 128
+//
+// DMBoot Utilities
+//
+// Written in 2021 by Xander Mol
+// https://github.com/xahmol/DMBoot
+// https://www.idreamtin8bits.com/
+//
+// See credits in main.c for credits to DraBrowse on main program (some code also used here).
+// Credits for the utilities code:
+// - ultimate-lib by xlar54 / Scott Hutter: main library to access the UII++ command interface and Ultimate DOS
+//   https://github.com/xlar54/ultimateii-dos-lib
+// - ntp2ultimate by MaxPlap: code for obtaining time via NTP
+//   https://github.com/MaxPlap/ntp2ultimate
+// - GRB128 by bvl1999 / Bart van Leeuwen: code for GEOS RAM boot
+//   https://github.com/bvl1999
+//
+// Requires and made possible by the C128 Device Manager ROM,
+// Created by Bart van Leeuwen
+// https://www.bartsplace.net/content/publications/devicemanager128.shtml
+//
+// Requires and made possible by the Ultimate II+ cartridge,
+// Created by Gideon Zweijtzer
+// https://ultimate64.com/
+//
+// The code can be used freely as long as you retain
+// a notice describing original source and author.
+//
+// THE PROGRAMS ARE DISTRIBUTED IN THE HOPE THAT THEY WILL BE USEFUL,
+// BUT WITHOUT ANY WARRANTY. USE THEM AT YOUR OWN RISK!
+
+
 // Functions to set time using NTP server
 // Source: https://github.com/MaxPlap/ntp2ultimate
 
@@ -13,10 +46,7 @@
 #include "ultimate_lib.h"
 #include "u-time.h"
 #include "defines.h"
-
-long secondsfromutc = 7200; 
-unsigned char timeonflag = 1;
-char DOSstatus[40];
+#include "configcommon.h"
 
 unsigned char CheckStatus()
 {
@@ -27,65 +57,6 @@ unsigned char CheckStatus()
         return 1;
     }
     return 0;
-}
-
-BYTE dosCommand(const BYTE lfn, const BYTE drive, const BYTE sec_addr, const char *cmd)
-{
-    // Function to send a DOS command
-
-    int res;
-    if (cbm_open(lfn, drive, sec_addr, cmd) != 0)
-      {
-        return _oserror;
-      }
-
-    if (lfn != 15)
-      {
-        if (cbm_open(15, drive, 15, "") != 0)
-          {
-            cbm_close(lfn);
-            return _oserror;
-          }
-      }
-
-    DOSstatus[0] = 0;
-    res = cbm_read(15, DOSstatus, sizeof(DOSstatus));
-
-    if(lfn != 15)
-      {
-        cbm_close(15);
-      }
-    cbm_close(lfn);
-
-    if (res < 1)
-      {
-        return _oserror;
-      }
-
-    return (DOSstatus[0] - 48) * 10 + DOSstatus[1] - 48;
-}
-
-int cmd(const BYTE device, const char *cmd)
-{
-    // Function to send command for disk operations
-
-    return dosCommand(15, device, 15, cmd);
-}
-
-void std_read(char * file_name)
-{
-    // Function to read time config file
-    // Input: file_name is the name of the config file
-
-    FILE *file;
-
-    _filetype = 's';
-    if(file = fopen(file_name, "r"))
-    {
-        timeonflag = fgetc(file);
-        fscanf(file,"%ld",secondsfromutc);
-        fclose(file);
-    }
 }
 
 void get_ntp_time()
@@ -148,13 +119,16 @@ void get_ntp_time()
 
 void main()
 {
+    char configfilename[10] = "dmbcfgfile";
     unsigned char bootdevice = getcurrentdevice();
-    
+
     textcolor(DC_COLOR_TEXT);
+    uii_change_dir("/usb*/11/");
+    printf("\n\nDir changed\nStatus: %s", uii_status);	
 
-    cmd(bootdevice,"cd:/usb*/11"); 
+    readconfigfile(configfilename);
 
-    //std_read("dmbtimeconf");
+    cmd(bootdevice,"cd:/usb*/11");
 
     if(timeonflag == 1)
     {

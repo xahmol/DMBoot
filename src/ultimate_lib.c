@@ -854,9 +854,53 @@ void uii_tcp_emptybuffer() {
 	uii_data_index = 0;
 }
 
-void uii_load_reu(void)
+void uii_load_reu(unsigned char size)
 {
-	unsigned char cmd[] = {0x00,DOS_CMD_LOAD_REU,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x01};	
+	// REU sizes on UII+:
+	// 0 = 128 KB
+	// 1 = 256 KB
+	// 2 = 512 KB
+	// 3 = 1 MB
+	// 4 = 2 MB
+	// 5 = 4 MB
+	// 6 = 8 MB
+	// 7 = 16 MB
+
+	unsigned char cmd[] = {0x00,DOS_CMD_LOAD_REU,0x00,0x00,0x00,0x00,0xff,0xff,0xff,0x00};
+
+	switch (size)
+	{
+	case '0':
+		cmd[8] = 0x01;
+		break;
+	
+	case '1':
+		cmd[8] = 0x03;
+		break;
+
+	case '2':
+		cmd[8] = 0x07;
+		break;
+	
+	case '3':
+		cmd[8] = 0x0f;
+		break;
+
+	case '4':
+		cmd[8] = 0x1f;
+		break;
+
+	case '5':
+		cmd[8] = 0x3f;
+		break;
+
+	case '6':
+		cmd[8] = 0x7f;
+		break;
+	
+	default:
+		break;
+	}	
 
 	uii_settarget(TARGET_DOS1);
 	uii_sendcommand(cmd,10);
