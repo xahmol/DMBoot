@@ -267,28 +267,47 @@ void std_write(char * file_name)
     // Function to write config file
     // Input: file_name is the name of the config file
 
-    FILE *file;
-    int x;
-
+    // Set directory to 11 dir
     cmd(bootdevice,"cd:/usb*/11");  // Set working dir to 11 dir at SoftIEC
 
-    _filetype = 's';
-    if(file = fopen(file_name, "w"))
-    {
-        for (x=0 ; x<36 ; ++x)
-        {
-            getslotfromem(x);
-            fwrite(Slot.menu, sizeof(Slot.menu),1, file);
-            fwrite(Slot.path, sizeof(Slot.path),1, file);
-            fwrite(Slot.file, sizeof(Slot.file),1, file);
-            fwrite(Slot.cmd, sizeof(Slot.cmd),1, file);
-            fputc(Slot.device, file);
-            fputc(Slot.runboot, file);
-            fputc(Slot.command, file);
-        }
-        fclose(file);
-    }
+    // For reference: old sequential config file
+    //_filetype = 's';
+    //if(file = fopen(file_name, "w"))
+    //{
+    //    for (x=0 ; x<36 ; ++x)
+    //    {
+    //        getslotfromem(x);
+    //        fwrite(Slot.menu, sizeof(Slot.menu),1, file);
+    //        fwrite(Slot.path, sizeof(Slot.path),1, file);
+    //        fwrite(Slot.file, sizeof(Slot.file),1, file);
+    //        fwrite(Slot.cmd, sizeof(Slot.cmd),1, file);
+    //        fputc(Slot.device, file);
+    //        fputc(Slot.runboot, file);
+    //        fputc(Slot.command, file);
+    //    }
+    //    fclose(file);
+    //}
     
+    // Remove old file
+    remove(file_name);
+
+    // Set device ID
+	cbm_k_setlfs(0, bootdevice, 0);
+
+    // Set filename
+	cbm_k_setnam(file_name);
+
+    // Set bank to 1
+    __asm__ (
+		"\tlda\t#1\n"
+		"\tldx\t#0\n"
+		"\tjsr\t$ff68\n"
+		);
+
+    // Save BANK 1 slots
+	cbm_k_save(0x0400, 0x0400 + (256*36));
+
+    // Set dir back to root    
     cmd(bootdevice, "cd:\xff");
 }
 
@@ -297,28 +316,48 @@ void std_read(char * file_name)
     // Function to read config file
     // Input: file_name is the name of the config file
 
-    FILE *file;
-    int x;
+    //FILE *file;
+    unsigned char x;
+    unsigned int error;
 
+    // Set directory to 11 dir
     cmd(bootdevice,"cd:/usb*/11");  // Set working dir to 11 dir at SoftIEC
 
-    _filetype = 's';
-    if(file = fopen(file_name, "r"))
-    {
-        for (x=0 ; x<36 ; ++x)
-        {
-            fread(Slot.menu, sizeof(Slot.menu),1, file);
-            fread(Slot.path, sizeof(Slot.path),1, file);
-            fread(Slot.file, sizeof(Slot.file),1, file);
-            fread(Slot.cmd, sizeof(Slot.cmd),1, file);
-            Slot.device = fgetc(file);
-            Slot.runboot = fgetc(file);
-            Slot.command = fgetc(file);
-            putslottoem(x);
-        }
-        fclose(file);
-    }
-    else
+    // For reference: old sequential config file
+    //_filetype = 's';
+    //if(file = fopen(file_name, "r"))
+    //{
+    //    for (x=0 ; x<36 ; ++x)
+    //    {
+    //        fread(Slot.menu, sizeof(Slot.menu),1, file);
+    //        fread(Slot.path, sizeof(Slot.path),1, file);
+    //        fread(Slot.file, sizeof(Slot.file),1, file);
+    //        fread(Slot.cmd, sizeof(Slot.cmd),1, file);
+    //        Slot.device = fgetc(file);
+    //        Slot.runboot = fgetc(file);
+    //        Slot.command = fgetc(file);
+    //        putslottoem(x);
+    //    }
+    //    fclose(file);
+    //}
+
+    // Set device ID
+	cbm_k_setlfs(0, bootdevice, 0);
+
+    // Set filename
+	cbm_k_setnam(file_name);
+
+    // Set bank to 1
+    __asm__ (
+		"\tlda\t#1\n"
+		"\tldx\t#0\n"
+		"\tjsr\t$ff68\n"
+		);
+
+    // Load BANK 1 slots
+    error = cbm_k_load(0, 0x0400);
+
+    if(error<=0x0400)
     {
         for(x=0; x<36; ++x)
         {

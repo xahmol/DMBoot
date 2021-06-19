@@ -50,7 +50,14 @@
 long secondsfromutc = 0; 
 unsigned char timeonflag = 1;
 char reufilename[20] = "default.reu";
-unsigned char reusize = '2';
+char reufilepath[60] = "/usb*/11/";
+char imageaname[20] = "";
+char imageapath[60] = "";
+unsigned char imageaid = 0;
+char imagebname[20] = "";
+char imagebpath[60] = "";
+unsigned char imagebid = 0;
+unsigned char reusize = 2;
 char* reusizelist[8] = { "128 KB","256 KB","512 KB","1 MB","2 MB","4 MB","8 MB","16 MB"};
 
 void mid(const char *src, size_t start, size_t length, char *dst, size_t dstlen)
@@ -115,11 +122,49 @@ void writeconfigfile(char* filename)
 	// Function to write config file
 	// Inout: filename of config file
 
-	char buffer[32] = "";
+	unsigned char buffer[248];
+  unsigned char x;
 
-	// Create text to write as config file, colon seperated
-  sprintf(buffer,"%s:%c:%i:%ld", reufilename, reusize, timeonflag, secondsfromutc);
+  // Clear buffer memory
+  memset(buffer,0,248);
 
+	// Place all variables in buffer memory
+  for(x=0;x<60;x++)
+  {
+    buffer[x]=reufilepath[x];
+  }
+
+  for(x=0;x<20;x++)
+  {
+    buffer[x+60]=reufilename[x];
+  }
+  for(x=0;x<60;x++)
+  {
+    buffer[x+80]=imageapath[x];
+  }
+  for(x=0;x<20;x++)
+  {
+    buffer[x+140]=imageaname[x];
+  }
+  for(x=0;x<60;x++)
+  {
+    buffer[x+160]=imagebpath[x];
+  }
+  for(x=0;x<20;x++)
+  {
+    buffer[x+220]=imagebname[x];
+  }
+  buffer[240] = reusize;
+  buffer[241] = timeonflag;
+
+  buffer[242] = (secondsfromutc & 0xFF000000) >> 24;
+  buffer[243] = (secondsfromutc & 0xFF0000) >> 16;
+  buffer[244] = (secondsfromutc & 0xFF00) >> 8;
+  buffer[245] = secondsfromutc & 0xFF;
+
+  buffer[246] = imageaid;
+  buffer[247] = imagebid;
+  
   // Delete old config file as I can not (yet) get overwrite to work
 	uii_delete_file(filename);
   // Uncomment for debbug
@@ -129,7 +174,7 @@ void writeconfigfile(char* filename)
   // Uncomment for debbug
   //printf("\nStatus: %s", uii_status);
 
-	uii_write_file(buffer,sizeof(buffer));
+	uii_write_file(buffer,248);
   // Uncomment for debbug
   //printf("\nStatus: %s", uii_status);
 
@@ -143,12 +188,7 @@ void readconfigfile(char* filename)
 	// Function to read config file
 	// Inout: filename of config file
 
-	char buffer[32] = "";
-  char utcoffset[10] = "";
-  unsigned char indexbuffer = 0;
-  unsigned char indexcopy = 0;
   unsigned char x;
-  char* ptrend;
 
 	uii_open_file(0x01,filename);
   // Uncomment for debbug
@@ -162,7 +202,7 @@ void readconfigfile(char* filename)
     return;
   }
 
-	uii_read_file(sizeof(buffer));
+	uii_read_file(248);
   // Uncomment for debbug
   //printf("\nStatus: %s", uii_status);
 
@@ -174,43 +214,53 @@ void readconfigfile(char* filename)
   // Uncomment for debbug
   //printf("\nStatus: %s", uii_status);
 
-	strcpy(buffer, uii_data);
+  // Read variables from read data
+  for(x=0;x<60;x++)
+  {
+    reufilepath[x]=uii_data[x];
+  }
+  for(x=0;x<20;x++)
+  {
+    reufilename[x]=uii_data[x+60];
+  }
+  for(x=0;x<60;x++)
+  {
+    imageapath[x]=uii_data[x+80];
+  }
+  for(x=0;x<20;x++)
+  {
+    imageaname[x]=uii_data[x+140];
+  }
+  for(x=0;x<60;x++)
+  {
+    imagebpath[x]=uii_data[x+160];
+  }
+  for(x=0;x<20;x++)
+  {
+    imagebname[x]=uii_data[x+220];
+  }
+  
+  reusize = uii_data[240];
+
+  timeonflag = uii_data[241];
+  
+  secondsfromutc = uii_data[245] | (((unsigned long)uii_data[244])<<8)| (((unsigned long)uii_data[243])<<16)| (((unsigned long)uii_data[242])<<24);
+
+  imageaid = uii_data[246];
+  imagebid = uii_data[247];
 
 	uii_close_file();
   // Uncomment for debbug
   //printf("\nStatus: %s", uii_status);
-
-  // Obtain REU filename by getting chars until first colon
-  do
-  {
-    reufilename[indexcopy++]=buffer[indexbuffer++];
-  } while (buffer[indexbuffer] != ':');
-
-  // Obtain REU size as first char after colon
-  reusize = buffer[++indexbuffer];
-
-  // Skip colon after REU size
-  indexbuffer++;
-
-  // Obtain next char as flag on/off for UTP time set. Substract '0' to get from ASCII to number
-  timeonflag = buffer[++indexbuffer] - '0';
-
-  // Skip colon
-  indexbuffer+=2;
-
-  // Obtain remainder als text input for UTC time offset
-  for(x=0;x<strlen(buffer)-indexbuffer;x++)
-  {
-    utcoffset[x] = buffer[indexbuffer+x];
-  }
-
-  // Convert text of UTC time offset to long.
-  secondsfromutc = strtol(utcoffset,&ptrend,10);
 	
   // Debug messages. Uncomment for debug mode
-  //printf("\nREU filename: %s", reufilename);
-  //printf("\nREU size: %c", reusize);
+  //printf("\nREU file path+name: %s%s", reufilepath, reufilename);
+  //printf("\nImage a ID: %i",imageaid);
+  //printf("\nImage b ID: %i",imagebid);
+  //printf("\nImage a path+name: %s%s", imageapath, imageaname);
+  //printf("\nImage b path+name: %s%s", imagebpath, imagebname);
+  //printf("\nREU size: %i", reusize);
   //printf("\nTime on flag: %i", timeonflag);
-	//printf("\nSeconds from UTC: %s", utcoffset);
   //printf("\nConverted UTC offset: %ld",secondsfromutc);
+  //cgetc();
 }

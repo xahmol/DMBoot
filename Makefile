@@ -12,12 +12,12 @@
 # - wput command installed: sudo apt-get install wput
 
 SOURCESMAIN = src/main.c src/screen.c src/cat.c src/dir.c src/base.c src/ops.c src/db.c
-SOURCESUPD = src/dmb-confupd-1-2.c
+SOURCESUPD = src/dmb-confupd-2-3.c
 SOURCESTIME = src/ultimate_lib.c src/configcommon.c src/u-time.c
 SOURCESGEOS = src/ultimate_lib.c src/configcommon.c src/geosramboot.c
 SOURCESCFG = src/ultimate_lib.c src/configcommon.c src/dmbconfig.c
 LIBGEOS = src/geosramroutine.s
-ZIP = DMBoot-v199-$(shell date "+%Y%m%d-%H%M").zip
+ZIP = DMBoot-v299-$(shell date "+%Y%m%d-%H%M").zip
 
 # Hostname of Ultimate II+ target for deployment. Edit for proper IP and usb number
 ULTHOST = ftp://192.168.1.31/usb1/11/
@@ -26,7 +26,7 @@ MAIN = dmbootmain.prg
 TIME = autostart.128.prg
 GEOS = geosramboot.prg
 CFG = dmbconfig.prg
-UPDATE = dmb-confupd-1-2.prg
+UPDATE = dmb-confupd-2-3.prg
 
 CC65_TARGET = c128
 CC = cl65

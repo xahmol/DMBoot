@@ -49,9 +49,20 @@ void main()
     textcolor(DC_COLOR_TEXT);
 
 	uii_change_dir("/usb*/11/");
-	printf("\n\nDir changed\nStatus: %s", uii_status);	
+	printf("\nDir changed\nStatus: %s", uii_status);	
 
 	readconfigfile(configfilename);
+
+	// Load REU file
+	uii_change_dir(reufilepath);
+	printf("\nREU Dir changed\nStatus: %s", uii_status);
+
+	// Exit if REU dir is not found
+	if(strcmp(uii_status,"00,ok") != 0)
+	{
+		printf("\nREU path not found.");
+		return;
+	}	
 
     printf("\nOpen REU file");
 	uii_open_file(1, reufilename);
@@ -71,6 +82,54 @@ void main()
 	printf("\nClose REU file");
 	uii_close_file();
 	printf("\nStatus: %s", uii_status);
+
+	// Load drive A image
+	if(imageaid>0)
+	{
+		uii_change_dir(imageapath);
+		printf("\nImage A Dir changed\nStatus: %s", uii_status);
+
+		// Exit if REU dir is not found
+		if(strcmp(uii_status,"00,ok") != 0)
+		{
+			printf("\nImage A path not found.");
+			return;
+		}
+
+		uii_mount_disk(imageaid,imageaname);
+		printf("\nImage A loaded\nStatus: %s", uii_status);
+
+		// Exit if image A is not found
+		if(strcmp(uii_status,"00,ok") != 0)
+		{
+			printf("\nImage A file not found.");
+			return;
+		}
+	}
+	
+	// Load drive B image
+	if(imagebid>0)
+	{
+		uii_change_dir(imagebpath);
+		printf("\nImage B Dir changed\nStatus: %s", uii_status);
+
+		// Exit if REU dir is not found
+		if(strcmp(uii_status,"00,ok") != 0)
+		{
+			printf("\nImage B path not found.");
+			return;
+		}
+
+		uii_mount_disk(imagebid,imagebname);
+		printf("\nImage B loaded\nStatus: %s", uii_status);
+
+		// Exit if image A is not found
+		if(strcmp(uii_status,"00,ok") != 0)
+		{
+			printf("\nImage B file not found.");
+			return;
+		}
+	}
 
 	printf("\nBooting GEOS.");
     startgeos();

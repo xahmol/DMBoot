@@ -867,40 +867,9 @@ void uii_load_reu(unsigned char size)
 	// 7 = 16 MB
 
 	unsigned char cmd[] = {0x00,DOS_CMD_LOAD_REU,0x00,0x00,0x00,0x00,0xff,0xff,0xff,0x00};
+	unsigned char sizes[8] = {0x01,0x03,0x07,0x0f,0x1f,0x3f,0x7f,0xff};
 
-	switch (size)
-	{
-	case '0':
-		cmd[8] = 0x01;
-		break;
-	
-	case '1':
-		cmd[8] = 0x03;
-		break;
-
-	case '2':
-		cmd[8] = 0x07;
-		break;
-	
-	case '3':
-		cmd[8] = 0x0f;
-		break;
-
-	case '4':
-		cmd[8] = 0x1f;
-		break;
-
-	case '5':
-		cmd[8] = 0x3f;
-		break;
-
-	case '6':
-		cmd[8] = 0x7f;
-		break;
-	
-	default:
-		break;
-	}	
+	cmd[8] = sizes[size];
 
 	uii_settarget(TARGET_DOS1);
 	uii_sendcommand(cmd,10);

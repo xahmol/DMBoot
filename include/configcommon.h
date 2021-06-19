@@ -8,6 +8,13 @@
 extern long secondsfromutc; 
 extern unsigned char timeonflag;
 extern char reufilename[20];
+extern char reufilepath[60];
+extern char imageaname[20];
+extern char imageapath[60];
+extern unsigned char imageaid;
+extern char imagebname[20];
+extern char imagebpath[60];
+extern unsigned char imagebid;
 extern unsigned char reusize;
 extern char* reusizelist[8];
 extern unsigned char changesmade;

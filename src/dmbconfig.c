@@ -184,7 +184,9 @@ char mainmenu()
     // Draw main boot menu
     // Returns chosen menu option as char key value
 
-    char key;
+    unsigned char key;
+    char buffer1[80] = "";
+    char buffer2[80] = "";
 
     clrscr();
     headertext("Configuration tool.");
@@ -195,8 +197,22 @@ char mainmenu()
     cprintf("- Update on boot toggle: %s\n\r",(timeonflag==0)?"Off":"On");
     cprintf("- Offset to UTC in seconds: %ld\n\n\r",secondsfromutc);
     cputs("GEOS RAM Boot settings:\n\r");
-    cprintf("- REU filename:\n\r  %s\n\r",reufilename);
-    cprintf("- REU file size: %s\n\n\r",reusizelist[reusize-48]);
+
+    strcpy(buffer1,reufilepath);
+    strcat(buffer1,reufilename);
+    mid(buffer1,0,SCREENW,buffer2,SCREENW);
+    cprintf("- REU filepath + name:\n\r%s\n\r",buffer2);
+    cprintf("- REU file size: (%i) %s\n\r",reusize,reusizelist[reusize]);
+
+    strcpy(buffer1,imageapath);
+    strcat(buffer1,imageaname);
+    mid(buffer1,0,SCREENW,buffer2,SCREENW);
+    cprintf("- Drive A image path+name: %i\n\r%s\n\r",imageaid, buffer2);
+
+    strcpy(buffer1,imagebpath);
+    strcat(buffer1,imagebname);
+    mid(buffer1,0,SCREENW,buffer2,SCREENW);
+    cprintf("- Drive B image path+name: %i\n\r%s\n\n\r",imagebid, buffer2);
 
     cputs("Make your choice:\n\r");
     
@@ -234,8 +250,8 @@ void edittimeconfig()
     char offsetinput[10] = "";
     char* ptrend;
 
-    clearArea(0,15,40,3);
-    gotoxy(0,15);
+    clearArea(0,19,40,3);
+    gotoxy(0,19);
 
     revers(1);
     textcolor(DMB_COLOR_SELECT);
@@ -275,11 +291,11 @@ void edittimeconfig()
             break;
 
         case CH_F3:
-            cputsxy(0,18,"Input time offset to UTC:");
-            textInput(0,19,offsetinput,10);
+            cputsxy(0,22,"Input time offset to UTC:");
+            textInput(0,23,offsetinput,10);
             secondsfromutc = strtol(offsetinput,&ptrend,10);
             clearArea(0,7,40,1);
-            clearArea(0,18,40,2);
+            clearArea(0,22,40,2);
             gotoxy(0,7);
             cprintf("- Offset to UTC in seconds: %ld\n\n\r",secondsfromutc);
             changesmade = 1;
@@ -293,41 +309,47 @@ void edittimeconfig()
 
 void editgeosconfig()
 {
-    char key;
-
-    clearArea(0,15,40,3);
-    gotoxy(0,15);
-
-    revers(1);
-    textcolor(DMB_COLOR_SELECT);
-    cputs(" F1 ");
-    revers(0);
-    textcolor(DC_COLOR_TEXT);
-    cputs(" Edit REU filename\n\r");
-
-    revers(1);
-    textcolor(DMB_COLOR_SELECT);
-    cputs(" F3 ");
-    revers(0);
-    textcolor(DC_COLOR_TEXT);
-    cputs(" Increase REU size\n\r");
-
-    revers(1);
-    textcolor(DMB_COLOR_SELECT);
-    cputs(" F5 ");
-    revers(0);
-    textcolor(DC_COLOR_TEXT);
-    cputs(" Decrease REU size\n\r");
-
-    revers(1);
-    textcolor(DMB_COLOR_SELECT);
-    cputs(" F7 ");
-    revers(0);
-    textcolor(DC_COLOR_TEXT);
-    cputs(" Back to main menu\n\r");
+    unsigned char key, plusmin;
+    char deviceidbuffer[3];
+    char* ptrend;
 
     do
     {
+        clrscr();
+        headertext("Edit GEOS RAM Boot configuration.");
+
+        gotoxy(0,3);
+
+        cputs("Make your choice:\n\r");
+
+        revers(1);
+        textcolor(DMB_COLOR_SELECT);
+        cputs(" F1 ");
+        revers(0);
+        textcolor(DC_COLOR_TEXT);
+        cputs(" Edit REU file path and name\n\r");
+
+        revers(1);
+        textcolor(DMB_COLOR_SELECT);
+        cputs(" F3 ");
+        revers(0);
+        textcolor(DC_COLOR_TEXT);
+        cputs(" Edit REU size\n\r");
+
+        revers(1);
+        textcolor(DMB_COLOR_SELECT);
+        cputs(" F5 ");
+        revers(0);
+        textcolor(DC_COLOR_TEXT);
+        cputs(" Edit images to mount\n\r");
+
+        revers(1);
+        textcolor(DMB_COLOR_SELECT);
+        cputs(" F7 ");
+        revers(0);
+        textcolor(DC_COLOR_TEXT);
+        cputs(" Back to main menu\n\r");
+
         do
         {
             key = cgetc();
@@ -336,34 +358,104 @@ void editgeosconfig()
         switch (key)
         {
         case CH_F1:
-            cputsxy(0,19,"Enter REU filename:");
-            textInput(0,20,reufilename,20);
-            clearArea(0,11,40,1);
-            clearArea(0,19,40,2);
-            gotoxy(0,11);
-            cprintf("  %s",reufilename);
+            clrscr();
+            headertext("Edit REU file path and name.");
+
+            cputsxy(0,3,"Enter REU file path:");
+            textInput(0,4,reufilepath,60);
+
+            cputsxy(0,7,"Enter REU file name:");
+            textInput(0,8,reufilename,20);
             changesmade = 1;
             break;
 
         case CH_F3:
+            clrscr();
+            headertext("Edit REU size.");
+
+            gotoxy(0,3);
+            cprintf("REU file size: (%i) %s\n\n\r",reusize,reusizelist[reusize]);
+
+            cputs("Make your choice:\n\r");
+
+            revers(1);
+            textcolor(DMB_COLOR_SELECT);
+            cputs("  + ");
+            revers(0);
+            textcolor(DC_COLOR_TEXT);
+            cputs(" Increase REU size\n\r");
+
+            revers(1);
+            textcolor(DMB_COLOR_SELECT);
+            cputs("  - ");
+            revers(0);
+            textcolor(DC_COLOR_TEXT);
+            cputs(" Decrease REU size\n\r");
+
+            revers(1);
+            textcolor(DMB_COLOR_SELECT);
+            cputs(" F7 ");
+            revers(0);
+            textcolor(DC_COLOR_TEXT);
+            cputs(" Back to previous menu\n\r");
+
+            do
+            {
+              do
+              {
+                plusmin = cgetc();
+              } while (plusmin != '+' && plusmin != '-' && plusmin != CH_F7);
+  
+              if(plusmin == '+')
+              {
+                  reusize++;
+                  if(reusize > 7) { reusize = 0; }
+                  changesmade = 1;
+              }
+              if(plusmin == '-')
+              {
+                  if(reusize == 0) { reusize = 7; }
+                  else { reusize--; }
+                  changesmade = 1;               
+              }
+              gotoxy(0,3);
+              cprintf("REU file size: (%i) %s  ",reusize,reusizelist[reusize]);
+            } while (plusmin != CH_F7);         
+            break;
+
         case CH_F5:
-            if(key == CH_F3)
-            {
-                reusize++;
-                if(reusize > '7') { reusize = '0'; }
-            }
-            else
-            {
-                reusize--;
-                if(reusize < '0') { reusize = '7'; }
-            }
-            clearArea(0,12,40,1);
-            gotoxy(0,12);
-            cprintf("- REU file size: %s\n\n\r",reusizelist[reusize-48]);
+            clrscr();
+            headertext("Edit images to mount.");
+
+            sprintf(deviceidbuffer,"%i",imageaid);
+            cputsxy(0,3,"Enter image drive A device ID:");
+            textInput(0,4,deviceidbuffer,2);
+            imageaid = (unsigned char)strtol(deviceidbuffer,&ptrend,10);
+
+            cputsxy(0,5,"Enter image drive A file path:");
+            textInput(0,6,imageapath,60);
+
+            cputsxy(0,8,"Enter image drive A file name:");
+            textInput(0,9,imageaname,20);
+
+            sprintf(deviceidbuffer,"%i",imagebid);
+            cputsxy(0,10,"Enter image drive B device ID:");
+            textInput(0,11,deviceidbuffer,2);
+            imagebid = (unsigned char)strtol(deviceidbuffer,&ptrend,10);
+
+            cputsxy(0,12,"Enter image drive B file path:");
+            textInput(0,13,imagebpath,60);
+
+            cputsxy(0,15,"Enter image drive B file name:");
+            textInput(0,16,imagebname,20);
+
+            changesmade = 1;
+
             break;
 
         default:
-	    	break;
+	    	  break;
+
         }
     } while (key != CH_F7);
 }
@@ -390,7 +482,7 @@ void main(void)
 
     cputs("Starting: Reading config file.");  
 
-	uii_change_dir("/usb*/11/");
+	  uii_change_dir("/usb*/11/");
     readconfigfile(cfgfilename);
 
     bordercolor(DC_COLOR_BORDER);
