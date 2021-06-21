@@ -1,71 +1,71 @@
 Modules list:
 -------------
 geosramroutine.o:
-    CODE              Offs=000000  Size=0000D3  Align=00001  Fill=0000
+    CODE              Offs=000000  Size=000098  Align=00001  Fill=0000
 ultimate_lib.o:
-    CODE              Offs=0000D3  Size=001475  Align=00001  Fill=0000
+    CODE              Offs=000098  Size=001475  Align=00001  Fill=0000
     RODATA            Offs=000000  Size=000137  Align=00001  Fill=0000
     BSS               Offs=000000  Size=000806  Align=00001  Fill=0000
     DATA              Offs=000000  Size=00000B  Align=00001  Fill=0000
 configcommon.o:
-    CODE              Offs=001548  Size=0005AE  Align=00001  Fill=0000
+    CODE              Offs=00150D  Size=0005AE  Align=00001  Fill=0000
     RODATA            Offs=000137  Size=00006B  Align=00001  Fill=0000
     BSS               Offs=000806  Size=000148  Align=00001  Fill=0000
     DATA              Offs=00000B  Size=000158  Align=00001  Fill=0000
 geosramboot.o:
-    CODE              Offs=001AF6  Size=00023E  Align=00001  Fill=0000
-    RODATA            Offs=0001A2  Size=0001A4  Align=00001  Fill=0000
+    CODE              Offs=001ABB  Size=00026B  Align=00001  Fill=0000
+    RODATA            Offs=0001A2  Size=0001D7  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(_directerrno.o):
-    CODE              Offs=001D34  Size=00000A  Align=00001  Fill=0000
+    CODE              Offs=001D26  Size=00000A  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(_file.o):
     DATA              Offs=000163  Size=00001E  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(_heap.o):
     DATA              Offs=000181  Size=00000A  Align=00001  Fill=0000
     ONCE              Offs=000000  Size=000010  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(_hextab.o):
-    RODATA            Offs=000346  Size=000010  Align=00001  Fill=0000
+    RODATA            Offs=000379  Size=000010  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(_longminstr.o):
-    RODATA            Offs=000356  Size=00000C  Align=00001  Fill=0000
+    RODATA            Offs=000389  Size=00000C  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(_mappederrno.o):
-    CODE              Offs=001D3E  Size=000010  Align=00001  Fill=0000
+    CODE              Offs=001D30  Size=000010  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(_oserror.o):
     BSS               Offs=00094E  Size=000001  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(_printf.o):
-    CODE              Offs=001D4E  Size=0003A5  Align=00001  Fill=0000
+    CODE              Offs=001D40  Size=0003A5  Align=00001  Fill=0000
     BSS               Offs=00094F  Size=00002B  Align=00001  Fill=0000
     DATA              Offs=00018B  Size=000003  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(_seterrno.o):
-    CODE              Offs=0020F3  Size=000009  Align=00001  Fill=0000
+    CODE              Offs=0020E5  Size=000009  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(add.o):
-    CODE              Offs=0020FC  Size=00001C  Align=00001  Fill=0000
+    CODE              Offs=0020EE  Size=00001C  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(addeqsp.o):
-    CODE              Offs=002118  Size=000011  Align=00001  Fill=0000
+    CODE              Offs=00210A  Size=000011  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(addysp.o):
-    CODE              Offs=002129  Size=00000E  Align=00001  Fill=0000
+    CODE              Offs=00211B  Size=00000E  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(axlong.o):
-    CODE              Offs=002137  Size=00000D  Align=00001  Fill=0000
+    CODE              Offs=002129  Size=00000D  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(bneg.o):
-    CODE              Offs=002144  Size=00000E  Align=00001  Fill=0000
+    CODE              Offs=002136  Size=00000E  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(c_close.o):
-    CODE              Offs=002152  Size=000004  Align=00001  Fill=0000
+    CODE              Offs=002144  Size=000004  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(c_open.o):
-    CODE              Offs=002156  Size=000009  Align=00001  Fill=0000
+    CODE              Offs=002148  Size=000009  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(c_setlfs.o):
-    CODE              Offs=00215F  Size=00000E  Align=00001  Fill=0000
+    CODE              Offs=002151  Size=00000E  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(c_setnam.o):
-    CODE              Offs=00216D  Size=000013  Align=00001  Fill=0000
+    CODE              Offs=00215F  Size=000013  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(callmain.o):
-    CODE              Offs=002180  Size=000017  Align=00001  Fill=0000
+    CODE              Offs=002172  Size=000017  Align=00001  Fill=0000
     DATA              Offs=00018E  Size=000004  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(cbm_close.o):
 /home/xahmol/retro/cc65/lib/c128.lib(cbm_open.o):
-    CODE              Offs=002197  Size=000016  Align=00001  Fill=0000
+    CODE              Offs=002189  Size=000016  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(cbm_read.o):
-    CODE              Offs=0021AD  Size=00005B  Align=00001  Fill=0000
+    CODE              Offs=00219F  Size=00005B  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(color.o):
-    CODE              Offs=002208  Size=000060  Align=00001  Fill=0000
+    CODE              Offs=0021FA  Size=000060  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(condes.o):
-    CODE              Offs=002268  Size=00000C  Align=00001  Fill=0000
+    CODE              Offs=00225A  Size=00000C  Align=00001  Fill=0000
     DATA              Offs=000192  Size=000025  Align=00001  Fill=0000
     ONCE              Offs=000010  Size=00000C  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(crt0.o):
@@ -73,143 +73,143 @@ geosramboot.o:
     STARTUP           Offs=000000  Size=000051  Align=00001  Fill=0000
     INIT              Offs=000000  Size=00001A  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(ctype.o):
-    RODATA            Offs=000362  Size=00008B  Align=00001  Fill=0000
+    RODATA            Offs=000395  Size=00008B  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(ctypemask.o):
-    CODE              Offs=002274  Size=00001E  Align=00001  Fill=0000
+    CODE              Offs=002266  Size=00001E  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(decax1.o):
-    CODE              Offs=002292  Size=000007  Align=00001  Fill=0000
+    CODE              Offs=002284  Size=000007  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(decaxy.o):
-    CODE              Offs=002299  Size=000009  Align=00001  Fill=0000
+    CODE              Offs=00228B  Size=000009  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(decsp1.o):
-    CODE              Offs=0022A2  Size=000009  Align=00001  Fill=0000
+    CODE              Offs=002294  Size=000009  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(decsp2.o):
-    CODE              Offs=0022AB  Size=00000D  Align=00001  Fill=0000
+    CODE              Offs=00229D  Size=00000D  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(decsp3.o):
-    CODE              Offs=0022B8  Size=00000D  Align=00001  Fill=0000
+    CODE              Offs=0022AA  Size=00000D  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(decsp4.o):
-    CODE              Offs=0022C5  Size=00000D  Align=00001  Fill=0000
+    CODE              Offs=0022B7  Size=00000D  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(decsp5.o):
-    CODE              Offs=0022D2  Size=00000D  Align=00001  Fill=0000
+    CODE              Offs=0022C4  Size=00000D  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(decsp6.o):
-    CODE              Offs=0022DF  Size=00000D  Align=00001  Fill=0000
+    CODE              Offs=0022D1  Size=00000D  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(decsp8.o):
-    CODE              Offs=0022EC  Size=00000D  Align=00001  Fill=0000
+    CODE              Offs=0022DE  Size=00000D  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(errno.o):
     BSS               Offs=00097C  Size=000002  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(exehdr.o):
     EXEHDR            Offs=000000  Size=00000C  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(filedes.o):
-    CODE              Offs=0022F9  Size=00000E  Align=00001  Fill=0000
+    CODE              Offs=0022EB  Size=00000E  Align=00001  Fill=0000
     DATA              Offs=0001B7  Size=000010  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(free.o):
-    CODE              Offs=002307  Size=0001D3  Align=00001  Fill=0000
+    CODE              Offs=0022F9  Size=0001D3  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(fwrite.o):
-    CODE              Offs=0024DA  Size=00007B  Align=00001  Fill=0000
+    CODE              Offs=0024CC  Size=00007B  Align=00001  Fill=0000
     BSS               Offs=00097E  Size=000002  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(icmp.o):
-    CODE              Offs=002555  Size=00002E  Align=00001  Fill=0000
+    CODE              Offs=002547  Size=00002E  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(incax1.o):
-    CODE              Offs=002583  Size=000007  Align=00001  Fill=0000
+    CODE              Offs=002575  Size=000007  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(incax2.o):
-    CODE              Offs=00258A  Size=000007  Align=00001  Fill=0000
+    CODE              Offs=00257C  Size=000007  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(incax3.o):
-    CODE              Offs=002591  Size=000005  Align=00001  Fill=0000
+    CODE              Offs=002583  Size=000005  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(incaxy.o):
-    CODE              Offs=002596  Size=00000B  Align=00001  Fill=0000
+    CODE              Offs=002588  Size=00000B  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(incsp1.o):
-    CODE              Offs=0025A1  Size=000007  Align=00001  Fill=0000
+    CODE              Offs=002593  Size=000007  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(incsp2.o):
-    CODE              Offs=0025A8  Size=000016  Align=00001  Fill=0000
+    CODE              Offs=00259A  Size=000016  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(incsp3.o):
-    CODE              Offs=0025BE  Size=000005  Align=00001  Fill=0000
+    CODE              Offs=0025B0  Size=000005  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(incsp4.o):
-    CODE              Offs=0025C3  Size=000005  Align=00001  Fill=0000
+    CODE              Offs=0025B5  Size=000005  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(incsp5.o):
-    CODE              Offs=0025C8  Size=000005  Align=00001  Fill=0000
+    CODE              Offs=0025BA  Size=000005  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(incsp6.o):
-    CODE              Offs=0025CD  Size=000005  Align=00001  Fill=0000
+    CODE              Offs=0025BF  Size=000005  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(incsp7.o):
-    CODE              Offs=0025D2  Size=000005  Align=00001  Fill=0000
+    CODE              Offs=0025C4  Size=000005  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(incsp8.o):
-    CODE              Offs=0025D7  Size=000005  Align=00001  Fill=0000
+    CODE              Offs=0025C9  Size=000005  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(kernal.o):
 /home/xahmol/retro/cc65/lib/c128.lib(land.o):
-    CODE              Offs=0025DC  Size=000024  Align=00001  Fill=0000
+    CODE              Offs=0025CE  Size=000024  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(ldaxsp.o):
-    CODE              Offs=002600  Size=000009  Align=00001  Fill=0000
+    CODE              Offs=0025F2  Size=000009  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(leaaxsp.o):
-    CODE              Offs=002609  Size=00000C  Align=00001  Fill=0000
+    CODE              Offs=0025FB  Size=00000C  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(lneg.o):
-    CODE              Offs=002615  Size=00001E  Align=00001  Fill=0000
+    CODE              Offs=002607  Size=00001E  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(loadaddr.o):
     LOADADDR          Offs=000000  Size=000002  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(lor.o):
-    CODE              Offs=002633  Size=000024  Align=00001  Fill=0000
+    CODE              Offs=002625  Size=000024  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(lpush.o):
-    CODE              Offs=002657  Size=000021  Align=00001  Fill=0000
+    CODE              Offs=002649  Size=000021  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(ltoa.o):
-    CODE              Offs=002678  Size=000095  Align=00001  Fill=0000
+    CODE              Offs=00266A  Size=000095  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(malloc.o):
-    CODE              Offs=00270D  Size=00010E  Align=00001  Fill=0000
+    CODE              Offs=0026FF  Size=00010E  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(memset.o):
-    CODE              Offs=00281B  Size=00005D  Align=00001  Fill=0000
+    CODE              Offs=00280D  Size=00005D  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(mul.o):
-    CODE              Offs=002878  Size=000045  Align=00001  Fill=0000
+    CODE              Offs=00286A  Size=000045  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(mul8.o):
-    CODE              Offs=0028BD  Size=00003A  Align=00001  Fill=0000
+    CODE              Offs=0028AF  Size=00003A  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(mulax10.o):
-    CODE              Offs=0028F7  Size=000019  Align=00001  Fill=0000
+    CODE              Offs=0028E9  Size=000019  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(oserror.o):
-    CODE              Offs=002910  Size=000016  Align=00001  Fill=0000
-    RODATA            Offs=0003ED  Size=00005A  Align=00001  Fill=0000
+    CODE              Offs=002902  Size=000016  Align=00001  Fill=0000
+    RODATA            Offs=000420  Size=00005A  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(popa.o):
-    CODE              Offs=002926  Size=00000C  Align=00001  Fill=0000
+    CODE              Offs=002918  Size=00000C  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(popptr1.o):
-    CODE              Offs=002932  Size=00000E  Align=00001  Fill=0000
+    CODE              Offs=002924  Size=00000E  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(printf.o):
-    CODE              Offs=002940  Size=000033  Align=00001  Fill=0000
+    CODE              Offs=002932  Size=000033  Align=00001  Fill=0000
     BSS               Offs=000980  Size=000001  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(push1.o):
-    CODE              Offs=002973  Size=000005  Align=00001  Fill=0000
+    CODE              Offs=002965  Size=000005  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(pusha.o):
-    CODE              Offs=002978  Size=000016  Align=00001  Fill=0000
+    CODE              Offs=00296A  Size=000016  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(pushax.o):
-    CODE              Offs=00298E  Size=00001A  Align=00001  Fill=0000
+    CODE              Offs=002980  Size=00001A  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(pushwsp.o):
-    CODE              Offs=0029A8  Size=00001C  Align=00001  Fill=0000
+    CODE              Offs=00299A  Size=00001C  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(return0.o):
-    CODE              Offs=0029C4  Size=000004  Align=00001  Fill=0000
+    CODE              Offs=0029B6  Size=000004  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(rwcommon.o):
-    CODE              Offs=0029C8  Size=00001A  Align=00001  Fill=0000
+    CODE              Offs=0029BA  Size=00001A  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(staspidx.o):
-    CODE              Offs=0029E2  Size=000016  Align=00001  Fill=0000
+    CODE              Offs=0029D4  Size=000016  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(status.o):
 /home/xahmol/retro/cc65/lib/c128.lib(staxsp.o):
-    CODE              Offs=0029F8  Size=00000B  Align=00001  Fill=0000
+    CODE              Offs=0029EA  Size=00000B  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(strcmp.o):
-    CODE              Offs=002A03  Size=000021  Align=00001  Fill=0000
+    CODE              Offs=0029F5  Size=000021  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(strcpy.o):
-    CODE              Offs=002A24  Size=00001F  Align=00001  Fill=0000
+    CODE              Offs=002A16  Size=00001F  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(strlen.o):
-    CODE              Offs=002A43  Size=000016  Align=00001  Fill=0000
+    CODE              Offs=002A35  Size=000016  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(strlower.o):
-    CODE              Offs=002A59  Size=000027  Align=00001  Fill=0000
+    CODE              Offs=002A4B  Size=000027  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(strncpy.o):
-    CODE              Offs=002A80  Size=000042  Align=00001  Fill=0000
+    CODE              Offs=002A72  Size=000042  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(subysp.o):
-    CODE              Offs=002AC2  Size=00000D  Align=00001  Fill=0000
+    CODE              Offs=002AB4  Size=00000D  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(toslong.o):
-    CODE              Offs=002ACF  Size=000038  Align=00001  Fill=0000
+    CODE              Offs=002AC1  Size=000038  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(udiv.o):
-    CODE              Offs=002B07  Size=00004F  Align=00001  Fill=0000
+    CODE              Offs=002AF9  Size=00004F  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(vfprintf.o):
-    CODE              Offs=002B56  Size=000061  Align=00001  Fill=0000
+    CODE              Offs=002B48  Size=000061  Align=00001  Fill=0000
     DATA              Offs=0001C7  Size=000008  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(write.o):
-    CODE              Offs=002BB7  Size=000054  Align=00001  Fill=0000
+    CODE              Offs=002BA9  Size=000054  Align=00001  Fill=0000
     ONCE              Offs=00001C  Size=000011  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(zerobss.o):
-    CODE              Offs=002C0B  Size=000023  Align=00001  Fill=0000
+    CODE              Offs=002BFD  Size=000023  Align=00001  Fill=0000
 /home/xahmol/retro/cc65/lib/c128.lib(zeropage.o):
     ZEROPAGE          Offs=000000  Size=00001A  Align=00001  Fill=0000
 
@@ -223,11 +223,11 @@ LOADADDR              001BFF  001C00  000002  00001
 EXEHDR                001C01  001C0C  00000C  00001
 STARTUP               001C0D  001C5D  000051  00001
 ONCE                  001C5E  001C8E  000031  00001
-CODE                  001C8F  0048BC  002C2E  00001
-RODATA                0048BD  004D03  000447  00001
-DATA                  004D04  004ED2  0001CF  00001
-INIT                  004ED3  004EEC  00001A  00001
-BSS                   004EED  00586D  000981  00001
+CODE                  001C8F  0048AE  002C20  00001
+RODATA                0048AF  004D28  00047A  00001
+DATA                  004D29  004EF7  0001CF  00001
+INIT                  004EF8  004F11  00001A  00001
+BSS                   004F12  005892  000981  00001
 
 
 Exports list by name:
@@ -237,83 +237,84 @@ CHKIN                     00FFC6 RLA    CKOUT                     00FFC9 RLA
 CLOSE                     00FFC3 RLA    CLRCH                     00FFCC RLA    
 OPEN                      00FFC0 RLA    READST                    00FFB7 RLA    
 SETLFS                    00FFBA RLA    SETNAM                    00FFBD RLA    
-ST                        000090 RLZ    __BSS_RUN__               004EED RLA    
+ST                        000090 RLZ    __BSS_RUN__               004F12 RLA    
 __BSS_SIZE__              000981 REA    __CONSTRUCTOR_COUNT__     000002 REA    
 __CONSTRUCTOR_TABLE__     001C8B RLA    __DESTRUCTOR_COUNT__      000000 REA    
-__DESTRUCTOR_TABLE__      004D04 RLA    __EXEHDR__                000001 REA    
+__DESTRUCTOR_TABLE__      004D29 RLA    __EXEHDR__                000001 REA    
 __LOADADDR__              000001 REA    __MAIN_SIZE__             009BF3 REA    
 __MAIN_START__            001C0D RLA    __STACKSIZE__             000800 REA    
-__STARTUP__               000001 REA    __bzero                   0044AA RLA    
-__ctype                   004C1F RLA    __ctypeidx                004C2A RLA    
-__directerrno             0039C3 RLA    __errno                   005869 RLA    
-__heapend                 004E89 RLA    __heapfirst               004E8B RLA    
-__heaplast                004E8D RLA    __heapptr                 004E87 RLA    
-__hextab                  004C03 RLA    __longminstr              004C13 RLA    
-__mappederrno             0039CD RLA    __oserror                 00583B RLA    
-__osmaperrno              00459F RLA    __printf                  003AD0 RLA    
-__seterrno                003D82 RLA    _cbm_close                003DE1 REA    
-_cbm_k_close              003DE1 RLA    _cbm_k_open               003DE5 RLA    
-_cbm_k_setlfs             003DEE RLA    _cbm_k_setnam             003DFC RLA    
-_cbm_open                 003E26 RLA    _cbm_read                 003E3C RLA    
-_free                     003F96 RLA    _fwrite                   004169 RLA    
-_imageaid                 004E04 RLA    _imageaname               004DB4 RLA    
-_imageapath               004DC8 RLA    _imagebid                 004E55 RLA    
-_imagebname               004E05 RLA    _imagebpath               004E19 RLA    
-_ltoa                     00431F RLA    _main                     003785 RLA    
-_malloc                   00439C RLA    _printf                   0045CF RLA    
-_readconfigfile           003523 RLA    _reufilename              004D64 RLA    
-_reufilepath              004D78 RLA    _reusize                  004E56 RLA    
-_startgeos                001C8F RLA    _stdout                   004E81 RLA    
-_strcmp                   004692 RLA    _strcpy                   0046B3 RLA    
-_strlen                   0046D2 RLA    _strlower                 0046E8 RLA    
-_strncpy                  00470F RLA    _textcolor                003E97 RLA    
-_uii_accept               002AB2 RLA    _uii_change_dir           001E43 RLA    
-_uii_close_file           0021B5 RLA    _uii_data                 004FED RLA    
-_uii_delete_file          0022DC RLA    _uii_load_reu             002DF9 RLA    
-_uii_mount_disk           001FC9 RLA    _uii_open_file            0020F5 RLA    
-_uii_read_file            0021E1 RLA    _uii_readdata             002A02 RLA    
-_uii_status               004EED RLA    _uii_write_file           002217 RLA    
-_ultoa                    004360 RLA    _vfprintf                 00481D RLA    
-_write                    004846 RLA    addeq0sp                  003DA7 RLA    
-addeqysp                  003DA9 RLA    addysp                    003DB9 RLA    
-addysp1                   003DB8 RLA    axlong                    003DC6 RLA    
-axulong                   003DCC RLA    bnega                     003DD7 RLA    
-callmain                  003E0F RLA    ctypemaskdirect           003F07 RLA    
-decax1                    003F21 RLA    decaxy                    003F28 RLA    
-decsp1                    003F31 RLA    decsp2                    003F3A RLA    
-decsp3                    003F47 RLA    decsp4                    003F54 RLA    
-decsp5                    003F61 RLA    decsp6                    003F6E RLA    
-decsp8                    003F7B RLA    donelib                   003EF7 RLA    
-fdtab                     004EBB RLA    incax1                    004212 RLA    
-incax2                    004219 RLA    incax3                    004220 RLA    
-incax4                    004225 RLA    incaxy                    004227 RLA    
-incsp1                    004230 RLA    incsp2                    00423F RLA    
-incsp3                    00424D RLA    incsp4                    004252 RLA    
-incsp5                    004257 RLA    incsp6                    00425C RLA    
-incsp7                    004261 RLA    incsp8                    004266 RLA    
+__STARTUP__               000001 REA    __bzero                   00449C RLA    
+__ctype                   004C44 RLA    __ctypeidx                004C4F RLA    
+__directerrno             0039B5 RLA    __errno                   00588E RLA    
+__heapend                 004EAE RLA    __heapfirst               004EB0 RLA    
+__heaplast                004EB2 RLA    __heapptr                 004EAC RLA    
+__hextab                  004C28 RLA    __longminstr              004C38 RLA    
+__mappederrno             0039BF RLA    __oserror                 005860 RLA    
+__osmaperrno              004591 RLA    __printf                  003AC2 RLA    
+__seterrno                003D74 RLA    _cbm_close                003DD3 REA    
+_cbm_k_close              003DD3 RLA    _cbm_k_open               003DD7 RLA    
+_cbm_k_setlfs             003DE0 RLA    _cbm_k_setnam             003DEE RLA    
+_cbm_open                 003E18 RLA    _cbm_read                 003E2E RLA    
+_errorcode                001D26 RLA    _free                     003F88 RLA    
+_fwrite                   00415B RLA    _imageaid                 004E29 RLA    
+_imageaname               004DD9 RLA    _imageapath               004DED RLA    
+_imagebid                 004E7A RLA    _imagebname               004E2A RLA    
+_imagebpath               004E3E RLA    _ltoa                     004311 RLA    
+_main                     003777 RLA    _malloc                   00438E RLA    
+_memoryconfig             001D25 RLA    _printf                   0045C1 RLA    
+_readconfigfile           0034E8 RLA    _reufilename              004D89 RLA    
+_reufilepath              004D9D RLA    _reusize                  004E7B RLA    
+_startgeos                001C8F RLA    _stdout                   004EA6 RLA    
+_strcmp                   004684 RLA    _strcpy                   0046A5 RLA    
+_strlen                   0046C4 RLA    _strlower                 0046DA RLA    
+_strncpy                  004701 RLA    _textcolor                003E89 RLA    
+_uii_accept               002A77 RLA    _uii_change_dir           001E08 RLA    
+_uii_close_file           00217A RLA    _uii_data                 005012 RLA    
+_uii_delete_file          0022A1 RLA    _uii_load_reu             002DBE RLA    
+_uii_mount_disk           001F8E RLA    _uii_open_file            0020BA RLA    
+_uii_read_file            0021A6 RLA    _uii_readdata             0029C7 RLA    
+_uii_status               004F12 RLA    _uii_write_file           0021DC RLA    
+_ultoa                    004352 RLA    _vfprintf                 00480F RLA    
+_write                    004838 RLA    addeq0sp                  003D99 RLA    
+addeqysp                  003D9B RLA    addysp                    003DAB RLA    
+addysp1                   003DAA RLA    axlong                    003DB8 RLA    
+axulong                   003DBE RLA    bnega                     003DC9 RLA    
+callmain                  003E01 RLA    ctypemaskdirect           003EF9 RLA    
+decax1                    003F13 RLA    decaxy                    003F1A RLA    
+decsp1                    003F23 RLA    decsp2                    003F2C RLA    
+decsp3                    003F39 RLA    decsp4                    003F46 RLA    
+decsp5                    003F53 RLA    decsp6                    003F60 RLA    
+decsp8                    003F6D RLA    donelib                   003EE9 RLA    
+fdtab                     004EE0 RLA    incax1                    004204 RLA    
+incax2                    00420B RLA    incax3                    004212 RLA    
+incax4                    004217 RLA    incaxy                    004219 RLA    
+incsp1                    004222 RLA    incsp2                    004231 RLA    
+incsp3                    00423F RLA    incsp4                    004244 RLA    
+incsp5                    004249 RLA    incsp6                    00424E RLA    
+incsp7                    004253 RLA    incsp8                    004258 RLA    
 initheap                  001C5E  LAI   initlib                   001C6E RLA    
-initstdout                001C7A  LAI   ldax0sp                   00428F RLA    
-ldaxysp                   004291 RLA    leaa0sp                   004298 RLA    
-mul8x16                   00454E RLA    mul8x16a                  004558 RLA    
-mulax10                   004586 RLA    negeax                    0042A4 RLA    
-popa                      0045B5 RLA    popax                     004237 RLA    
-popptr1                   0045C1 RLA    ptr1                      00000A RLZ    
+initstdout                001C7A  LAI   ldax0sp                   004281 RLA    
+ldaxysp                   004283 RLA    leaa0sp                   00428A RLA    
+mul8x16                   004540 RLA    mul8x16a                  00454A RLA    
+mulax10                   004578 RLA    negeax                    004296 RLA    
+popa                      0045A7 RLA    popax                     004229 RLA    
+popptr1                   0045B3 RLA    ptr1                      00000A RLZ    
 ptr2                      00000C RLZ    ptr3                      00000E RLZ    
-ptr4                      000010 RLZ    push0                     00461D RLA    
-push1                     004602 RLA    pusha                     00460B RLA    
-pusha0                    00461F RLA    pushax                    004621 RLA    
-pusheax                   0042EF RLA    pushw0sp                  004637 RLA    
-pushwysp                  004639 RLA    regbank                   000016 RLZ    
-return0                   004653 RLA    rwcommon                  004657 RLA    
+ptr4                      000010 RLZ    push0                     00460F RLA    
+push1                     0045F4 RLA    pusha                     0045FD RLA    
+pusha0                    004611 RLA    pushax                    004613 RLA    
+pusheax                   0042E1 RLA    pushw0sp                  004629 RLA    
+pushwysp                  00462B RLA    regbank                   000016 RLZ    
+return0                   004645 RLA    rwcommon                  004649 RLA    
 sp                        000002 RLZ    sreg                      000004 RLZ    
-staspidx                  004671 RLA    stax0sp                   004687 RLA    
-staxysp                   004689 RLA    subysp                    004751 RLA    
+staspidx                  004663 RLA    stax0sp                   004679 RLA    
+staxysp                   00467B RLA    subysp                    004743 RLA    
 tmp1                      000012 RLZ    tmp2                      000013 RLZ    
-tmp3                      000014 RLZ    tosaddax                  003D8D RLA    
-tosandeax                 004271 RLA    tosicmp                   0041E6 RLA    
-tosoreax                  0042C8 RLA    tosudivax                 004798 RLA    
-tosulong                  00475E RLA    tosumulax                 004507 RLA    
-zerobss                   00489A RLA    
+tmp3                      000014 RLZ    tosaddax                  003D7F RLA    
+tosandeax                 004263 RLA    tosicmp                   0041D8 RLA    
+tosoreax                  0042BA RLA    tosudivax                 00478A RLA    
+tosulong                  004750 RLA    tosumulax                 0044F9 RLA    
+zerobss                   00488C RLA    
 
 
 Exports list by value:
@@ -330,70 +331,71 @@ __STACKSIZE__             000800 REA    __BSS_SIZE__              000981 REA
 __MAIN_START__            001C0D RLA    initheap                  001C5E  LAI   
 initlib                   001C6E RLA    initstdout                001C7A  LAI   
 __CONSTRUCTOR_TABLE__     001C8B RLA    _startgeos                001C8F RLA    
-_uii_change_dir           001E43 RLA    _uii_mount_disk           001FC9 RLA    
-_uii_open_file            0020F5 RLA    _uii_close_file           0021B5 RLA    
-_uii_read_file            0021E1 RLA    _uii_write_file           002217 RLA    
-_uii_delete_file          0022DC RLA    _uii_readdata             002A02 RLA    
-_uii_accept               002AB2 RLA    _uii_load_reu             002DF9 RLA    
-_readconfigfile           003523 RLA    _main                     003785 RLA    
-__directerrno             0039C3 RLA    __mappederrno             0039CD RLA    
-__printf                  003AD0 RLA    __seterrno                003D82 RLA    
-tosaddax                  003D8D RLA    addeq0sp                  003DA7 RLA    
-addeqysp                  003DA9 RLA    addysp1                   003DB8 RLA    
-addysp                    003DB9 RLA    axlong                    003DC6 RLA    
-axulong                   003DCC RLA    bnega                     003DD7 RLA    
-_cbm_close                003DE1 REA    _cbm_k_close              003DE1 RLA    
-_cbm_k_open               003DE5 RLA    _cbm_k_setlfs             003DEE RLA    
-_cbm_k_setnam             003DFC RLA    callmain                  003E0F RLA    
-_cbm_open                 003E26 RLA    _cbm_read                 003E3C RLA    
-_textcolor                003E97 RLA    donelib                   003EF7 RLA    
-ctypemaskdirect           003F07 RLA    decax1                    003F21 RLA    
-decaxy                    003F28 RLA    decsp1                    003F31 RLA    
-decsp2                    003F3A RLA    decsp3                    003F47 RLA    
-decsp4                    003F54 RLA    decsp5                    003F61 RLA    
-decsp6                    003F6E RLA    decsp8                    003F7B RLA    
-_free                     003F96 RLA    _fwrite                   004169 RLA    
-tosicmp                   0041E6 RLA    incax1                    004212 RLA    
-incax2                    004219 RLA    incax3                    004220 RLA    
-incax4                    004225 RLA    incaxy                    004227 RLA    
-incsp1                    004230 RLA    popax                     004237 RLA    
-incsp2                    00423F RLA    incsp3                    00424D RLA    
-incsp4                    004252 RLA    incsp5                    004257 RLA    
-incsp6                    00425C RLA    incsp7                    004261 RLA    
-incsp8                    004266 RLA    tosandeax                 004271 RLA    
-ldax0sp                   00428F RLA    ldaxysp                   004291 RLA    
-leaa0sp                   004298 RLA    negeax                    0042A4 RLA    
-tosoreax                  0042C8 RLA    pusheax                   0042EF RLA    
-_ltoa                     00431F RLA    _ultoa                    004360 RLA    
-_malloc                   00439C RLA    __bzero                   0044AA RLA    
-tosumulax                 004507 RLA    mul8x16                   00454E RLA    
-mul8x16a                  004558 RLA    mulax10                   004586 RLA    
-__osmaperrno              00459F RLA    popa                      0045B5 RLA    
-popptr1                   0045C1 RLA    _printf                   0045CF RLA    
-push1                     004602 RLA    pusha                     00460B RLA    
-push0                     00461D RLA    pusha0                    00461F RLA    
-pushax                    004621 RLA    pushw0sp                  004637 RLA    
-pushwysp                  004639 RLA    return0                   004653 RLA    
-rwcommon                  004657 RLA    staspidx                  004671 RLA    
-stax0sp                   004687 RLA    staxysp                   004689 RLA    
-_strcmp                   004692 RLA    _strcpy                   0046B3 RLA    
-_strlen                   0046D2 RLA    _strlower                 0046E8 RLA    
-_strncpy                  00470F RLA    subysp                    004751 RLA    
-tosulong                  00475E RLA    tosudivax                 004798 RLA    
-_vfprintf                 00481D RLA    _write                    004846 RLA    
-zerobss                   00489A RLA    __hextab                  004C03 RLA    
-__longminstr              004C13 RLA    __ctype                   004C1F RLA    
-__ctypeidx                004C2A RLA    __DESTRUCTOR_TABLE__      004D04 RLA    
-_reufilename              004D64 RLA    _reufilepath              004D78 RLA    
-_imageaname               004DB4 RLA    _imageapath               004DC8 RLA    
-_imageaid                 004E04 RLA    _imagebname               004E05 RLA    
-_imagebpath               004E19 RLA    _imagebid                 004E55 RLA    
-_reusize                  004E56 RLA    _stdout                   004E81 RLA    
-__heapptr                 004E87 RLA    __heapend                 004E89 RLA    
-__heapfirst               004E8B RLA    __heaplast                004E8D RLA    
-fdtab                     004EBB RLA    __BSS_RUN__               004EED RLA    
-_uii_status               004EED RLA    _uii_data                 004FED RLA    
-__oserror                 00583B RLA    __errno                   005869 RLA    
+_memoryconfig             001D25 RLA    _errorcode                001D26 RLA    
+_uii_change_dir           001E08 RLA    _uii_mount_disk           001F8E RLA    
+_uii_open_file            0020BA RLA    _uii_close_file           00217A RLA    
+_uii_read_file            0021A6 RLA    _uii_write_file           0021DC RLA    
+_uii_delete_file          0022A1 RLA    _uii_readdata             0029C7 RLA    
+_uii_accept               002A77 RLA    _uii_load_reu             002DBE RLA    
+_readconfigfile           0034E8 RLA    _main                     003777 RLA    
+__directerrno             0039B5 RLA    __mappederrno             0039BF RLA    
+__printf                  003AC2 RLA    __seterrno                003D74 RLA    
+tosaddax                  003D7F RLA    addeq0sp                  003D99 RLA    
+addeqysp                  003D9B RLA    addysp1                   003DAA RLA    
+addysp                    003DAB RLA    axlong                    003DB8 RLA    
+axulong                   003DBE RLA    bnega                     003DC9 RLA    
+_cbm_close                003DD3 REA    _cbm_k_close              003DD3 RLA    
+_cbm_k_open               003DD7 RLA    _cbm_k_setlfs             003DE0 RLA    
+_cbm_k_setnam             003DEE RLA    callmain                  003E01 RLA    
+_cbm_open                 003E18 RLA    _cbm_read                 003E2E RLA    
+_textcolor                003E89 RLA    donelib                   003EE9 RLA    
+ctypemaskdirect           003EF9 RLA    decax1                    003F13 RLA    
+decaxy                    003F1A RLA    decsp1                    003F23 RLA    
+decsp2                    003F2C RLA    decsp3                    003F39 RLA    
+decsp4                    003F46 RLA    decsp5                    003F53 RLA    
+decsp6                    003F60 RLA    decsp8                    003F6D RLA    
+_free                     003F88 RLA    _fwrite                   00415B RLA    
+tosicmp                   0041D8 RLA    incax1                    004204 RLA    
+incax2                    00420B RLA    incax3                    004212 RLA    
+incax4                    004217 RLA    incaxy                    004219 RLA    
+incsp1                    004222 RLA    popax                     004229 RLA    
+incsp2                    004231 RLA    incsp3                    00423F RLA    
+incsp4                    004244 RLA    incsp5                    004249 RLA    
+incsp6                    00424E RLA    incsp7                    004253 RLA    
+incsp8                    004258 RLA    tosandeax                 004263 RLA    
+ldax0sp                   004281 RLA    ldaxysp                   004283 RLA    
+leaa0sp                   00428A RLA    negeax                    004296 RLA    
+tosoreax                  0042BA RLA    pusheax                   0042E1 RLA    
+_ltoa                     004311 RLA    _ultoa                    004352 RLA    
+_malloc                   00438E RLA    __bzero                   00449C RLA    
+tosumulax                 0044F9 RLA    mul8x16                   004540 RLA    
+mul8x16a                  00454A RLA    mulax10                   004578 RLA    
+__osmaperrno              004591 RLA    popa                      0045A7 RLA    
+popptr1                   0045B3 RLA    _printf                   0045C1 RLA    
+push1                     0045F4 RLA    pusha                     0045FD RLA    
+push0                     00460F RLA    pusha0                    004611 RLA    
+pushax                    004613 RLA    pushw0sp                  004629 RLA    
+pushwysp                  00462B RLA    return0                   004645 RLA    
+rwcommon                  004649 RLA    staspidx                  004663 RLA    
+stax0sp                   004679 RLA    staxysp                   00467B RLA    
+_strcmp                   004684 RLA    _strcpy                   0046A5 RLA    
+_strlen                   0046C4 RLA    _strlower                 0046DA RLA    
+_strncpy                  004701 RLA    subysp                    004743 RLA    
+tosulong                  004750 RLA    tosudivax                 00478A RLA    
+_vfprintf                 00480F RLA    _write                    004838 RLA    
+zerobss                   00488C RLA    __hextab                  004C28 RLA    
+__longminstr              004C38 RLA    __ctype                   004C44 RLA    
+__ctypeidx                004C4F RLA    __DESTRUCTOR_TABLE__      004D29 RLA    
+_reufilename              004D89 RLA    _reufilepath              004D9D RLA    
+_imageaname               004DD9 RLA    _imageapath               004DED RLA    
+_imageaid                 004E29 RLA    _imagebname               004E2A RLA    
+_imagebpath               004E3E RLA    _imagebid                 004E7A RLA    
+_reusize                  004E7B RLA    _stdout                   004EA6 RLA    
+__heapptr                 004EAC RLA    __heapend                 004EAE RLA    
+__heapfirst               004EB0 RLA    __heaplast                004EB2 RLA    
+fdtab                     004EE0 RLA    __BSS_RUN__               004F12 RLA    
+_uii_status               004F12 RLA    _uii_data                 005012 RLA    
+__oserror                 005860 RLA    __errno                   00588E RLA    
 __MAIN_SIZE__             009BF3 REA    READST                    00FFB7 RLA    
 SETLFS                    00FFBA RLA    SETNAM                    00FFBD RLA    
 OPEN                      00FFC0 RLA    CLOSE                     00FFC3 RLA    
@@ -516,39 +518,43 @@ _cbm_open (cbm_open.o):
     configcommon.o            src/configcommon.s:19
 _cbm_read (cbm_read.o):
     configcommon.o            src/configcommon.s:21
+_errorcode (geosramroutine.o):
+    geosramboot.o             src/geosramboot.s:26
 _free (free.o):
     ultimate_lib.o            src/ultimate_lib.s:16
 _fwrite (fwrite.o):
     vfprintf.o                common/vfprintf.s:10
 _imageaid (configcommon.o):
-    geosramboot.o             src/geosramboot.s:29
-_imageaname (configcommon.o):
-    geosramboot.o             src/geosramboot.s:27
-_imageapath (configcommon.o):
-    geosramboot.o             src/geosramboot.s:28
-_imagebid (configcommon.o):
     geosramboot.o             src/geosramboot.s:32
-_imagebname (configcommon.o):
+_imageaname (configcommon.o):
     geosramboot.o             src/geosramboot.s:30
-_imagebpath (configcommon.o):
+_imageapath (configcommon.o):
     geosramboot.o             src/geosramboot.s:31
+_imagebid (configcommon.o):
+    geosramboot.o             src/geosramboot.s:35
+_imagebname (configcommon.o):
+    geosramboot.o             src/geosramboot.s:33
+_imagebpath (configcommon.o):
+    geosramboot.o             src/geosramboot.s:34
 _ltoa (ltoa.o):
     _printf.o                 common/_printf.s:12
 _main (geosramboot.o):
     callmain.o                runtime/callmain.s:11
 _malloc (malloc.o):
     ultimate_lib.o            src/ultimate_lib.s:15
+_memoryconfig (geosramroutine.o):
+    geosramboot.o             src/geosramboot.s:25
 _printf (printf.o):
     geosramboot.o             src/geosramboot.s:14
     configcommon.o            src/configcommon.s:13
 _readconfigfile (configcommon.o):
-    geosramboot.o             src/geosramboot.s:34
+    geosramboot.o             src/geosramboot.s:37
 _reufilename (configcommon.o):
-    geosramboot.o             src/geosramboot.s:25
+    geosramboot.o             src/geosramboot.s:28
 _reufilepath (configcommon.o):
-    geosramboot.o             src/geosramboot.s:26
+    geosramboot.o             src/geosramboot.s:29
 _reusize (configcommon.o):
-    geosramboot.o             src/geosramboot.s:33
+    geosramboot.o             src/geosramboot.s:36
 _startgeos (geosramroutine.o):
     geosramboot.o             src/geosramboot.s:24
 _stdout (_file.o):
@@ -628,7 +634,7 @@ addysp (addysp.o):
     incsp5.o                  runtime/incsp5.s:8
     incsp4.o                  runtime/incsp4.s:8
     incsp3.o                  runtime/incsp3.s:8
-    geosramboot.o             src/geosramboot.s:355
+    geosramboot.o             src/geosramboot.s:396
     configcommon.o            src/configcommon.s:876
     configcommon.o            src/configcommon.s:876
     ultimate_lib.o            src/ultimate_lib.s:3378
@@ -949,7 +955,7 @@ push1 (push1.o):
     _printf.o                 common/_printf.s:11
     vfprintf.o                common/vfprintf.s:9
 pusha (pusha.o):
-    geosramboot.o             src/geosramboot.s:355
+    geosramboot.o             src/geosramboot.s:396
     configcommon.o            src/configcommon.s:876
     configcommon.o            src/configcommon.s:876
     configcommon.o            src/configcommon.s:876
@@ -983,7 +989,8 @@ pushax (pushax.o):
     callmain.o                runtime/callmain.s:11
     _printf.o                 common/_printf.s:11
     printf.o                  common/printf.s:8
-    geosramboot.o             src/geosramboot.s:355
+    geosramboot.o             src/geosramboot.s:396
+    geosramboot.o             src/geosramboot.s:396
     configcommon.o            src/configcommon.s:876
     configcommon.o            src/configcommon.s:876
     configcommon.o            src/configcommon.s:876
@@ -1147,7 +1154,7 @@ staxysp (staxsp.o):
     ultimate_lib.o            src/ultimate_lib.s:3378
     ultimate_lib.o            src/ultimate_lib.s:3378
 subysp (subysp.o):
-    geosramboot.o             src/geosramboot.s:355
+    geosramboot.o             src/geosramboot.s:396
     configcommon.o            src/configcommon.s:876
     ultimate_lib.o            src/ultimate_lib.s:3378
 tmp1 (zeropage.o):

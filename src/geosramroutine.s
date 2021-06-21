@@ -7,6 +7,8 @@
 ; Adapted from ACME original to CA65 syntax by Xander Mol
 
 .export _startgeos
+.export _memoryconfig
+.export _errorcode
 
 .segment	"CODE"
 
@@ -60,44 +62,25 @@ _startgeos:
 reuerror:
         pla
         sta     $df06          ; probably does nothing, but.. just in case something mapped some ram here, we restore the original content...
-        ldx     #$00
-:
-        lda     error1msg,x
-        beq     :+
-        jsr     $ffd2
-        inx
-        bne :-
-:
+        lda     #$01
+        sta     _errorcode
         cli
         rts    
 
 ; we didn't find something which looks like a GEOS rboot loader. Note we first need to setup a 'sane' memory config so we can call kernal functions and return to basic.
 sigerror:
-        ldx     #$00
+        ldx     _memoryconfig
         stx     $ff00          ; set memory map to 'bank 15', this must be done before restoring the default shared ram config
         lda     #$04           ; set DMA target and shared ram config to ram block 0 for DMA and 1k shared ram at bottom of memory
         sta     $d506
-:
-        lda     error2msg,x   ; print error message.
-        beq :+
-        jsr     $ffd2
-        inx
-        bne :-
-:
+        lda     #$02
+        sta     _errorcode
         cli
         rts
 
 ; a GEOS rboot loader should have this at offset $0006
 sig:
-.byte   "geos boot"
-
-error1msg:
-.byte   "reu not detected"
-.byte   $0d, $00
-
-error2msg:
-.byte   "geos ramboot image not found"
-.byte   $0d, $00              
+.byte   "geos boot"       
 
 reudata:
 .byte   $91, $00, $c0, $40, $bc 
@@ -108,4 +91,7 @@ resetcode:
         sta     $ff00
         jmp     $c000
 resetcode_end:
+
+_memoryconfig:  .byte   0
+_errorcode:     .byte   0
 

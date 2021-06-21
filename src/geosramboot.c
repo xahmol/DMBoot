@@ -131,6 +131,6 @@ void main()
 		}
 	}
 
-	printf("\nBooting GEOS.");
-    startgeos();
+	printf("\nBooting GEOS.\n");
+    bootgeos();
 }
