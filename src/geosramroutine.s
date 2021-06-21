@@ -13,8 +13,8 @@
 
 _startgeos:
         sei
-        lda     $ff00
-        sta     memoryconfig
+        lda     $ff00          ; load old memory configuration to enable safe return to C
+        sta     memoryconfig   ; save old configuration in variable
         lda     #$00
         sta     $ff00          ; select bank 15: kernal, monitor, editor, basic roms enabled, io enabled.
         lda     $df06          ; REU bank register
@@ -64,18 +64,18 @@ reuerror:
         pla
         sta     $df06          ; probably does nothing, but.. just in case something mapped some ram here, we restore the original content...
         lda     #$01
-        sta     _errorcode
+        sta     _errorcode     ; exit with error code 1 for REU not enabled
         cli
         rts    
 
 ; we didn't find something which looks like a GEOS rboot loader. Note we first need to setup a 'sane' memory config so we can call kernal functions and return to basic.
 sigerror:
-        ldx     memoryconfig
-        stx     $ff00          ; set memory map to 'bank 15', this must be done before restoring the default shared ram config
+        ldx     memoryconfig   ; load old memory config back
+        stx     $ff00          ; set memory map to original for safe return to C, this must be done before restoring the default shared ram config
         lda     #$04           ; set DMA target and shared ram config to ram block 0 for DMA and 1k shared ram at bottom of memory
         sta     $d506
         lda     #$02
-        sta     _errorcode
+        sta     _errorcode     ; exit with error code 2 for unvalid GEOS RAM image
         cli
         rts
 
