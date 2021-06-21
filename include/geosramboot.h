@@ -2,12 +2,10 @@
 #define __GEOSRAMBOOT_H__
 
 extern void startgeos(void);
-extern unsigned char memoryconfig;
 extern unsigned char errorcode;
 
 void bootgeos()
 {
-    memoryconfig = *(char*)0xff00;
     startgeos();
     switch (errorcode)
 	{

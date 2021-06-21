@@ -7,13 +7,14 @@
 ; Adapted from ACME original to CA65 syntax by Xander Mol
 
 .export _startgeos
-.export _memoryconfig
 .export _errorcode
 
 .segment	"CODE"
 
 _startgeos:
         sei
+        lda     $ff00
+        sta     memoryconfig
         lda     #$00
         sta     $ff00          ; select bank 15: kernal, monitor, editor, basic roms enabled, io enabled.
         lda     $df06          ; REU bank register
@@ -69,7 +70,7 @@ reuerror:
 
 ; we didn't find something which looks like a GEOS rboot loader. Note we first need to setup a 'sane' memory config so we can call kernal functions and return to basic.
 sigerror:
-        ldx     _memoryconfig
+        ldx     memoryconfig
         stx     $ff00          ; set memory map to 'bank 15', this must be done before restoring the default shared ram config
         lda     #$04           ; set DMA target and shared ram config to ram block 0 for DMA and 1k shared ram at bottom of memory
         sta     $d506
@@ -92,6 +93,6 @@ resetcode:
         jmp     $c000
 resetcode_end:
 
-_memoryconfig:  .byte   0
+memoryconfig:  .byte   0
 _errorcode:     .byte   0
 
