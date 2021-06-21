@@ -58,7 +58,7 @@ void main()
 	printf("\nREU Dir changed\nStatus: %s", uii_status);
 
 	// Exit if REU dir is not found
-	if(strcmp(uii_status,"00,ok") != 0)
+	if(strcmp((const char*)uii_status,"00,ok") != 0)
 	{
 		printf("\nREU path not found.");
 		return;
@@ -69,7 +69,7 @@ void main()
 	printf("\nStatus: %s", uii_status);
 
 	// Exit if REU file is not found
-	if(strcmp(uii_status,"00,ok") != 0)
+	if(strcmp((const char*)uii_status,"00,ok") != 0)
 	{
 		printf("\nREU file not found.");
 		return;
@@ -90,7 +90,7 @@ void main()
 		printf("\nImage A Dir changed\nStatus: %s", uii_status);
 
 		// Exit if REU dir is not found
-		if(strcmp(uii_status,"00,ok") != 0)
+		if(strcmp((const char*)uii_status,"00,ok") != 0)
 		{
 			printf("\nImage A path not found.");
 			return;
@@ -100,7 +100,7 @@ void main()
 		printf("\nImage A loaded\nStatus: %s", uii_status);
 
 		// Exit if image A is not found
-		if(strcmp(uii_status,"00,ok") != 0)
+		if(strcmp((const char*)uii_status,"00,ok") != 0)
 		{
 			printf("\nImage A file not found.");
 			return;
@@ -114,7 +114,7 @@ void main()
 		printf("\nImage B Dir changed\nStatus: %s", uii_status);
 
 		// Exit if REU dir is not found
-		if(strcmp(uii_status,"00,ok") != 0)
+		if(strcmp((const char*)uii_status,"00,ok") != 0)
 		{
 			printf("\nImage B path not found.");
 			return;
@@ -124,7 +124,7 @@ void main()
 		printf("\nImage B loaded\nStatus: %s", uii_status);
 
 		// Exit if image A is not found
-		if(strcmp(uii_status,"00,ok") != 0)
+		if(strcmp((const char*)uii_status,"00,ok") != 0)
 		{
 			printf("\nImage B file not found.");
 			return;

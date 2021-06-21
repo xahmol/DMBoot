@@ -49,6 +49,7 @@
 
 long secondsfromutc = 0; 
 unsigned char timeonflag = 1;
+char host[80] = "pool.ntp.org";
 char reufilename[20] = "default.reu";
 char reufilepath[60] = "/usb*/11/";
 char imageaname[20] = "";
@@ -59,6 +60,7 @@ char imagebpath[60] = "";
 unsigned char imagebid = 0;
 unsigned char reusize = 2;
 char* reusizelist[8] = { "128 KB","256 KB","512 KB","1 MB","2 MB","4 MB","8 MB","16 MB"};
+unsigned char buffer[328];
 
 void mid(const char *src, size_t start, size_t length, char *dst, size_t dstlen)
 {       
@@ -122,11 +124,10 @@ void writeconfigfile(char* filename)
 	// Function to write config file
 	// Inout: filename of config file
 
-	unsigned char buffer[248];
   unsigned char x;
 
   // Clear buffer memory
-  memset(buffer,0,248);
+  memset(buffer,0,328);
 
 	// Place all variables in buffer memory
   for(x=0;x<60;x++)
@@ -164,6 +165,10 @@ void writeconfigfile(char* filename)
 
   buffer[246] = imageaid;
   buffer[247] = imagebid;
+  for(x=0;x<80;x++)
+  {
+    buffer[248+x] = host[x];
+  }
   
   // Delete old config file as I can not (yet) get overwrite to work
 	uii_delete_file(filename);
@@ -174,7 +179,7 @@ void writeconfigfile(char* filename)
   // Uncomment for debbug
   //printf("\nStatus: %s", uii_status);
 
-	uii_write_file(buffer,248);
+	uii_write_file(buffer,328);
   // Uncomment for debbug
   //printf("\nStatus: %s", uii_status);
 
@@ -195,14 +200,14 @@ void readconfigfile(char* filename)
   //printf("\nStatus: %s", uii_status);
 
   // Write a config file with default values if no file is found
-  if(strcmp(uii_status,"00,ok") != 0)
+  if(strcmp((const char*)uii_status,"00,ok") != 0)
   {
     printf("\nNo config file found, writing defaults.");
     writeconfigfile(filename);
     return;
   }
 
-	uii_read_file(248);
+	uii_read_file(328);
   // Uncomment for debbug
   //printf("\nStatus: %s", uii_status);
 
@@ -249,6 +254,14 @@ void readconfigfile(char* filename)
   imageaid = uii_data[246];
   imagebid = uii_data[247];
 
+  for(x=0;x<80;x++)
+  {
+    host[x] = uii_data[248+x];
+  }
+
+  // If no hostname is read due to old config file format, set default
+  if(strlen(host)==0) { strcpy(host,"pool.ntp.org"); }
+
 	uii_close_file();
   // Uncomment for debbug
   //printf("\nStatus: %s", uii_status);
@@ -262,5 +275,6 @@ void readconfigfile(char* filename)
   //printf("\nREU size: %i", reusize);
   //printf("\nTime on flag: %i", timeonflag);
   //printf("\nConverted UTC offset: %ld",secondsfromutc);
+  //printf("\nNTP Hostname: %s",host);
   //cgetc();
 }

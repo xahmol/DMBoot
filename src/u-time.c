@@ -63,7 +63,6 @@ void get_ntp_time()
 {
     // Function to get time from NTP server and set UII+ time with this
 
-    char host[] = "pool.ntp.org";
     struct tm *datetime;
     extern struct _timezone _tz;
 
@@ -134,6 +133,9 @@ void main()
     {
         get_ntp_time();
     }
+
+    // Uncomment for debug
+    //cgetc();
 
     clrscr();
     gotoxy(0,2);

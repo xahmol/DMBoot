@@ -195,7 +195,11 @@ char mainmenu()
     cputs("Present configuration settings:\n\n\r");
     cputs("NTP time update settings:\n\r");
     cprintf("- Update on boot toggle: %s\n\r",(timeonflag==0)?"Off":"On");
-    cprintf("- Offset to UTC in seconds: %ld\n\n\r",secondsfromutc);
+    cprintf("- Offset to UTC in seconds: %ld\n\r",secondsfromutc);
+
+    mid(host,0,SCREENW,buffer2,SCREENW);
+    cprintf("- NTP server hostname:\n\r%s\n\r",buffer2);
+
     cputs("GEOS RAM Boot settings:\n\r");
 
     strcpy(buffer1,reufilepath);
@@ -212,7 +216,7 @@ char mainmenu()
     strcpy(buffer1,imagebpath);
     strcat(buffer1,imagebname);
     mid(buffer1,0,SCREENW,buffer2,SCREENW);
-    cprintf("- Drive B image path+name: %i\n\r%s\n\n\r",imagebid, buffer2);
+    cprintf("- Drive B image path+name: %i\n\r%s\n\r",imagebid, buffer2);
 
     cputs("Make your choice:\n\r");
     
@@ -246,8 +250,9 @@ char mainmenu()
 
 void edittimeconfig()
 {
-    char key;
+    unsigned char key;
     char offsetinput[10] = "";
+    char buffer2[80] = "";
     char* ptrend;
 
     clearArea(0,19,40,3);
@@ -269,6 +274,13 @@ void edittimeconfig()
 
     revers(1);
     textcolor(DMB_COLOR_SELECT);
+    cputs(" F5 ");
+    revers(0);
+    textcolor(DC_COLOR_TEXT);
+    cputs(" Edit NTP server host\n\r");
+
+    revers(1);
+    textcolor(DMB_COLOR_SELECT);
     cputs(" F7 ");
     revers(0);
     textcolor(DC_COLOR_TEXT);
@@ -279,7 +291,7 @@ void edittimeconfig()
         do
         {
             key = cgetc();
-        } while (key != CH_F1 && key != CH_F3 && key != CH_F7);
+        } while (key != CH_F1 && key != CH_F3 && key != CH_F5 && key != CH_F7);
 
         switch (key)
         {
@@ -291,13 +303,24 @@ void edittimeconfig()
             break;
 
         case CH_F3:
-            cputsxy(0,22,"Input time offset to UTC:");
-            textInput(0,23,offsetinput,10);
+            cputsxy(0,23,"Input time offset to UTC:");
+            textInput(0,24,offsetinput,10);
             secondsfromutc = strtol(offsetinput,&ptrend,10);
             clearArea(0,7,40,1);
-            clearArea(0,22,40,2);
+            clearArea(0,23,40,2);
             gotoxy(0,7);
             cprintf("- Offset to UTC in seconds: %ld\n\n\r",secondsfromutc);
+            changesmade = 1;
+            break;
+
+        case CH_F5:
+            cputsxy(0,23,"Input NTP server hostname:");
+            textInput(0,24,host,80);
+            clearArea(0,9,40,1);
+            clearArea(0,23,40,2);
+            gotoxy(0,9);
+            mid(host,0,SCREENW,buffer2,SCREENW);
+            cprintf("%s",buffer2);
             changesmade = 1;
             break;
 
