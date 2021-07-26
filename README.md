@@ -11,6 +11,7 @@ https://www.idreamtin8bits.com/
 ### Changelog release versions:
 
 **Version v299-20210726-1019 :**
+
  [Link to build of version](https://github.com/xahmol/DMBoot/raw/main/DMBoot-v299-20210726-1019.zip)
  
 * Changed configuration file for main program from a sequential file to a binary blob, which loads much faster, so shortening boot time.
