@@ -42,9 +42,27 @@ https://www.idreamtin8bits.com/
   (link: https://www.bartsplace.net/content/publications/devicemanager128.shtml )
 
 **Installation:**
+* Create a directory called '11' on your usb stick, and put the contents of the DMBoot ZIP there. It doesn't really matter if the usb stick is usb0 or usb1 or such, but what is important is the 'default path' setting in the Software IEC menu of the U2+ cartridge is pointing to the proper path for your usb stick. While it doesn't matter if the usb stick is usb0/1 etc, the names of the directory and file are important.
 
-* Create a directory called '11' on your usb stick, and put the autostart.128.prg file there. It doesn't really matter if the usb stick is usb0 or usb1 or such, but what is important is the 'default path' setting in the Software IEC menu of the U2+ cartridge is pointing to the proper path for your usb stick.
-  While it doesn't matter if the usb stick is usb0/1 etc, the names of the directory and file are important.
+* Unzipping should place these files in the 11 directory:
+
+..* autostart.128.prg:
+The executable that will automatically start DM Boot running with the DM manager Autoboot option enabled / chosen from the DM menu. This will update time via the chosen NTP server if enabled and then start the DMBoot main program.
+
+..* dmbconfig.prg:
+Configuration program to set the options for the NTP time server update and the GEOS Ram boot options and file paths/names.
+
+..* dmb-confupd-2-3.prg:
+Utility to upgrade the configuration file of the DM Boot main program from the 1.99 version to the 2.99 version. Only needed if coming from a previous version.
+
+..* dmbootmain.prg:
+DMBoot main program.
+
+..*  geosramboot.prg:
+GEOS RAM boot executable. This will boot GEOS from the REU file specified using the dmbconfig.prg program.
+
+..* readme.txt:
+This readme file.
 
 **First run:**
 
