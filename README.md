@@ -8,7 +8,14 @@ https://github.com/xahmol/DMBoot
 
 https://www.idreamtin8bits.com/
 
-### Changelog
+### Changelog release versions:
+
+**Version v299-20210726-1019 :**
+* Changed configuration file for main program from a sequential file to a binary blob, which loads much faster, so shortening boot time.
+* Added dmb-confupd-2-3.prg: Utility to migrate the old sequential config file to the new format
+* The new autostart.128.prg now sets time from NTP server on boot before starting DMBoot itself;
+* Geosramboot.prg starts GEOS from a specified REU file
+* Dmb-config.prg is a program to configure NTP time set and GEOS ram boot configuration
 
 **Version v199-20210125-2234 :**
 
@@ -19,12 +26,12 @@ https://www.idreamtin8bits.com/
 * Made the other options available via Function-keys (as the letter keys are now taken by the extra menu slots)
 * Added option to add a user defined command to each menuslot (e.g. a partition change, a POKE or anything else you can imagine as long as it runs from the BASIC prompt with one enter, fits in 100 chars and does not give screen output other than the READY prompt (suggested by Bob Grimes) 
 
-**Upgrade instructions from version 0.99 to 1.99:**
+**Upgrade instructions from version 1.99 to 2.99:**
 
 - If you want to be able to revert to the old version (and also in all other cases as backing up is always a good idea), please backup your present config file as it will be altered/overwritten to the updated format unreadable by the old version.
-- In the ZIP are two files: next to the autostart.128.prg also an utility dmb-confupd-1-2.prg to update your present config file to the new format.
-- Unzip the ZIP file and transfer first dmb-confupd-1-2.prg to the 11 dir of your UII+ USB drive.
-- On your C128, move to the 11 dir and run dmb-confupd-1-2.prg to upgrade the config file.
+- The ZIP contains the utility dmb-confupd-2-3.prg to update your present config file to the new format.
+- Unzip the ZIP file and transfer first dmb-confupd-2-3.prg to the 11 dir of your UII+ USB drive.
+- On your C128, move to the 11 dir and run dmb-confupd-2-3.prg to upgrade the config file.
   Of course you can also opt to start clean: in that case just delete the dmbootconf.seq file and a new empty one will be created on start of the new DMBoot version.
   Starting the new DMBoot version with the old config file however gives unexpected results as I did not program a check on the config file version.
 - Only then transfer the new autostart.128.prg to the 11 dir of your USB stick.
