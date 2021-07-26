@@ -46,22 +46,22 @@ https://www.idreamtin8bits.com/
 
 * Unzipping should place these files in the 11 directory:
 
- * autostart.128.prg:
+  * autostart.128.prg:
 The executable that will automatically start DM Boot running with the DM manager Autoboot option enabled / chosen from the DM menu. This will update time via the chosen NTP server if enabled and then start the DMBoot main program.
 
- * dmbconfig.prg:
+  * dmbconfig.prg:
 Configuration program to set the options for the NTP time server update and the GEOS Ram boot options and file paths/names.
 
- * dmb-confupd-2-3.prg:
+  * dmb-confupd-2-3.prg:
 Utility to upgrade the configuration file of the DM Boot main program from the 1.99 version to the 2.99 version. Only needed if coming from a previous version.
 
- * dmbootmain.prg:
+  * dmbootmain.prg:
 DMBoot main program.
 
- *  geosramboot.prg:
+  *  geosramboot.prg:
 GEOS RAM boot executable. This will boot GEOS from the REU file specified using the dmbconfig.prg program.
 
-..* readme.txt:
+  * readme.txt:
 This readme file.
 
 **First run:**
