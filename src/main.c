@@ -309,6 +309,13 @@ void std_write(char * file_name)
 
     // Set dir back to root    
     cmd(bootdevice, "cd:\xff");
+
+    // Set load/save bank back to 0
+    __asm__ (
+		"\tlda\t#0\n"
+		"\tldx\t#0\n"
+		"\tjsr\t$ff68\n"
+		);
 }
 
 void std_read(char * file_name)
@@ -372,7 +379,15 @@ void std_read(char * file_name)
         }
     }
     
+    // Set dir back to root 
     cmd(bootdevice, "cd:\xff");
+
+    // Set load/save bank back to 0
+    __asm__ (
+		"\tlda\t#0\n"
+		"\tldx\t#0\n"
+		"\tjsr\t$ff68\n"
+		);
 }
 
 void mid(const char *src, size_t start, size_t length, char *dst, size_t dstlen)

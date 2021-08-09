@@ -17,10 +17,15 @@ SOURCESTIME = src/ultimate_lib.c src/configcommon.c src/u-time.c
 SOURCESGEOS = src/ultimate_lib.c src/configcommon.c src/geosramboot.c
 SOURCESCFG = src/ultimate_lib.c src/configcommon.c src/dmbconfig.c
 LIBGEOS = src/geosramroutine.s
+README = readme.txt
 ZIP = DMBoot-v299-$(shell date "+%Y%m%d-%H%M").zip
 
 # Hostname of Ultimate II+ target for deployment. Edit for proper IP and usb number
+<<<<<<< HEAD
 ULTHOST = ftp://192.168.1.19/usb1/11/
+=======
+ULTHOST = ftp://192.168.1.31/usb1/11/
+>>>>>>> 02fd186f12413f4996b0492f0632e290c82b6fa0
 ULTHOST2 = ftp://192.168.1.31/usb1/11/
 
 MAIN = dmbootmain.prg
@@ -66,7 +71,7 @@ $(GEOS): $(LIBGEOS) $(SOURCESGEOS:.c=.o)
 $(CFG): $(SOURCESCFG:.c=.o)
 	$(CC) $(LDFLAGSCFG) -o $@ $^
 
-$(ZIP): $(MAIN) $(TIME) $(GEOS) $(CFG) $(UPDATE)
+$(ZIP): $(MAIN) $(TIME) $(GEOS) $(CFG) $(UPDATE) $(README)
 	zip $@ $^
 
 clean:
