@@ -20,7 +20,8 @@ LIBGEOS = src/geosramroutine.s
 ZIP = DMBoot-v299-$(shell date "+%Y%m%d-%H%M").zip
 
 # Hostname of Ultimate II+ target for deployment. Edit for proper IP and usb number
-ULTHOST = ftp://192.168.1.31/usb1/11/
+ULTHOST = ftp://192.168.1.19/usb1/11/
+ULTHOST2 = ftp://192.168.1.31/usb1/11/
 
 MAIN = dmbootmain.prg
 TIME = autostart.128.prg
@@ -82,3 +83,8 @@ deploy: $(MAIN) $(UPDATE)
 	wput -u $(GEOS) $(ULTHOST)
 	wput -u $(CFG) $(ULTHOST)
 	wput -u $(UPDATE) $(ULTHOST)
+	wput -u $(MAIN) $(ULTHOST2)
+	wput -u $(TIME) $(ULTHOST2)
+	wput -u $(GEOS) $(ULTHOST2)
+	wput -u $(CFG) $(ULTHOST2)
+	wput -u $(UPDATE) $(ULTHOST2)

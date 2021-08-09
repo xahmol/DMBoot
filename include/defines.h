@@ -68,6 +68,9 @@ typedef unsigned char BYTE;
 #define DIRX (context?DIR2X:DIR1X)
 #define DIRY (context?DIR2Y:DIR1Y)
 
+// Define highest device ID allowed
+#define MAXDEVID 15
+
 extern BYTE DIR1H;
 extern BYTE DIR2H;
 extern unsigned int SCREENW;

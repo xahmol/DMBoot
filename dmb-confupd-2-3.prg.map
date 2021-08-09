@@ -7,157 +7,157 @@ dmb-confupd-2-3.o:
 c128-ram.o:
     CODE              Offs=0002A0  Size=00012B  Align=00001  Fill=0000
     BSS               Offs=0000F5  Size=000102  Align=00001  Fill=0000
-/home/xahmol/retro/cc65/lib/c128.lib(_directerrno.o):
+/mnt/d/retro/cc65/lib/c128.lib(_directerrno.o):
     CODE              Offs=0003CB  Size=00000A  Align=00001  Fill=0000
-/home/xahmol/retro/cc65/lib/c128.lib(_fdesc.o):
+/mnt/d/retro/cc65/lib/c128.lib(_fdesc.o):
     CODE              Offs=0003D5  Size=00001D  Align=00001  Fill=0000
-/home/xahmol/retro/cc65/lib/c128.lib(_file.o):
+/mnt/d/retro/cc65/lib/c128.lib(_file.o):
     DATA              Offs=000000  Size=00001E  Align=00001  Fill=0000
-/home/xahmol/retro/cc65/lib/c128.lib(_fopen.o):
+/mnt/d/retro/cc65/lib/c128.lib(_fopen.o):
     CODE              Offs=0003F2  Size=00007B  Align=00001  Fill=0000
     BSS               Offs=0001F7  Size=000002  Align=00001  Fill=0000
-/home/xahmol/retro/cc65/lib/c128.lib(_mappederrno.o):
+/mnt/d/retro/cc65/lib/c128.lib(_mappederrno.o):
     CODE              Offs=00046D  Size=000010  Align=00001  Fill=0000
-/home/xahmol/retro/cc65/lib/c128.lib(_oserror.o):
+/mnt/d/retro/cc65/lib/c128.lib(_oserror.o):
     BSS               Offs=0001F9  Size=000001  Align=00001  Fill=0000
-/home/xahmol/retro/cc65/lib/c128.lib(_seterrno.o):
+/mnt/d/retro/cc65/lib/c128.lib(_seterrno.o):
     CODE              Offs=00047D  Size=000009  Align=00001  Fill=0000
-/home/xahmol/retro/cc65/lib/c128.lib(addeqsp.o):
+/mnt/d/retro/cc65/lib/c128.lib(addeqsp.o):
     CODE              Offs=000486  Size=000011  Align=00001  Fill=0000
-/home/xahmol/retro/cc65/lib/c128.lib(addysp.o):
+/mnt/d/retro/cc65/lib/c128.lib(addysp.o):
     CODE              Offs=000497  Size=00000E  Align=00001  Fill=0000
-/home/xahmol/retro/cc65/lib/c128.lib(c_save.o):
+/mnt/d/retro/cc65/lib/c128.lib(c_save.o):
     CODE              Offs=0004A5  Size=000016  Align=00001  Fill=0000
-/home/xahmol/retro/cc65/lib/c128.lib(c_setlfs.o):
+/mnt/d/retro/cc65/lib/c128.lib(c_setlfs.o):
     CODE              Offs=0004BB  Size=00000E  Align=00001  Fill=0000
-/home/xahmol/retro/cc65/lib/c128.lib(c_setnam.o):
+/mnt/d/retro/cc65/lib/c128.lib(c_setnam.o):
     CODE              Offs=0004C9  Size=000013  Align=00001  Fill=0000
-/home/xahmol/retro/cc65/lib/c128.lib(callmain.o):
+/mnt/d/retro/cc65/lib/c128.lib(callmain.o):
     CODE              Offs=0004DC  Size=000017  Align=00001  Fill=0000
     DATA              Offs=00001E  Size=000004  Align=00001  Fill=0000
-/home/xahmol/retro/cc65/lib/c128.lib(close.o):
+/mnt/d/retro/cc65/lib/c128.lib(close.o):
     CODE              Offs=0004F3  Size=000038  Align=00001  Fill=0000
-/home/xahmol/retro/cc65/lib/c128.lib(clrscr.o):
-/home/xahmol/retro/cc65/lib/c128.lib(condes.o):
+/mnt/d/retro/cc65/lib/c128.lib(clrscr.o):
+/mnt/d/retro/cc65/lib/c128.lib(condes.o):
     CODE              Offs=00052B  Size=00000C  Align=00001  Fill=0000
     DATA              Offs=000022  Size=000025  Align=00001  Fill=0000
     ONCE              Offs=000000  Size=00000C  Align=00001  Fill=0000
-/home/xahmol/retro/cc65/lib/c128.lib(conio.o):
-/home/xahmol/retro/cc65/lib/c128.lib(cputc.o):
+/mnt/d/retro/cc65/lib/c128.lib(conio.o):
+/mnt/d/retro/cc65/lib/c128.lib(cputc.o):
     CODE              Offs=000537  Size=000049  Align=00001  Fill=0000
-/home/xahmol/retro/cc65/lib/c128.lib(cputs.o):
+/mnt/d/retro/cc65/lib/c128.lib(cputs.o):
     CODE              Offs=000580  Size=000023  Align=00001  Fill=0000
-/home/xahmol/retro/cc65/lib/c128.lib(crt0.o):
+/mnt/d/retro/cc65/lib/c128.lib(crt0.o):
     BSS               Offs=0001FA  Size=000002  Align=00001  Fill=0000
     STARTUP           Offs=000000  Size=000051  Align=00001  Fill=0000
     INIT              Offs=000000  Size=00001A  Align=00001  Fill=0000
-/home/xahmol/retro/cc65/lib/c128.lib(curdevice.o):
+/mnt/d/retro/cc65/lib/c128.lib(curdevice.o):
     CODE              Offs=0005A3  Size=000006  Align=00001  Fill=0000
-/home/xahmol/retro/cc65/lib/c128.lib(decsp1.o):
+/mnt/d/retro/cc65/lib/c128.lib(decsp1.o):
     CODE              Offs=0005A9  Size=000009  Align=00001  Fill=0000
-/home/xahmol/retro/cc65/lib/c128.lib(decsp4.o):
+/mnt/d/retro/cc65/lib/c128.lib(decsp4.o):
     CODE              Offs=0005B2  Size=00000D  Align=00001  Fill=0000
-/home/xahmol/retro/cc65/lib/c128.lib(devnum.o):
-/home/xahmol/retro/cc65/lib/c128.lib(diskcmd.o):
+/mnt/d/retro/cc65/lib/c128.lib(devnum.o):
+/mnt/d/retro/cc65/lib/c128.lib(diskcmd.o):
     CODE              Offs=0005BF  Size=0000C4  Align=00001  Fill=0000
     BSS               Offs=0001FC  Size=000017  Align=00001  Fill=0000
-/home/xahmol/retro/cc65/lib/c128.lib(em-kernel.o):
+/mnt/d/retro/cc65/lib/c128.lib(em-kernel.o):
     RODATA            Offs=000099  Size=000051  Align=00001  Fill=0000
     BSS               Offs=000213  Size=000002  Align=00001  Fill=0000
     DATA              Offs=000047  Size=000018  Align=00001  Fill=0000
-/home/xahmol/retro/cc65/lib/c128.lib(em_commit.o):
-/home/xahmol/retro/cc65/lib/c128.lib(em_map.o):
-/home/xahmol/retro/cc65/lib/c128.lib(em_use.o):
-/home/xahmol/retro/cc65/lib/c128.lib(errno.o):
+/mnt/d/retro/cc65/lib/c128.lib(em_commit.o):
+/mnt/d/retro/cc65/lib/c128.lib(em_map.o):
+/mnt/d/retro/cc65/lib/c128.lib(em_use.o):
+/mnt/d/retro/cc65/lib/c128.lib(errno.o):
     BSS               Offs=000215  Size=000002  Align=00001  Fill=0000
-/home/xahmol/retro/cc65/lib/c128.lib(exehdr.o):
+/mnt/d/retro/cc65/lib/c128.lib(exehdr.o):
     EXEHDR            Offs=000000  Size=00000C  Align=00001  Fill=0000
-/home/xahmol/retro/cc65/lib/c128.lib(fclose.o):
+/mnt/d/retro/cc65/lib/c128.lib(fclose.o):
     CODE              Offs=000683  Size=000022  Align=00001  Fill=0000
-/home/xahmol/retro/cc65/lib/c128.lib(fgetc.o):
+/mnt/d/retro/cc65/lib/c128.lib(fgetc.o):
     CODE              Offs=0006A5  Size=00008A  Align=00001  Fill=0000
-/home/xahmol/retro/cc65/lib/c128.lib(filedes.o):
+/mnt/d/retro/cc65/lib/c128.lib(filedes.o):
     CODE              Offs=00072F  Size=00000E  Align=00001  Fill=0000
     DATA              Offs=00005F  Size=000010  Align=00001  Fill=0000
-/home/xahmol/retro/cc65/lib/c128.lib(filename.o):
+/mnt/d/retro/cc65/lib/c128.lib(filename.o):
     CODE              Offs=00073D  Size=0000A0  Align=00001  Fill=0000
     BSS               Offs=000217  Size=000003  Align=00001  Fill=0000
     DATA              Offs=00006F  Size=000024  Align=00001  Fill=0000
-/home/xahmol/retro/cc65/lib/c128.lib(filetype.o):
+/mnt/d/retro/cc65/lib/c128.lib(filetype.o):
     DATA              Offs=000093  Size=000001  Align=00001  Fill=0000
-/home/xahmol/retro/cc65/lib/c128.lib(filevars.o):
+/mnt/d/retro/cc65/lib/c128.lib(filevars.o):
     INIT              Offs=00001A  Size=000001  Align=00001  Fill=0000
     ONCE              Offs=00000C  Size=00000C  Align=00001  Fill=0000
-/home/xahmol/retro/cc65/lib/c128.lib(fopen.o):
+/mnt/d/retro/cc65/lib/c128.lib(fopen.o):
     CODE              Offs=0007DD  Size=000018  Align=00001  Fill=0000
-/home/xahmol/retro/cc65/lib/c128.lib(fread.o):
+/mnt/d/retro/cc65/lib/c128.lib(fread.o):
     CODE              Offs=0007F5  Size=0000D3  Align=00001  Fill=0000
     BSS               Offs=00021A  Size=000003  Align=00001  Fill=0000
-/home/xahmol/retro/cc65/lib/c128.lib(gotoxy.o):
+/mnt/d/retro/cc65/lib/c128.lib(gotoxy.o):
     CODE              Offs=0008C8  Size=00000D  Align=00001  Fill=0000
-/home/xahmol/retro/cc65/lib/c128.lib(incaxy.o):
+/mnt/d/retro/cc65/lib/c128.lib(incaxy.o):
     CODE              Offs=0008D5  Size=00000B  Align=00001  Fill=0000
-/home/xahmol/retro/cc65/lib/c128.lib(incsp2.o):
+/mnt/d/retro/cc65/lib/c128.lib(incsp2.o):
     CODE              Offs=0008E0  Size=000016  Align=00001  Fill=0000
-/home/xahmol/retro/cc65/lib/c128.lib(incsp3.o):
+/mnt/d/retro/cc65/lib/c128.lib(incsp3.o):
     CODE              Offs=0008F6  Size=000005  Align=00001  Fill=0000
-/home/xahmol/retro/cc65/lib/c128.lib(incsp4.o):
+/mnt/d/retro/cc65/lib/c128.lib(incsp4.o):
     CODE              Offs=0008FB  Size=000005  Align=00001  Fill=0000
-/home/xahmol/retro/cc65/lib/c128.lib(incsp6.o):
+/mnt/d/retro/cc65/lib/c128.lib(incsp6.o):
     CODE              Offs=000900  Size=000005  Align=00001  Fill=0000
-/home/xahmol/retro/cc65/lib/c128.lib(kernal.o):
-/home/xahmol/retro/cc65/lib/c128.lib(ldaxsp.o):
+/mnt/d/retro/cc65/lib/c128.lib(kernal.o):
+/mnt/d/retro/cc65/lib/c128.lib(ldaxsp.o):
     CODE              Offs=000905  Size=000009  Align=00001  Fill=0000
-/home/xahmol/retro/cc65/lib/c128.lib(leaaxsp.o):
+/mnt/d/retro/cc65/lib/c128.lib(leaaxsp.o):
     CODE              Offs=00090E  Size=00000C  Align=00001  Fill=0000
-/home/xahmol/retro/cc65/lib/c128.lib(libref.o):
-/home/xahmol/retro/cc65/lib/c128.lib(loadaddr.o):
+/mnt/d/retro/cc65/lib/c128.lib(libref.o):
+/mnt/d/retro/cc65/lib/c128.lib(loadaddr.o):
     LOADADDR          Offs=000000  Size=000002  Align=00001  Fill=0000
-/home/xahmol/retro/cc65/lib/c128.lib(mul.o):
+/mnt/d/retro/cc65/lib/c128.lib(mul.o):
     CODE              Offs=00091A  Size=000045  Align=00001  Fill=0000
-/home/xahmol/retro/cc65/lib/c128.lib(mul8.o):
+/mnt/d/retro/cc65/lib/c128.lib(mul8.o):
     CODE              Offs=00095F  Size=00003A  Align=00001  Fill=0000
-/home/xahmol/retro/cc65/lib/c128.lib(open.o):
+/mnt/d/retro/cc65/lib/c128.lib(open.o):
     CODE              Offs=000999  Size=0000BE  Align=00001  Fill=0000
-/home/xahmol/retro/cc65/lib/c128.lib(oserror.o):
+/mnt/d/retro/cc65/lib/c128.lib(oserror.o):
     CODE              Offs=000A57  Size=000016  Align=00001  Fill=0000
     RODATA            Offs=0000EA  Size=00005A  Align=00001  Fill=0000
-/home/xahmol/retro/cc65/lib/c128.lib(popa.o):
+/mnt/d/retro/cc65/lib/c128.lib(popa.o):
     CODE              Offs=000A6D  Size=00000C  Align=00001  Fill=0000
-/home/xahmol/retro/cc65/lib/c128.lib(popptr1.o):
+/mnt/d/retro/cc65/lib/c128.lib(popptr1.o):
     CODE              Offs=000A79  Size=00000E  Align=00001  Fill=0000
-/home/xahmol/retro/cc65/lib/c128.lib(pusha.o):
+/mnt/d/retro/cc65/lib/c128.lib(pusha.o):
     CODE              Offs=000A87  Size=000016  Align=00001  Fill=0000
-/home/xahmol/retro/cc65/lib/c128.lib(pushax.o):
+/mnt/d/retro/cc65/lib/c128.lib(pushax.o):
     CODE              Offs=000A9D  Size=00001A  Align=00001  Fill=0000
-/home/xahmol/retro/cc65/lib/c128.lib(pushwsp.o):
+/mnt/d/retro/cc65/lib/c128.lib(pushwsp.o):
     CODE              Offs=000AB7  Size=00001C  Align=00001  Fill=0000
-/home/xahmol/retro/cc65/lib/c128.lib(read.o):
+/mnt/d/retro/cc65/lib/c128.lib(read.o):
     CODE              Offs=000AD3  Size=00007E  Align=00001  Fill=0000
     BSS               Offs=00021D  Size=000001  Align=00001  Fill=0000
     ONCE              Offs=000018  Size=00000C  Align=00001  Fill=0000
-/home/xahmol/retro/cc65/lib/c128.lib(regswap2.o):
+/mnt/d/retro/cc65/lib/c128.lib(regswap2.o):
     CODE              Offs=000B51  Size=000016  Align=00001  Fill=0000
-/home/xahmol/retro/cc65/lib/c128.lib(remove.o):
+/mnt/d/retro/cc65/lib/c128.lib(remove.o):
     CODE              Offs=000B67  Size=000006  Align=00001  Fill=0000
-/home/xahmol/retro/cc65/lib/c128.lib(return0.o):
+/mnt/d/retro/cc65/lib/c128.lib(return0.o):
     CODE              Offs=000B6D  Size=000004  Align=00001  Fill=0000
-/home/xahmol/retro/cc65/lib/c128.lib(rwcommon.o):
+/mnt/d/retro/cc65/lib/c128.lib(rwcommon.o):
     CODE              Offs=000B71  Size=00001A  Align=00001  Fill=0000
-/home/xahmol/retro/cc65/lib/c128.lib(scratch.o):
+/mnt/d/retro/cc65/lib/c128.lib(scratch.o):
     CODE              Offs=000B8B  Size=000019  Align=00001  Fill=0000
-/home/xahmol/retro/cc65/lib/c128.lib(status.o):
-/home/xahmol/retro/cc65/lib/c128.lib(staxsp.o):
+/mnt/d/retro/cc65/lib/c128.lib(status.o):
+/mnt/d/retro/cc65/lib/c128.lib(staxsp.o):
     CODE              Offs=000BA4  Size=00000B  Align=00001  Fill=0000
-/home/xahmol/retro/cc65/lib/c128.lib(strcpy.o):
+/mnt/d/retro/cc65/lib/c128.lib(strcpy.o):
     CODE              Offs=000BAF  Size=00001F  Align=00001  Fill=0000
-/home/xahmol/retro/cc65/lib/c128.lib(sysremove.o):
+/mnt/d/retro/cc65/lib/c128.lib(sysremove.o):
     CODE              Offs=000BCE  Size=000009  Align=00001  Fill=0000
-/home/xahmol/retro/cc65/lib/c128.lib(udiv.o):
+/mnt/d/retro/cc65/lib/c128.lib(udiv.o):
     CODE              Offs=000BD7  Size=00004F  Align=00001  Fill=0000
-/home/xahmol/retro/cc65/lib/c128.lib(zerobss.o):
+/mnt/d/retro/cc65/lib/c128.lib(zerobss.o):
     CODE              Offs=000C26  Size=000023  Align=00001  Fill=0000
-/home/xahmol/retro/cc65/lib/c128.lib(zeropage.o):
+/mnt/d/retro/cc65/lib/c128.lib(zeropage.o):
     ZEROPAGE          Offs=000000  Size=00001A  Align=00001  Fill=0000
 
 
@@ -376,54 +376,54 @@ __DESTRUCTOR_COUNT__ ([linker generated]):
 __DESTRUCTOR_TABLE__ ([linker generated]):
     condes.o                  runtime/condes.s:19
 __EXEHDR__ (exehdr.o):
-    [linker generated]        /home/xahmol/retro/cc65/cfg/c128.cfg:3
+    [linker generated]        /mnt/d/retro/cc65/cfg/c128.cfg:3
 __LOADADDR__ (loadaddr.o):
-    [linker generated]        /home/xahmol/retro/cc65/cfg/c128.cfg:2
+    [linker generated]        /mnt/d/retro/cc65/cfg/c128.cfg:2
 __MAIN_SIZE__ ([linker generated]):
     crt0.o                    c128/crt0.s:11
 __MAIN_START__ ([linker generated]):
     crt0.o                    c128/crt0.s:11
 __STACKSIZE__ ([linker generated]):
     crt0.o                    c128/crt0.s:11
-    [linker generated]        /home/xahmol/retro/cc65/cfg/c128.cfg:10
+    [linker generated]        /mnt/d/retro/cc65/cfg/c128.cfg:10
 __STARTUP__ (crt0.o):
     dmb-confupd-2-3.o         src/dmb-confupd-2-3.s:13
 __ZP_START__ ([linker generated]):
     c128-ram.o                c128-ram.s:312
 __directerrno (_directerrno.o):
-    open.o                    /home/xahmol/retro/cc65/asminc/errno.inc:10
-    close.o                   /home/xahmol/retro/cc65/asminc/errno.inc:10
-    read.o                    /home/xahmol/retro/cc65/asminc/errno.inc:10
+    open.o                    /mnt/d/retro/cc65/asminc/errno.inc:10
+    close.o                   /mnt/d/retro/cc65/asminc/errno.inc:10
+    read.o                    /mnt/d/retro/cc65/asminc/errno.inc:10
 __errno (errno.o):
-    _seterrno.o               /home/xahmol/retro/cc65/asminc/errno.inc:7
+    _seterrno.o               /mnt/d/retro/cc65/asminc/errno.inc:7
 __fdesc (_fdesc.o):
     fopen.o                   common/fopen.s:10
 __filetab (_file.o):
-    _fdesc.o                  /home/xahmol/retro/cc65/asminc/_file.inc:25
+    _fdesc.o                  /mnt/d/retro/cc65/asminc/_file.inc:25
 __filetype (filetype.o):
     filename.o                cbm/filename.s:11
     dmb-confupd-2-3.o         src/dmb-confupd-2-3.s:20
 __fopen (_fopen.o):
     fopen.o                   common/fopen.s:10
 __mappederrno (_mappederrno.o):
-    open.o                    /home/xahmol/retro/cc65/asminc/errno.inc:10
-    close.o                   /home/xahmol/retro/cc65/asminc/errno.inc:10
+    open.o                    /mnt/d/retro/cc65/asminc/errno.inc:10
+    close.o                   /mnt/d/retro/cc65/asminc/errno.inc:10
     remove.o                  common/remove.s:10
-    read.o                    /home/xahmol/retro/cc65/asminc/errno.inc:10
+    read.o                    /mnt/d/retro/cc65/asminc/errno.inc:10
 __oserror (_oserror.o):
-    open.o                    /home/xahmol/retro/cc65/asminc/errno.inc:7
-    _mappederrno.o            /home/xahmol/retro/cc65/asminc/errno.inc:7
-    _directerrno.o            /home/xahmol/retro/cc65/asminc/errno.inc:7
-    read.o                    /home/xahmol/retro/cc65/asminc/errno.inc:7
+    open.o                    /mnt/d/retro/cc65/asminc/errno.inc:7
+    _mappederrno.o            /mnt/d/retro/cc65/asminc/errno.inc:7
+    _directerrno.o            /mnt/d/retro/cc65/asminc/errno.inc:7
+    read.o                    /mnt/d/retro/cc65/asminc/errno.inc:7
 __osmaperrno (oserror.o):
-    _mappederrno.o            /home/xahmol/retro/cc65/asminc/errno.inc:8
+    _mappederrno.o            /mnt/d/retro/cc65/asminc/errno.inc:8
 __seterrno (_seterrno.o):
-    _mappederrno.o            /home/xahmol/retro/cc65/asminc/errno.inc:9
-    _fopen.o                  /home/xahmol/retro/cc65/asminc/errno.inc:9
-    _directerrno.o            /home/xahmol/retro/cc65/asminc/errno.inc:9
-    fread.o                   /home/xahmol/retro/cc65/asminc/errno.inc:9
-    fopen.o                   /home/xahmol/retro/cc65/asminc/errno.inc:9
-    fclose.o                  /home/xahmol/retro/cc65/asminc/errno.inc:9
+    _mappederrno.o            /mnt/d/retro/cc65/asminc/errno.inc:9
+    _fopen.o                  /mnt/d/retro/cc65/asminc/errno.inc:9
+    _directerrno.o            /mnt/d/retro/cc65/asminc/errno.inc:9
+    fread.o                   /mnt/d/retro/cc65/asminc/errno.inc:9
+    fopen.o                   /mnt/d/retro/cc65/asminc/errno.inc:9
+    fclose.o                  /mnt/d/retro/cc65/asminc/errno.inc:9
 __sysremove (sysremove.o):
     remove.o                  common/remove.s:9
 _c128_ram (c128-ram.o):
@@ -505,11 +505,11 @@ donelib (condes.o):
 em_libref (libref.o):
     em-kernel.o               em/em-kernel.s:7
 emd_commit (em-kernel.o):
-    em_commit.o               /home/xahmol/retro/cc65/asminc/em-kernel.inc:84
+    em_commit.o               /mnt/d/retro/cc65/asminc/em-kernel.inc:84
 emd_map (em-kernel.o):
-    em_map.o                  /home/xahmol/retro/cc65/asminc/em-kernel.inc:82
+    em_map.o                  /mnt/d/retro/cc65/asminc/em-kernel.inc:82
 emd_use (em-kernel.o):
-    em_use.o                  /home/xahmol/retro/cc65/asminc/em-kernel.inc:83
+    em_use.o                  /mnt/d/retro/cc65/asminc/em-kernel.inc:83
 fdtab (filedes.o):
     open.o                    cbm/filedes.inc:7
     close.o                   cbm/filedes.inc:7
@@ -675,7 +675,7 @@ sp (zeropage.o):
     fread.o                   common/fread.s:17
     fgetc.o                   ../libwrk/c128/fgetc.s:10
     decsp4.o                  runtime/decsp4.s:8
-    crt0.o                    /home/xahmol/retro/cc65/asminc/zeropage.inc:11
+    crt0.o                    /mnt/d/retro/cc65/asminc/zeropage.inc:11
     addeqsp.o                 runtime/addeqsp.s:8
 sreg (zeropage.o):
     udiv.o                    runtime/udiv.s:10

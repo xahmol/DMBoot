@@ -133,7 +133,7 @@ mainLoopBrowse(void)
 
     textcolor(DC_COLOR_HIGHLIGHT);
     i = 7;
-    while(++i < 12)
+    while(++i < MAXDEVID+1)
       {
         devices[context] = i;
         dirs[context] = readDir(NULL, devices[context], context, sorted);
@@ -149,7 +149,7 @@ mainLoopBrowse(void)
     if (SCREENW == 80)
     {
       textcolor(DC_COLOR_TEXT);
-      while(++i < 12)
+      while(++i < MAXDEVID+1)
       {
         devices[1] = i;
         dirs[1] = readDir(NULL, devices[1], 1, sorted);
@@ -180,7 +180,7 @@ mainLoopBrowse(void)
 
         case '2':
         case CH_F2:
-          if (++devices[context] > 11)
+          if (++devices[context] > MAXDEVID)
             devices[context]=8;
           freeDir(&dirs[context]);
           if (! devicetype[devices[context]])

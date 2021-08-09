@@ -8,6 +8,7 @@
         "myCompilerPath": "l:/cc65/"
       },  
     "configurations": [
+        
         {
             "type": "cc65-vice",
             "request": "launch",
@@ -18,8 +19,8 @@
             "stopOnEntry": true,
             "stopOnExit": true,
             "viceArgs": [
-                "-model",
-                "ntsc"
+                "-c128",
+                "pal"
             ]
         }
     ]
