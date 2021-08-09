@@ -34,6 +34,9 @@
 #include "ops.h"
 #include "version.h"
 
+#pragma code-name ("OVERLAY1");
+#pragma rodata-name ("OVERLAY1");
+
 static BYTE sorted = 0;
 
 void
@@ -47,7 +50,7 @@ updateMenu(void)
 
   ++menuy;
   cputsxy(MENUXT+1,++menuy,"F1 DIR");
-  cputsxy(MENUXT+1,++menuy,"F2 DEVICE");
+  cputsxy(MENUXT+1,++menuy,"+- DEVICE");
   cputsxy(MENUXT+1,++menuy,"F3 HEX");
   cputsxy(MENUXT+1,++menuy,"F4 ASC");
   cputsxy(MENUXT+1,++menuy,"F5 BOOT");
@@ -180,8 +183,20 @@ mainLoopBrowse(void)
 
         case '2':
         case CH_F2:
+        case '+':
           if (++devices[context] > MAXDEVID)
             devices[context]=8;
+          freeDir(&dirs[context]);
+          if (! devicetype[devices[context]])
+            {
+              getDeviceType(devices[context]);
+            }
+          showDir(context, context);
+          break;
+        
+        case '-':
+          if (--devices[context] < 8)
+            devices[context]=MAXDEVID;
           freeDir(&dirs[context]);
           if (! devicetype[devices[context]])
             {

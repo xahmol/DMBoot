@@ -46,124 +46,21 @@
 #include "ultimate_lib.h"
 #include "defines.h"
 #include "configcommon.h"
+#include "main.h"
+#include "ops.h"
+#include "screen.h"
 
-unsigned int SCREENW;
-char spaces[81]    = "                                                                                ";
-char spacedest[81];
-BYTE bootdevice;
+#pragma code-name ("OVERLAY3");
+#pragma rodata-name ("OVERLAY3");
+
 unsigned char changesmade = 0;
 
-void clearArea(const BYTE xpos, const BYTE ypos, const BYTE xsize, const BYTE ysize)
-{
-  BYTE y = ypos;
-  for (; y < (ypos+ysize); ++y)
-    {
-      cclearxy(xpos,y,xsize);
-    }
-}
-
-int textInput(const BYTE xpos, const BYTE ypos, char *str, const BYTE size)
-{
-  register BYTE idx = strlen(str);
-  register BYTE c;
-
-  cursor(1);
-  cputsxy(xpos, ypos, str);
-
-  while(1)
-    {
-      c = cgetc();
-      switch (c)
-        {
-      case CH_LARROW:
-      case CH_ESC:
-        cursor(0);
-        return -1;
-
-      case CH_ENTER:
-        idx = strlen(str);
-        str[idx] = 0;
-        cursor(0);
-        return idx;
-
-      case CH_DEL:
-        if (idx)
-          {
-            --idx;
-            cputcxy(xpos + idx, ypos, ' ');
-            for(c = idx; 1; ++c)
-              {
-                const BYTE b = str[c+1];
-                str[c] = b;
-                cputcxy(xpos + c, ypos, b ? b : ' ');
-                if (b == 0)
-                  break;
-              }
-            gotoxy(xpos + idx, ypos);
-          }
-        break;
-
-        case CH_INS:
-          c = strlen(str);
-          if (c < size &&
-              c > 0 &&
-              idx < c)
-            {
-              ++c;
-              while(c >= idx)
-                {
-                  str[c+1] = str[c];
-                  if (c == 0)
-                    break;
-                  --c;
-                }
-              str[idx] = ' ';
-              cputsxy(xpos, ypos, str);
-              gotoxy(xpos + idx, ypos);
-            }
-          break;
-
-      case CH_CURS_LEFT:
-        if (idx)
-          {
-            --idx;
-            gotoxy(xpos + idx, ypos);
-          }
-        break;
-
-      case CH_CURS_RIGHT:
-        if (idx < strlen(str) &&
-            idx < size)
-          {
-            ++idx;
-            gotoxy(xpos + idx, ypos);
-          }
-        break;
-
-      default:
-        if (isprint(c) &&
-            idx < size)
-          {
-            const BYTE flag = (str[idx] == 0);
-            str[idx] = c;
-            cputc(c);
-            ++idx;
-            if (flag)
-              str[idx+1] = 0;
-            break;
-          }
-        break;
-      }
-    }
-  return 0;
-}
-
-void headertext(char* subtitle)
+void config_headertext(char* subtitle)
 {
     // Draw header text
     // Input: subtitle is text to draw on second line
 
-    mid(spaces,1,SCREENW,spacedest, sizeof(spacedest)); // select spaces based on screenwidth
+    mid(spacefill,1,SCREENW,spacedest, sizeof(spacedest)); // select spaces based on screenwidth
     revers(1);
     textcolor(DMB_COLOR_HEADER1);
     gotoxy(0,0);
@@ -175,11 +72,16 @@ void headertext(char* subtitle)
     cprintf("%s\n",spacedest);
     gotoxy(0,1);
     cprintf("%s\n\n\r", subtitle);
+    if(SCREENW == 80)
+    {
+        uii_get_time();
+        cputsxy(80-strlen((const char*)uii_data),1,(const char*)uii_data);
+    }
     revers(0);
     textcolor(DC_COLOR_TEXT);
 }
 
-char mainmenu()
+char config_mainmenu()
 {
     // Draw main boot menu
     // Returns chosen menu option as char key value
@@ -189,7 +91,7 @@ char mainmenu()
     char buffer2[80] = "";
 
     clrscr();
-    headertext("Configuration tool.");
+    config_headertext("Configuration tool.");
 
     gotoxy(0,3);
     cputs("Present configuration settings:\n\n\r");
@@ -339,7 +241,7 @@ void editgeosconfig()
     do
     {
         clrscr();
-        headertext("Edit GEOS RAM Boot configuration.");
+        config_headertext("Edit GEOS RAM Boot configuration.");
 
         gotoxy(0,3);
 
@@ -382,7 +284,7 @@ void editgeosconfig()
         {
         case CH_F1:
             clrscr();
-            headertext("Edit REU file path and name.");
+            config_headertext("Edit REU file path and name.");
 
             cputsxy(0,3,"Enter REU file path:");
             textInput(0,4,reufilepath,60);
@@ -394,7 +296,7 @@ void editgeosconfig()
 
         case CH_F3:
             clrscr();
-            headertext("Edit REU size.");
+            config_headertext("Edit REU size.");
 
             gotoxy(0,3);
             cprintf("REU file size: (%i) %s\n\n\r",reusize,reusizelist[reusize]);
@@ -448,7 +350,7 @@ void editgeosconfig()
 
         case CH_F5:
             clrscr();
-            headertext("Edit images to mount.");
+            config_headertext("Edit images to mount.");
 
             sprintf(deviceidbuffer,"%i",imageaid);
             cputsxy(0,3,"Enter image drive A device ID:");
@@ -483,38 +385,15 @@ void editgeosconfig()
     } while (key != CH_F7);
 }
 
-void main(void)
+void config_main(void)
 {
-    char cfgfilename[10] = "dmbcfgfile";
     int menuselect;
-
-    bootdevice = getcurrentdevice();
     
-    //Check column width of present screen
-    if ( PEEK(0xee) == 79) //Memory position $ee is present screen width
-    {
-        SCREENW = 80;  //Set flag for 80 column
-        set_c128_speed(SPEED_FAST);
-    }
-    else
-    {
-        SCREENW = 40;  //Set flag for 40 column
-    }
-
-    textcolor(DC_COLOR_TEXT);
-
-    cputs("Starting: Reading config file.");  
-
-	  uii_change_dir("/usb*/11/");
-    readconfigfile(cfgfilename);
-
-    bordercolor(DC_COLOR_BORDER);
-    bgcolor(DC_COLOR_BG);
     clrscr();
 
     do
     {
-        menuselect = mainmenu();
+        menuselect = config_mainmenu();
 
         switch (menuselect)
         {
@@ -533,16 +412,6 @@ void main(void)
 
     if (changesmade == 1)
     {
-        writeconfigfile(cfgfilename);
+        writeconfigfile(configfilename);
     }
-    
-    cmd(bootdevice,"cd:/usb*/11");
-
-    clrscr();
-    gotoxy(0,2);
-    cprintf("run\"dmbootmain\",u%i", bootdevice);
-    *((unsigned char *)KBCHARS)=13;
-    *((unsigned char *)KBNUM)=1;
-    gotoxy(0,0);
-    exit(0);
 }

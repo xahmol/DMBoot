@@ -23,7 +23,6 @@
  * https://github.com/doj/dracopy
  */
 
-#include "ops.h"
 #include "screen.h"
 #include "version.h"
 #include "base.h"

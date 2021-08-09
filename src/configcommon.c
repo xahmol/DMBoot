@@ -46,78 +46,11 @@
 #include "ultimate_lib.h"
 #include "defines.h"
 #include "configcommon.h"
+#include "ops.h"
+#include "main.h"
 
-long secondsfromutc = 0; 
-unsigned char timeonflag = 1;
-char host[80] = "pool.ntp.org";
-char reufilename[20] = "default.reu";
-char reufilepath[60] = "/usb*/11/";
-char imageaname[20] = "";
-char imageapath[60] = "";
-unsigned char imageaid = 0;
-char imagebname[20] = "";
-char imagebpath[60] = "";
-unsigned char imagebid = 0;
-unsigned char reusize = 2;
-char* reusizelist[8] = { "128 KB","256 KB","512 KB","1 MB","2 MB","4 MB","8 MB","16 MB"};
-unsigned char buffer[328];
-
-void mid(const char *src, size_t start, size_t length, char *dst, size_t dstlen)
-{       
-    // Function to provide MID$ equivalent
-
-    size_t len = min( dstlen - 1, length);
- 
-    strncpy(dst, src + start, len);
-    // zero terminate because strncpy() didn't ? 
-    if(len < length)
-        dst[dstlen-1] = 0;
-}
-
-BYTE dosCommand(const BYTE lfn, const BYTE drive, const BYTE sec_addr, const char *cmd)
-{
-    // Function to send a DOS command
-
-    int res;
-    char DOSstatus[40];
-
-    if (cbm_open(lfn, drive, sec_addr, cmd) != 0)
-      {
-        return _oserror;
-      }
-
-    if (lfn != 15)
-      {
-        if (cbm_open(15, drive, 15, "") != 0)
-          {
-            cbm_close(lfn);
-            return _oserror;
-          }
-      }
-
-    DOSstatus[0] = 0;
-    res = cbm_read(15, DOSstatus, sizeof(DOSstatus));
-
-    if(lfn != 15)
-      {
-        cbm_close(15);
-      }
-    cbm_close(lfn);
-
-    if (res < 1)
-      {
-        return _oserror;
-      }
-
-    return (DOSstatus[0] - 48) * 10 + DOSstatus[1] - 48;
-}
-
-int cmd(const BYTE device, const char *cmd)
-{
-    // Function to send command for disk operations
-
-    return dosCommand(15, device, 15, cmd);
-}
+#pragma code-name ("OVERLAY3");
+#pragma rodata-name ("OVERLAY3");
 
 void writeconfigfile(char* filename)
 {
@@ -127,47 +60,47 @@ void writeconfigfile(char* filename)
   unsigned char x;
 
   // Clear buffer memory
-  memset(buffer,0,328);
+  memset(utilbuffer,0,328);
 
 	// Place all variables in buffer memory
   for(x=0;x<60;x++)
   {
-    buffer[x]=reufilepath[x];
+    utilbuffer[x]=reufilepath[x];
   }
 
   for(x=0;x<20;x++)
   {
-    buffer[x+60]=reufilename[x];
+    utilbuffer[x+60]=reufilename[x];
   }
   for(x=0;x<60;x++)
   {
-    buffer[x+80]=imageapath[x];
+    utilbuffer[x+80]=imageapath[x];
   }
   for(x=0;x<20;x++)
   {
-    buffer[x+140]=imageaname[x];
+    utilbuffer[x+140]=imageaname[x];
   }
   for(x=0;x<60;x++)
   {
-    buffer[x+160]=imagebpath[x];
+    utilbuffer[x+160]=imagebpath[x];
   }
   for(x=0;x<20;x++)
   {
-    buffer[x+220]=imagebname[x];
+    utilbuffer[x+220]=imagebname[x];
   }
-  buffer[240] = reusize;
-  buffer[241] = timeonflag;
+  utilbuffer[240] = reusize;
+  utilbuffer[241] = timeonflag;
 
-  buffer[242] = (secondsfromutc & 0xFF000000) >> 24;
-  buffer[243] = (secondsfromutc & 0xFF0000) >> 16;
-  buffer[244] = (secondsfromutc & 0xFF00) >> 8;
-  buffer[245] = secondsfromutc & 0xFF;
+  utilbuffer[242] = (secondsfromutc & 0xFF000000) >> 24;
+  utilbuffer[243] = (secondsfromutc & 0xFF0000) >> 16;
+  utilbuffer[244] = (secondsfromutc & 0xFF00) >> 8;
+  utilbuffer[245] = secondsfromutc & 0xFF;
 
-  buffer[246] = imageaid;
-  buffer[247] = imagebid;
+  utilbuffer[246] = imageaid;
+  utilbuffer[247] = imagebid;
   for(x=0;x<80;x++)
   {
-    buffer[248+x] = host[x];
+    utilbuffer[248+x] = host[x];
   }
   
   // Delete old config file as I can not (yet) get overwrite to work
@@ -179,7 +112,7 @@ void writeconfigfile(char* filename)
   // Uncomment for debbug
   //printf("\nStatus: %s", uii_status);
 
-	uii_write_file(buffer,328);
+	uii_write_file(utilbuffer,328);
   // Uncomment for debbug
   //printf("\nStatus: %s", uii_status);
 

@@ -1,4 +1,4 @@
-src/ops.o:	src/ops.c include/ops.h include/defines.h include/dir.h include/screen.h include/version.h include/base.h
+src/ops.o:	src/ops.c include/screen.h include/defines.h include/version.h include/base.h include/ops.h include/dir.h
 
-src/ops.c include/ops.h include/defines.h include/dir.h include/screen.h include/version.h include/base.h:
+src/ops.c include/screen.h include/defines.h include/version.h include/base.h include/ops.h include/dir.h:
 

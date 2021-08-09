@@ -675,7 +675,7 @@ _cgetc (cgetc.o):
 _clrscr (clrscr.o):
     dmbconfig.o               src/dmbconfig.s:18
 _cmd (configcommon.o):
-    dmbconfig.o               src/dmbconfig.s:53
+    dmbconfig.o               src/dmbconfig.s:56
 _cprintf (cprintf.o):
     dmbconfig.o               src/dmbconfig.s:24
 _cputc (cputc.o):
@@ -701,19 +701,19 @@ _getcurrentdevice (curdevice.o):
 _gotoxy (gotoxy.o):
     dmbconfig.o               src/dmbconfig.s:19
 _host (configcommon.o):
-    dmbconfig.o               src/dmbconfig.s:41
-_imageaid (configcommon.o):
-    dmbconfig.o               src/dmbconfig.s:46
-_imageaname (configcommon.o):
     dmbconfig.o               src/dmbconfig.s:44
-_imageapath (configcommon.o):
-    dmbconfig.o               src/dmbconfig.s:45
-_imagebid (configcommon.o):
+_imageaid (configcommon.o):
     dmbconfig.o               src/dmbconfig.s:49
-_imagebname (configcommon.o):
+_imageaname (configcommon.o):
     dmbconfig.o               src/dmbconfig.s:47
-_imagebpath (configcommon.o):
+_imageapath (configcommon.o):
     dmbconfig.o               src/dmbconfig.s:48
+_imagebid (configcommon.o):
+    dmbconfig.o               src/dmbconfig.s:52
+_imagebname (configcommon.o):
+    dmbconfig.o               src/dmbconfig.s:50
+_imagebpath (configcommon.o):
+    dmbconfig.o               src/dmbconfig.s:51
 _isdigit (isdigit.o):
     strtol.o                  ../libwrk/c128/strtol.s:13
 _islower (islower.o):
@@ -733,23 +733,23 @@ _malloc (malloc.o):
 _memcpy (memcpy.o):
     vsnprintf.o               common/vsnprintf.s:10
 _mid (configcommon.o):
-    dmbconfig.o               src/dmbconfig.s:52
+    dmbconfig.o               src/dmbconfig.s:55
 _printf (printf.o):
     configcommon.o            src/configcommon.s:13
 _readconfigfile (configcommon.o):
-    dmbconfig.o               src/dmbconfig.s:55
+    dmbconfig.o               src/dmbconfig.s:58
 _reufilename (configcommon.o):
-    dmbconfig.o               src/dmbconfig.s:42
+    dmbconfig.o               src/dmbconfig.s:45
 _reufilepath (configcommon.o):
-    dmbconfig.o               src/dmbconfig.s:43
+    dmbconfig.o               src/dmbconfig.s:46
 _reusize (configcommon.o):
-    dmbconfig.o               src/dmbconfig.s:50
+    dmbconfig.o               src/dmbconfig.s:53
 _reusizelist (configcommon.o):
-    dmbconfig.o               src/dmbconfig.s:51
+    dmbconfig.o               src/dmbconfig.s:54
 _revers (revers.o):
     dmbconfig.o               src/dmbconfig.s:27
 _secondsfromutc (configcommon.o):
-    dmbconfig.o               src/dmbconfig.s:39
+    dmbconfig.o               src/dmbconfig.s:42
 _set_c128_speed (acc_c128_speed.o):
     dmbconfig.o               src/dmbconfig.s:36
 _sprintf (sprintf.o):
@@ -777,7 +777,7 @@ _strtol (strtol.o):
 _textcolor (color.o):
     dmbconfig.o               src/dmbconfig.s:28
 _timeonflag (configcommon.o):
-    dmbconfig.o               src/dmbconfig.s:40
+    dmbconfig.o               src/dmbconfig.s:43
 _uii_accept (ultimate_lib.o):
     configcommon.o            src/configcommon.s:31
 _uii_change_dir (ultimate_lib.o):
@@ -809,7 +809,7 @@ _vsprintf (vsprintf.o):
 _write (write.o):
     fwrite.o                  common/fwrite.s:10
 _writeconfigfile (configcommon.o):
-    dmbconfig.o               src/dmbconfig.s:54
+    dmbconfig.o               src/dmbconfig.s:57
 addeq0sp (addeqsp.o):
     ultimate_lib.o            src/ultimate_lib.s:3378
     ultimate_lib.o            src/ultimate_lib.s:3378

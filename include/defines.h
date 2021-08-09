@@ -69,8 +69,9 @@ typedef unsigned char BYTE;
 #define DIRY (context?DIR2Y:DIR1Y)
 
 // Define highest device ID allowed
-#define MAXDEVID 15
+#define MAXDEVID 30
 
+// Global variables
 extern BYTE DIR1H;
 extern BYTE DIR2H;
 extern unsigned int SCREENW;
@@ -79,14 +80,46 @@ extern unsigned int MENUXT;
 extern unsigned int MENUW;
 extern unsigned int DIR2X;
 extern unsigned int DIR2Y;
+extern unsigned int validdriveid;
+extern unsigned int idnr[30];
 extern char path[8][20];
-extern BYTE pathdevice;
 extern char pathfile[20];
+extern BYTE pathdevice;
 extern BYTE pathrunboot;
 extern BYTE depth;
 extern BYTE trace;
 extern BYTE forceeight;
 extern BYTE fastflag;
+extern struct SlotStruct {
+    char path[100];
+    char menu[21];
+    char file[20];
+    char cmd[100];
+    BYTE runboot;
+    BYTE device;
+    BYTE command;
+};
+extern struct SlotStruct Slot;
+extern char newmenuname[36][21];
+extern unsigned int newmenuoldslot[36];
+extern char spacefill[81];
+extern char spacedest[81];
+extern BYTE bootdevice;
+extern long secondsfromutc; 
+extern unsigned char timeonflag;
+extern char host[80];
+extern char reufilename[20];
+extern char reufilepath[60];
+extern char imageaname[20];
+extern char imageapath[60];
+extern unsigned char imageaid;
+extern char imagebname[20];
+extern char imagebpath[60];
+extern unsigned char imagebid;
+extern unsigned char reusize;
+extern char* reusizelist[8];
+extern unsigned char utilbuffer[328];
+extern char configfilename[11];
 extern char c128_ram;
 
 // keyboard buffer

@@ -42,17 +42,11 @@
 #include "geosramboot.h"
 #include "configcommon.h"
 
-void main()
+#pragma code-name ("OVERLAY4");
+#pragma rodata-name ("OVERLAY4");
+
+void geosboot_main()
 {
-	char configfilename[10] = "dmbcfgfile";
-
-    textcolor(DC_COLOR_TEXT);
-
-	uii_change_dir("/usb*/11/");
-	printf("\nDir changed\nStatus: %s", uii_status);	
-
-	readconfigfile(configfilename);
-
 	// Load REU file
 	uii_change_dir(reufilepath);
 	printf("\nREU Dir changed\nStatus: %s", uii_status);

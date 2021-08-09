@@ -38,6 +38,9 @@
 #define DISK_ID_LEN 5
 #define disk_id_buf linebuffer2
 
+#pragma code-name ("OVERLAY1");
+#pragma rodata-name ("OVERLAY1");
+
 static const char progressBar[4] = { 0xA5, 0xA1, 0xA7, ' ' };
 static const char progressRev[4] = { 0,    0,    1,    1 };
 

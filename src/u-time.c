@@ -47,6 +47,10 @@
 #include "u-time.h"
 #include "defines.h"
 #include "configcommon.h"
+#include "ops.h"
+
+#pragma code-name ("OVERLAY3");
+#pragma rodata-name ("OVERLAY3");
 
 unsigned char CheckStatus()
 {
@@ -116,19 +120,8 @@ void get_ntp_time()
     printf("\nStatus: %s", uii_status);
 }
 
-void main()
+void time_main()
 {
-    char configfilename[10] = "dmbcfgfile";
-    unsigned char bootdevice = getcurrentdevice();
-
-    textcolor(DC_COLOR_TEXT);
-    uii_change_dir("/usb*/11/");
-    printf("\n\nDir changed\nStatus: %s", uii_status);	
-
-    readconfigfile(configfilename);
-
-    cmd(bootdevice,"cd:/usb*/11");
-
     if(timeonflag == 1)
     {
         get_ntp_time();
@@ -136,12 +129,4 @@ void main()
 
     // Uncomment for debug
     //cgetc();
-
-    clrscr();
-    gotoxy(0,2);
-    cprintf("run\"dmbootmain\",u%i", bootdevice);
-    *((unsigned char *)KBCHARS)=13;
-    *((unsigned char *)KBNUM)=1;
-    gotoxy(0,0);
-    exit(0);
 }

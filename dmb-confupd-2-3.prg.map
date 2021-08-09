@@ -427,7 +427,7 @@ __seterrno (_seterrno.o):
 __sysremove (sysremove.o):
     remove.o                  common/remove.s:9
 _c128_ram (c128-ram.o):
-    dmb-confupd-2-3.o         src/dmb-confupd-2-3.s:32
+    dmb-confupd-2-3.o         src/dmb-confupd-2-3.s:34
 _cbm_k_save (c_save.o):
     dmb-confupd-2-3.o         src/dmb-confupd-2-3.s:21
 _cbm_k_setlfs (c_setlfs.o):

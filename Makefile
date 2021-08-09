@@ -11,43 +11,31 @@
 # - ZIP packages installed: sudo apt-get install zip
 # - wput command installed: sudo apt-get install wput
 
-SOURCESMAIN = src/main.c src/screen.c src/cat.c src/dir.c src/base.c src/ops.c src/db.c
+SOURCESMAIN = src/main.c src/bootmenu.c src/screen.c src/cat.c src/dir.c src/base.c src/ops.c src/db.c src/ultimate_lib.c src/configcommon.c src/u-time.c src/dmbconfig.c src/geosramboot.c
+LIBMAIN = src/geosramroutine.s
 SOURCESUPD = src/dmb-confupd-2-3.c
-SOURCESTIME = src/ultimate_lib.c src/configcommon.c src/u-time.c
-SOURCESGEOS = src/ultimate_lib.c src/configcommon.c src/geosramboot.c
-SOURCESCFG = src/ultimate_lib.c src/configcommon.c src/dmbconfig.c
-LIBGEOS = src/geosramroutine.s
 README = readme.txt
 ZIP = DMBoot-v299-$(shell date "+%Y%m%d-%H%M").zip
 
 # Hostname of Ultimate II+ target for deployment. Edit for proper IP and usb number
-<<<<<<< HEAD
 ULTHOST = ftp://192.168.1.19/usb1/11/
-=======
-ULTHOST = ftp://192.168.1.31/usb1/11/
->>>>>>> 02fd186f12413f4996b0492f0632e290c82b6fa0
 ULTHOST2 = ftp://192.168.1.31/usb1/11/
 
-MAIN = dmbootmain.prg
-TIME = autostart.128.prg
-GEOS = geosramboot.prg
-CFG = dmbconfig.prg
+MAIN = autostart.128.prg
 UPDATE = dmb-confupd-2-3.prg
+DEPLOYS = $(MAIN) $(UPDATE) dmb-fb.prg dmb-menu.prg dmb-util.prg dmb-lowc.prg
 
 CC65_TARGET = c128
 CC = cl65
 CFLAGS  = -t $(CC65_TARGET) --create-dep $(<:.c=.d) -O -I include
-LDFLAGSMAIN = -t $(CC65_TARGET) -m $(MAIN).map
-LDFLAGSTIME = -t $(CC65_TARGET) -m $(TIME).map
-LDFLAGSGEOS = -t $(CC65_TARGET) -m $(GEOS).map
-LDFLAGSCFG = -t $(CC65_TARGET) -m $(CFG).map
+LDFLAGSMAIN = -C dmboot-cc65.cfg -t $(CC65_TARGET) -m $(MAIN).map
 LDFLAGSUPD = -t $(CC65_TARGET) -m $(UPDATE).map
 
 ########################################
 
 .SUFFIXES:
 .PHONY: all clean deploy
-all: $(MAIN) $(TIME) $(GEOS) $(CFG) $(UPDATE) $(ZIP)
+all: $(MAIN) $(TIME) $(CFG) $(UPDATE) $(ZIP)
 
 ifneq ($(MAKECMDGOALS),clean)
 -include $(SOURCESMAIN:.c=.d) $(SOURCESUPD:.c=.d) $(SOURCESTIME:.c=.d) $(SOURCESGEOS:.c=.d) $(SOURCESCFG:.c=.d)
@@ -56,7 +44,7 @@ endif
 %.o: %.c
 	$(CC) -c $(CFLAGS) -o $@ $<
   
-$(MAIN): $(SOURCESMAIN:.c=.o)
+$(MAIN): $(LIBMAIN) $(SOURCESMAIN:.c=.o)
 	$(CC) $(LDFLAGSMAIN) -o $@ $^ c128-ram.o
 
 $(TIME): $(SOURCESTIME:.c=.o)
@@ -65,13 +53,10 @@ $(TIME): $(SOURCESTIME:.c=.o)
 $(UPDATE): $(SOURCESUPD:.c=.o)
 	$(CC) $(LDFLAGSUPD) -o $@ $^ c128-ram.o 
 
-$(GEOS): $(LIBGEOS) $(SOURCESGEOS:.c=.o)
-	$(CC) $(LDFLAGSGEOS) -o $@ $^
-
 $(CFG): $(SOURCESCFG:.c=.o)
 	$(CC) $(LDFLAGSCFG) -o $@ $^
 
-$(ZIP): $(MAIN) $(TIME) $(GEOS) $(CFG) $(UPDATE) $(README)
+$(ZIP): $(DEPLOYS) $(README)
 	zip $@ $^
 
 clean:
@@ -83,13 +68,5 @@ clean:
 	
 # To deploy software to UII+ enter make deploy. Obviously C128 needs to powered on with UII+ and USB drive connected.
 deploy: $(MAIN) $(UPDATE)
-	wput -u $(MAIN) $(ULTHOST)
-	wput -u $(TIME) $(ULTHOST)
-	wput -u $(GEOS) $(ULTHOST)
-	wput -u $(CFG) $(ULTHOST)
-	wput -u $(UPDATE) $(ULTHOST)
-	wput -u $(MAIN) $(ULTHOST2)
-	wput -u $(TIME) $(ULTHOST2)
-	wput -u $(GEOS) $(ULTHOST2)
-	wput -u $(CFG) $(ULTHOST2)
-	wput -u $(UPDATE) $(ULTHOST2)
+	wput -u $(DEPLOYS) $(ULTHOST)
+#	wput -u $(DEPLOYS) $(ULTHOST2)

@@ -35,6 +35,9 @@
 #include "defines.h"
 #include "ops.h"
 
+#pragma code-name ("OVERLAY1");
+#pragma rodata-name ("OVERLAY1");
+
 int
 cathex(BYTE device, char *filename)
 {

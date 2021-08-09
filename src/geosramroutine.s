@@ -9,7 +9,7 @@
 .export _startgeos
 .export _errorcode
 
-.segment	"CODE"
+.segment	"OVERLAY4"
 
 _startgeos:
         sei

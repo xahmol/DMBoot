@@ -14,15 +14,6 @@ void std_read(char * file_name);
 void getslotfromem(int slotnumber);
 void putslottoem(int slotnumber);
 
-struct SlotStruct {
-    char path[100];
-    char menu[21];
-    char file[20];
-    char cmd[100];
-    BYTE runboot;
-    BYTE device;
-    BYTE command;
-};
 struct SlotStruct Slot;
 BYTE bootdevice;
 
