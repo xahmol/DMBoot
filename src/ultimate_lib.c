@@ -28,96 +28,6 @@ int uii_data_len;
 
 unsigned char uii_target = TARGET_DOS1;
 
-void uii_logtext(char *text)
-{
-#ifdef DEBUG
-	printf("%s", text);
-#else
-	text = 0;  // to eliminate the warning in cc65
-#endif
-}
-
-void uii_logstatusreg(void)
-{
-#ifdef DEBUG
-	printf("\nstatus reg %p = %d",statusreg, *statusreg);
-#endif
-}
-
-void uii_settarget(unsigned char id)
-{
-	uii_target = id;
-}
-
-void uii_freeze(void)
-{
-	unsigned char cmd[] = {0x00,0x05};
-	
-	uii_settarget(TARGET_CONTROL);
-	
-	uii_sendcommand(cmd, 2);
-	uii_readdata();
-	uii_readstatus();
-	uii_accept();
-	
-}
-
-void uii_identify(void)
-{
-	unsigned char cmd[] = {0x00,DOS_CMD_IDENTIFY};
-	uii_settarget(TARGET_DOS1);
-	uii_sendcommand(cmd, 2);
-	uii_readdata();
-	uii_readstatus();
-	uii_accept();
-}
-
-void uii_get_path(void)
-{
-	unsigned char cmd[] = {0x00,DOS_CMD_GET_PATH};	
-	uii_settarget(TARGET_DOS1);
-	uii_sendcommand(cmd, 2);
-	uii_readdata();
-	uii_readstatus();
-	uii_accept();
-}
-
-void uii_open_dir(void)
-{
-	unsigned char cmd[] = {0x00,DOS_CMD_OPEN_DIR};
-	uii_settarget(TARGET_DOS1);
-	uii_sendcommand(cmd, 2);
-	uii_readstatus();
-	uii_accept();
-}
-
-void uii_get_dir(void)
-{
-	unsigned char cmd[] = {0x00,DOS_CMD_READ_DIR};
-	int count = 0;
-	uii_settarget(TARGET_DOS1);
-	uii_sendcommand(cmd, 2);
-}
-
-void uii_change_dir(char* directory)
-{
-	int x = 0;
-	unsigned char* fullcmd = (unsigned char *)malloc(strlen(directory)+2);
-	fullcmd[0] = 0x00;
-	fullcmd[1] = DOS_CMD_CHANGE_DIR;
-	
-	for(x=0;x<strlen(directory);x++)
-		fullcmd[x+2] = directory[x];
-
-	uii_settarget(TARGET_DOS1);
-	uii_sendcommand(fullcmd, strlen(directory)+2);
-	
-	free(fullcmd);
-	
-	uii_readstatus();
-	uii_accept();
-}
-
 void uii_create_dir(char *directory)
 {
 	int x = 0;
@@ -134,17 +44,6 @@ void uii_create_dir(char *directory)
 	free(fullcmd);
 	
 	uii_readdata();
-	uii_readstatus();
-	uii_accept();
-}
-
-void uii_change_dir_home(void)
-{
-	unsigned char cmd[] = {0x00,DOS_CMD_COPY_HOME_PATH};
-	int count = 0;
-	
-	uii_settarget(TARGET_DOS1);
-	uii_sendcommand(cmd, 2);
 	uii_readstatus();
 	uii_accept();
 }
@@ -223,34 +122,6 @@ void uii_open_file(unsigned char attrib, char *filename)
 	uii_readdata();
 	uii_readstatus();
 	uii_accept();
-}
-
-void uii_close_file(void)
-{
-	unsigned char cmd[] = {0x00,DOS_CMD_CLOSE_FILE};
-	
-	uii_settarget(TARGET_DOS1);
-	uii_sendcommand(cmd, 2);
-	
-	uii_readdata();
-	uii_readstatus();
-	uii_accept();
-}
-
-void uii_read_file(unsigned char length)
-{
-	unsigned char cmd[] = {0x00,DOS_CMD_READ_DATA, 0x00, 0x00};
-	
-	cmd[2] = length & 0xFF;
-	cmd[3] = length >> 8;
-	
-	uii_settarget(TARGET_DOS1);
-	uii_sendcommand(cmd, 2);
-	
-	// As with _get_dir(), read this in a loop, and _accept() the data
-	// in order to get the next packet
-	//
-	// each data packet is 512 bytes each
 }
 
 void uii_write_file(unsigned char* data, int length)
@@ -344,29 +215,6 @@ void uii_copy_file(char* sourcefile, char* destfile)
 	uii_accept();
 }
 
-void uii_echo(void)
-{
-	unsigned char cmd[] = {0x00,DOS_CMD_ECHO};
-	uii_settarget(TARGET_DOS1);
-	uii_sendcommand(cmd, 2);
-
-	uii_readdata();
-	uii_readstatus();
-	uii_accept();
-}
-
-void uii_enable_drive_a(void)
-{
-	unsigned char cmd[] = {0x00,CTRL_CMD_ENABLE_DISK_A};
-
-	uii_settarget(TARGET_CONTROL);
-	uii_sendcommand(cmd, 2);
-
-	uii_readdata();
-	uii_readstatus();
-	uii_accept();
-}
-
 void uii_disable_drive_a(void)
 {
 #define CTRL_CMD_DISABLE_DISK_A	0x31
@@ -438,6 +286,7 @@ void uii_get_time(void)
 	uii_readstatus();
 	uii_accept();
 }
+
 void uii_set_time(char* data) 
 {
 	int x = 0;
@@ -452,6 +301,186 @@ void uii_set_time(char* data)
 	uii_sendcommand(fullcmd, 8);
 	
 	free(fullcmd);
+	uii_readstatus();
+	uii_accept();
+}
+
+void uii_load_reu(unsigned char size)
+{
+	// REU sizes on UII+:
+	// 0 = 128 KB
+	// 1 = 256 KB
+	// 2 = 512 KB
+	// 3 = 1 MB
+	// 4 = 2 MB
+	// 5 = 4 MB
+	// 6 = 8 MB
+	// 7 = 16 MB
+
+	unsigned char cmd[] = {0x00,DOS_CMD_LOAD_REU,0x00,0x00,0x00,0x00,0xff,0xff,0xff,0x00};
+	unsigned char sizes[8] = {0x01,0x03,0x07,0x0f,0x1f,0x3f,0x7f,0xff};
+
+	cmd[8] = sizes[size];
+
+	uii_settarget(TARGET_DOS1);
+	uii_sendcommand(cmd,10);
+	uii_readdata();
+	uii_readstatus();
+	uii_accept();
+}
+
+#pragma code-name (push, "OVERLAY4");
+#pragma rodata-name (push, "OVERLAY4");
+
+// Core functions
+void uii_logtext(char *text)
+{
+#ifdef DEBUG
+	printf("%s", text);
+#else
+	text = 0;  // to eliminate the warning in cc65
+#endif
+}
+
+void uii_logstatusreg(void)
+{
+#ifdef DEBUG
+	printf("\nstatus reg %p = %d",statusreg, *statusreg);
+#endif
+}
+
+void uii_settarget(unsigned char id)
+{
+	uii_target = id;
+}
+
+void uii_freeze(void)
+{
+	unsigned char cmd[] = {0x00,0x05};
+	
+	uii_settarget(TARGET_CONTROL);
+	
+	uii_sendcommand(cmd, 2);
+	uii_readdata();
+	uii_readstatus();
+	uii_accept();
+	
+}
+
+void uii_identify(void)
+{
+	unsigned char cmd[] = {0x00,DOS_CMD_IDENTIFY};
+	uii_settarget(TARGET_DOS1);
+	uii_sendcommand(cmd, 2);
+	uii_readdata();
+	uii_readstatus();
+	uii_accept();
+}
+
+void uii_get_path(void)
+{
+	unsigned char cmd[] = {0x00,DOS_CMD_GET_PATH};	
+	uii_settarget(TARGET_DOS1);
+	uii_sendcommand(cmd, 2);
+	uii_readdata();
+	uii_readstatus();
+	uii_accept();
+}
+
+void uii_open_dir(void)
+{
+	unsigned char cmd[] = {0x00,DOS_CMD_OPEN_DIR};
+	uii_settarget(TARGET_DOS1);
+	uii_sendcommand(cmd, 2);
+	uii_readstatus();
+	uii_accept();
+}
+
+void uii_get_dir(void)
+{
+	unsigned char cmd[] = {0x00,DOS_CMD_READ_DIR};
+	int count = 0;
+	uii_settarget(TARGET_DOS1);
+	uii_sendcommand(cmd, 2);
+}
+
+void uii_change_dir(char* directory)
+{
+	int x = 0;
+	unsigned char* fullcmd = (unsigned char *)malloc(strlen(directory)+2);
+	fullcmd[0] = 0x00;
+	fullcmd[1] = DOS_CMD_CHANGE_DIR;
+	
+	for(x=0;x<strlen(directory);x++)
+		fullcmd[x+2] = directory[x];
+
+	uii_settarget(TARGET_DOS1);
+	uii_sendcommand(fullcmd, strlen(directory)+2);
+	
+	free(fullcmd);
+	
+	uii_readstatus();
+	uii_accept();
+}
+
+void uii_change_dir_home(void)
+{
+	unsigned char cmd[] = {0x00,DOS_CMD_COPY_HOME_PATH};
+	int count = 0;
+	
+	uii_settarget(TARGET_DOS1);
+	uii_sendcommand(cmd, 2);
+	uii_readstatus();
+	uii_accept();
+}
+
+void uii_close_file(void)
+{
+	unsigned char cmd[] = {0x00,DOS_CMD_CLOSE_FILE};
+	
+	uii_settarget(TARGET_DOS1);
+	uii_sendcommand(cmd, 2);
+	
+	uii_readdata();
+	uii_readstatus();
+	uii_accept();
+}
+
+void uii_read_file(unsigned char length)
+{
+	unsigned char cmd[] = {0x00,DOS_CMD_READ_DATA, 0x00, 0x00};
+	
+	cmd[2] = length & 0xFF;
+	cmd[3] = length >> 8;
+	
+	uii_settarget(TARGET_DOS1);
+	uii_sendcommand(cmd, 2);
+	
+	// As with _get_dir(), read this in a loop, and _accept() the data
+	// in order to get the next packet
+	//
+	// each data packet is 512 bytes each
+}
+
+void uii_enable_drive_a(void)
+{
+	unsigned char cmd[] = {0x00,CTRL_CMD_ENABLE_DISK_A};
+
+	uii_settarget(TARGET_CONTROL);
+	uii_sendcommand(cmd, 2);
+
+	uii_readdata();
+	uii_readstatus();
+	uii_accept();
+}
+
+void uii_echo(void)
+{
+	unsigned char cmd[] = {0x00,DOS_CMD_ECHO};
+	uii_settarget(TARGET_DOS1);
+	uii_sendcommand(cmd, 2);
+
+	uii_readdata();
 	uii_readstatus();
 	uii_accept();
 }
@@ -592,6 +621,14 @@ void uii_getinterfacecount(void)
 	
 	uii_target = tempTarget;
 }
+
+#pragma code-name(pop);
+#pragma rodata-name(pop);
+
+#pragma code-name (push, "OVERLAY3");
+#pragma rodata-name (push, "OVERLAY3");
+
+// Network functions
 
 void uii_getipaddress(void)
 {
@@ -854,27 +891,5 @@ void uii_tcp_emptybuffer() {
 	uii_data_index = 0;
 }
 
-void uii_load_reu(unsigned char size)
-{
-	// REU sizes on UII+:
-	// 0 = 128 KB
-	// 1 = 256 KB
-	// 2 = 512 KB
-	// 3 = 1 MB
-	// 4 = 2 MB
-	// 5 = 4 MB
-	// 6 = 8 MB
-	// 7 = 16 MB
-
-	unsigned char cmd[] = {0x00,DOS_CMD_LOAD_REU,0x00,0x00,0x00,0x00,0xff,0xff,0xff,0x00};
-	unsigned char sizes[8] = {0x01,0x03,0x07,0x0f,0x1f,0x3f,0x7f,0xff};
-
-	cmd[8] = sizes[size];
-
-	uii_settarget(TARGET_DOS1);
-	uii_sendcommand(cmd,10);
-	uii_readdata();
-	uii_readstatus();
-	uii_accept();
-
-}
+#pragma code-name(pop);
+#pragma rodata-name(pop);

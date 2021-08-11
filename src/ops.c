@@ -45,21 +45,6 @@ BYTE devices[] = {8,9};
 char linebuffer[81];
 char linebuffer2[81];
 
-void
-initDirWindowHeight(void)
-{
-  if (SCREENW == 80)
-  {
-    DIR1H = 23;
-    DIR2H = 23;
-  }
-  else
-  {
-    DIR1H = 11;
-    DIR2H = 10;
-  }
-}
-
 char DOSstatus[40];
 
 /// string descriptions of enum drive_e
@@ -233,33 +218,9 @@ execute(char * prg, BYTE device, BYTE boot, char * command)
 }
 
 void
-updateScreen(const BYTE context, BYTE num_dirs)
-{
-  clrscr();
-  updateMenu();
-  showDir(context, context);
-  if (num_dirs > 1)
-    {
-      const BYTE other_context = context^1;
-      showDir(other_context, context);
-    }
-}
-
-void
 clrDir(BYTE context)
 {
   clearArea(DIRX+1, DIRY+1, DIRW, DIRH);
-}
-
-void
-refreshDir(const BYTE context, const BYTE sorted, const BYTE mycontext)
-{
-  Directory * cwd = dirs[context];
-  textcolor(DC_COLOR_HIGHLIGHT);
-  cwd = readDir(cwd, devices[context], context, sorted);
-  dirs[context]=cwd;
-  cwd->selected=cwd->firstelement;
-  showDir(context, mycontext);
 }
 
 const char *reg_types[] = { "SEQ","PRG","URS","REL","VRP" };
@@ -284,133 +245,6 @@ fileTypeToStr(BYTE ft)
   bad_type[2] = value2hex[ft & 15];
   bad_type[3] = 0;
   return bad_type;
-}
-
-static void
-printElementPriv(const BYTE context, const Directory *dir, const DirElement *current, const BYTE xpos, const BYTE ypos)
-{
-  Directory * cwd = GETCWD;
-  gotoxy(xpos,ypos);
-  if ((current == dir->selected) && (cwd == dir))
-    {
-      revers(1);
-    }
-
-  // if blocks are >= 10000 shorten the file type to 2 characters
-  strcpy(linebuffer2, fileTypeToStr(current->dirent.type));
-  if (current->dirent.size >= 10000 &&
-      strlen(current->dirent.name) == 16)
-    {
-      linebuffer2[0] = linebuffer2[1];
-      linebuffer2[1] = linebuffer2[2];
-      linebuffer2[2] = 0;
-    }
-  cprintf((current->dirent.size < 10000) ? "%4u %-16s %s" : "%u %-15s %s",
-          current->dirent.size,
-          current->dirent.name,
-          linebuffer2);
-
-  if (current->flags!=0)
-    {
-      gotoxy(xpos,ypos);
-      textcolor(DC_COLOR_HIGHLIGHT);
-      cputc('>');
-    }
-
-  textcolor(DC_COLOR_TEXT);
-  revers(0);
-}
-
-void
-printDir(const BYTE context, const BYTE xpos, const BYTE ypos)
-{
-  const Directory *dir = GETCWD;
-  DirElement * current;
-  int selidx = 0;
-  int page = 0;
-  int skip = 0;
-  int pos = 0;
-  int idx = 0;
-  const char *typestr = NULL;
-
-  if (dir==NULL)
-    {
-      clrDir(context);
-      return;
-    }
-
-  revers(0);
-  current = dir->firstelement;
-  idx=0;
-  while (current!=NULL)
-    {
-      if (current==dir->selected)
-        {
-          break;
-        }
-      idx++;
-      current=current->next;
-    }
-
-  page=idx/DIRH;
-  skip=page*DIRH;
-
-  current = dir->firstelement;
-
-  // skip pages
-  if (page>0)
-    {
-      for (idx=0; (idx < skip) && (current != NULL); ++idx)
-        {
-          current=current->next;
-          pos++;
-        }
-    }
-
-  for(idx=0; (current != NULL) && (idx < DIRH); ++idx)
-    {
-      printElementPriv(context, dir, current, xpos, ypos+idx+1);
-      current = current->next;
-    }
-
-  // clear empty lines
-  for (;idx < DIRH; ++idx)
-    {
-      gotoxy(xpos,ypos+idx+1);
-      cputs("                         ");
-    }
-}
-
-void
-printElement(const BYTE context, const Directory *dir, const BYTE xpos, const BYTE ypos)
-{
-  const DirElement *current;
-
-  int page = 0;
-  int idx = 0;
-  int pos = 0;
-  int yoff=0;
-
-  if (dir==NULL || dir->firstelement == NULL)
-    {
-      return;
-    }
-
-  revers(0);
-  current = dir->firstelement;
-
-  pos = dir->pos;
-
-  idx=pos;
-  while (current!=NULL && (idx--) >0)
-    {
-      current=current->next;
-    }
-
-  page=pos/DIRH;
-  yoff=pos-(page*DIRH);
-
-  printElementPriv(context, dir, current, xpos, ypos+yoff+1);
 }
 
 void
@@ -490,6 +324,73 @@ changeDir(const BYTE context, const BYTE device, const char *dirname, const BYTE
       refreshDir(context, sorted, context);
     }
   return ret;
+}
+
+static void
+printElementPriv(const BYTE context, const Directory *dir, const DirElement *current, const BYTE xpos, const BYTE ypos)
+{
+  Directory * cwd = GETCWD;
+  gotoxy(xpos,ypos);
+  if ((current == dir->selected) && (cwd == dir))
+    {
+      revers(1);
+    }
+
+  // if blocks are >= 10000 shorten the file type to 2 characters
+  strcpy(linebuffer2, fileTypeToStr(current->dirent.type));
+  if (current->dirent.size >= 10000 &&
+      strlen(current->dirent.name) == 16)
+    {
+      linebuffer2[0] = linebuffer2[1];
+      linebuffer2[1] = linebuffer2[2];
+      linebuffer2[2] = 0;
+    }
+  cprintf((current->dirent.size < 10000) ? "%4u %-16s %s" : "%u %-15s %s",
+          current->dirent.size,
+          current->dirent.name,
+          linebuffer2);
+
+  if (current->flags!=0)
+    {
+      gotoxy(xpos,ypos);
+      textcolor(DC_COLOR_HIGHLIGHT);
+      cputc('>');
+    }
+
+  textcolor(DC_COLOR_TEXT);
+  revers(0);
+}
+
+void
+printElement(const BYTE context, const Directory *dir, const BYTE xpos, const BYTE ypos)
+{
+  const DirElement *current;
+
+  int page = 0;
+  int idx = 0;
+  int pos = 0;
+  int yoff=0;
+
+  if (dir==NULL || dir->firstelement == NULL)
+    {
+      return;
+    }
+
+  revers(0);
+  current = dir->firstelement;
+
+  pos = dir->pos;
+
+  idx=pos;
+  while (current!=NULL && (idx--) >0)
+    {
+      current=current->next;
+    }
+
+  page=pos/DIRH;
+  yoff=pos-(page*DIRH);
+
+  printElementPriv(context, dir, current, xpos, ypos+yoff+1);
 }
 
 void
@@ -654,7 +555,6 @@ textInput(const BYTE xpos, const BYTE ypos, char *str, const BYTE size)
   return 0;
 }
 
-
 void
 doDOScommand(const BYTE context, const BYTE sorted, const BYTE use_linebuffer)
 {
@@ -673,3 +573,108 @@ doDOScommand(const BYTE context, const BYTE sorted, const BYTE use_linebuffer)
       dirs[context] = readDir(dirs[context], device, context, sorted);
     }
 }
+
+#pragma code-name (push, "OVERLAY1");
+#pragma rodata-name (push, "OVERLAY1");
+
+void
+initDirWindowHeight(void)
+{
+  if (SCREENW == 80)
+  {
+    DIR1H = 23;
+    DIR2H = 23;
+  }
+  else
+  {
+    DIR1H = 11;
+    DIR2H = 10;
+  }
+}
+
+void
+updateScreen(const BYTE context, BYTE num_dirs)
+{
+  clrscr();
+  updateMenu();
+  showDir(context, context);
+  if (num_dirs > 1)
+    {
+      const BYTE other_context = context^1;
+      showDir(other_context, context);
+    }
+}
+
+void
+refreshDir(const BYTE context, const BYTE sorted, const BYTE mycontext)
+{
+  Directory * cwd = dirs[context];
+  textcolor(DC_COLOR_HIGHLIGHT);
+  cwd = readDir(cwd, devices[context], context, sorted);
+  dirs[context]=cwd;
+  cwd->selected=cwd->firstelement;
+  showDir(context, mycontext);
+}
+
+void
+printDir(const BYTE context, const BYTE xpos, const BYTE ypos)
+{
+  const Directory *dir = GETCWD;
+  DirElement * current;
+  int selidx = 0;
+  int page = 0;
+  int skip = 0;
+  int pos = 0;
+  int idx = 0;
+  const char *typestr = NULL;
+
+  if (dir==NULL)
+    {
+      clrDir(context);
+      return;
+    }
+
+  revers(0);
+  current = dir->firstelement;
+  idx=0;
+  while (current!=NULL)
+    {
+      if (current==dir->selected)
+        {
+          break;
+        }
+      idx++;
+      current=current->next;
+    }
+
+  page=idx/DIRH;
+  skip=page*DIRH;
+
+  current = dir->firstelement;
+
+  // skip pages
+  if (page>0)
+    {
+      for (idx=0; (idx < skip) && (current != NULL); ++idx)
+        {
+          current=current->next;
+          pos++;
+        }
+    }
+
+  for(idx=0; (current != NULL) && (idx < DIRH); ++idx)
+    {
+      printElementPriv(context, dir, current, xpos, ypos+idx+1);
+      current = current->next;
+    }
+
+  // clear empty lines
+  for (;idx < DIRH; ++idx)
+    {
+      gotoxy(xpos,ypos+idx+1);
+      cputs("                         ");
+    }
+}
+
+#pragma code-name(pop);
+#pragma rodata-name(pop);

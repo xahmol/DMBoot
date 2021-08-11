@@ -23,7 +23,7 @@ ULTHOST2 = ftp://192.168.1.31/usb1/11/
 
 MAIN = autostart.128.prg
 UPDATE = dmb-confupd-2-3.prg
-DEPLOYS = $(MAIN) $(UPDATE) dmb-fb.prg dmb-menu.prg dmb-util.prg dmb-lowc.prg
+DEPLOYS = $(MAIN) $(UPDATE) dmb-fb.prg dmb-menu.prg dmb-util.prg dmb-lowc.prg dmb-geos.prg
 
 CC65_TARGET = c128
 CC = cl65
@@ -69,4 +69,4 @@ clean:
 # To deploy software to UII+ enter make deploy. Obviously C128 needs to powered on with UII+ and USB drive connected.
 deploy: $(MAIN) $(UPDATE)
 	wput -u $(DEPLOYS) $(ULTHOST)
-#	wput -u $(DEPLOYS) $(ULTHOST2)
+	wput -u $(DEPLOYS) $(ULTHOST2)

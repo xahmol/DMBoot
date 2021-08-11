@@ -94,7 +94,8 @@ extern struct SlotStruct {
     char path[100];
     char menu[21];
     char file[20];
-    char cmd[100];
+    char cmd[80];
+    char image[20];
     BYTE runboot;
     BYTE device;
     BYTE command;

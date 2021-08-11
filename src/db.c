@@ -426,8 +426,6 @@ mainLoopBrowse(void)
     }
 
  done:;
-  // nobody cares about freeing memory upon program exit.
-#if 0
-  freeDir(&dirs[0]);
-#endif
+ freeDir(&dirs[0]);
+ if(SCREENW==80) { freeDir(&dirs[1]); }
 }

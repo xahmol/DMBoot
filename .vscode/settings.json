@@ -3,6 +3,7 @@
         "ultimate_lib.h": "c",
         "defines.h": "c",
         "stdlib.h": "c",
-        "stdio.h": "c"
+        "stdio.h": "c",
+        "system_error": "c"
     }
 }

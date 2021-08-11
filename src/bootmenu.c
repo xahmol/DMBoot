@@ -325,6 +325,9 @@ char mainmenu()
 
 void runbootfrommenu(int select)
 {
+    char pathbuffer[81];
+    char filenamebuffer[21];
+
     // Function to execute selected boot option choice slot 0-9
     // Input: select: chosen menuslot 0-9
 
@@ -332,8 +335,20 @@ void runbootfrommenu(int select)
 
     // Enter correct directory path on correct device number
     cmd(Slot.device,Slot.path);
-    // Execute or boot
-    execute(Slot.file,Slot.device,Slot.runboot,Slot.cmd);
+
+    // Load image if defined, then execute without or with command
+    if(Slot.command > 1 )
+    {
+        mid(Slot.cmd,0,80,pathbuffer,80);
+        mid(Slot.cmd,80,20,filenamebuffer,20);
+        uii_change_dir(pathbuffer);
+        uii_mount_disk(Slot.command/2,filenamebuffer);
+        execute(Slot.file,Slot.device,Slot.runboot,"");
+    }
+    else
+    {
+        execute(Slot.file,Slot.device,Slot.runboot,Slot.cmd);
+    }    
 }
 
 void commandfrommenu(char * command, int confirm)
@@ -512,7 +527,7 @@ void editmenuoptions()
         cprintf(" F2 ");
         revers(0);
         textcolor(DC_COLOR_TEXT);
-        cputs(" Edit userdefined command");
+        cputs(" Edit userdef. command/mount");
 
         if(SCREENW==80)
         {
@@ -1019,13 +1034,15 @@ void getslotfromem(int slotnumber)
 
     char* page = em_map(slotnumber);
     strcpy(Slot.path, page);
-    page = page + 100;
+    page += 100;
     strcpy(Slot.menu, page);
-    page = page + 21;
+    page += 21;
     strcpy(Slot.file, page);
-    page = page + 20;
+    page += 20;
     strcpy(Slot.cmd, page);
-    page = page + 100;
+    page += 80;
+    strcpy(Slot.image, page);
+    page += 20;
     Slot.runboot = *page;
     page++;
     Slot.device = *page;
@@ -1040,13 +1057,15 @@ void putslottoem(int slotnumber)
 
     char* page = em_use(slotnumber);
     strcpy(page, Slot.path);
-    page = page + 100;
+    page += 100;
     strcpy(page, Slot.menu);
-    page = page + 21;
+    page += 21;
     strcpy(page, Slot.file);
-    page = page + 20;
+    page += 20;
     strcpy(page, Slot.cmd);
-    page = page + 100;
+    page += 80;
+    strcpy(page, Slot.image);
+    page += 20;
     *page = Slot.runboot;
     page++;
     *page = Slot.device;
@@ -1094,11 +1113,13 @@ int edituserdefinedcommand()
 
     int menuslot;
     int changesmade = 0;
-    char key;
+    unsigned char key, x;
     BYTE selected = 0;
+    char deviceidbuffer[3];
+    char* ptrend;
 
     clrscr();
-    headertext("Edit user defined command");
+    headertext("Edit user defined mount or command");
 
     presentmenuslots();
 
@@ -1129,6 +1150,7 @@ int edituserdefinedcommand()
         clrscr();
         headertext("Edit user defined command");
 
+        gotoxy(0,3);
         cputs("Chosen slot:\n\r");
         revers(1);
         textcolor(DMB_COLOR_SELECT);
@@ -1136,18 +1158,71 @@ int edituserdefinedcommand()
         revers(0);
         textcolor(DC_COLOR_TEXT);
         cprintf(" %s",Slot.menu);
+
+        gotoxy(0,6);
+        cputs("Choose:\n\r");
+        revers(1);
+        textcolor(DMB_COLOR_SELECT);
+        cprintf(" F1 ");
+        revers(0);
+        textcolor(DC_COLOR_TEXT);
+        cputs(" Add/edit mount\n\r");
+        revers(1);
+        textcolor(DMB_COLOR_SELECT);
+        cprintf(" F3 ");
+        revers(0);
+        textcolor(DC_COLOR_TEXT);
+        cputs(" Add/edit command\n\r");
+
+        do
+        {
+            key = cgetc();
+        } while (key != CH_F1 && key != CH_F3);
+
+        switch (key)
+        {
+        case CH_F1:
+            if(Slot.command > 1)
+            {
+                sprintf(deviceidbuffer,"%i",Slot.command/2);
+            }
+            else{
+                strcpy(deviceidbuffer,"0");
+            }
+            cputsxy(0,10,"Enter image ID (0=none):");
+            textInput(0,11,deviceidbuffer,2);
+            Slot.command = (unsigned char)strtol(deviceidbuffer,&ptrend,10)*2;
+
+            if(Slot.command > 1)
+            {
+                cputsxy(0,13,"Enter image file path:");
+                textInput(0,14,Slot.cmd,80);
+
+                cputsxy(0,16,"Enter image file name:");
+                textInput(0,17,Slot.image,20);
+            }
+            else
+            {
+                strcpy(Slot.cmd,"");
+            }
+            break;
+
+        case CH_F3:
+            cputsxy(0,10,"Enter command (empty=none):");
+            textInput(0,11,Slot.cmd,100);
+            if( strlen(Slot.cmd) == 0)
+            {
+                Slot.command = 0;
+            }
+            else
+            {
+                Slot.command = 1;
+            }
+            break;
         
-        gotoxy(0,10);
-        cputs("Enter command string (empty for none):");
-        textInput(0,11,Slot.cmd,100);
-        if( strlen(Slot.cmd) == 0)
-        {
-            Slot.command = 0;
-        }
-        else
-        {
-            Slot.command = 1;
-        }
+        default:
+            break;
+        }        
         
         putslottoem(menuslot);
         changesmade = 1;

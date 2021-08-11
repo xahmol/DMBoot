@@ -132,7 +132,8 @@ int main() {
     bootdevice = getcurrentdevice();    // Get device number program started from
 
     // Load util config
-    loadoverlay("11:dmb-util");
+    loadoverlay("11:dmb-lowc");         // Load code in low memory
+    loadoverlay("11:dmb-util");         // Load overlay for utils
     uii_change_dir("/usb*/11/");
 	printf("\nDir changed\nStatus: %s", uii_status);
 	readconfigfile(configfilename);
@@ -181,10 +182,8 @@ int main() {
         case CH_F6:
             // GEOS RAM boot
             clrscr();
-            loadoverlay("11:dmb-lowc");      // Load GEOS ramboot code in low memory
-            loadoverlay("11:dmb-util");      // Load util routines
+            loadoverlay("11:dmb-geos");      // Load GEOS assembly code
             geosboot_main();
-            loadoverlay("11:dmb-menu");      // Load overlay of main DMBoot menu routines
             break;
 
         case CH_F4:
@@ -392,6 +391,7 @@ void std_read(char * file_name)
             strcpy(Slot.path,"");
             strcpy(Slot.file,"");
             strcpy(Slot.cmd,"");
+            strcpy(Slot.image,"");
             Slot.device = 0;
             Slot.runboot = 0;
             Slot.command = 0;
