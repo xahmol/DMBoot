@@ -86,7 +86,7 @@ This readme file.
 * For this, first choose **F1** for filebrowser.  You will get a screen like this:
   ![](https://github.com/xahmol/DMBoot/raw/main/pictures/dmboot%20-%20filebrowsermenu.png)
 * Full instructions for the filebrowser are below. Here only the quick instructions to add an option to the startmenu.
-* Select your desired drive target as highlighted (white border) by switching to the correct column (only applicable for 80 column mode) by the **<-** (left arrow) key and/or pressing **F2** until the desired device number is selected.
+* Select your desired drive target as highlighted (white border) by switching to the correct column (only applicable for 80 column mode) by the **<-** (left arrow) key and/or pressing **+** or **-** to increase resp. decrease the device number until the desired device number is selected.
 * Refresh directory by **F1** if needed (empty column)
 * Start a directory trace by pressing **D**
   

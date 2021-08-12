@@ -8,7 +8,7 @@ main.o:
     BSS               Offs=000000  Size=00068E  Align=00001  Fill=0000
     DATA              Offs=000000  Size=0001B8  Align=00001  Fill=0000
 bootmenu.o:
-    OVERLAY2          Offs=000000  Size=002058  Align=00001  Fill=0000
+    OVERLAY2          Offs=000000  Size=00205C  Align=00001  Fill=0000
 screen.o:
     CODE              Offs=0005AE  Size=000232  Align=00001  Fill=0000
     BSS               Offs=00068E  Size=000003  Align=00001  Fill=0000
@@ -486,7 +486,7 @@ OVL7ADDR              009F9E  009F9F  000002  00001
 OVL8ADDR              009F9E  009F9F  000002  00001
 OVL9ADDR              009F9E  009F9F  000002  00001
 OVERLAY1              009FA0  00BFF9  00205A  00001
-OVERLAY2              009FA0  00BFF7  002058  00001
+OVERLAY2              009FA0  00BFFB  00205C  00001
 OVERLAY3              009FA0  00BDED  001E4E  00001
 
 
@@ -537,7 +537,7 @@ _cclear                   004778 RLA    _cclearxy                 004773 RLA
 _cgetc                    004788 RLA    _changeDir                0029A3 RLA    
 _chline                   0047BD RLA    _clearArea                002260 RLA    
 _clrscr                   00C142 REA    _cmd                      0024C3 RLA    
-_commandfrommenu          00AC24 RLA    _config_main              00BDAC RLA    
+_commandfrommenu          00AC28 RLA    _config_main              00BDAC RLA    
 _configfilename           007003 RLA    _cprintf                  004839 RLA    
 _cputc                    004868 RLA    _cputcxy                  004863 RLA    
 _cputhex16                0048AC RLA    _cputhex8                 0048B2 RLA    
@@ -547,7 +547,7 @@ _debugu                   003372 RLA    _depth                    006E56 RLA
 _devices                  007014 RLA    _devicetype               0077B5 RLA    
 _dirs                     007010 RLA    _div                      0049CF RLA    
 _doDOScommand             003253 RLA    _drawDirFrame             002DCF RLA    
-_drawFrame                00235C RLA    _editmenuoptions          00AE72 RLA    
+_drawFrame                00235C RLA    _editmenuoptions          00AE76 RLA    
 _em_commit                0070B8 REA    _em_install               006C64 RLA    
 _em_map                   0070B2 REA    _em_uninstall             006CA4 RLA    
 _em_use                   0070B5 REA    _errorcode                000B9D RLA    
@@ -562,27 +562,27 @@ _gotoxy                   004D16 RLA    _host                     006EB0 RLA
 _imageaid                 006FA0 RLA    _imageaname               006F50 RLA    
 _imageapath               006F64 RLA    _imagebid                 006FF1 RLA    
 _imagebname               006FA1 RLA    _imagebpath               006FB5 RLA    
-_information              00AC7B RLA    _initScreen               002451 RLA    
+_information              00AC7F RLA    _initScreen               002451 RLA    
 _isdigit                  004DAC RLA    _islower                  004DB4 RLA    
 _isprint                  004DBC RLA    _isspace                  004DC6 RLA    
-_isupper                  004DCE RLA    _keytomenuslot            00BFDA RLA    
+_isupper                  004DCE RLA    _keytomenuslot            00BFDE RLA    
 _linebuffer               0077D4 RLA    _linebuffer2              007825 RLA    
 _localtime                004F54 RLA    _ltoa                     00503B RLA    
 _main                     002089 RLA    _mainLoopBrowse           00B4CA RLA    
-_mainmenu                 00A870 RLA    _malloc                   00517D RLA    
+_mainmenu                 00A874 RLA    _malloc                   00517D RLA    
 _memcpy                   00528B RLA    _mid                      001E15 RLA    
 _mktime                   005324 RLA    _newmenuname              0072DC RLA    
 _newmenuoldslot           0075D0 RLA    _newscreen                0022A8 RLA    
 _path                     007132 RLA    _pathconcat               001E84 RLA    
 _pathdevice               0071E6 RLA    _pathfile                 0071D2 RLA    
-_pathrunboot              0071E7 RLA    _pickmenuslot             00A61E RLA    
+_pathrunboot              0071E7 RLA    _pickmenuslot             00A622 RLA    
 _printDir                 00AEF8 RLA    _printElement             00275B RLA    
-_printf                   0057F7 RLA    _putslottoem              00BF15 RLA    
+_printf                   0057F7 RLA    _putslottoem              00BF19 RLA    
 _raise                    00588A RLA    _readDir                  00A40F RLA    
 _readconfigfile           00A8A2 RLA    _reufilename              006F00 RLA    
 _reufilepath              006F14 RLA    _reusize                  006FF2 RLA    
 _reusizelist              006FF3 RLA    _revers                   0058CF RLA    
-_runbootfrommenu          00AB72 RLA    _secondsfromutc           006EAB RLA    
+_runbootfrommenu          00AB76 RLA    _secondsfromutc           006EAB RLA    
 _set_c128_speed           004273 RLA    _showDir                  0026EA RLA    
 _spacedest                007618 RLA    _spacefill                006E5A RLA    
 _sprintf                  005958 RLA    _startgeos                000B00 RLA    
@@ -873,14 +873,14 @@ __errno                   0081DE RLA    _cathex                   009FBC RLA
 _uii_udpconnect           009FF1 RLA    _uii_socketclose          00A006 RLA    
 _uii_socketread           00A04D RLA    _catasc                   00A16F RLA    
 _freeDir                  00A339 RLA    _readDir                  00A40F RLA    
-_pickmenuslot             00A61E RLA    _writeconfigfile          00A6BA RLA    
-_mainmenu                 00A870 RLA    _readconfigfile           00A8A2 RLA    
-_runbootfrommenu          00AB72 RLA    _commandfrommenu          00AC24 RLA    
-_information              00AC7B RLA    _updateScreen             00AE39 RLA    
-_time_main                00AE49 RLA    _editmenuoptions          00AE72 RLA    
+_pickmenuslot             00A622 RLA    _writeconfigfile          00A6BA RLA    
+_mainmenu                 00A874 RLA    _readconfigfile           00A8A2 RLA    
+_runbootfrommenu          00AB76 RLA    _commandfrommenu          00AC28 RLA    
+_information              00AC7F RLA    _updateScreen             00AE39 RLA    
+_time_main                00AE49 RLA    _editmenuoptions          00AE76 RLA    
 _printDir                 00AEF8 RLA    _updateMenu               00B1EE RLA    
 _mainLoopBrowse           00B4CA RLA    _config_main              00BDAC RLA    
-_putslottoem              00BF15 RLA    _keytomenuslot            00BFDA RLA    
+_putslottoem              00BF19 RLA    _keytomenuslot            00BFDE RLA    
 _clrscr                   00C142 REA    newline                   00C363 REA    
 putchar                   00CC2F REA    READST                    00FFB7 RLA    
 SETLFS                    00FFBA RLA    SETNAM                    00FFBD RLA    
@@ -1598,9 +1598,9 @@ addeq0sp (addeqsp.o):
     ultimate_lib.o            src/ultimate_lib.s:3382
     ops.o                     src/ops.s:2711
     ops.o                     src/ops.s:2711
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
     main.o                    src/main.s:997
 addeqysp (addeqsp.o):
     strtol.o                  ../libwrk/c128/strtol.s:320
@@ -1623,8 +1623,8 @@ addeqysp (addeqsp.o):
     cat.o                     src/cat.s:462
     cat.o                     src/cat.s:462
     screen.o                  src/screen.s:365
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
 addysp (addysp.o):
     mktime.o                  ../libwrk/c128/mktime.s:612
     fwrite.o                  common/fwrite.s:11
@@ -1658,10 +1658,10 @@ addysp (addysp.o):
     dir.o                     src/dir.s:1472
     cat.o                     src/cat.s:462
     cat.o                     src/cat.s:462
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
     main.o                    src/main.s:997
     main.o                    src/main.s:997
     main.o                    src/main.s:997
@@ -1677,7 +1677,7 @@ addysp1 (addysp.o):
 aslax1 (aslax1.o):
     mktime.o                  ../libwrk/c128/mktime.s:612
     strftime.o                ../libwrk/c128/strftime.s:827
-    bootmenu.o                src/bootmenu.s:3450
+    bootmenu.o                src/bootmenu.s:3451
 axlong (axlong.o):
     _printf.o                 common/_printf.s:11
     strtol.o                  ../libwrk/c128/strtol.s:320
@@ -1729,7 +1729,7 @@ decax1 (decax1.o):
     db.o                      src/db.s:1793
     ops.o                     src/ops.s:2711
     dir.o                     src/dir.s:1472
-    bootmenu.o                src/bootmenu.s:3450
+    bootmenu.o                src/bootmenu.s:3451
     main.o                    src/main.s:997
 decax2 (decax2.o):
     ops.o                     src/ops.s:2711
@@ -1745,11 +1745,11 @@ decaxy (decaxy.o):
     strtol.o                  ../libwrk/c128/strtol.s:320
     ops.o                     src/ops.s:2711
     cat.o                     src/cat.s:462
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
 decsp1 (decsp1.o):
     cbm_dir.o                 ../libwrk/c128/cbm_dir.s:374
     configcommon.o            src/configcommon.s:595
@@ -1760,8 +1760,8 @@ decsp1 (decsp1.o):
     ops.o                     src/ops.s:2711
     dir.o                     src/dir.s:1472
     screen.o                  src/screen.s:365
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
     main.o                    src/main.s:997
 decsp2 (decsp2.o):
     toslong.o                 runtime/toslong.s:8
@@ -1799,10 +1799,10 @@ decsp2 (decsp2.o):
     dir.o                     src/dir.s:1472
     cat.o                     src/cat.s:462
     cat.o                     src/cat.s:462
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
     main.o                    src/main.s:997
     main.o                    src/main.s:997
 decsp3 (decsp3.o):
@@ -1822,13 +1822,13 @@ decsp4 (decsp4.o):
     ultimate_lib.o            src/ultimate_lib.s:3382
     ultimate_lib.o            src/ultimate_lib.s:3382
     dir.o                     src/dir.s:1472
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
 decsp5 (decsp5.o):
     ultimate_lib.o            src/ultimate_lib.s:3382
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
 decsp6 (decsp6.o):
     _printf.o                 common/_printf.s:11
     strtol.o                  ../libwrk/c128/strtol.s:320
@@ -1877,7 +1877,7 @@ incax1 (incax1.o):
     ultimate_lib.o            src/ultimate_lib.s:3382
     db.o                      src/db.s:1793
     ops.o                     src/ops.s:2711
-    bootmenu.o                src/bootmenu.s:3450
+    bootmenu.o                src/bootmenu.s:3451
     main.o                    src/main.s:997
 incax2 (incax2.o):
     ultimate_lib.o            src/ultimate_lib.s:3382
@@ -1903,8 +1903,8 @@ incax3 (incax3.o):
     ultimate_lib.o            src/ultimate_lib.s:3382
     ultimate_lib.o            src/ultimate_lib.s:3382
     ops.o                     src/ops.s:2711
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
 incax4 (incaxy.o):
     mktime.o                  ../libwrk/c128/mktime.s:612
     cbm_dir.o                 ../libwrk/c128/cbm_dir.s:374
@@ -1921,8 +1921,8 @@ incaxy (incaxy.o):
     ops.o                     src/ops.s:2711
     dir.o                     src/dir.s:1472
     cat.o                     src/cat.s:462
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
 inceaxy (linc.o):
     gmtime.o                  ../libwrk/c128/gmtime.s:96
 incsp1 (incsp1.o):
@@ -1938,7 +1938,7 @@ incsp1 (incsp1.o):
     dir.o                     src/dir.s:1472
     cat.o                     src/cat.s:462
     screen.o                  src/screen.s:365
-    bootmenu.o                src/bootmenu.s:3450
+    bootmenu.o                src/bootmenu.s:3451
 incsp2 (incsp2.o):
     vsnprintf.o               common/vsnprintf.s:9
     mktime.o                  ../libwrk/c128/mktime.s:612
@@ -1974,9 +1974,9 @@ incsp2 (incsp2.o):
     ops.o                     src/ops.s:2711
     dir.o                     src/dir.s:1472
     dir.o                     src/dir.s:1472
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
     main.o                    src/main.s:997
     main.o                    src/main.s:997
     main.o                    src/main.s:997
@@ -2006,18 +2006,18 @@ incsp4 (incsp4.o):
     ultimate_lib.o            src/ultimate_lib.s:3382
     ultimate_lib.o            src/ultimate_lib.s:3382
     screen.o                  src/screen.s:365
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
 incsp5 (incsp5.o):
     cbm_load.o                ../libwrk/c128/cbm_load.s:61
     ultimate_lib.o            src/ultimate_lib.s:3382
     ultimate_lib.o            src/ultimate_lib.s:3382
     ops.o                     src/ops.s:2711
     screen.o                  src/screen.s:365
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
     main.o                    src/main.s:997
 incsp6 (incsp6.o):
     vsnprintf.o               common/vsnprintf.s:9
@@ -2042,8 +2042,8 @@ incsp7 (incsp7.o):
     ops.o                     src/ops.s:2711
     ops.o                     src/ops.s:2711
     ops.o                     src/ops.s:2711
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
 incsp8 (incsp8.o):
     strftime.o                ../libwrk/c128/strftime.s:827
     ultimate_lib.o            src/ultimate_lib.s:3382
@@ -2081,11 +2081,11 @@ ldax0sp (ldaxsp.o):
     dir.o                     src/dir.s:1472
     dir.o                     src/dir.s:1472
     screen.o                  src/screen.s:365
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
     main.o                    src/main.s:997
     main.o                    src/main.s:997
     main.o                    src/main.s:997
@@ -2097,7 +2097,7 @@ ldaxi (ldaxi.o):
     ops.o                     src/ops.s:2711
     ops.o                     src/ops.s:2711
     dir.o                     src/dir.s:1472
-    bootmenu.o                src/bootmenu.s:3450
+    bootmenu.o                src/bootmenu.s:3451
 ldaxidx (ldaxi.o):
     strftime.o                ../libwrk/c128/strftime.s:827
     u-time.o                  src/u-time.s:423
@@ -2155,16 +2155,16 @@ ldaxysp (ldaxsp.o):
     cat.o                     src/cat.s:462
     screen.o                  src/screen.s:365
     screen.o                  src/screen.s:365
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
     main.o                    src/main.s:997
     main.o                    src/main.s:997
     main.o                    src/main.s:997
@@ -2188,9 +2188,9 @@ leaa0sp (leaaxsp.o):
     dir.o                     src/dir.s:1472
     cat.o                     src/cat.s:462
     cat.o                     src/cat.s:462
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
     main.o                    src/main.s:997
     main.o                    src/main.s:997
 leaaxsp (leaaxsp.o):
@@ -2392,12 +2392,12 @@ push0 (pushax.o):
     dir.o                     src/dir.s:1472
     cat.o                     src/cat.s:462
     cat.o                     src/cat.s:462
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
 push1 (push1.o):
     _printf.o                 common/_printf.s:11
     vfprintf.o                common/vfprintf.s:9
@@ -2467,19 +2467,19 @@ pusha (pusha.o):
     screen.o                  src/screen.s:365
     screen.o                  src/screen.s:365
     screen.o                  src/screen.s:365
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
     main.o                    src/main.s:997
     main.o                    src/main.s:997
     main.o                    src/main.s:997
@@ -2502,14 +2502,14 @@ pusha0 (pushax.o):
     dir.o                     src/dir.s:1472
     screen.o                  src/screen.s:365
     screen.o                  src/screen.s:365
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
 pushax (pushax.o):
     mktime.o                  ../libwrk/c128/mktime.s:612
     mktime.o                  ../libwrk/c128/mktime.s:612
@@ -2609,22 +2609,22 @@ pushax (pushax.o):
     cat.o                     src/cat.s:462
     screen.o                  src/screen.s:365
     screen.o                  src/screen.s:365
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
     main.o                    src/main.s:997
     main.o                    src/main.s:997
     main.o                    src/main.s:997
@@ -2670,8 +2670,8 @@ pushw0sp (pushwsp.o):
     ultimate_lib.o            src/ultimate_lib.s:3382
     ops.o                     src/ops.s:2711
     dir.o                     src/dir.s:1472
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
     main.o                    src/main.s:997
 pushwidx (pushw.o):
     strftime.o                ../libwrk/c128/strftime.s:827
@@ -2713,10 +2713,10 @@ pushwysp (pushwsp.o):
     ops.o                     src/ops.s:2711
     dir.o                     src/dir.s:1472
     dir.o                     src/dir.s:1472
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
     main.o                    src/main.s:997
     main.o                    src/main.s:997
 putchar (cputc.o):
@@ -2871,9 +2871,9 @@ stax0sp (staxsp.o):
     ops.o                     src/ops.s:2711
     dir.o                     src/dir.s:1472
     dir.o                     src/dir.s:1472
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
     main.o                    src/main.s:997
     main.o                    src/main.s:997
     main.o                    src/main.s:997
@@ -2910,14 +2910,14 @@ staxysp (staxsp.o):
     dir.o                     src/dir.s:1472
     cat.o                     src/cat.s:462
     cat.o                     src/cat.s:462
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
 steax0sp (steaxsp.o):
     gmtime.o                  ../libwrk/c128/gmtime.s:96
     localtime.o               ../libwrk/c128/localtime.s:53
@@ -2927,7 +2927,7 @@ steaxysp (steaxsp.o):
 subeqysp (subeqsp.o):
     cbm_dir.o                 ../libwrk/c128/cbm_dir.s:374
     ops.o                     src/ops.s:2711
-    bootmenu.o                src/bootmenu.s:3450
+    bootmenu.o                src/bootmenu.s:3451
 subysp (subysp.o):
     dmbconfig.o               src/dmbconfig.s:1347
     dmbconfig.o               src/dmbconfig.s:1347
@@ -2935,8 +2935,8 @@ subysp (subysp.o):
     ultimate_lib.o            src/ultimate_lib.s:3382
     cat.o                     src/cat.s:462
     cat.o                     src/cat.s:462
-    bootmenu.o                src/bootmenu.s:3450
-    bootmenu.o                src/bootmenu.s:3450
+    bootmenu.o                src/bootmenu.s:3451
+    bootmenu.o                src/bootmenu.s:3451
     main.o                    src/main.s:997
     main.o                    src/main.s:997
 tmp1 (zeropage.o):
@@ -3039,7 +3039,7 @@ tosmula0 (mul8.o):
     ops.o                     src/ops.s:2711
     ops.o                     src/ops.s:2711
     ops.o                     src/ops.s:2711
-    bootmenu.o                src/bootmenu.s:3450
+    bootmenu.o                src/bootmenu.s:3451
     main.o                    src/main.s:997
 tosorax (or.o):
     cbm_dir.o                 ../libwrk/c128/cbm_dir.s:374
@@ -3051,7 +3051,7 @@ tossubax (sub.o):
     strftime.o                ../libwrk/c128/strftime.s:827
     dmbconfig.o               src/dmbconfig.s:1347
     ops.o                     src/ops.s:2711
-    bootmenu.o                src/bootmenu.s:3450
+    bootmenu.o                src/bootmenu.s:3451
 tossubeax (lsub.o):
     mktime.o                  ../libwrk/c128/mktime.s:612
 tosudiv0ax (ludiv.o):

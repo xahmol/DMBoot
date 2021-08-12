@@ -217,7 +217,7 @@ void edittimeconfig()
 
         case CH_F5:
             cputsxy(0,23,"Input NTP server hostname:");
-            textInput(0,24,host,80);
+            textInput(0,24,host,79);
             clearArea(0,9,40,1);
             clearArea(0,23,40,2);
             gotoxy(0,9);
@@ -287,10 +287,10 @@ void editgeosconfig()
             config_headertext("Edit REU file path and name.");
 
             cputsxy(0,3,"Enter REU file path:");
-            textInput(0,4,reufilepath,60);
+            textInput(0,4,reufilepath,59);
 
             cputsxy(0,7,"Enter REU file name:");
-            textInput(0,8,reufilename,20);
+            textInput(0,8,reufilename,19);
             changesmade = 1;
             break;
 
@@ -358,10 +358,10 @@ void editgeosconfig()
             imageaid = (unsigned char)strtol(deviceidbuffer,&ptrend,10);
 
             cputsxy(0,5,"Enter image drive A file path:");
-            textInput(0,6,imageapath,60);
+            textInput(0,6,imageapath,59);
 
             cputsxy(0,8,"Enter image drive A file name:");
-            textInput(0,9,imageaname,20);
+            textInput(0,9,imageaname,19);
 
             sprintf(deviceidbuffer,"%i",imagebid);
             cputsxy(0,10,"Enter image drive B device ID:");
@@ -369,10 +369,10 @@ void editgeosconfig()
             imagebid = (unsigned char)strtol(deviceidbuffer,&ptrend,10);
 
             cputsxy(0,12,"Enter image drive B file path:");
-            textInput(0,13,imagebpath,60);
+            textInput(0,13,imagebpath,59);
 
             cputsxy(0,15,"Enter image drive B file name:");
-            textInput(0,16,imagebname,20);
+            textInput(0,16,imagebname,19);
 
             changesmade = 1;
 

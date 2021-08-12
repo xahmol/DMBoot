@@ -452,7 +452,7 @@ void information()
     clrscr();
     headertext("Information and credits");
 
-    cputs("DMBoot 128:\n\r");
+    cputs("\n\rDMBoot 128:\n\r");
     cputs("Device Manager Boot Menu for the C128\n\n\r");
     cprintf("Version: v%i%i-", VERSION_MAJOR, VERSION_MINOR);
     cprintf("%c%c%c%c", BUILD_YEAR_CH0, BUILD_YEAR_CH1, BUILD_YEAR_CH2, BUILD_YEAR_CH3);
@@ -1196,10 +1196,10 @@ int edituserdefinedcommand()
             if(Slot.command > 1)
             {
                 cputsxy(0,13,"Enter image file path:");
-                textInput(0,14,Slot.cmd,80);
+                textInput(0,14,Slot.cmd,79);
 
                 cputsxy(0,16,"Enter image file name:");
-                textInput(0,17,Slot.image,20);
+                textInput(0,17,Slot.image,19);
             }
             else
             {
@@ -1209,7 +1209,7 @@ int edituserdefinedcommand()
 
         case CH_F3:
             cputsxy(0,10,"Enter command (empty=none):");
-            textInput(0,11,Slot.cmd,100);
+            textInput(0,11,Slot.cmd,79);
             if( strlen(Slot.cmd) == 0)
             {
                 Slot.command = 0;
