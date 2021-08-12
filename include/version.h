@@ -2,7 +2,7 @@
 #define VERSION__H
 
 #define DRA_VERNUM "1.0doj"
-#define DRA_VERDATE "2020-06-17"
+#define DRA_VERDATE "2021-04-14"
 
 #define VERSION_MAJOR 2
 #define VERSION_MINOR 99

@@ -306,7 +306,7 @@ mainLoopBrowse(void)
           goto done;
 
         case '@':
-          doDOScommand(context, sorted, 0);
+          doDOScommand(context, sorted, 0, "DOS command");
           updateScreen(context, num_windows);
           break;
 

@@ -48,9 +48,23 @@ char linebuffer2[81];
 char DOSstatus[40];
 
 /// string descriptions of enum drive_e
-const char* drivetype[LAST_DRIVE_E] = {"", "1540", "1541", "1551", "1570", "1571", "1581", "1001", "2031", "8040", "sd2iec", "cmd", "vice", "u64"};
-/// enum drive_e value for each device 0-19.
+const char* drivetype[LAST_DRIVE_E] = {"", "Pi1541", "1540", "1541", "1551", "1570", "1571", "1581", "1001", "2031", "8040", "sd2iec", "cmd", "vice", "u64"};/// enum drive_e value for each device 0-19.
 BYTE devicetype[MAXDEVID+1];
+
+void
+initDirWindowHeight(void)
+{
+  if (SCREENW == 80)
+  {
+    DIR1H = 23;
+    DIR2H = 23;
+  }
+  else
+  {
+    DIR1H = 11;
+    DIR2H = 10;
+  }
+}
 
 const char*
 getDeviceType(const BYTE device)
@@ -556,12 +570,12 @@ textInput(const BYTE xpos, const BYTE ypos, char *str, const BYTE size)
 }
 
 void
-doDOScommand(const BYTE context, const BYTE sorted, const BYTE use_linebuffer)
+doDOScommand(const BYTE context, const BYTE sorted, const BYTE use_linebuffer, const char *title)
 {
   int i;
   const BYTE device = devices[context];
-  newscreen("DOS command");
-  cprintf("\n\rsend DOS command to device %i:", device);
+  newscreen(title);
+  cprintf("\n\r%s on device %i:", title, device);
   linebuffer[use_linebuffer ? SCREENW : 0] = 0;
   i = textInput(0, 3, linebuffer, SCREENW);
   if (i > 0)
@@ -576,21 +590,6 @@ doDOScommand(const BYTE context, const BYTE sorted, const BYTE use_linebuffer)
 
 #pragma code-name (push, "OVERLAY1");
 #pragma rodata-name (push, "OVERLAY1");
-
-void
-initDirWindowHeight(void)
-{
-  if (SCREENW == 80)
-  {
-    DIR1H = 23;
-    DIR2H = 23;
-  }
-  else
-  {
-    DIR1H = 11;
-    DIR2H = 10;
-  }
-}
 
 void
 updateScreen(const BYTE context, BYTE num_dirs)
