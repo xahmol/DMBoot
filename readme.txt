@@ -7,36 +7,34 @@ Written in 2020 by Xander Mol
 
 Prerequisites:
 --------------
-- UltimateII+ (U2+) cartridge installed, with firmware at version 3.9 or higher (link to firmware page, scroll down for U2 firmware: https://ultimate64.com/Firmware )
-- 128 Device Manager ROM installed as Cartridge ROM on the U2+, version 1.99 or higher. (link: https://www.bartsplace.net/content/publications/devicemanager128.shtml )
+* UltimateII+ (U2+) cartridge installed, with firmware at version 3.9 or higher (link to firmware page, scroll down for U2 firmware: https://ultimate64.com/Firmware )
+* 128 Device Manager ROM installed as Cartridge ROM on the U2+, version 1.99 or higher. (link: https://www.bartsplace.net/content/publications/devicemanager128.shtml )
 
 Installation:
 -------------
-- Create a directory called '11' on your usb stick, and put the contents of the DMBoot ZIP there. It doesn't really matter if the usb stick is usb0 or usb1 or such, but what is important is the 'default path' setting in the Software IEC menu of the U2+ cartridge is pointing to the proper path for your usb stick. While it doesn't matter if the usb stick is usb0/1 etc, the names of the directory and file are important.
+* Create a directory called '11' on your usb stick, and put the contents of the DMBoot ZIP there. It doesn't really matter if the usb stick is usb0 or usb1 or such, but what is important is the 'default path' setting in the Software IEC menu of the U2+ cartridge is pointing to the proper path for your usb stick. While it doesn't matter if the usb stick is usb0/1 etc, the names of the directory and file are important.
 
-- Unzipping should place these files in the 11 directory:
+* Unzipping should place these files in the 11 directory:
 
-autostart.128.prg:
-The executable that will automatically start DM Boot running with the DM manager Autoboot option enabled / chosen from the DM menu. This will update time via the chosen NTP server if enabled and then start the DMBoot main program.
+  * autostart.128.prg: DMBoot main program that will be auto started on boot (and therefore has to have this name, otherwise the Device Manager ROM will not be able to recognise that this needs to be started)
 
-dmbconfig.prg:
-Configuration program to set the options for the NTP time server update and the GEOS Ram boot options and file paths/names.
+  * dmb-fb.prg: Memory overlay for the file browser (cannot be executed as stand alone program)
 
-dmb-confupd-2-3.prg:
-Utility to upgrade the configuration file of the DM Boot main program from the 1.99 version to the 2.99 version. Only needed if coming from a previous version.
+  * dmb-geos.prg: Memory overlay for the GEOS RAM Boot code (cannot be executed as stand alone program)
 
-dmbootmain.prg:
-DMBoot main program.
+  * dmb-lowc.prg: Memory overlay for shared functions loaded in the $1300 area (cannot be executed as stand alone program)
 
-geosramboot.prg:
-GEOS RAM boot executable. This will boot GEOS from the REU file specified using the dmbconfig.prg program.
+  * dmb-menu.prg: Memory overlay for the DMBoot main menu functions (cannot be executed as stand alone program)
 
-readme.txt:
-This readme file.
+  * dmb-util.prg: Memory overlay for the NTP time set and GEOS configuration settings and UI.
+
+  * dmb-confupd-2-3.prg: Utility to upgrade the configuration file of the DM Boot main program from the 1.99 version to the 2.99 version. Only needed if coming from a previous version.
+
+  * readme.txt: This readme file.
 
 First run:
 ----------
-On first run, configuration options with default values will be created, start menu slots will be empty. It is suggested to add the dmbconfig and geosramboot executables to the start menu for easy access.
+On first run, configuration options with default values will be created, start menu slots will be empty.
 
 Instructions:
 -------------

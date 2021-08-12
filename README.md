@@ -89,8 +89,7 @@ Written in 2020/2021 by Xander Mol
 
   * dmb-confupd-2-3.prg: Utility to upgrade the configuration file of the DM Boot main program from the 1.99 version to the 2.99 version. Only needed if coming from a previous version.
 
-  * readme.txt:
-This readme file.
+  * readme.txt: This readme file.
 
 **First run:**
 
