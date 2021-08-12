@@ -205,11 +205,7 @@ Go to C64 mode (no confirmation will be asked)
 Boot GEOS from RAM with the specified settings. Those settings need to be configured first (via the F4 option in the main menu) for this to work.
 
 Demonstration of booting GEOS via DMBoot:
-<!-- blank line -->
-<figure class="video_container">
-  <iframe src="https://www.youtube.com/embed/u9hQ0eEtpeI" frameborder="0" allowfullscreen="true"> </iframe>
-</figure>
-<!-- blank line -->
+https://github.com/xahmol/DMBoot/blob/main/pictures/2021-08-12%2013-34-15.mkv
 
 **F7: Edit / re-order / delete**
 
