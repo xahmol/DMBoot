@@ -234,6 +234,10 @@ DraBrowse (db*) is a simple file browser, originally created 2009 by Sascha Bade
 Used version adapted by Dirk Jagdmann (doj)
 <https://github.com/doj/dracopy>
 
+Uses code from:
+ultimate-lib by xlar54 (Scott Hutter)
+https://github.com/xlar54/ultimateii-dos-lib
+
 Requires and made possible by the C128 Device Manager ROM, created by Bart van Leeuwen.
 <https://www.bartsplace.net/content/publications/devicemanager128.shtml>
 
