@@ -10,6 +10,11 @@
 // Used version adapted by Dirk Jagdmann (doj)
 // https://github.com/doj/dracopy
 //
+// Uses code from:
+// Ultimate 64/II+ Command Library
+// Scott Hutter, Francesco Sblendorio
+// https://github.com/xlar54/ultimateii-dos-lib
+//
 // Requires and made possible by the C128 Device Manager ROM,
 // Created by Bart van Leeuwen
 // https://www.bartsplace.net/content/publications/devicemanager128.shtml
