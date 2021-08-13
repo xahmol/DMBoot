@@ -235,7 +235,8 @@ Used version adapted by Dirk Jagdmann (doj)
 <https://github.com/doj/dracopy>
 
 Uses code from:
-ultimate-lib by xlar54 (Scott Hutter)
+Ultimate 64/II+ Command Library
+Scott Hutter, Francesco Sblendorio
 https://github.com/xlar54/ultimateii-dos-lib
 
 Requires and made possible by the C128 Device Manager ROM, created by Bart van Leeuwen.
