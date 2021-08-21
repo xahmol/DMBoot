@@ -121,6 +121,8 @@ extern unsigned char reusize;
 extern char* reusizelist[8];
 extern unsigned char utilbuffer[328];
 extern char configfilename[11];
+//extern unsigned int validdriveid;
+//extern unsigned int idnr[30];
 extern char c128_ram;
 
 // keyboard buffer

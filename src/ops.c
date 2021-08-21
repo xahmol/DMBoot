@@ -37,6 +37,7 @@
 #include "screen.h"
 #include "version.h"
 #include "base.h"
+#include "main.h"
 
 const char *value2hex = "0123456789abcdef";
 
@@ -70,6 +71,15 @@ const char*
 getDeviceType(const BYTE device)
 {
   BYTE idx;
+
+  idx = dm_getdevicetype(device);
+  
+  if(idx != 0)
+  {
+    devicetype[device] = idx;
+    return drivetype[idx];
+  }
+
   if (device > sizeof(devicetype))
     {
       return "!d";

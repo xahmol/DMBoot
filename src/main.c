@@ -58,6 +58,7 @@
 //Functions
 //void checkdmdevices();
 //const char* deviceidtext (int id);
+unsigned char dm_getdevicetype(unsigned char id);
 void std_write(char * file_name);
 void std_read(char * file_name);
 void mid(const char *src, size_t start, size_t length, char *dst, size_t dstlen);
@@ -105,6 +106,7 @@ unsigned char reusize = 2;
 char* reusizelist[8] = { "128 KB","256 KB","512 KB","1 MB","2 MB","4 MB","8 MB","16 MB"};
 unsigned char utilbuffer[328];
 char configfilename[11] = "dmbcfgfile";
+unsigned char mmu_temp, dm_devtype;
 
 //Main program
 int main() {
@@ -187,6 +189,7 @@ int main() {
         case CH_F6:
             // GEOS RAM boot
             clrscr();
+            textcolor(DC_COLOR_TEXT);
             loadoverlay("11:dmb-geos");      // Load GEOS assembly code
             geosboot_main();
             break;
@@ -219,6 +222,90 @@ int main() {
 
 //User defined functions
 
+unsigned char dm_getdevicetype(unsigned char id)
+{
+
+    dm_devtype = id;
+    
+    // Safeguard old MMU config and set new one to %00101010
+    asm("lda $ff00");                   // Load preent MMU config
+    asm("sta %v", mmu_temp);            // Store MMU config to temporary variable
+    asm("lda #$2a");                    // Load MMU config to access function ROM
+    asm("sta $ff00");                   // Store MMU config
+
+    // Check DM jumptable version and only proceed if right version
+    asm("lda $807b");                   // Load first ID byte
+    asm("cmp #$4e");                    // Compare with expected value 'n'
+    asm("bne %g", incorrectversion);    // Jump to incorrect version
+    asm("lda $807c");                   // Load second ID byte
+    asm("cmp #$45");                    // Compare with expected value 'e'
+    asm("bne %g", incorrectversion);    // Jump to incorrect version
+    asm("lda $807d");                   // Load third byte
+    asm("cmp #$44");                    // Compare with expected value 'd'
+    asm("bne %g", incorrectversion);    // Jump to incorrect version
+
+    // Check device ID and obtain type
+    asm("lda %v", dm_devtype);          // Load device ID to be tested
+    asm("jsr $8083");                   // Call DM ext_get_drivetype  function
+    asm("sta %v", dm_devtype);          // Store obtained device type
+    asm("jmp %g", routineend);          // Jump to end
+
+    // Return 0 if incorrect DM version
+incorrectversion:
+    asm("lda #$00");                    // Load zero value
+    asm("sta %v", dm_devtype);          // Return zero value
+
+routineend:
+    // Restore MMU config
+    asm("lda %v", mmu_temp);            // Load saved MMU config
+    asm("sta $ff00");                   // Restore MMU config
+
+    switch (dm_devtype)
+    {
+    case 0x02:
+    case 0x03:
+    case 0x08:
+        return 14;                      // Return code for Ultimate II+ drives
+        break;
+
+    case 0x04:
+    case 0x05:
+        return 11;                      // Return code for SDIEC/mIEC
+        break;
+
+    case 0x28:
+        return 2;                       // 1540
+        break;
+
+    case 0x29:
+        return 3;                       // 1541
+        break;
+
+    case 0x46:
+        return 5;                       // 1570
+        break;
+
+    case 0x47:
+        return 6;                       // 1571
+        break;
+    
+    case 0x51:
+        return 7;                       // 1581
+        break;
+
+    case 0x80:
+    case 0xc0:
+    case 0xe0:
+    case 0xf0:
+        return 12;                      // CMD drives
+        break;
+
+    default:
+        return 0;                       // All other / unrecognised / error
+        break;
+    }
+}
+
 //void checkdmdevices() {
 //    //Read memory for devices recognised by Device Manager Rom
 //
@@ -247,24 +334,24 @@ int main() {
 //
 //    switch( id )
 //    {
-//        case 0:
-//            return "none";
-//        case 1:
-//            return "unkown";
+//    //    case 0:
+//    //        return "";
+//    //    case 1:
+//    //        return "";
 //        case 2:
-//            return "U2 A";
+//            return "u64";
 //        case 3:
-//            return "U2 B";
+//            return "u64";
 //        case 4:
-//            return "SD2IEC";
-//        case 5:
-//            return "uIEC";
-//        case 6:
-//            return "Printer";
-//        case 7:
-//            return "Plotter";
+//            return "sd2iec";
+//    //    case 5:
+//    //        return "";
+//    //    case 6:
+//    //        return "";
+//    //    case 7:
+//    //        return "";
 //        case 8:
-//            return "SoftIEC";
+//            return "u64";
 //        case 40:
 //            return "1540";
 //        case 41:
@@ -278,7 +365,7 @@ int main() {
 //        case 81:
 //            return "1581";
 //        default:
-//            return "other";
+//            return "";
 //    }
 //}
 

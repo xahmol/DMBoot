@@ -195,8 +195,7 @@ mainLoopBrowse(void)
           break;
         
         case '-':
-          if (--devices[context] < 8)
-            devices[context]=MAXDEVID;
+          if (--devices[context] < 8) { devices[context]=MAXDEVID; }
           freeDir(&dirs[context]);
           if (! devicetype[devices[context]])
             {
