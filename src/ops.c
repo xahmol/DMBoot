@@ -190,17 +190,31 @@ execute(char * prg, BYTE device, BYTE boot, char * command)
     break;
 
   case 2:
-    cputs("poke 673,8");
-    gotoxy(0,ypos+3);
+    if(dm_apipresent==1 && dm_apiversion>0)
+    {
+      dm_sethsidviaapi();
+    }
+    else
+    {
+      cputs("poke 673,8");
+      gotoxy(0,ypos+3);
+      numberenter++;
+    }
     cprintf("run\"%s\",u%i", prg, 8);
-    numberenter++;
     break;
   
   case 3:
-    cputs("poke 673,8");
-    gotoxy(0,ypos+3);
+    if(dm_apipresent==1 && dm_apiversion>0)
+    {
+      dm_sethsidviaapi();
+    }
+    else
+    {
+      cputs("poke 673,8");
+      gotoxy(0,ypos+3);
+      numberenter++;
+    }
     cprintf("boot u%i", 8);
-    numberenter++;
     break;
 
   case 10:
@@ -212,17 +226,31 @@ execute(char * prg, BYTE device, BYTE boot, char * command)
     break;
 
   case 12:
-    cputs("fast:poke 673,8");
-    gotoxy(0,ypos+3);
+    if(dm_apipresent==1 && dm_apiversion>0)
+    {
+      dm_sethsidviaapi();
+    }
+    else
+    {
+      cputs("poke 673,8");
+      gotoxy(0,ypos+3);
+      numberenter++;
+    }
     cprintf("run\"%s\",u%i", prg, 8);
-    numberenter++;
     break;
   
   case 13:
-    cputs("fast:poke 673,8");
-    gotoxy(0,ypos+3);
+    if(dm_apipresent==1 && dm_apiversion>0)
+    {
+      dm_sethsidviaapi();
+    }
+    else
+    {
+      cputs("poke 673,8");
+      gotoxy(0,ypos+3);
+      numberenter++;
+    }
     cprintf("boot u%i", 8);
-    numberenter++;
     break;
   
   default:

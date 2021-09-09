@@ -58,7 +58,9 @@
 //Functions
 //void checkdmdevices();
 //const char* deviceidtext (int id);
+void dm_getapiversion();
 unsigned char dm_getdevicetype(unsigned char id);
+void dm_sethsidviaapi();
 void std_write(char * file_name);
 void std_read(char * file_name);
 void mid(const char *src, size_t start, size_t length, char *dst, size_t dstlen);
@@ -107,6 +109,10 @@ char* reusizelist[8] = { "128 KB","256 KB","512 KB","1 MB","2 MB","4 MB","8 MB",
 unsigned char utilbuffer[328];
 char configfilename[11] = "dmbcfgfile";
 unsigned char mmu_temp, dm_devtype;
+unsigned char dm_apipresent = 0;
+unsigned char dm_apiversion = 0;
+unsigned char dm_apiverlowb = 0;
+unsigned char dm_apiverhigb = 0;
 
 //Main program
 int main() {
@@ -141,6 +147,13 @@ int main() {
     // Load util config
     loadoverlay("11:dmb-lowc");         // Load code in low memory
     loadoverlay("11:dmb-util");         // Load overlay for utils
+
+    dm_getapiversion();
+    if(dm_apipresent==1)
+    {
+        printf("\nDM API version: %i",dm_apiversion);
+    }
+
     uii_change_dir("/usb*/11/");
 	printf("\nDir changed\nStatus: %s", uii_status);
 	readconfigfile(configfilename);
@@ -221,12 +234,8 @@ int main() {
 }
 
 //User defined functions
-
-unsigned char dm_getdevicetype(unsigned char id)
+void dm_getapiversion()
 {
-
-    dm_devtype = id;
-    
     // Safeguard old MMU config and set new one to %00101010
     asm("lda $ff00");                   // Load preent MMU config
     asm("sta %v", mmu_temp);            // Store MMU config to temporary variable
@@ -244,22 +253,50 @@ unsigned char dm_getdevicetype(unsigned char id)
     asm("cmp #$44");                    // Compare with expected value 'd'
     asm("bne %g", incorrectversion);    // Jump to incorrect version
 
-    // Check device ID and obtain type
-    asm("lda %v", dm_devtype);          // Load device ID to be tested
-    asm("jsr $8083");                   // Call DM ext_get_drivetype  function
-    asm("sta %v", dm_devtype);          // Store obtained device type
-    asm("jmp %g", routineend);          // Jump to end
+    // Set API present flag to 1
+    asm("lda #$01");                    // Load 1 in A
+    asm("sta %v", dm_apipresent);       // Store in API present flag variable
 
-    // Return 0 if incorrect DM version
+    // Load and store major and minor version number bytes
+    asm("lda $807e");                   // Load first byte
+    asm("sta %v",dm_apiverlowb);         // Store first byte in variable
+    asm("lda $807f");                   // Load second byte
+    asm("sta %v",dm_apiverhigb);         // Store second byte in variable
+
+    dm_apiversion = dm_apiverhigb*256+dm_apiverlowb;
+
 incorrectversion:
-    asm("lda #$00");                    // Load zero value
-    asm("sta %v", dm_devtype);          // Return zero value
-
-routineend:
     // Restore MMU config
     asm("lda %v", mmu_temp);            // Load saved MMU config
     asm("sta $ff00");                   // Restore MMU config
+}
 
+unsigned char dm_getdevicetype(unsigned char id)
+{
+    if(dm_apipresent==1)
+    {
+        dm_devtype = id;
+
+        // Safeguard old MMU config and set new one to %00101010
+        asm("lda $ff00");                   // Load preent MMU config
+        asm("sta %v", mmu_temp);            // Store MMU config to temporary variable
+        asm("lda #$2a");                    // Load MMU config to access function ROM
+        asm("sta $ff00");                   // Store MMU config
+
+        // Check device ID and obtain type
+        asm("lda %v", dm_devtype);          // Load device ID to be tested
+        asm("jsr $8083");                   // Call DM ext_get_drivetype  function
+        asm("sta %v", dm_devtype);          // Store obtained device type
+
+        // Restore MMU config
+        asm("lda %v", mmu_temp);            // Load saved MMU config
+        asm("sta $ff00");                   // Restore MMU config
+    }
+    else
+    {
+        dm_devtype=0;
+    }
+    
     switch (dm_devtype)
     {
     case 0x02:
@@ -304,6 +341,23 @@ routineend:
         return 0;                       // All other / unrecognised / error
         break;
     }
+}
+
+void dm_sethsidviaapi()
+{
+    // Safeguard old MMU config and set new one to %00101010
+    asm("lda $ff00");                   // Load preent MMU config
+    asm("sta %v", mmu_temp);            // Store MMU config to temporary variable
+    asm("lda #$2a");                    // Load MMU config to access function ROM
+    asm("sta $ff00");                   // Store MMU config
+
+    // Set hyperspeed drive ID to 8 via DM API call
+    asm("lda #$08");                    // Load 8 to A
+    asm("jsr $8089");                   // Call DM ext_get_drivetype  function
+
+    // Restore MMU config
+    asm("lda %v", mmu_temp);            // Load saved MMU config
+    asm("sta $ff00");                   // Restore MMU config
 }
 
 //void checkdmdevices() {
