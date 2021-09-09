@@ -305,6 +305,10 @@ unsigned char dm_getdevicetype(unsigned char id)
         return 14;                      // Return code for Ultimate II+ drives
         break;
 
+    case 0x09:
+        return 1;                       // Return code for Pi1541
+        break;
+
     case 0x04:
     case 0x05:
         return 11;                      // Return code for SDIEC/mIEC
