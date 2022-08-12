@@ -10,9 +10,9 @@ Written in 2020/2021 by Xander Mol
 
 ### Changelog release versions
 
-**Version v299-20210812-1320:**
+**Version v299-20210909-1708:**
 
- [Link to build of version](https://github.com/xahmol/DMBoot/raw/main/DMBoot-v299-20210812-1320.zip)
+ [Link to build of version](https://github.com/xahmol/DMBoot/raw/main/DMBoot-v299-20210909-1708.zip)
 
 * Complete redesign of internal memory structure creating more working memory space
 * This enabled placing eveything in one menu again instead of having to start seperate programs for the NTP time and GEOS utilities.
