@@ -10,6 +10,12 @@ Written in 2020/2021 by Xander Mol
 
 ### Changelog release versions
 
+**Version v299-20220812-0958:**
+ [Link to build of version](https://github.com/xahmol/DMBoot/raw/main/DMBoot-v299-20220812-0958.zip)
+
+ * Added Load in C64 mode option with key '6' in the filebrowser. Works on directly executing programs from the filebrowser, as well as adding programs to load in 64 mode as slots in the bootmenu. Keeps supporting user defined commands and disk mounts. Requires Device Manager ROM API v2, so at least c128dm-200-alpha-20409. Thanks to Bart van Leeuwen providing API functionality to his Load 64 program function.
+ * Minor other improvements / fixes
+
 **Version v299-20210909-1708:**
 
  [Link to build of version](https://github.com/xahmol/DMBoot/raw/main/DMBoot-v299-20210909-1708.zip)
@@ -118,6 +124,7 @@ Written in 2020/2021 by Xander Mol
 * FAST: this starts the program in FAST mode. Only use if the target is started in 80 column mode and the target supports it.
 * Browse to your desired target via the **Cursor keys**: **UP/DOWN** to move within the directory, **ENTER or RIGHT** on a directory or disk image to enter the selected directory or image, **DEL / LEFT** to change to parent directory.
 * To choose to have a program executed from the menuslot, select **ENTER** or **F7** on the desired executable
+* To have the program executed in C64 mode from the menuslot, select **6** on the desired executable ![](https://github.com/xahmol/DMBoot/blob/main/pictures/dmboot%20-%20filebrowsermenu_run64.png?raw=true)
 * To choose to boot the image you are now in from the menuslot, select **F5**.
 * You should than get this screen to select the menuslot position:
   ![](https://github.com/xahmol/DMBoot/raw/main/pictures/dmboot%20-%20choosemenuslot.png)
@@ -214,6 +221,13 @@ Enables to rename menuslots, re-order the slots or delete a slot. Selecting prov
 
 * **F1** enables renaming a menuslot. Choose slot to be renamed by pressing **0-9** or **A-Z**. Enter new name. Enter to confirm.
 ![](https://github.com/xahmol/DMBoot/raw/main/pictures/dmboot%20-%20rename.png)
+
+* **F2** enables to add a user defined command or a user defined image to mount. This gives this screen:
+![](https://github.com/xahmol/DMBoot/blob/main/pictures/dmboot%20-%20commandmountselect.png?raw=true)
+
+**F1** will then enable to add an image to be mounted before the slot executable is started. Enter device ID (8 or 9 for the emulated drives, or 0 to cancel), path on the USB stick to the image and the image name.
+
+**F2** will enable to add a user defined command to be executed before the program in the slot is started. Can be any valid BASIC command.
 
 * **F3** enables re-ordering menu slots. Choose slot to be re-ordered by pressing **0-9** or **A-Z**. Selected menu slot is highlighted white. Move option by pressing **UP** or **DOWN**. Confirm by **ENTER**. Cancel with **F7**.
 ![](https://github.com/xahmol/DMBoot/raw/main/pictures/dmboot%20-%20reorder.png)
