@@ -38,6 +38,7 @@
 #include "version.h"
 #include "base.h"
 #include "main.h"
+#include "dmapi.h"
 
 const char *value2hex = "0123456789abcdef";
 
@@ -157,6 +158,7 @@ execute(char * prg, BYTE device, BYTE boot, char * command)
   //          1: Boot from dir without drive set to 8
   //          3: Run without drive set to 8
   //          4: Boot from dir without drive set to 8
+  //          5: Run in C64 mode
   //          Add 10 to option to execute in FAST mode
   // command: User defined command to be executed before execution.
   //          Empty is no command.
@@ -215,6 +217,23 @@ execute(char * prg, BYTE device, BYTE boot, char * command)
       numberenter++;
     }
     cprintf("boot u%i", 8);
+    break;
+
+  case 5:
+    if(dm_apipresent==1 && dm_apiversion>1)
+    {
+      // Set filename
+	    strcpy(dm_prgnam,prg);
+
+      // Set filename length
+      dm_prglen = strlen(prg);
+
+      // Set file drive ID
+      dm_devid = device;
+
+      // Print call to start in 64 mode function
+      cprintf("sys %i",&dm_run64);
+    }
     break;
 
   case 10:

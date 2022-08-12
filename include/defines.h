@@ -125,7 +125,7 @@ extern char configfilename[11];
 //extern unsigned int idnr[30];
 extern char c128_ram;
 extern unsigned char dm_apipresent;
-extern unsigned char dm_apiversion;
+extern unsigned int dm_apiversion;
 
 // keyboard buffer
 #define KBCHARS 842

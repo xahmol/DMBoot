@@ -60,16 +60,15 @@ void config_headertext(char* subtitle)
     // Draw header text
     // Input: subtitle is text to draw on second line
 
-    mid(spacefill,1,SCREENW,spacedest, sizeof(spacedest)); // select spaces based on screenwidth
     revers(1);
     textcolor(DMB_COLOR_HEADER1);
     gotoxy(0,0);
-    cprintf("%s\n",spacedest);
+    cspaces(SCREENW);
     gotoxy(0,0);  
     cprintf("DMBoot 128: Device Manager Boot Menu");
     textcolor(DMB_COLOR_HEADER2);
     gotoxy(0,1);
-    cprintf("%s\n",spacedest);
+    cspaces(SCREENW);
     gotoxy(0,1);
     cprintf("%s\n\n\r", subtitle);
     if(SCREENW == 80)

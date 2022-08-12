@@ -50,6 +50,7 @@
 #include "bootmenu.h"
 #include "utils.h"
 #include "ultimate_lib.h"
+#include "dmapi.h"
 
 #ifndef min
 #define min(a,b) ( (a) < (b) ? (a) : (b) )
@@ -64,6 +65,7 @@ void dm_sethsidviaapi();
 void std_write(char * file_name);
 void std_read(char * file_name);
 void mid(const char *src, size_t start, size_t length, char *dst, size_t dstlen);
+void cspaces(unsigned char number);
 char* pathconcat();
 char getkey(BYTE mask);
 unsigned char loadoverlay(char* name);
@@ -90,8 +92,6 @@ BYTE fastflag = 0;
 struct SlotStruct Slot;
 char newmenuname[36][21];
 unsigned int newmenuoldslot[36];
-char spacefill[81] = "                                                                                 ";
-char spacedest[81];
 BYTE bootdevice;
 long secondsfromutc = 0; 
 unsigned char timeonflag = 1;
@@ -108,11 +108,7 @@ unsigned char reusize = 2;
 char* reusizelist[8] = { "128 KB","256 KB","512 KB","1 MB","2 MB","4 MB","8 MB","16 MB"};
 unsigned char utilbuffer[328];
 char configfilename[11] = "dmbcfgfile";
-unsigned char mmu_temp, dm_devtype;
-unsigned char dm_apipresent = 0;
-unsigned char dm_apiversion = 0;
-unsigned char dm_apiverlowb = 0;
-unsigned char dm_apiverhigb = 0;
+unsigned int dm_apiversion = 0;
 
 //Main program
 int main() {
@@ -236,39 +232,8 @@ int main() {
 //User defined functions
 void dm_getapiversion()
 {
-    // Safeguard old MMU config and set new one to %00101010
-    asm("lda $ff00");                   // Load preent MMU config
-    asm("sta %v", mmu_temp);            // Store MMU config to temporary variable
-    asm("lda #$2a");                    // Load MMU config to access function ROM
-    asm("sta $ff00");                   // Store MMU config
-
-    // Check DM jumptable version and only proceed if right version
-    asm("lda $807b");                   // Load first ID byte
-    asm("cmp #$4e");                    // Compare with expected value 'n'
-    asm("bne %g", incorrectversion);    // Jump to incorrect version
-    asm("lda $807c");                   // Load second ID byte
-    asm("cmp #$45");                    // Compare with expected value 'e'
-    asm("bne %g", incorrectversion);    // Jump to incorrect version
-    asm("lda $807d");                   // Load third byte
-    asm("cmp #$44");                    // Compare with expected value 'd'
-    asm("bne %g", incorrectversion);    // Jump to incorrect version
-
-    // Set API present flag to 1
-    asm("lda #$01");                    // Load 1 in A
-    asm("sta %v", dm_apipresent);       // Store in API present flag variable
-
-    // Load and store major and minor version number bytes
-    asm("lda $807e");                   // Load first byte
-    asm("sta %v",dm_apiverlowb);         // Store first byte in variable
-    asm("lda $807f");                   // Load second byte
-    asm("sta %v",dm_apiverhigb);         // Store second byte in variable
-
-    dm_apiversion = dm_apiverhigb*256+dm_apiverlowb;
-
-incorrectversion:
-    // Restore MMU config
-    asm("lda %v", mmu_temp);            // Load saved MMU config
-    asm("sta $ff00");                   // Restore MMU config
+    dm_getapiversion_core();
+    dm_apiversion = dm_apiverhigb * 256 + dm_apiverlowb;
 }
 
 unsigned char dm_getdevicetype(unsigned char id)
@@ -276,21 +241,7 @@ unsigned char dm_getdevicetype(unsigned char id)
     if(dm_apipresent==1)
     {
         dm_devtype = id;
-
-        // Safeguard old MMU config and set new one to %00101010
-        asm("lda $ff00");                   // Load preent MMU config
-        asm("sta %v", mmu_temp);            // Store MMU config to temporary variable
-        asm("lda #$2a");                    // Load MMU config to access function ROM
-        asm("sta $ff00");                   // Store MMU config
-
-        // Check device ID and obtain type
-        asm("lda %v", dm_devtype);          // Load device ID to be tested
-        asm("jsr $8083");                   // Call DM ext_get_drivetype  function
-        asm("sta %v", dm_devtype);          // Store obtained device type
-
-        // Restore MMU config
-        asm("lda %v", mmu_temp);            // Load saved MMU config
-        asm("sta $ff00");                   // Restore MMU config
+        dm_getdevicetype_core();
     }
     else
     {
@@ -345,23 +296,6 @@ unsigned char dm_getdevicetype(unsigned char id)
         return 0;                       // All other / unrecognised / error
         break;
     }
-}
-
-void dm_sethsidviaapi()
-{
-    // Safeguard old MMU config and set new one to %00101010
-    asm("lda $ff00");                   // Load preent MMU config
-    asm("sta %v", mmu_temp);            // Store MMU config to temporary variable
-    asm("lda #$2a");                    // Load MMU config to access function ROM
-    asm("sta $ff00");                   // Store MMU config
-
-    // Set hyperspeed drive ID to 8 via DM API call
-    asm("lda #$08");                    // Load 8 to A
-    asm("jsr $8089");                   // Call DM ext_get_drivetype  function
-
-    // Restore MMU config
-    asm("lda %v", mmu_temp);            // Load saved MMU config
-    asm("sta $ff00");                   // Restore MMU config
 }
 
 //void checkdmdevices() {
@@ -567,6 +501,15 @@ void mid(const char *src, size_t start, size_t length, char *dst, size_t dstlen)
     // zero terminate because strncpy() didn't ? 
     if(len < length)
         dst[dstlen-1] = 0;
+}
+
+void cspaces(unsigned char number)
+{
+    /* Function to print specified number of spaces, cursor set by conio.h functions */
+
+    unsigned char x;
+
+    for(x=0;x<number;x++) { cputc(32); }
 }
 
 char* pathconcat()

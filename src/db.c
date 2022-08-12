@@ -62,6 +62,7 @@ updateMenu(void)
   cputsxy(MENUXT+1,++menuy," B BOTTOM");
   cputsxy(MENUXT+1,++menuy," S SORT");
   cputsxy(MENUXT+1,++menuy," D DIRTRAC");
+  cputsxy(MENUXT+1,++menuy," 6 RUN 64");
   cputsxy(MENUXT+1,++menuy," 8 FORCE 8");
   cputsxy(MENUXT+1,++menuy," F FAST");
   cputsxy(MENUXT+1,++menuy," @ DOScmd");
@@ -70,7 +71,6 @@ updateMenu(void)
   {
     cputsxy(MENUXT+1,++menuy," \xff SW WIN");
   }
-  ++menuy;
   if (trace == 1)
   {
     cputsxy(MENUXT,++menuy," TRACE ON ");
@@ -352,6 +352,27 @@ mainLoopBrowse(void)
                   printElement(context, cwd, DIRX+1, DIRY);
                 }
             }
+          break;
+
+        // --- Run in 64 mode
+        case '6':
+          if(dm_apipresent==1 && dm_apiversion>1)
+          {
+            cwd=GETCWD;
+            if (cwd->selected && cwd->selected->dirent.type==CBM_T_PRG)
+              {
+                if (trace == 0)
+                {
+                  execute(dirs[context]->selected->dirent.name,devices[context], 5, "");
+                }
+                else
+                {
+                  strcpy(pathfile, dirs[context]->selected->dirent.name );
+                  pathrunboot = 5;
+                  goto done;
+                }             
+              }
+          }
           break;
 
           // --- start / enter directory
