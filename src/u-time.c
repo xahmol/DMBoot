@@ -79,13 +79,19 @@ void get_ntp_time()
     time_t t;
     char res[32];
 
+    // Aborting anything the UII+ might be doing to be safe
+    uii_abort();
+
     printf("\nUpdating UII+ time from NTP Server.");
     uii_get_time();
     printf("\nUltimate datetime: %s", uii_data);
 
     printf("\nConnecting to: %s", host);
 	socket = uii_udpconnect(host, 123); //https://github.com/markusC64/1541ultimate2/blob/master/software/io/network/network_target.cc
-    if(CheckStatus()) return;
+    if(CheckStatus()) {
+        uii_socketclose(socket);
+        return;
+    }
 
     printf("\nSending data");
 	fullcmd[2] = socket;
@@ -93,11 +99,18 @@ void get_ntp_time()
     uii_sendcommand(fullcmd, 51);//3 + sizeof( ntp_packet ));
 	uii_readstatus();
 	uii_accept();
-    if(CheckStatus()) return;
+    if(CheckStatus()) {
+        uii_socketclose(socket);
+        return;
+    }
 
     printf("\nReading result");
     uii_socketread(socket, 50);// 2 + sizeof( ntp_packet ));
-    if(CheckStatus()) return;
+    if(CheckStatus()) {
+        uii_socketclose(socket);
+        return;
+    }
+    
     uii_socketclose(socket);
 
     t = uii_data[37] | (((unsigned long)uii_data[36])<<8)| (((unsigned long)uii_data[35])<<16)| (((unsigned long)uii_data[34])<<24);

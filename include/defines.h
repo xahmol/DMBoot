@@ -103,8 +103,6 @@ extern struct SlotStruct {
 extern struct SlotStruct Slot;
 extern char newmenuname[36][21];
 extern unsigned int newmenuoldslot[36];
-extern char spacefill[81];
-extern char spacedest[81];
 extern BYTE bootdevice;
 extern long secondsfromutc; 
 extern unsigned char timeonflag;

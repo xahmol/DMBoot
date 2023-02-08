@@ -414,7 +414,7 @@ mainLoopBrowse(void)
           {
             --depth;
           }
-          changeDir(context, devices[context], "\xff", sorted);
+          changeDir(context, devices[context], devicetype[devices[context]] == U64?"..":"\xff", sorted);
           break;
 
         case CH_UARROW:
