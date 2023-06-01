@@ -4,6 +4,8 @@
         "defines.h": "c",
         "stdlib.h": "c",
         "stdio.h": "c",
-        "system_error": "c"
+        "system_error": "c",
+        "ultimate_common_lib.h": "c",
+        "ultimate_dos_lib.h": "c"
     }
 }

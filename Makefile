@@ -11,11 +11,11 @@
 # - ZIP packages installed: sudo apt-get install zip
 # - wput command installed: sudo apt-get install wput
 
-SOURCESMAIN = src/main.c src/bootmenu.c src/screen.c src/cat.c src/dir.c src/base.c src/ops.c src/db.c src/ultimate_lib.c src/configcommon.c src/u-time.c src/dmbconfig.c src/geosramboot.c
+SOURCESMAIN = src/main.c src/bootmenu.c src/screen.c src/cat.c src/dir.c src/base.c src/ops.c src/db.c src/ultimate_common_lib.c src/ultimate_dos_lib.c src/ultimate_time_lib.c src/ultimate_network_lib.c src/configcommon.c src/u-time.c src/dmbconfig.c src/geosramboot.c
 LIBMAIN = src/geosramroutine.s src/dmapiasm.s
 SOURCESUPD = src/dmb-confupd-2-3.c
 README = readme.txt
-ZIP = DMBoot-v299-$(shell date "+%Y%m%d-%H%M").zip
+ZIP = DMBoot-v391-$(shell date "+%Y%m%d-%H%M").zip
 
 # Hostname of Ultimate II+ target for deployment. Edit for proper IP and usb number
 ULTHOST = ftp://192.168.1.19/usb1/11/

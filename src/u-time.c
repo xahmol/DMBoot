@@ -43,7 +43,9 @@
 #include <ctype.h>
 #include <device.h>
 #include <time.h>
-#include "ultimate_lib.h"
+#include "ultimate_common_lib.h"
+#include "ultimate_time_lib.h"
+#include "ultimate_network_lib.h"
 #include "u-time.h"
 #include "defines.h"
 #include "configcommon.h"
@@ -69,7 +71,8 @@ void get_ntp_time()
 
     struct tm *datetime;
     extern struct _timezone _tz;
-
+    unsigned char attempt = 1;
+    unsigned char clock;
     char settime[6];
     unsigned char fullcmd[] = { 0x00, NET_CMD_SOCKET_WRITE, 0x00, \
                                0x1b, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, \
@@ -78,9 +81,6 @@ void get_ntp_time()
     unsigned char socket = 0;
     time_t t;
     char res[32];
-
-    // Aborting anything the UII+ might be doing to be safe
-    uii_abort();
 
     printf("\nUpdating UII+ time from NTP Server.");
     uii_get_time();
@@ -93,7 +93,7 @@ void get_ntp_time()
         return;
     }
 
-    printf("\nSending data");
+    printf("\nSending NTP request");
 	fullcmd[2] = socket;
     uii_settarget(TARGET_NETWORK);
     uii_sendcommand(fullcmd, 51);//3 + sizeof( ntp_packet ));
@@ -104,17 +104,41 @@ void get_ntp_time()
         return;
     }
 
-    printf("\nReading result");
-    uii_socketread(socket, 50);// 2 + sizeof( ntp_packet ));
+    // Do maximum of 4 attempts at receiving data
+    do
+    {
+        // Add delay of a second to avoid time to wait on response being too short
+        clock = cia_seconds;
+        while (cia_seconds == clock) { ; }
+
+        // Print attempt number
+        printf("\nReading result attempt %d",attempt);
+
+        // Try to read incoming data        
+        uii_socketread(socket, 50);// 2 + sizeof( ntp_packet ));
+
+        // If data received, end loop. Else do new attempt till counter = 5
+        if(uii_success()) { 
+            attempt = 5;
+        } else {
+            attempt++;
+        }
+
+    } while (attempt<5);
+        
     if(CheckStatus()) {
         uii_socketclose(socket);
         return;
     }
-    
-    uii_socketclose(socket);
 
+    // Convert time received to UCI format
     t = uii_data[37] | (((unsigned long)uii_data[36])<<8)| (((unsigned long)uii_data[35])<<16)| (((unsigned long)uii_data[34])<<24);
     t -= NTP_TIMESTAMP_DELTA;
+    
+    // Close socket
+    uii_socketclose(socket);
+
+    // Print time received and parse to UII+ format
     printf("\nUnix epoch %lu", t);
     _tz.timezone = secondsfromutc;
     datetime = localtime(&t);
@@ -123,6 +147,8 @@ void get_ntp_time()
         return;
     }
     printf("\nNTP datetime: %s", res);
+
+    // Set UII+ RTC clock
     settime[0]=datetime->tm_year;
     settime[1]=datetime->tm_mon + 1;
     settime[2]=datetime->tm_mday;

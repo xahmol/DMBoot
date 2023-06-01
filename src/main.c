@@ -49,7 +49,8 @@
 #include "cat.h"
 #include "bootmenu.h"
 #include "utils.h"
-#include "ultimate_lib.h"
+#include "ultimate_common_lib.h"
+#include "ultimate_dos_lib.h"
 #include "dmapi.h"
 
 #ifndef min
@@ -133,6 +134,11 @@ int main() {
         MENUW = 13; // width of menu frame
         DIR2X = 0;
         DIR2Y = (DIR1Y+2+DIR1H);
+    }
+
+    if(!uii_detect()) {
+        cputs("No Ultimate Command Interface enabled.");
+        return 1;
     }
 
     cputs("Starting: Reading config file.");

@@ -43,7 +43,8 @@
 #include <device.h>
 #include <accelerator.h>
 #include <peekpoke.h>
-#include "ultimate_lib.h"
+#include "ultimate_common_lib.h"
+#include "ultimate_dos_lib.h"
 #include "defines.h"
 #include "configcommon.h"
 #include "ops.h"

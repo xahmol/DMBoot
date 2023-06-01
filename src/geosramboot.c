@@ -37,7 +37,8 @@
 #include <string.h>
 #include <conio.h>
 #include <stdlib.h>
-#include "ultimate_lib.h"
+#include "ultimate_common_lib.h"
+#include "ultimate_dos_lib.h"
 #include "defines.h"
 #include "geosramboot.h"
 #include "configcommon.h"

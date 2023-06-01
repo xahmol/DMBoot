@@ -43,7 +43,9 @@
 #include "base.h"
 #include "cat.h"
 #include "main.h"
-#include "ultimate_lib.h"
+#include "ultimate_common_lib.h"
+#include "ultimate_dos_lib.h"
+#include "ultimate_time_lib.h"
 
 #ifndef min
 #define min(a,b) ( (a) < (b) ? (a) : (b) )
