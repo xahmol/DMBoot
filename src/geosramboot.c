@@ -60,7 +60,7 @@ void geosboot_main()
 	}	
 
     printf("\nOpen REU file");
-	uii_open_file(1, reufilename);
+	uii_open_file(1, imagename);
 	printf("\nStatus: %s", uii_status);
 
 	// Exit if REU file is not found

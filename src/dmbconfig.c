@@ -105,7 +105,7 @@ char config_mainmenu()
     cputs("GEOS RAM Boot settings:\n\r");
 
     strcpy(buffer1,reufilepath);
-    strcat(buffer1,reufilename);
+    strcat(buffer1,imagename);
     mid(buffer1,0,SCREENW,buffer2,SCREENW);
     cprintf("- REU filepath + name:\n\r%s\n\r",buffer2);
     cprintf("- REU file size: (%i) %s\n\r",reusize,reusizelist[reusize]);
@@ -290,7 +290,7 @@ void editgeosconfig()
             textInput(0,4,reufilepath,59);
 
             cputsxy(0,7,"Enter REU file name:");
-            textInput(0,8,reufilename,19);
+            textInput(0,8,imagename,19);
             changesmade = 1;
             break;
 

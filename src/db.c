@@ -27,7 +27,6 @@
 #include <stdlib.h>
 #include <screen.h>
 #include <conio.h>
-#include "cat.h"
 #include "dir.h"
 #include "base.h"
 #include "defines.h"
@@ -48,29 +47,30 @@ updateMenu(void)
   textcolor(DC_COLOR_TEXT);
   drawFrame(" DMBoot ",MENUX,MENUY,MENUW,MENUH,NULL);
 
-  ++menuy;
+  menuy++;
   cputsxy(MENUXT+1,++menuy,"F1 DIR");
   cputsxy(MENUXT+1,++menuy,"+- DEVICE");
-  cputsxy(MENUXT+1,++menuy,"F3 HEX");
-  cputsxy(MENUXT+1,++menuy,"F4 ASC");
   cputsxy(MENUXT+1,++menuy,"F5 BOOT");
-  cputsxy(MENUXT+1,++menuy,"F7 RUN");
   cputsxy(MENUXT+1,++menuy,"CR RUN/CD");
   cputsxy(MENUXT+1,++menuy,"BS DIR UP");
   cputsxy(MENUXT+1,++menuy," \x5e PAR DIR");
   cputsxy(MENUXT+1,++menuy," T TOP");
-  cputsxy(MENUXT+1,++menuy," B BOTTOM");
+  cputsxy(MENUXT+1,++menuy," E END");
   cputsxy(MENUXT+1,++menuy," S SORT");
+  menuy++;
   cputsxy(MENUXT+1,++menuy," D DIRTRAC");
+  cputsxy(MENUXT+1,++menuy,"AB ADD MNT");
+  cputsxy(MENUXT+1,++menuy," M RUN MNT");
   cputsxy(MENUXT+1,++menuy," 6 RUN 64");
   cputsxy(MENUXT+1,++menuy," 8 FORCE 8");
   cputsxy(MENUXT+1,++menuy," F FAST");
-  cputsxy(MENUXT+1,++menuy," @ DOScmd");
   cputsxy(MENUXT+1,++menuy," Q QUIT");
   if (SCREENW == 80 )
   {
     cputsxy(MENUXT+1,++menuy," \xff SW WIN");
   }
+
+  menuy++;
   if (trace == 1)
   {
     cputsxy(MENUXT,++menuy," TRACE ON ");
@@ -108,9 +108,13 @@ mainLoopBrowse(void)
   BYTE nextpage = 0;
   BYTE context = 0;
   BYTE num_windows;
-
+  
   trace = 0;
   depth = 0;
+  reuflag = 0;
+  addmountflag = 0;
+  runmountflag = 0;
+  mountflag = 0;
 
   DIR1H = DIR2H = SCREENH-2;
   dirs[0] = dirs[1] = NULL;
@@ -204,30 +208,18 @@ mainLoopBrowse(void)
           showDir(context, context);
           break;
 
-        case '3':
-        case CH_F3:
-          cathex(devices[context],dirs[context]->selected->dirent.name);
-          updateScreen(context, num_windows);
-          break;
-
-        case '4':
-        case CH_F4:
-          catasc(devices[context],dirs[context]->selected->dirent.name);
-          updateScreen(context, num_windows);
-          break;
-
         // --- boot directory
         case '5':
         case CH_F5:
           cwd=GETCWD;
           if (trace == 0)
           {
-            execute(dirs[context]->selected->dirent.name,devices[context], 1 + 2*forceeight + 10*fastflag, "");
+            execute(dirs[context]->selected->dirent.name,devices[context], EXEC_BOOT + EXEC_FRC8*forceeight + EXEC_FAST*fastflag, "");
           }
           else
           {
             strcpy(pathfile, "" );
-            pathrunboot = 1 + 2*forceeight + 10*fastflag;
+            pathrunboot = EXEC_BOOT + EXEC_FRC8*forceeight + EXEC_FAST*fastflag;
             goto done;
           }   
           break;
@@ -279,7 +271,7 @@ mainLoopBrowse(void)
           updateMenu();
           break;
 
-        case 'b':
+        case 'e':
           cwd=GETCWD;
           current = cwd->firstelement;
           pos=0;
@@ -303,11 +295,6 @@ mainLoopBrowse(void)
         case 'q':
           trace = 0;
           goto done;
-
-        case '@':
-          doDOScommand(context, sorted, 0, "DOS command");
-          updateScreen(context, num_windows);
-          break;
 
         case CH_CURS_DOWN:
           cwd=GETCWD;
@@ -363,12 +350,12 @@ mainLoopBrowse(void)
               {
                 if (trace == 0)
                 {
-                  execute(dirs[context]->selected->dirent.name,devices[context], 5, "");
+                  execute(dirs[context]->selected->dirent.name,devices[context], EXEC_RUN64, "");
                 }
                 else
                 {
                   strcpy(pathfile, dirs[context]->selected->dirent.name );
-                  pathrunboot = 5;
+                  pathrunboot = EXEC_RUN64;
                   goto done;
                 }             
               }
@@ -384,12 +371,12 @@ mainLoopBrowse(void)
             {
               if (trace == 0)
               {
-                execute(dirs[context]->selected->dirent.name,devices[context], 0 + 2*forceeight + 10*fastflag, "");
+                execute(dirs[context]->selected->dirent.name,devices[context], EXEC_FRC8*forceeight + EXEC_FAST*fastflag, "");
               }
               else
               {
                 strcpy(pathfile, dirs[context]->selected->dirent.name );
-                pathrunboot = 0 + 2*forceeight + 10*fastflag;
+                pathrunboot = EXEC_FRC8*forceeight + EXEC_FAST*fastflag;
                 goto done;
               }             
             }
@@ -399,12 +386,12 @@ mainLoopBrowse(void)
           cwd=GETCWD;
           if (cwd->selected)
             {
-              if (trace == 1)
-              {
+              if (trace == 1) {
                 strcpy(path[depth++],cwd->selected->dirent.name);
               }
               changeDir(context, devices[context], cwd->selected->dirent.name, sorted);
             }
+            if(reuflag) { goto done; }
           break;
 
           // --- leave directory
@@ -442,6 +429,31 @@ mainLoopBrowse(void)
             }
           }
           break;
+
+        case 'a':
+          CheckMounttype(cwd->selected->dirent.name);
+          if(mountflag==1) {
+            addmountflag = 1;
+            strcpy(imageaname,dirs[context]->selected->dirent.name);
+            goto done;
+          }
+        
+        case 'b':
+          CheckMounttype(cwd->selected->dirent.name);
+          if(mountflag==1) {
+            addmountflag = 2;
+            strcpy(imagebname,dirs[context]->selected->dirent.name);
+            goto done;
+          }
+
+        case 'm':
+          if(mountflag==1 && imageaid) {
+            runmountflag = 1;
+            strcpy(pathfile, dirs[context]->selected->dirent.name );
+            pathrunboot = EXEC_MOUNT + EXEC_FAST*fastflag;
+            goto done;
+          }
+
         }
     }
 

@@ -41,7 +41,6 @@
 #include "screen.h"
 #include "version.h"
 #include "base.h"
-#include "cat.h"
 #include "main.h"
 #include "ultimate_common_lib.h"
 #include "ultimate_dos_lib.h"
@@ -82,9 +81,11 @@ void pickmenuslot()
     // Routine to pick a slot to store the chosen dir trace path
     
     int menuslot;
-    char key;
+    char key,devid,plusmin;
     BYTE yesno;
     BYTE selected = 0;
+    char deviceidbuffer[3];
+    char* ptrend;
     
     clrscr();
     headertext("Choose menuslot for chosen start option.");
@@ -102,31 +103,82 @@ void pickmenuslot()
     if ( strlen(Slot.menu) != 0 )
     {
         gotoxy(0,22);
-        cprintf("Slot not empty. Are you sure? Y/N ");
+        cprintf("Slot not empty. Edit? Y/N ");
         yesno = getkey(128);
         cprintf("%c", yesno);
         if ( yesno == 78 )
         {
             selected = 0;
         }
+    } else {
+        strcpy(Slot.menu, pathfile);
     }
     if ( selected == 1)
     {
+        clearArea(0,22,80,3);
         gotoxy(0,23);
         cputs("Choose name for slot:");
-        strcpy(Slot.menu, pathfile);
         textInput(0,24,Slot.menu,20);
 
-        Slot.device = pathdevice;
-        strcpy(Slot.file, pathfile);
-        strcpy(Slot.path, pathconcat());
-        strcpy(Slot.cmd, "");
-        Slot.runboot = pathrunboot;
-        Slot.command = 0;
+        clearArea(0,23,80,2);
+        gotoxy(0,23);
+        if(reuflag || addmountflag) {
+            if(reuflag) {
 
-        if ( devicetype[pathdevice] != U64 && (pathrunboot == 2 || pathrunboot == 3 || pathrunboot == 12 || pathrunboot == 13))
-        {
-            Slot.runboot = pathrunboot - 2;
+                cputs("Select REU size (+/-/ENTER):");
+
+                do
+                {
+                  gotoxy(0,24);
+                  cprintf("REU file size: (%i) %s",Slot.reusize,reusizelist[Slot.reusize]);
+                  do
+                  {
+                    plusmin = cgetc();
+                  } while (plusmin != '+' && plusmin != '-' && plusmin != CH_ENTER);
+                  if(plusmin == '+')
+                  {
+                      Slot.reusize++;
+                      if(Slot.reusize > 7) { Slot.reusize = 0; }
+                  }
+                  if(plusmin == '-')
+                  {
+                      if(Slot.reusize == 0) { Slot.reusize = 7; }
+                      else { Slot.reusize--; }       
+                  }
+                } while (plusmin != CH_ENTER);
+                strcpy(Slot.reu_image,imagename);
+                Slot.command = Slot.command | COMMAND_REU;
+            } else {
+                sprintf(deviceidbuffer,"%d",addmountflag==1?Slot.image_a_id:Slot.image_b_id);
+                cputs("Enter drive ID:       ");
+                textInput(0,24,deviceidbuffer,2);
+                devid = (unsigned char)strtol(deviceidbuffer,&ptrend,10);
+                if(addmountflag==1) {
+                    strcpy(Slot.image_a_path, pathconcat());
+                    strcpy(Slot.image_a_file,imageaname);
+                    Slot.image_a_id = devid;
+                    Slot.command = Slot.command | COMMAND_IMGA;
+                } else {
+                    strcpy(Slot.image_b_path, pathconcat());
+                    strcpy(Slot.image_b_file,imagebname);
+                    Slot.image_b_id = devid;
+                    Slot.command = Slot.command | COMMAND_IMGB;
+                }
+            }
+        } else {
+            Slot.device = pathdevice;
+            strcpy(Slot.file, pathfile);
+            if(runmountflag) {
+                strcpy(Slot.path, "");
+            } else {
+                strcpy(Slot.path, pathconcat());
+            }
+            Slot.runboot = pathrunboot;
+
+            if ( devicetype[pathdevice] != U64 && forceeight)
+            {
+                Slot.runboot = pathrunboot - EXEC_FRC8;
+            }
         }
 
         putslottoem(menuslot);
@@ -324,32 +376,45 @@ char mainmenu()
     return key;    
 }
 
+void mountimage(unsigned char device, char* path, char* image) {
+    uii_change_dir(path);
+    uii_mount_disk(device,image);
+}
+
 void runbootfrommenu(int select)
 {
-    char pathbuffer[81];
-    char filenamebuffer[21];
-
     // Function to execute selected boot option choice slot 0-9
     // Input: select: chosen menuslot 0-9
 
     getslotfromem(select);
 
-    // Enter correct directory path on correct device number
-    cmd(Slot.device,Slot.path);
-
-    // Load image if defined, then execute without or with command
-    if(Slot.command > 1 )
-    {
-        mid(Slot.cmd,0,80,pathbuffer,80);
-        mid(Slot.cmd,80,20,filenamebuffer,20);
-        uii_change_dir(pathbuffer);
-        uii_mount_disk(Slot.command/2,filenamebuffer);
-        execute(Slot.file,Slot.device,Slot.runboot,"");
+    clrscr();
+    gotoxy(0,0);
+    if(Slot.command & COMMAND_IMGA) {
+        cprintf("%s on ID %d.\n\r",Slot.image_a_file,Slot.image_a_id);
+        mountimage(Slot.image_a_id,Slot.image_a_path,Slot.image_a_file);
     }
-    else
-    {
+    if(Slot.command & COMMAND_IMGB) {
+        cprintf("%s on ID %d.\n\r",Slot.image_b_file,Slot.image_b_id);
+        mountimage(Slot.image_b_id,Slot.image_b_path,Slot.image_b_file);
+    }
+    if(Slot.command & COMMAND_REU) {
+        cprintf("REU file %s",Slot.reu_image);
+        uii_change_dir(Slot.image_a_path);
+        uii_open_file(1, Slot.reu_image);
+        uii_load_reu(Slot.reusize);
+        uii_close_file();
+    }
+
+    // Enter correct directory path on correct device number
+    if(Slot.runboot & EXEC_MOUNT) {
+        // Run from mounted disk
+        execute(Slot.file,Slot.image_a_id,Slot.runboot,Slot.cmd);
+    } else {
+        // Run from hyperspeed filesystem
+        cmd(Slot.device,Slot.path);
         execute(Slot.file,Slot.device,Slot.runboot,Slot.cmd);
-    }    
+    }
 }
 
 void commandfrommenu(char * command, int confirm)
@@ -383,68 +448,6 @@ void commandfrommenu(char * command, int confirm)
     gotoxy(0,0);
     exit(0);
 }
-
-//void bootfromfloppy()
-//{
-//    // Routine to boot from selected floppy drive
-//
-//    char devselect[3];
-//    char command[20];
-//    int devvalue;
-//    int validselect = 0;
-//    int x;
-//
-//    clrscr();
-//    headertext("Boot from floppy");
-//
-//    if (validdriveid == 1)
-//    {
-//        cputs("Drives and drivetypes detected:\n\r");
-//        for (x=8; x<30; ++x)
-//        {
-//            if (idnr[x] != 0)
-//            {
-//                revers(1);
-//                textcolor(DMB_COLOR_SELECT);
-//                cprintf(" %2i ",x);
-//                revers(0);
-//                textcolor(DC_COLOR_TEXT);
-//                cprintf(" %s\n\r",deviceidtext(idnr[x]));
-//            }
-//        }
-//    }
-//
-//    do
-//    {
-//        gotoxy(0,22);
-//        cputs("Input device number to boot from:");
-//        devvalue = textInput(0,23,devselect,2);
-//        if (devvalue <= 0 )
-//        {
-//            return;
-//        }
-//        devvalue = atoi(devselect);
-//        if (devvalue > 7 && devvalue < 31)
-//        {
-//            validselect = 1;
-//            if(validdriveid == 1)
-//            {
-//                if(idnr[devvalue] == 0)
-//                {
-//                    validselect = 0;
-//                }
-//            }
-//        }
-//        if (validselect == 0)
-//        {
-//            gotoxy(0,24);
-//            cputs("Invalid drive ID!");
-//        }
-//    } while (validselect == 0);
-//
-//    sprintf(command,"boot u%i",devvalue);
-//    commandfrommenu(command,0);
-//}
 
 void information()
 {
@@ -528,7 +531,7 @@ void editmenuoptions()
         cprintf(" F2 ");
         revers(0);
         textcolor(DC_COLOR_TEXT);
-        cputs(" Edit userdef. command/mount");
+        cputs(" Edit userdefined command");
 
         if(SCREENW==80)
         {
@@ -1031,9 +1034,15 @@ void printnewmenuslot(int pos, int color, char* name)
 void getslotfromem(int slotnumber)
 {
     // Routine to read a menu option from extended memory page
-    // Input: Slotnumber = pagenumber
+    // Input: Slotnumber 0-36 (or 40-76 for backup)
 
-    char* page = em_map(slotnumber);
+    char* page;
+    unsigned char pagenr = slotnumber * 2;
+
+    // Calculate page address from slotnumber 
+    page = em_map(pagenr);
+
+    // Copy data from first page
     strcpy(Slot.path, page);
     page += 100;
     strcpy(Slot.menu, page);
@@ -1042,21 +1051,46 @@ void getslotfromem(int slotnumber)
     page += 20;
     strcpy(Slot.cmd, page);
     page += 80;
-    strcpy(Slot.image, page);
+    strcpy(Slot.reu_image, page);
     page += 20;
+    Slot.reusize = *page;
+    page++;
     Slot.runboot = *page;
     page++;
     Slot.device = *page;
     page++;
-    Slot.command  = *page;  
+    Slot.command  = *page;
+    page++;
+    Slot.cfgvs  = *page;
+
+    // Copy data from second page
+    pagenr++;
+    page = em_map(pagenr);
+    strcpy(Slot.image_a_path, page);
+    page += 100;
+    strcpy(Slot.image_a_file, page);
+    page += 20;
+    Slot.image_a_id = *page;
+    page++;
+    strcpy(Slot.image_b_path, page);
+    page += 100;
+    strcpy(Slot.image_b_file, page);
+    page += 20;
+    Slot.image_b_id = *page;
 }
 
 void putslottoem(int slotnumber)
 {
     // Routine to write a menu option to extended memory page
-    // Input: Slotnumber = pagenumber
+    // Input: Slotnumber 0-36 (or 40-76 for backup)
+    char* page;
+    unsigned char pagenr = slotnumber * 2;
 
-    char* page = em_use(slotnumber);
+    // Point at first page and erase page
+    page = em_use(pagenr);
+    memset(page,0,256);
+
+    // Store data in first page
     strcpy(page, Slot.path);
     page += 100;
     strcpy(page, Slot.menu);
@@ -1065,13 +1099,37 @@ void putslottoem(int slotnumber)
     page += 20;
     strcpy(page, Slot.cmd);
     page += 80;
-    strcpy(page, Slot.image);
+    strcpy(page, Slot.reu_image);
     page += 20;
+    *page = Slot.reusize;
+    page++;
     *page = Slot.runboot;
     page++;
     *page = Slot.device;
     page++;
-    *page = Slot.command;  
+    *page = Slot.command;
+    page++;
+    *page = Slot.cfgvs;  
+    em_commit();
+
+    // Point at first page and erase page
+    pagenr++;
+    page = em_use(pagenr);
+    memset(page,0,256);
+
+    // Store data in second page
+    page = em_use(pagenr);
+    strcpy(page, Slot.image_a_path);
+    page += 100;
+    strcpy(page, Slot.image_a_file);
+    page += 20;
+    *page = Slot.image_a_id;
+    page++;
+    strcpy(page, Slot.image_b_path);
+    page += 100;
+    strcpy(page, Slot.image_b_file);
+    page += 20;
+    *page = Slot.image_b_id;
     em_commit();
 }
 
@@ -1114,13 +1172,11 @@ int edituserdefinedcommand()
 
     int menuslot;
     int changesmade = 0;
-    unsigned char key, x;
+    unsigned char key;
     BYTE selected = 0;
-    char deviceidbuffer[3];
-    char* ptrend;
 
     clrscr();
-    headertext("Edit user defined mount or command");
+    headertext("Edit user defined command");
 
     presentmenuslots();
 
@@ -1160,71 +1216,16 @@ int edituserdefinedcommand()
         textcolor(DC_COLOR_TEXT);
         cprintf(" %s",Slot.menu);
 
-        gotoxy(0,6);
-        cputs("Choose:\n\r");
-        revers(1);
-        textcolor(DMB_COLOR_SELECT);
-        cprintf(" F1 ");
-        revers(0);
-        textcolor(DC_COLOR_TEXT);
-        cputs(" Add/edit mount\n\r");
-        revers(1);
-        textcolor(DMB_COLOR_SELECT);
-        cprintf(" F3 ");
-        revers(0);
-        textcolor(DC_COLOR_TEXT);
-        cputs(" Add/edit command\n\r");
-
-        do
+        cputsxy(0,6,"Enter command (empty=none):");
+        textInput(0,7,Slot.cmd,79);
+        if( strlen(Slot.cmd) == 0)
         {
-            key = cgetc();
-        } while (key != CH_F1 && key != CH_F3);
-
-        switch (key)
+            Slot.command = 0;
+        }
+        else
         {
-        case CH_F1:
-            if(Slot.command > 1)
-            {
-                sprintf(deviceidbuffer,"%i",Slot.command/2);
-            }
-            else{
-                strcpy(deviceidbuffer,"0");
-                sprintf(Slot.cmd,Slot.path+3);
-            }
-            cputsxy(0,10,"Enter image ID (0=none):");
-            textInput(0,11,deviceidbuffer,2);
-            Slot.command = (unsigned char)strtol(deviceidbuffer,&ptrend,10)*2;
-
-            if(Slot.command > 1)
-            {
-                cputsxy(0,13,"Enter image file path:");
-                textInput(0,14,Slot.cmd,79);
-
-                cputsxy(0,16,"Enter image file name:");
-                textInput(0,17,Slot.image,19);
-            }
-            else
-            {
-                strcpy(Slot.cmd,"");
-            }
-            break;
-
-        case CH_F3:
-            cputsxy(0,10,"Enter command (empty=none):");
-            textInput(0,11,Slot.cmd,79);
-            if( strlen(Slot.cmd) == 0)
-            {
-                Slot.command = 0;
-            }
-            else
-            {
-                Slot.command = 1;
-            }
-            break;
-        
-        default:
-            break;
-        }        
+            Slot.command = 1;
+        }
         
         putslottoem(menuslot);
         changesmade = 1;

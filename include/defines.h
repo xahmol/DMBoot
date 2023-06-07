@@ -41,6 +41,22 @@
 #define DMB_COLOR_HEADER1 COLOR_GREEN
 #define DMB_COLOR_HEADER2 COLOR_LIGHTGREEN
 
+// Command flag values
+#define COMMAND_CMD             0x01
+#define COMMAND_REU             0x02
+#define COMMAND_IMGA            0x04
+#define COMMAND_IMGB            0x08
+
+// Execute flag values
+#define EXEC_MOUNT              0x01
+#define EXEC_FRC8               0x02
+#define EXEC_RUN64              0x04
+#define EXEC_FAST               0x08
+#define EXEC_BOOT               0x10
+
+// Config version
+#define CFGVERSION              0x01
+
 typedef unsigned char BYTE;
 
 #define OK 0
@@ -90,15 +106,28 @@ extern BYTE depth;
 extern BYTE trace;
 extern BYTE forceeight;
 extern BYTE fastflag;
+extern BYTE commandflag;
+extern BYTE mountflag;
+extern BYTE reuflag;
+extern BYTE addmountflag;
+extern BYTE runmountflag;
 extern struct SlotStruct {
     char path[100];
     char menu[21];
     char file[20];
     char cmd[80];
-    char image[20];
+    char reu_image[20];
+    BYTE reusize;
     BYTE runboot;
     BYTE device;
     BYTE command;
+    BYTE cfgvs;
+    char image_a_path[100];
+    char image_a_file[20];
+    BYTE image_a_id;
+    char image_b_path[100];
+    char image_b_file[20];
+    BYTE image_b_id;
 };
 extern struct SlotStruct Slot;
 extern char newmenuname[36][21];
@@ -107,7 +136,7 @@ extern BYTE bootdevice;
 extern long secondsfromutc; 
 extern unsigned char timeonflag;
 extern char host[80];
-extern char reufilename[20];
+extern char imagename[20];
 extern char reufilepath[60];
 extern char imageaname[20];
 extern char imageapath[60];
@@ -124,6 +153,7 @@ extern char configfilename[11];
 extern char c128_ram;
 extern unsigned char dm_apipresent;
 extern unsigned int dm_apiversion;
+extern unsigned char configversion;
 
 // keyboard buffer
 #define KBCHARS 842

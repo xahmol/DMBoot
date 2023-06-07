@@ -46,7 +46,6 @@
 #include "screen.h"
 #include "version.h"
 #include "base.h"
-#include "cat.h"
 #include "bootmenu.h"
 #include "utils.h"
 #include "ultimate_common_lib.h"
@@ -90,6 +89,12 @@ BYTE depth = 0;
 BYTE trace = 0;
 BYTE forceeight = 0;
 BYTE fastflag = 0;
+BYTE commandflag = 0;
+BYTE reuflag = 0;
+BYTE addmountflag = 0;
+BYTE runmountflag = 0;
+BYTE mountflag = 0;
+
 struct SlotStruct Slot;
 char newmenuname[36][21];
 unsigned int newmenuoldslot[36];
@@ -97,7 +102,7 @@ BYTE bootdevice;
 long secondsfromutc = 0; 
 unsigned char timeonflag = 1;
 char host[80] = "pool.ntp.org";
-char reufilename[20] = "default.reu";
+char imagename[20] = "default.reu";
 char reufilepath[60] = "/usb*/11/";
 char imageaname[20] = "";
 char imageapath[60] = "";
@@ -110,6 +115,7 @@ char* reusizelist[8] = { "128 KB","256 KB","512 KB","1 MB","2 MB","4 MB","8 MB",
 unsigned char utilbuffer[328];
 char configfilename[11] = "dmbcfgfile";
 unsigned int dm_apiversion = 0;
+unsigned char configversion = CFGVERSION;
 
 //Main program
 int main() {
@@ -304,69 +310,6 @@ unsigned char dm_getdevicetype(unsigned char id)
     }
 }
 
-//void checkdmdevices() {
-//    //Read memory for devices recognised by Device Manager Rom
-//
-//    unsigned int checksum = 0x42; // Set base value for checksum
-//    unsigned int x;
-//
-//    for (x=0; x<30; ++x) // Check for device number 0 to 30
-//    {
-//        idnr[x] = PEEK(0x0c00 + x);
-//        checksum = checksum ^ idnr[x]; // Perform bitwise exlusive OR with checksum for each memory position
-//    }
-//
-//    if (checksum == PEEK(0x0c00+31) ) // Compare calculated checsum with memory position where valid checksum would be
-//    {
-//        validdriveid = 1;
-//    }
-//    else
-//    {
-//        validdriveid = 0;
-//    }   
-//}
-//
-//const char* deviceidtext (int id)
-//{
-//    // Function to return device ID string based on ID value
-//
-//    switch( id )
-//    {
-//    //    case 0:
-//    //        return "";
-//    //    case 1:
-//    //        return "";
-//        case 2:
-//            return "u64";
-//        case 3:
-//            return "u64";
-//        case 4:
-//            return "sd2iec";
-//    //    case 5:
-//    //        return "";
-//    //    case 6:
-//    //        return "";
-//    //    case 7:
-//    //        return "";
-//        case 8:
-//            return "u64";
-//        case 40:
-//            return "1540";
-//        case 41:
-//            return "1541";
-//        case 51:
-//            return "1551";
-//        case 70:
-//            return "1570";
-//        case 71:
-//            return "1571";
-//        case 81:
-//            return "1581";
-//        default:
-//            return "";
-//    }
-//}
-
 void std_write(char * file_name)
 {
     char cmdbuf[20] = "s:";
@@ -376,25 +319,7 @@ void std_write(char * file_name)
     // Set directory of boot partition to root
     cmd(bootdevice,"cp11");             // Set working partition to autoboot partition
     cmd(bootdevice,"cd:\xff");          // Go to root of partition
-
-    // For reference: old sequential config file
-    //_filetype = 's';
-    //if(file = fopen(file_name, "w"))
-    //{
-    //    for (x=0 ; x<36 ; ++x)
-    //    {
-    //        getslotfromem(x);
-    //        fwrite(Slot.menu, sizeof(Slot.menu),1, file);
-    //        fwrite(Slot.path, sizeof(Slot.path),1, file);
-    //        fwrite(Slot.file, sizeof(Slot.file),1, file);
-    //        fwrite(Slot.cmd, sizeof(Slot.cmd),1, file);
-    //        fputc(Slot.device, file);
-    //        fputc(Slot.runboot, file);
-    //        fputc(Slot.command, file);
-    //    }
-    //    fclose(file);
-    //}
-    
+   
     // Remove old file
     strcat(cmdbuf,file_name);
     cmd(bootdevice,cmdbuf);
@@ -413,7 +338,7 @@ void std_write(char * file_name)
 		);
 
     // Save BANK 1 slots
-	cbm_k_save(0x0400, 0x0400 + (256*36));
+	cbm_k_save(0x0400, 0x0400 + (256*76));
 
     // Set load/save bank back to 0
     __asm__ (
@@ -439,24 +364,6 @@ void std_read(char * file_name)
     cmd(bootdevice,"cd:\xff");          // Go to root of partition
     cmd(bootdevice,"cp0");              // Go back to main partition
 
-    // For reference: old sequential config file
-    //_filetype = 's';
-    //if(file = fopen(file_name, "r"))
-    //{
-    //    for (x=0 ; x<36 ; ++x)
-    //    {
-    //        fread(Slot.menu, sizeof(Slot.menu),1, file);
-    //        fread(Slot.path, sizeof(Slot.path),1, file);
-    //        fread(Slot.file, sizeof(Slot.file),1, file);
-    //        fread(Slot.cmd, sizeof(Slot.cmd),1, file);
-    //        Slot.device = fgetc(file);
-    //        Slot.runboot = fgetc(file);
-    //        Slot.command = fgetc(file);
-    //        putslottoem(x);
-    //    }
-    //    fclose(file);
-    //}
-
     // Set device ID
 	cbm_k_setlfs(0, bootdevice, 0);
 
@@ -481,11 +388,25 @@ void std_read(char * file_name)
             strcpy(Slot.path,"");
             strcpy(Slot.file,"");
             strcpy(Slot.cmd,"");
-            strcpy(Slot.image,"");
+            strcpy(Slot.reu_image,"");
             Slot.device = 0;
             Slot.runboot = 0;
             Slot.command = 0;
+            Slot.cfgvs = CFGVERSION;
+            strcpy(Slot.image_a_path,"");
+            strcpy(Slot.image_a_file,"");
+            Slot.image_a_id = 0;
+            strcpy(Slot.image_b_path,"");
+            strcpy(Slot.image_b_file,"");
+            Slot.image_b_id = 0;
             putslottoem(x);
+        }
+    } else {
+        getslotfromem(0);
+        if(Slot.cfgvs < CFGVERSION) {
+            printf("/nOld configuration file format.");
+            printf("/nRun upgrade tool first.");
+            exit(1);
         }
     }
 

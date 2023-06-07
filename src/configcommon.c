@@ -71,7 +71,7 @@ void writeconfigfile(char* filename)
 
   for(x=0;x<20;x++)
   {
-    utilbuffer[x+60]=reufilename[x];
+    utilbuffer[x+60]=imagename[x];
   }
   for(x=0;x<60;x++)
   {
@@ -160,7 +160,7 @@ void readconfigfile(char* filename)
   }
   for(x=0;x<20;x++)
   {
-    reufilename[x]=uii_data[x+60];
+    imagename[x]=uii_data[x+60];
   }
   for(x=0;x<60;x++)
   {
@@ -201,7 +201,7 @@ void readconfigfile(char* filename)
   //printf("\nStatus: %s", uii_status);
 	
   // Debug messages. Uncomment for debug mode
-  //printf("\nREU file path+name: %s%s", reufilepath, reufilename);
+  //printf("\nREU file path+name: %s%s", reufilepath, imagename);
   //printf("\nImage a ID: %i",imageaid);
   //printf("\nImage b ID: %i",imagebid);
   //printf("\nImage a path+name: %s%s", imageapath, imageaname);

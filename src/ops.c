@@ -153,13 +153,12 @@ execute(char * prg, BYTE device, BYTE boot, char * command)
   // Input:
   // prg:     Filename
   // device:  device number
-  // boot:    flag to boot or execute, with or without drive set to 8
-  //          0: Run without drive set to 8
-  //          1: Boot from dir without drive set to 8
-  //          3: Run without drive set to 8
-  //          4: Boot from dir without drive set to 8
-  //          5: Run in C64 mode
-  //          Add 10 to option to execute in FAST mode
+  // boot:    Execute flag
+  //          bit 0: Run from mount
+  //          bit 1: Force 8
+  //          bit 2: Run 64
+  //          bit 3: Fast
+  //          bit 4: Boot
   // command: User defined command to be executed before execution.
   //          Empty is no command.
 
@@ -181,99 +180,46 @@ execute(char * prg, BYTE device, BYTE boot, char * command)
     numberenter++;
   }
 
-  switch (boot)
-  {
-  case 0:
-    cprintf("run\"%s\",u%i", prg, device);
-    break;
-
-  case 1:
-    cprintf("boot u%i", device);
-    break;
-
-  case 2:
-    if(dm_apipresent==1 && dm_apiversion>0)
-    {
-      dm_sethsidviaapi();
-    }
-    else
-    {
-      cputs("poke 673,8");
-      gotoxy(0,ypos+3);
-      numberenter++;
-    }
-    cprintf("run\"%s\",u%i", prg, 8);
-    break;
-  
-  case 3:
-    if(dm_apipresent==1 && dm_apiversion>0)
-    {
-      dm_sethsidviaapi();
-    }
-    else
-    {
-      cputs("poke 673,8");
-      gotoxy(0,ypos+3);
-      numberenter++;
-    }
-    cprintf("boot u%i", 8);
-    break;
-
-  case 5:
+  if(boot & EXEC_RUN64) {
+    // Run in C65 mode
     if(dm_apipresent==1 && dm_apiversion>1)
     {
       // Set filename
 	    strcpy(dm_prgnam,prg);
-
       // Set filename length
       dm_prglen = strlen(prg);
-
       // Set file drive ID
       dm_devid = device;
-
       // Print call to start in 64 mode function
       cprintf("sys %i",&dm_run64);
     }
-    break;
+  } else {
+    // Force 8 mode
+    if(boot & EXEC_FRC8) {
+      if(dm_apipresent==1 && dm_apiversion>0)
+      {
+        dm_sethsidviaapi();
+      }
+      else
+      {
+        cputs("poke 673,8");
+        gotoxy(0,ypos+3);
+        numberenter++;
+      }
+      device = 8;
+    }
 
-  case 10:
-    cprintf("fast:run\"%s\",u%i", prg, device);
-    break;
+    // Fast mode
+    if(boot & EXEC_FAST) {
+      cprintf("fast:");
+    }
 
-  case 11:
-    cprintf("fast:boot u%i", device);
-    break;
-
-  case 12:
-    if(dm_apipresent==1 && dm_apiversion>0)
-    {
-      dm_sethsidviaapi();
+    // Boot or just run
+    if(boot & EXEC_BOOT) {
+      cprintf("boot u%i", device);
+    } else {
+      cprintf("run\"%s\",u%i", prg, device);
     }
-    else
-    {
-      cputs("poke 673,8");
-      gotoxy(0,ypos+3);
-      numberenter++;
-    }
-    cprintf("run\"%s\",u%i", prg, 8);
-    break;
-  
-  case 13:
-    if(dm_apipresent==1 && dm_apiversion>0)
-    {
-      dm_sethsidviaapi();
-    }
-    else
-    {
-      cputs("poke 673,8");
-      gotoxy(0,ypos+3);
-      numberenter++;
-    }
-    cprintf("boot u%i", 8);
-    break;
-  
-  default:
-    break;
   }
 
   // put CRs in keyboard buffer
@@ -341,36 +287,69 @@ showDir(BYTE context, const BYTE mycontext)
   printDir(context, DIRX+1, DIRY);
 }
 
+void CheckMounttype(const char *dirname) {
+  register BYTE l = strlen(dirname);
+
+  mountflag = 0;
+  
+  if(dirname) {
+      if (l > 4 && dirname[l-4] == '.')
+      {
+        if ((dirname[l-3] == 'd' || dirname[l-3] == 'D') &&
+            (dirname[l-2] == '6') &&
+            (dirname[l-1] == '4'))
+          {
+            mountflag = 1;
+          }
+        if ((dirname[l-3] == 'g' || dirname[l-3] == 'G') &&
+          (dirname[l-2] == '6') &&
+          (dirname[l-1] == '4'))
+        {
+          mountflag = 1;
+        }
+        else if ((dirname[l-3] == 'd' || dirname[l-3] == 'D') &&
+                 (dirname[l-2] == '7' || dirname[l-2] == '8') &&
+                 (dirname[l-1] == '1'))
+          {
+            mountflag = 1;
+          }
+        else if ((dirname[l-3] == 'g' || dirname[l-3] == 'G') &&
+                 (dirname[l-2] == '7' || dirname[l-2] == '8') &&
+                 (dirname[l-1] == '1'))
+          {
+            mountflag = 1;
+          }
+        else if ((dirname[l-3] == 'd' || dirname[l-3] == 'D') &&
+                 (dirname[l-2] == 'n' || dirname[l-2] == 'N') &&
+                 (dirname[l-1] == 'p' || dirname[l-1] == 'P'))
+          {
+            mountflag = 1;
+          }
+        else if ((dirname[l-3] == 'r' || dirname[l-3] == 'R') &&
+                 (dirname[l-2] == 'e' || dirname[l-2] == 'E') &&
+                 (dirname[l-1] == 'u' || dirname[l-1] == 'U'))
+          {
+            mountflag = 2;
+          }
+      }
+  }
+}
+
 int
 changeDir(const BYTE context, const BYTE device, const char *dirname, const BYTE sorted)
 {
   int ret;
+  register BYTE l = strlen(dirname);
+  
   if (dirname)
     {
-      BYTE mount = 0;
-      register BYTE l = strlen(dirname);
-      if (l > 4 && dirname[l-4] == '.')
-        {
-          if ((dirname[l-3] == 'd' || dirname[l-3] == 'D') &&
-              (dirname[l-2] == '6') &&
-              (dirname[l-1] == '4'))
-            {
-              mount = 1;
-            }
-          else if ((dirname[l-3] == 'd' || dirname[l-3] == 'D') &&
-                   (dirname[l-2] == '7' || dirname[l-2] == '8') &&
-                   (dirname[l-1] == '1'))
-            {
-              mount = 1;
-            }
-          else if ((dirname[l-3] == 'd' || dirname[l-3] == 'D') &&
-                   (dirname[l-2] == 'n' || dirname[l-2] == 'N') &&
-                   (dirname[l-1] == 'p' || dirname[l-1] == 'P'))
-            {
-              mount = 1;
-            }
-        }
-      if (mount ||
+      CheckMounttype(dirname);
+      if(mountflag==2 && trace == 1) {
+        reuflag = 1;
+        strcpy(imagename,dirs[context]->selected->dirent.name );
+      }
+
+      if (mountflag==1 ||
           (l == 1 && dirname[0]==CH_LARROW) ||
           devicetype[device] == VICE || devicetype[device] == U64)
         {
@@ -624,25 +603,6 @@ textInput(const BYTE xpos, const BYTE ypos, char *str, const BYTE size)
       }
     }
   return 0;
-}
-
-void
-doDOScommand(const BYTE context, const BYTE sorted, const BYTE use_linebuffer, const char *title)
-{
-  int i;
-  const BYTE device = devices[context];
-  newscreen(title);
-  cprintf("\n\r%s on device %i:", title, device);
-  linebuffer[use_linebuffer ? SCREENW : 0] = 0;
-  i = textInput(0, 3, linebuffer, SCREENW);
-  if (i > 0)
-    {
-      i = cmd(device, linebuffer);
-      gotoxy(0,5);
-      cprintf("result: %i\n\r", i);
-      waitKey(0);
-      dirs[context] = readDir(dirs[context], device, context, sorted);
-    }
 }
 
 #pragma code-name (push, "OVERLAY1");

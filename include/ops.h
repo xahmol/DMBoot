@@ -41,6 +41,7 @@ void printDir(const BYTE context, const BYTE xpos, const BYTE ypos);
 void printElement(const BYTE context, const Directory *dir, const BYTE xpos, const BYTE ypos);
 const char* fileTypeToStr(BYTE ft);
 BYTE dosCommand(const BYTE lfn, const BYTE drive, const BYTE sec_addr, const char *cmd);
+void CheckMounttype(const char *dirname);
 int changeDir(const BYTE context, const BYTE device, const char *dirname, const BYTE sorted);
 void changeDeviceID(BYTE device);
 void drawDirFrame(BYTE context, const BYTE mycontext);
