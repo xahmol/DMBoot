@@ -6,5 +6,6 @@ void geosboot_main();
 void time_main();
 void writeconfigfile(char* filename);
 void readconfigfile(char* filename);
+void information();
 
 #endif

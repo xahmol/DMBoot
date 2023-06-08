@@ -46,6 +46,7 @@
 #include "ultimate_common_lib.h"
 #include "ultimate_time_lib.h"
 #include "defines.h"
+#include "version.h"
 #include "configcommon.h"
 #include "main.h"
 #include "ops.h"
@@ -383,6 +384,35 @@ void editgeosconfig()
 
         }
     } while (key != CH_F7);
+}
+
+void information()
+{
+    // Routine for version information and credits
+
+    clrscr();
+    config_headertext("Information and credits");
+
+    cputs("\n\rDMBoot 128:\n\r");
+    cputs("Device Manager Boot Menu for the C128\n\n\r");
+    cprintf("Version: v%i%i-", VERSION_MAJOR, VERSION_MINOR);
+    cprintf("%c%c%c%c", BUILD_YEAR_CH0, BUILD_YEAR_CH1, BUILD_YEAR_CH2, BUILD_YEAR_CH3);
+    cprintf("%c%c%c%c-", BUILD_MONTH_CH0, BUILD_MONTH_CH1, BUILD_DAY_CH0, BUILD_DAY_CH1);
+    cprintf("%c%c%c%c\n\r", BUILD_HOUR_CH0, BUILD_HOUR_CH1, BUILD_MIN_CH0, BUILD_MIN_CH1);
+    cputs("Written 2020-2023 by Xander Mol.\n\n\r");
+    cputs("Based on DraBrowse:\n\r");
+    cputs("DraBrowse is a simple file browser.\n\r");
+    cputs("Original 2009 by Sascha Bader.\n\r");
+    cputs("Used version adapted by Dirk Jagdmann.\n\n\r");
+    cputs("Requires and made possible by:\n\n\r");
+    cputs("The C128 Device Manager ROM,\n\r");
+    cputs("Created by Bart van Leeuwen.\n\n\r");
+    cputs("The Ultimate II+ cartridge,\n\r");
+    cputs("Created by Gideon Zweijtzer.\n\n\r");
+
+    cputs("Press a key to continue.");
+
+    getkey(2);    
 }
 
 void config_main(void)

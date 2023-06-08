@@ -1,0 +1,674 @@
+Modules list:
+-------------
+dmb-confupd-3-4.o:
+    CODE              Offs=000000  Size=00062C  Align=00001  Fill=0000
+    RODATA            Offs=000000  Size=000124  Align=00001  Fill=0000
+    BSS               Offs=000000  Size=000211  Align=00001  Fill=0000
+c128-ram.o:
+    CODE              Offs=00062C  Size=00012B  Align=00001  Fill=0000
+    BSS               Offs=000211  Size=000102  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(_hextab.o):
+    RODATA            Offs=000124  Size=000010  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(_longminstr.o):
+    RODATA            Offs=000134  Size=00000C  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(_oserror.o):
+    BSS               Offs=000313  Size=000001  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(_printf.o):
+    CODE              Offs=000757  Size=0003A5  Align=00001  Fill=0000
+    BSS               Offs=000314  Size=00002B  Align=00001  Fill=0000
+    DATA              Offs=000000  Size=000003  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(addeqsp.o):
+    CODE              Offs=000AFC  Size=000011  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(addysp.o):
+    CODE              Offs=000B0D  Size=00000E  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(axlong.o):
+    CODE              Offs=000B1B  Size=00000D  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(c_close.o):
+    CODE              Offs=000B28  Size=000004  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(c_load.o):
+    CODE              Offs=000B2C  Size=00001D  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(c_open.o):
+    CODE              Offs=000B49  Size=000009  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(c_save.o):
+    CODE              Offs=000B52  Size=000016  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(c_setlfs.o):
+    CODE              Offs=000B68  Size=00000E  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(c_setnam.o):
+    CODE              Offs=000B76  Size=000013  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(callmain.o):
+    CODE              Offs=000B89  Size=000017  Align=00001  Fill=0000
+    DATA              Offs=000003  Size=000004  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(cbm_close.o):
+/mnt/d/retro/cc65/lib/c128.lib(cbm_open.o):
+    CODE              Offs=000BA0  Size=000016  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(cbm_read.o):
+    CODE              Offs=000BB6  Size=00005B  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(clrscr.o):
+/mnt/d/retro/cc65/lib/c128.lib(condes.o):
+    CODE              Offs=000C11  Size=00000C  Align=00001  Fill=0000
+    DATA              Offs=000007  Size=000025  Align=00001  Fill=0000
+    ONCE              Offs=000000  Size=00000C  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(conio.o):
+/mnt/d/retro/cc65/lib/c128.lib(cprintf.o):
+    CODE              Offs=000C1D  Size=00002A  Align=00001  Fill=0000
+    BSS               Offs=00033F  Size=000001  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(cputc.o):
+    CODE              Offs=000C47  Size=000049  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(cputs.o):
+    CODE              Offs=000C90  Size=000023  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(crt0.o):
+    BSS               Offs=000340  Size=000002  Align=00001  Fill=0000
+    STARTUP           Offs=000000  Size=000051  Align=00001  Fill=0000
+    INIT              Offs=000000  Size=00001A  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(ctype.o):
+    RODATA            Offs=000140  Size=00008B  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(ctypemask.o):
+    CODE              Offs=000CB3  Size=00001E  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(curdevice.o):
+    CODE              Offs=000CD1  Size=000006  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(decaxy.o):
+    CODE              Offs=000CD7  Size=000009  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(decsp1.o):
+    CODE              Offs=000CE0  Size=000009  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(decsp2.o):
+    CODE              Offs=000CE9  Size=00000D  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(decsp4.o):
+    CODE              Offs=000CF6  Size=00000D  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(decsp6.o):
+    CODE              Offs=000D03  Size=00000D  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(devnum.o):
+/mnt/d/retro/cc65/lib/c128.lib(em-kernel.o):
+    RODATA            Offs=0001CB  Size=000051  Align=00001  Fill=0000
+    BSS               Offs=000342  Size=000002  Align=00001  Fill=0000
+    DATA              Offs=00002C  Size=000018  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(em_commit.o):
+/mnt/d/retro/cc65/lib/c128.lib(em_map.o):
+/mnt/d/retro/cc65/lib/c128.lib(em_use.o):
+/mnt/d/retro/cc65/lib/c128.lib(exehdr.o):
+    EXEHDR            Offs=000000  Size=00000C  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(filevars.o):
+    INIT              Offs=00001A  Size=000001  Align=00001  Fill=0000
+    ONCE              Offs=00000C  Size=00000C  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(gotoxy.o):
+    CODE              Offs=000D10  Size=00000D  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(incax1.o):
+    CODE              Offs=000D1D  Size=000007  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(incaxy.o):
+    CODE              Offs=000D24  Size=00000B  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(incsp1.o):
+    CODE              Offs=000D2F  Size=000007  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(incsp2.o):
+    CODE              Offs=000D36  Size=000016  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(incsp3.o):
+    CODE              Offs=000D4C  Size=000005  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(incsp4.o):
+    CODE              Offs=000D51  Size=000005  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(incsp5.o):
+    CODE              Offs=000D56  Size=000005  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(incsp7.o):
+    CODE              Offs=000D5B  Size=000005  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(kernal.o):
+/mnt/d/retro/cc65/lib/c128.lib(ldaxsp.o):
+    CODE              Offs=000D60  Size=000009  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(leaaxsp.o):
+    CODE              Offs=000D69  Size=00000C  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(libref.o):
+/mnt/d/retro/cc65/lib/c128.lib(lneg.o):
+    CODE              Offs=000D75  Size=00001E  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(loadaddr.o):
+    LOADADDR          Offs=000000  Size=000002  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(lpush.o):
+    CODE              Offs=000D93  Size=000021  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(ltoa.o):
+    CODE              Offs=000DB4  Size=000095  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(memset.o):
+    CODE              Offs=000E49  Size=00005D  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(mulax10.o):
+    CODE              Offs=000EA6  Size=000019  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(popa.o):
+    CODE              Offs=000EBF  Size=00000C  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(popptr1.o):
+    CODE              Offs=000ECB  Size=00000E  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(push1.o):
+    CODE              Offs=000ED9  Size=000005  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(pusha.o):
+    CODE              Offs=000EDE  Size=000016  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(pushax.o):
+    CODE              Offs=000EF4  Size=00001A  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(pushwsp.o):
+    CODE              Offs=000F0E  Size=00001C  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(return0.o):
+    CODE              Offs=000F2A  Size=000004  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(status.o):
+/mnt/d/retro/cc65/lib/c128.lib(staxsp.o):
+    CODE              Offs=000F2E  Size=00000B  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(strcat.o):
+    CODE              Offs=000F39  Size=000031  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(strcpy.o):
+    CODE              Offs=000F6A  Size=00001F  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(strlen.o):
+    CODE              Offs=000F89  Size=000016  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(strlower.o):
+    CODE              Offs=000F9F  Size=000027  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(subysp.o):
+    CODE              Offs=000FC6  Size=00000D  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(vcprintf.o):
+    CODE              Offs=000FD3  Size=000078  Align=00001  Fill=0000
+    DATA              Offs=000044  Size=000008  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(zerobss.o):
+    CODE              Offs=00104B  Size=000023  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(zeropage.o):
+    ZEROPAGE          Offs=000000  Size=00001A  Align=00001  Fill=0000
+
+
+Segment list:
+-------------
+Name                   Start     End    Size  Align
+----------------------------------------------------
+ZEROPAGE              000002  00001B  00001A  00001
+LOADADDR              001BFF  001C00  000002  00001
+EXEHDR                001C01  001C0C  00000C  00001
+STARTUP               001C0D  001C5D  000051  00001
+ONCE                  001C5E  001C77  00001A  00001
+CODE                  001C78  002CE5  00106E  00001
+RODATA                002CE6  002F01  00021C  00001
+DATA                  002F02  002F4D  00004C  00001
+INIT                  002F4E  002F68  00001B  00001
+BSS                   002F69  0032AC  000344  00001
+
+
+Exports list by name:
+---------------------
+BASIN                     00FFCF RLA    BSOUT                     00FFD2 RLA    
+CHKIN                     00FFC6 RLA    CLOSE                     00FFC3 RLA    
+CLRCH                     00FFCC RLA    CURS_X                    0000EC RLZ    
+CURS_Y                    0000EB RLZ    LOAD                      00FFD5 RLA    
+OPEN                      00FFC0 RLA    READST                    00FFB7 RLA    
+SAVE                      00FFD8 RLA    SETLFS                    00FFBA RLA    
+SETNAM                    00FFBD RLA    ST                        000090 RLZ    
+__BSS_RUN__               002F69 RLA    __BSS_SIZE__              000344 REA    
+__CONSTRUCTOR_COUNT__     000001 REA    __CONSTRUCTOR_TABLE__     001C76 RLA    
+__DESTRUCTOR_COUNT__      000000 REA    __DESTRUCTOR_TABLE__      002F02 RLA    
+__EXEHDR__                000001 REA    __LOADADDR__              000001 REA    
+__MAIN_SIZE__             009BF3 REA    __MAIN_START__            001C0D RLA    
+__STACKSIZE__             000800 REA    __STARTUP__               000001 REA    
+__ZP_START__              000002 RLA    __bzero                   002AC1 RLA    
+__ctype                   002E26 RLA    __ctypeidx                002E31 RLA    
+__hextab                  002E0A RLA    __longminstr              002E1A RLA    
+__oserror                 00327C RLA    __printf                  0024C2 RLA    
+_c128_ram                 0022A4 RLA    _cbm_close                0027A0 REA    
+_cbm_k_close              0027A0 RLA    _cbm_k_load               0027A4 RLA    
+_cbm_k_open               0027C1 RLA    _cbm_k_save               0027CA RLA    
+_cbm_k_setlfs             0027E0 RLA    _cbm_k_setnam             0027EE RLA    
+_cbm_open                 002818 RLA    _cbm_read                 00282E RLA    
+_clrscr                   00C142 REA    _cprintf                  002895 RLA    
+_cputc                    0028C4 RLA    _cputs                    002912 RLA    
+_em_commit                002F3D REA    _em_install               002EB5 RLA    
+_em_map                   002F37 REA    _em_uninstall             002EF5 RLA    
+_em_use                   002F3A REA    _exit                     001C42 RLA    
+_getcurrentdevice         002949 RLA    _gotoxy                   00298B RLA    
+_ltoa                     002A44 RLA    _main                     0020DD RLA    
+_strcat                   002BB1 RLA    _strcpy                   002BE2 RLA    
+_strlen                   002C01 RLA    _strlower                 002C17 RLA    
+_ultoa                    002A85 RLA    _vcprintf                 002C93 RLA    
+addeq0sp                  002774 RLA    addeqysp                  002776 RLA    
+addysp                    002786 RLA    axlong                    002793 RLA    
+axulong                   002799 RLA    callmain                  002801 RLA    
+ctypemaskdirect           00292F RLA    curunit                   002F68 RLA    
+decaxy                    00294F RLA    decsp1                    002958 RLA    
+decsp2                    002961 RLA    decsp4                    00296E RLA    
+decsp6                    00297B RLA    devnum                    0000BA RLZ    
+donelib                   002889 RLA    em_libref                 001C42 RLA    
+emd_commit                002F3D RLA    emd_map                   002F37 RLA    
+emd_use                   002F3A RLA    gotoxy                    002988 RLA    
+incax1                    002995 RLA    incaxy                    00299E RLA    
+incsp1                    0029A7 RLA    incsp2                    0029B6 RLA    
+incsp3                    0029C4 RLA    incsp4                    0029C9 RLA    
+incsp5                    0029CE RLA    incsp7                    0029D3 RLA    
+initcurunit               001C6A  LAI   initlib                   001C5E RLA    
+ldax0sp                   0029D8 RLA    ldaxysp                   0029DA RLA    
+leaa0sp                   0029E1 RLA    mulax10                   002B1E RLA    
+negeax                    0029ED RLA    plot                      002900 RLA    
+popa                      002B37 RLA    popax                     0029AE RLA    
+popptr1                   002B43 RLA    ptr1                      00000A RLZ    
+ptr2                      00000C RLZ    ptr3                      00000E RLZ    
+push1                     002B51 RLA    pusha                     002B5A RLA    
+pusha0                    002B6E RLA    pushax                    002B70 RLA    
+pusheax                   002A14 RLA    pushwysp                  002B88 RLA    
+regbank                   000016 RLZ    return0                   002BA2 RLA    
+sp                        000002 RLZ    sreg                      000004 RLZ    
+stax0sp                   002BA6 RLA    staxysp                   002BA8 RLA    
+subysp                    002C3E RLA    tmp1                      000012 RLZ    
+tmp3                      000014 RLZ    zerobss                   002CC3 RLA    
+
+
+
+Exports list by value:
+----------------------
+__DESTRUCTOR_COUNT__      000000 REA    __CONSTRUCTOR_COUNT__     000001 REA    
+__EXEHDR__                000001 REA    __LOADADDR__              000001 REA    
+__STARTUP__               000001 REA    __ZP_START__              000002 RLA    
+sp                        000002 RLZ    sreg                      000004 RLZ    
+ptr1                      00000A RLZ    ptr2                      00000C RLZ    
+ptr3                      00000E RLZ    tmp1                      000012 RLZ    
+tmp3                      000014 RLZ    regbank                   000016 RLZ    
+ST                        000090 RLZ    devnum                    0000BA RLZ    
+CURS_Y                    0000EB RLZ    CURS_X                    0000EC RLZ    
+__BSS_SIZE__              000344 REA    __STACKSIZE__             000800 REA    
+__MAIN_START__            001C0D RLA    _exit                     001C42 RLA    
+em_libref                 001C42 RLA    initlib                   001C5E RLA    
+initcurunit               001C6A  LAI   __CONSTRUCTOR_TABLE__     001C76 RLA    
+_main                     0020DD RLA    _c128_ram                 0022A4 RLA    
+__printf                  0024C2 RLA    addeq0sp                  002774 RLA    
+addeqysp                  002776 RLA    addysp                    002786 RLA    
+axlong                    002793 RLA    axulong                   002799 RLA    
+_cbm_close                0027A0 REA    _cbm_k_close              0027A0 RLA    
+_cbm_k_load               0027A4 RLA    _cbm_k_open               0027C1 RLA    
+_cbm_k_save               0027CA RLA    _cbm_k_setlfs             0027E0 RLA    
+_cbm_k_setnam             0027EE RLA    callmain                  002801 RLA    
+_cbm_open                 002818 RLA    _cbm_read                 00282E RLA    
+donelib                   002889 RLA    _cprintf                  002895 RLA    
+_cputc                    0028C4 RLA    plot                      002900 RLA    
+_cputs                    002912 RLA    ctypemaskdirect           00292F RLA    
+_getcurrentdevice         002949 RLA    decaxy                    00294F RLA    
+decsp1                    002958 RLA    decsp2                    002961 RLA    
+decsp4                    00296E RLA    decsp6                    00297B RLA    
+gotoxy                    002988 RLA    _gotoxy                   00298B RLA    
+incax1                    002995 RLA    incaxy                    00299E RLA    
+incsp1                    0029A7 RLA    popax                     0029AE RLA    
+incsp2                    0029B6 RLA    incsp3                    0029C4 RLA    
+incsp4                    0029C9 RLA    incsp5                    0029CE RLA    
+incsp7                    0029D3 RLA    ldax0sp                   0029D8 RLA    
+ldaxysp                   0029DA RLA    leaa0sp                   0029E1 RLA    
+negeax                    0029ED RLA    pusheax                   002A14 RLA    
+_ltoa                     002A44 RLA    _ultoa                    002A85 RLA    
+__bzero                   002AC1 RLA    mulax10                   002B1E RLA    
+popa                      002B37 RLA    popptr1                   002B43 RLA    
+push1                     002B51 RLA    pusha                     002B5A RLA    
+pusha0                    002B6E RLA    pushax                    002B70 RLA    
+pushwysp                  002B88 RLA    return0                   002BA2 RLA    
+stax0sp                   002BA6 RLA    staxysp                   002BA8 RLA    
+_strcat                   002BB1 RLA    _strcpy                   002BE2 RLA    
+_strlen                   002C01 RLA    _strlower                 002C17 RLA    
+subysp                    002C3E RLA    _vcprintf                 002C93 RLA    
+zerobss                   002CC3 RLA    __hextab                  002E0A RLA    
+__longminstr              002E1A RLA    __ctype                   002E26 RLA    
+__ctypeidx                002E31 RLA    _em_install               002EB5 RLA    
+_em_uninstall             002EF5 RLA    __DESTRUCTOR_TABLE__      002F02 RLA    
+_em_map                   002F37 REA    emd_map                   002F37 RLA    
+_em_use                   002F3A REA    emd_use                   002F3A RLA    
+_em_commit                002F3D REA    emd_commit                002F3D RLA    
+curunit                   002F68 RLA    __BSS_RUN__               002F69 RLA    
+__oserror                 00327C RLA    __MAIN_SIZE__             009BF3 REA    
+_clrscr                   00C142 REA    READST                    00FFB7 RLA    
+SETLFS                    00FFBA RLA    SETNAM                    00FFBD RLA    
+OPEN                      00FFC0 RLA    CLOSE                     00FFC3 RLA    
+CHKIN                     00FFC6 RLA    CLRCH                     00FFCC RLA    
+BASIN                     00FFCF RLA    BSOUT                     00FFD2 RLA    
+LOAD                      00FFD5 RLA    SAVE                      00FFD8 RLA    
+
+
+
+Imports list:
+-------------
+BASIN (kernal.o):
+    cbm_read.o                cbm/cbm.inc:47
+BSOUT (kernal.o):
+    crt0.o                    c128/crt0.s:10
+CHKIN (kernal.o):
+    cbm_read.o                cbm/cbm.inc:44
+CLOSE (kernal.o):
+    c_close.o                 cbm/cbm.inc:36
+CLRCH (kernal.o):
+    cbm_read.o                cbm/cbm.inc:46
+CURS_X (conio.o):
+    gotoxy.o                  cbm/gotoxy.s:9
+CURS_Y (conio.o):
+    gotoxy.o                  cbm/gotoxy.s:9
+LOAD (kernal.o):
+    c_load.o                  cbm/cbm.inc:37
+OPEN (kernal.o):
+    c_open.o                  cbm/cbm.inc:35
+READST (kernal.o):
+    cbm_read.o                cbm/cbm.inc:32
+SAVE (kernal.o):
+    c_save.o                  cbm/cbm.inc:38
+SETLFS (kernal.o):
+    c_setlfs.o                cbm/cbm.inc:33
+SETNAM (kernal.o):
+    c_setnam.o                cbm/cbm.inc:34
+ST (status.o):
+    crt0.o                    c128/crt0.s:12
+__BSS_RUN__ ([linker generated]):
+    zerobss.o                 common/zerobss.s:8
+__BSS_SIZE__ ([linker generated]):
+    zerobss.o                 common/zerobss.s:8
+__CONSTRUCTOR_COUNT__ ([linker generated]):
+    condes.o                  runtime/condes.s:18
+__CONSTRUCTOR_TABLE__ ([linker generated]):
+    condes.o                  runtime/condes.s:18
+__DESTRUCTOR_COUNT__ ([linker generated]):
+    condes.o                  runtime/condes.s:19
+__DESTRUCTOR_TABLE__ ([linker generated]):
+    condes.o                  runtime/condes.s:19
+__EXEHDR__ (exehdr.o):
+    [linker generated]        /mnt/d/retro/cc65/cfg/c128.cfg:3
+__LOADADDR__ (loadaddr.o):
+    [linker generated]        /mnt/d/retro/cc65/cfg/c128.cfg:2
+__MAIN_SIZE__ ([linker generated]):
+    crt0.o                    c128/crt0.s:11
+__MAIN_START__ ([linker generated]):
+    crt0.o                    c128/crt0.s:11
+__STACKSIZE__ ([linker generated]):
+    crt0.o                    c128/crt0.s:11
+    [linker generated]        /mnt/d/retro/cc65/cfg/c128.cfg:10
+__STARTUP__ (crt0.o):
+    dmb-confupd-3-4.o         src/dmb-confupd-3-4.s:13
+__ZP_START__ ([linker generated]):
+    c128-ram.o                c128-ram.s:312
+__bzero (memset.o):
+    dmb-confupd-3-4.o         src/dmb-confupd-3-4.s:878
+__ctype (ctype.o):
+    ctypemask.o               common/ctypemask.s:23
+__ctypeidx (ctype.o):
+    ctypemask.o               common/ctypemask.s:24
+__hextab (_hextab.o):
+    ltoa.o                    common/ltoa.s:10
+__longminstr (_longminstr.o):
+    ltoa.o                    common/ltoa.s:10
+__oserror (_oserror.o):
+    cbm_read.o                cbm/cbm_read.s:44
+    cbm_open.o                cbm/cbm_open.s:24
+    c_load.o                  cbm/c_load.s:10
+    dmb-confupd-3-4.o         src/dmb-confupd-3-4.s:29
+__printf (_printf.o):
+    vcprintf.o                conio/vcprintf.s:9
+_c128_ram (c128-ram.o):
+    dmb-confupd-3-4.o         src/dmb-confupd-3-4.s:38
+_cbm_close (cbm_close.o):
+    dmb-confupd-3-4.o         src/dmb-confupd-3-4.s:22
+_cbm_k_close (c_close.o):
+    cbm_close.o               cbm/cbm_close.s:7
+_cbm_k_load (c_load.o):
+    dmb-confupd-3-4.o         src/dmb-confupd-3-4.s:17
+_cbm_k_open (c_open.o):
+    cbm_open.o                cbm/cbm_open.s:23
+_cbm_k_save (c_save.o):
+    dmb-confupd-3-4.o         src/dmb-confupd-3-4.s:18
+_cbm_k_setlfs (c_setlfs.o):
+    cbm_open.o                cbm/cbm_open.s:23
+    dmb-confupd-3-4.o         src/dmb-confupd-3-4.s:19
+_cbm_k_setnam (c_setnam.o):
+    cbm_open.o                cbm/cbm_open.s:23
+    dmb-confupd-3-4.o         src/dmb-confupd-3-4.s:20
+_cbm_open (cbm_open.o):
+    dmb-confupd-3-4.o         src/dmb-confupd-3-4.s:21
+_cbm_read (cbm_read.o):
+    dmb-confupd-3-4.o         src/dmb-confupd-3-4.s:23
+_clrscr (clrscr.o):
+    dmb-confupd-3-4.o         src/dmb-confupd-3-4.s:24
+_cprintf (cprintf.o):
+    dmb-confupd-3-4.o         src/dmb-confupd-3-4.s:27
+_cputc (cputc.o):
+    vcprintf.o                conio/vcprintf.s:9
+    cputs.o                   conio/cputs.s:9
+_cputs (cputs.o):
+    dmb-confupd-3-4.o         src/dmb-confupd-3-4.s:26
+_em_commit (em_commit.o):
+    dmb-confupd-3-4.o         src/dmb-confupd-3-4.s:35
+_em_install (em-kernel.o):
+    dmb-confupd-3-4.o         src/dmb-confupd-3-4.s:31
+_em_map (em_map.o):
+    dmb-confupd-3-4.o         src/dmb-confupd-3-4.s:33
+_em_uninstall (em-kernel.o):
+    dmb-confupd-3-4.o         src/dmb-confupd-3-4.s:32
+_em_use (em_use.o):
+    dmb-confupd-3-4.o         src/dmb-confupd-3-4.s:34
+_exit (crt0.o):
+    libref.o                  c128/libref.s:11
+    dmb-confupd-3-4.o         src/dmb-confupd-3-4.s:28
+_getcurrentdevice (curdevice.o):
+    dmb-confupd-3-4.o         src/dmb-confupd-3-4.s:30
+_gotoxy (gotoxy.o):
+    dmb-confupd-3-4.o         src/dmb-confupd-3-4.s:25
+_ltoa (ltoa.o):
+    _printf.o                 common/_printf.s:12
+_main (dmb-confupd-3-4.o):
+    callmain.o                runtime/callmain.s:11
+_strcat (strcat.o):
+    dmb-confupd-3-4.o         src/dmb-confupd-3-4.s:14
+_strcpy (strcpy.o):
+    dmb-confupd-3-4.o         src/dmb-confupd-3-4.s:15
+_strlen (strlen.o):
+    _printf.o                 common/_printf.s:13
+_strlower (strlower.o):
+    _printf.o                 common/_printf.s:13
+_ultoa (ltoa.o):
+    _printf.o                 common/_printf.s:12
+_vcprintf (vcprintf.o):
+    cprintf.o                 conio/cprintf.s:8
+addeq0sp (addeqsp.o):
+    dmb-confupd-3-4.o         src/dmb-confupd-3-4.s:878
+addeqysp (addeqsp.o):
+    dmb-confupd-3-4.o         src/dmb-confupd-3-4.s:878
+addysp (addysp.o):
+    incsp7.o                  runtime/incsp7.s:8
+    incsp5.o                  runtime/incsp5.s:8
+    incsp4.o                  runtime/incsp4.s:8
+    incsp3.o                  runtime/incsp3.s:8
+    cprintf.o                 conio/cprintf.s:8
+    dmb-confupd-3-4.o         src/dmb-confupd-3-4.s:878
+axlong (axlong.o):
+    _printf.o                 common/_printf.s:11
+axulong (axlong.o):
+    _printf.o                 common/_printf.s:11
+callmain (callmain.o):
+    crt0.o                    c128/crt0.s:9
+ctypemaskdirect (ctypemask.o):
+    strlower.o                common/strlower.s:14
+curunit (filevars.o):
+    curdevice.o               cbm/curdevice.s:8
+decaxy (decaxy.o):
+    dmb-confupd-3-4.o         src/dmb-confupd-3-4.s:878
+decsp1 (decsp1.o):
+    dmb-confupd-3-4.o         src/dmb-confupd-3-4.s:878
+    dmb-confupd-3-4.o         src/dmb-confupd-3-4.s:878
+decsp2 (decsp2.o):
+    dmb-confupd-3-4.o         src/dmb-confupd-3-4.s:878
+    dmb-confupd-3-4.o         src/dmb-confupd-3-4.s:878
+    dmb-confupd-3-4.o         src/dmb-confupd-3-4.s:878
+decsp4 (decsp4.o):
+    lpush.o                   runtime/lpush.s:12
+decsp6 (decsp6.o):
+    _printf.o                 common/_printf.s:11
+devnum (devnum.o):
+    filevars.o                cbm/filevars.s:9
+donelib (condes.o):
+    crt0.o                    c128/crt0.s:7
+em_libref (libref.o):
+    em-kernel.o               em/em-kernel.s:7
+emd_commit (em-kernel.o):
+    em_commit.o               /mnt/d/retro/cc65/asminc/em-kernel.inc:84
+emd_map (em-kernel.o):
+    em_map.o                  /mnt/d/retro/cc65/asminc/em-kernel.inc:82
+emd_use (em-kernel.o):
+    em_use.o                  /mnt/d/retro/cc65/asminc/em-kernel.inc:83
+gotoxy (gotoxy.o):
+    cputc.o                   c128/cputc.s:11
+    cputs.o                   conio/cputs.s:9
+incax1 (incax1.o):
+    dmb-confupd-3-4.o         src/dmb-confupd-3-4.s:878
+incaxy (incaxy.o):
+    dmb-confupd-3-4.o         src/dmb-confupd-3-4.s:878
+    dmb-confupd-3-4.o         src/dmb-confupd-3-4.s:878
+incsp1 (incsp1.o):
+    dmb-confupd-3-4.o         src/dmb-confupd-3-4.s:878
+incsp2 (incsp2.o):
+    popptr1.o                 runtime/popptr1.s:8
+incsp3 (incsp3.o):
+    dmb-confupd-3-4.o         src/dmb-confupd-3-4.s:878
+incsp4 (incsp4.o):
+    dmb-confupd-3-4.o         src/dmb-confupd-3-4.s:878
+incsp5 (incsp5.o):
+    dmb-confupd-3-4.o         src/dmb-confupd-3-4.s:878
+    dmb-confupd-3-4.o         src/dmb-confupd-3-4.s:878
+incsp7 (incsp7.o):
+    dmb-confupd-3-4.o         src/dmb-confupd-3-4.s:878
+initlib (condes.o):
+    crt0.o                    c128/crt0.s:7
+ldax0sp (ldaxsp.o):
+    dmb-confupd-3-4.o         src/dmb-confupd-3-4.s:878
+    dmb-confupd-3-4.o         src/dmb-confupd-3-4.s:878
+ldaxysp (ldaxsp.o):
+    dmb-confupd-3-4.o         src/dmb-confupd-3-4.s:878
+    dmb-confupd-3-4.o         src/dmb-confupd-3-4.s:878
+    dmb-confupd-3-4.o         src/dmb-confupd-3-4.s:878
+    dmb-confupd-3-4.o         src/dmb-confupd-3-4.s:878
+    dmb-confupd-3-4.o         src/dmb-confupd-3-4.s:878
+    dmb-confupd-3-4.o         src/dmb-confupd-3-4.s:878
+leaa0sp (leaaxsp.o):
+    dmb-confupd-3-4.o         src/dmb-confupd-3-4.s:878
+mulax10 (mulax10.o):
+    dmb-confupd-3-4.o         src/dmb-confupd-3-4.s:878
+negeax (lneg.o):
+    ltoa.o                    common/ltoa.s:9
+plot (cputc.o):
+    gotoxy.o                  cbm/gotoxy.s:8
+popa (popa.o):
+    gotoxy.o                  cbm/gotoxy.s:8
+    cbm_read.o                cbm/cbm_read.s:43
+    cbm_open.o                cbm/cbm_open.s:22
+    c_setlfs.o                cbm/c_setlfs.s:12
+    c_load.o                  cbm/c_load.s:11
+popax (incsp2.o):
+    ltoa.o                    common/ltoa.s:9
+    _printf.o                 common/_printf.s:11
+    vcprintf.o                conio/vcprintf.s:8
+    strcpy.o                  common/strcpy.s:8
+    strcat.o                  common/strcat.s:9
+    memset.o                  common/memset.s:19
+    cbm_read.o                cbm/cbm_read.s:43
+popptr1 (popptr1.o):
+    ltoa.o                    common/ltoa.s:9
+    vcprintf.o                conio/vcprintf.s:8
+    c_save.o                  cbm/c_save.s:10
+ptr1 (zeropage.o):
+    strlower.o                common/strlower.s:13
+    ltoa.o                    common/ltoa.s:11
+    _printf.o                 /mnt/d/retro/cc65/asminc/zeropage.inc:12
+    zerobss.o                 common/zerobss.s:9
+    vcprintf.o                conio/vcprintf.s:10
+    strcpy.o                  common/strcpy.s:9
+    strcat.o                  common/strcat.s:10
+    popptr1.o                 runtime/popptr1.s:9
+    mulax10.o                 runtime/mulax10.s:9
+    memset.o                  common/memset.s:20
+    em-kernel.o               em/em-kernel.s:8
+    cputs.o                   conio/cputs.s:10
+    cprintf.o                 conio/cprintf.s:9
+    cbm_read.o                cbm/cbm_read.s:42
+    c_setnam.o                cbm/c_setnam.s:10
+    c_save.o                  cbm/c_save.s:11
+    c_load.o                  cbm/c_load.s:12
+    dmb-confupd-3-4.o         src/dmb-confupd-3-4.s:11
+ptr2 (zeropage.o):
+    strlower.o                common/strlower.s:13
+    strlen.o                  common/strlen.s:12
+    ltoa.o                    common/ltoa.s:11
+    _printf.o                 /mnt/d/retro/cc65/asminc/zeropage.inc:12
+    vcprintf.o                conio/vcprintf.s:10
+    strcpy.o                  common/strcpy.s:9
+    strcat.o                  common/strcat.s:10
+    memset.o                  common/memset.s:20
+    cbm_read.o                cbm/cbm_read.s:42
+ptr3 (zeropage.o):
+    ltoa.o                    common/ltoa.s:11
+    vcprintf.o                conio/vcprintf.s:10
+    memset.o                  common/memset.s:20
+    cbm_read.o                cbm/cbm_read.s:42
+push1 (push1.o):
+    _printf.o                 common/_printf.s:11
+pusha (pusha.o):
+    dmb-confupd-3-4.o         src/dmb-confupd-3-4.s:878
+    dmb-confupd-3-4.o         src/dmb-confupd-3-4.s:878
+    dmb-confupd-3-4.o         src/dmb-confupd-3-4.s:878
+    dmb-confupd-3-4.o         src/dmb-confupd-3-4.s:878
+    dmb-confupd-3-4.o         src/dmb-confupd-3-4.s:878
+    dmb-confupd-3-4.o         src/dmb-confupd-3-4.s:878
+pusha0 (pushax.o):
+    push1.o                   runtime/push1.s:8
+    dmb-confupd-3-4.o         src/dmb-confupd-3-4.s:878
+pushax (pushax.o):
+    callmain.o                runtime/callmain.s:11
+    _printf.o                 common/_printf.s:11
+    vcprintf.o                conio/vcprintf.s:8
+    cprintf.o                 conio/cprintf.s:8
+    dmb-confupd-3-4.o         src/dmb-confupd-3-4.s:878
+    dmb-confupd-3-4.o         src/dmb-confupd-3-4.s:878
+    dmb-confupd-3-4.o         src/dmb-confupd-3-4.s:878
+    dmb-confupd-3-4.o         src/dmb-confupd-3-4.s:878
+    dmb-confupd-3-4.o         src/dmb-confupd-3-4.s:878
+    dmb-confupd-3-4.o         src/dmb-confupd-3-4.s:878
+    dmb-confupd-3-4.o         src/dmb-confupd-3-4.s:878
+pusheax (lpush.o):
+    _printf.o                 common/_printf.s:11
+pushwysp (pushwsp.o):
+    dmb-confupd-3-4.o         src/dmb-confupd-3-4.s:878
+regbank (zeropage.o):
+    _printf.o                 /mnt/d/retro/cc65/asminc/zeropage.inc:14
+return0 (return0.o):
+    em-kernel.o               em/em-kernel.s:7
+sp (zeropage.o):
+    decsp4.o                  runtime/decsp4.s:8
+    lpush.o                   runtime/lpush.s:13
+    decsp6.o                  runtime/decsp6.s:8
+    _printf.o                 /mnt/d/retro/cc65/asminc/zeropage.inc:11
+    vcprintf.o                conio/vcprintf.s:10
+    subysp.o                  runtime/subysp.s:9
+    staxsp.o                  runtime/staxsp.s:8
+    pushwsp.o                 runtime/pushwsp.s:8
+    pushax.o                  runtime/pushax.s:8
+    pusha.o                   runtime/pusha.s:8
+    popptr1.o                 runtime/popptr1.s:9
+    popa.o                    runtime/popa.s:8
+    memset.o                  common/memset.s:20
+    leaaxsp.o                 runtime/leaaxsp.s:8
+    ldaxsp.o                  runtime/ldaxsp.s:8
+    incsp2.o                  runtime/incsp2.s:8
+    incsp1.o                  runtime/incsp1.s:8
+    decsp2.o                  runtime/decsp2.s:8
+    decsp1.o                  runtime/decsp1.s:8
+    crt0.o                    /mnt/d/retro/cc65/asminc/zeropage.inc:11
+    cprintf.o                 conio/cprintf.s:9
+    addysp.o                  runtime/addysp.s:8
+    addeqsp.o                 runtime/addeqsp.s:8
+    dmb-confupd-3-4.o         src/dmb-confupd-3-4.s:10
+sreg (zeropage.o):
+    lneg.o                    runtime/lneg.s:11
+    ltoa.o                    common/ltoa.s:11
+    lpush.o                   runtime/lpush.s:13
+    axlong.o                  runtime/axlong.s:9
+    _printf.o                 /mnt/d/retro/cc65/asminc/zeropage.inc:11
+stax0sp (staxsp.o):
+    dmb-confupd-3-4.o         src/dmb-confupd-3-4.s:878
+    dmb-confupd-3-4.o         src/dmb-confupd-3-4.s:878
+    dmb-confupd-3-4.o         src/dmb-confupd-3-4.s:878
+staxysp (staxsp.o):
+    dmb-confupd-3-4.o         src/dmb-confupd-3-4.s:878
+subysp (subysp.o):
+    dmb-confupd-3-4.o         src/dmb-confupd-3-4.s:878
+tmp1 (zeropage.o):
+    ltoa.o                    common/ltoa.s:11
+    _printf.o                 /mnt/d/retro/cc65/asminc/zeropage.inc:13
+    vcprintf.o                conio/vcprintf.s:10
+    incaxy.o                  runtime/incaxy.s:8
+    decaxy.o                  runtime/decaxy.s:8
+    cputs.o                   conio/cputs.s:10
+    cbm_read.o                cbm/cbm_read.s:42
+    c_setlfs.o                cbm/c_setlfs.s:13
+    c_save.o                  cbm/c_save.s:11
+tmp3 (zeropage.o):
+    strcat.o                  common/strcat.s:10
+zerobss (zerobss.o):
+    crt0.o                    c128/crt0.s:8
+

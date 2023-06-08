@@ -29,14 +29,30 @@ int main() {
     cputs("Loading extended memory driver...\n\r");
     em_install(&c128_ram); ; // Load extended memory driver 
     cputs("Read old config....\n\r");
-    std_read("dmbootconf"); // Read config file old format
-    cputs("Convert to new format.\n\r");
 
+    // Read old config
+    std_read("dmbootconf"); // Read config file old format
+
+    // Convert to backup space
+    cputs("Convert to new format.\n\r");
+    
     for(slot=0;slot<36;slot++) {
+        gotoxy(0,5);
+        cprintf("Converting slot %d\n\r",slot);
         getslotfromem(slot);
         putslottoem(slot+40);
     }
 
+    // Copy from backup space to normal space
+    for(slot=0;slot<72;slot++) {
+        gotoxy(0,6);
+        cprintf("Storing slot %d page %d\n\r",slot/2,slot%2+1);
+        em_map(slot+80);
+        em_use(slot);
+        em_commit();
+    }
+
+    // Write new file to disk
     cputs("Write in new format...\n\r");
     std_write("dmbootconf"); // Write config new format
     cputs("Finished.\n\r");
@@ -132,7 +148,7 @@ void std_write(char * file_name)
 		);
 
     // Save BANK 1 slots
-	cbm_k_save(0x0400 + (256*80), 0x0400 + (256*156));
+	cbm_k_save(0x0400, 0x0400 + (256*72));
 
     // Set load/save bank back to 0
     __asm__ (
@@ -212,6 +228,23 @@ void getslotfromem(int slotnumber)
 
     unsigned char old;
 
+    //Old routine
+    //strcpy(Slot.path, page);
+    //page += 100;
+    //strcpy(Slot.menu, page);
+    //page += 21;
+    //strcpy(Slot.file, page);
+    //page += 20;
+    //strcpy(Slot.cmd, page);
+    //page += 80;
+    //strcpy(Slot.image, page);
+    //page += 20;
+    //Slot.runboot = *page;
+    //page++;
+    //Slot.device = *page;
+    //page++;
+    //Slot.command  = *page; 
+
     char* page = em_map(slotnumber);
     strcpy(Slot.path, page);
     page = page + 100;
@@ -220,7 +253,7 @@ void getslotfromem(int slotnumber)
     strcpy(Slot.file, page);
     page = page + 20;
     strcpy(Slot.cmd, page);
-    page = page + 100;
+    page = page + 80;
     strcpy(Slot.reu_image, page);
     page += 20;
     Slot.reusize = 0;
@@ -257,6 +290,11 @@ void getslotfromem(int slotnumber)
     strcpy(Slot.image_b_path, "");
     strcpy(Slot.image_b_file, "");
     Slot.image_b_id = 0;
+
+    // Debug
+    //gotoxy(0,10);
+    //cprintf("REUSize: %2X Execute: %2X Device: %2X Command: %2x",Slot.reusize,Slot.runboot,Slot.device,Slot.command);
+    //cgetc();
 }
 
 void putslottoem(int slotnumber)
@@ -264,10 +302,11 @@ void putslottoem(int slotnumber)
     // Routine to write a menu option to extended memory page
     // Input: Slotnumber 0-36 (or 40-76 for backup)
     char* page;
+    unsigned char pagenr = slotnumber * 2;
 
-    // Calculate page address from slotnumber
-    slotnumber = slotnumber *2;    
-    page = em_use(slotnumber++);
+    // Point at first page and erase page
+    page = em_use(pagenr);
+    memset(page,0,256);
 
     // Store data in first page
     strcpy(page, Slot.path);
@@ -280,7 +319,7 @@ void putslottoem(int slotnumber)
     page += 80;
     strcpy(page, Slot.reu_image);
     page += 20;
-    Slot.reusize = *page;
+    *page = Slot.reusize;
     page++;
     *page = Slot.runboot;
     page++;
@@ -291,8 +330,13 @@ void putslottoem(int slotnumber)
     *page = Slot.cfgvs;  
     em_commit();
 
+    // Point at first page and erase page
+    pagenr++;
+    page = em_use(pagenr);
+    memset(page,0,256);
+
     // Store data in second page
-    page = em_use(slotnumber);
+    page = em_use(pagenr);
     strcpy(page, Slot.image_a_path);
     page += 100;
     strcpy(page, Slot.image_a_file);
@@ -304,5 +348,6 @@ void putslottoem(int slotnumber)
     strcpy(page, Slot.image_b_file);
     page += 20;
     *page = Slot.image_b_id;
-    em_commit();   
+    em_commit();
 }
+

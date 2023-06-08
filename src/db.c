@@ -43,6 +43,7 @@ updateMenu(void)
 {
   BYTE menuy=MENUY;
 
+  clearArea(MENUXT+1,MENUY+1,MENUW-2,MENUH-2);
   revers(0);
   textcolor(DC_COLOR_TEXT);
   drawFrame(" DMBoot ",MENUX,MENUY,MENUW,MENUH,NULL);
@@ -59,8 +60,10 @@ updateMenu(void)
   cputsxy(MENUXT+1,++menuy," S SORT");
   menuy++;
   cputsxy(MENUXT+1,++menuy," D DIRTRAC");
-  cputsxy(MENUXT+1,++menuy,"AB ADD MNT");
-  cputsxy(MENUXT+1,++menuy," M RUN MNT");
+  if(trace) {
+    cputsxy(MENUXT+1,++menuy,"AB ADD MNT");
+    cputsxy(MENUXT+1,++menuy," M RUN MNT");
+  } else { menuy += 2; }
   cputsxy(MENUXT+1,++menuy," 6 RUN 64");
   cputsxy(MENUXT+1,++menuy," 8 FORCE 8");
   cputsxy(MENUXT+1,++menuy," F FAST");

@@ -6,7 +6,6 @@ void headertext(char* subtitle);
 char mainmenu();
 void runbootfrommenu(int select);
 void commandfrommenu(char * command, int confirm);
-void information();
 char* completeVersion();
 void editmenuoptions();
 void presentmenuslots();

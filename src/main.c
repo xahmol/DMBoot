@@ -120,6 +120,8 @@ unsigned char configversion = CFGVERSION;
 //Main program
 int main() {
     int menuselect;
+
+    cputs("Starting DMBoot.\n\r");
  
     //Check column width of present screen
     if ( PEEK(0xee) == 79) //Memory position $ee is present screen width
@@ -147,8 +149,6 @@ int main() {
         return 1;
     }
 
-    cputs("Starting: Reading config file.");
-
     //checkdmdevices();
     bootdevice = getcurrentdevice();    // Get device number program started from
 
@@ -169,10 +169,12 @@ int main() {
     // Set time from NTP server
     time_main();
 
-    loadoverlay("11:dmb-menu");        // Load overlay of main DMBoot menu routines
+    // Initialize drivers and memory for boot menu
+    loadoverlay("11:dmb-menu");         // Load overlay of main DMBoot menu routines
+    em_install(&c128_ram);              // Load extended memory driver
 
-    em_install(&c128_ram); // Load extended memory driver
-
+    // Load slot config
+    cputs("\n\n\rReading slot data.");
     std_read("11:dmbootconf"); // Read config file
     
     initScreen(DC_COLOR_BORDER, DC_COLOR_BG, DC_COLOR_TEXT);
@@ -223,7 +225,9 @@ int main() {
 
         case CH_F2:
             // Information and credits
+            loadoverlay("11:dmb-util");      // Load util routines
             information();
+            loadoverlay("11:dmb-menu");      // Load overlay of main DMBoot menu routines
             break;
         
         case CH_F7:
@@ -338,7 +342,7 @@ void std_write(char * file_name)
 		);
 
     // Save BANK 1 slots
-	cbm_k_save(0x0400, 0x0400 + (256*76));
+	cbm_k_save(0x0400, 0x0400 + (256*72));
 
     // Set load/save bank back to 0
     __asm__ (
@@ -404,8 +408,8 @@ void std_read(char * file_name)
     } else {
         getslotfromem(0);
         if(Slot.cfgvs < CFGVERSION) {
-            printf("/nOld configuration file format.");
-            printf("/nRun upgrade tool first.");
+            printf("\n\rOld configuration file format.");
+            printf("\n\rRun upgrade tool first.");
             exit(1);
         }
     }

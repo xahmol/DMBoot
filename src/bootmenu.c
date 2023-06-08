@@ -39,7 +39,6 @@
 #include "defines.h"
 #include "ops.h"
 #include "screen.h"
-#include "version.h"
 #include "base.h"
 #include "main.h"
 #include "ultimate_common_lib.h"
@@ -449,35 +448,6 @@ void commandfrommenu(char * command, int confirm)
     exit(0);
 }
 
-void information()
-{
-    // Routine for version information and credits
-
-    clrscr();
-    headertext("Information and credits");
-
-    cputs("\n\rDMBoot 128:\n\r");
-    cputs("Device Manager Boot Menu for the C128\n\n\r");
-    cprintf("Version: v%i%i-", VERSION_MAJOR, VERSION_MINOR);
-    cprintf("%c%c%c%c", BUILD_YEAR_CH0, BUILD_YEAR_CH1, BUILD_YEAR_CH2, BUILD_YEAR_CH3);
-    cprintf("%c%c%c%c-", BUILD_MONTH_CH0, BUILD_MONTH_CH1, BUILD_DAY_CH0, BUILD_DAY_CH1);
-    cprintf("%c%c%c%c\n\r", BUILD_HOUR_CH0, BUILD_HOUR_CH1, BUILD_MIN_CH0, BUILD_MIN_CH1);
-    cputs("Written in 2020 by Xander Mol.\n\n\r");
-    cputs("Based on DraBrowse:\n\r");
-    cputs("DraBrowse is a simple file browser.\n\r");
-    cputs("Original 2009 by Sascha Bader.\n\r");
-    cputs("Used version adapted by Dirk Jagdmann.\n\n\r");
-    cputs("Requires and made possible by:\n\n\r");
-    cputs("The C128 Device Manager ROM,\n\r");
-    cputs("Created by Bart van Leeuwen.\n\n\r");
-    cputs("The Ultimate II+ cartridge,\n\r");
-    cputs("Created by Gideon Zweijtzer.\n\n\r");
-
-    cputs("Press a key to continue.");
-
-    getkey(2);    
-}
-
 void editmenuoptions()
 {
     // Routine for edit / re-order / delete menu slots
@@ -669,6 +639,8 @@ int deletemenuslot()
     int menuslot;
     int changesmade = 0;
     char key;
+    char* page;
+    unsigned char pagenr;
     BYTE yesno;
     BYTE selected = 0;
 
@@ -711,15 +683,14 @@ int deletemenuslot()
     }
     if (selected == 1)
     {
-        strcpy(Slot.menu,"");
-        strcpy(Slot.file,"");
-        strcpy(Slot.path,"");
-        strcpy(Slot.cmd,"");
-        Slot.runboot = 0;
-        Slot.device = 0;
-        Slot.command = 0;
-        changesmade = 1;
-        putslottoem(menuslot);
+        pagenr = menuslot * 2;
+        page = em_use(pagenr);
+        memset(page,0,256);
+        em_commit();
+        pagenr++;
+        page = em_use(pagenr);
+        memset(page,0,256);
+        em_commit();
     }
     
     return changesmade;
