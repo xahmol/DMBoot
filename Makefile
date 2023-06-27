@@ -20,6 +20,7 @@ ZIP = DMBoot-v391-$(shell date "+%Y%m%d-%H%M").zip
 # Hostname of Ultimate II+ target for deployment. Edit for proper IP and usb number
 ULTHOST = ftp://192.168.1.19/usb1/11/
 ULTHOST2 = ftp://192.168.1.31/usb1/11/
+ULTHOST3 = ftp://192.168.1.80/usb1/11/
 
 MAIN = autostart.128.prg
 UPDATE = dmb-confupd-3-4.prg
@@ -69,4 +70,5 @@ clean:
 # To deploy software to UII+ enter make deploy. Obviously C128 needs to powered on with UII+ and USB drive connected.
 deploy: $(MAIN) $(UPDATE)
 	wput -u $(DEPLOYS) $(ULTHOST)
-	wput -u $(DEPLOYS) $(ULTHOST2)
+#	wput -u $(DEPLOYS) $(ULTHOST2)
+#	wput -u $(DEPLOYS) $(ULTHOST3)

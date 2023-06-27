@@ -691,6 +691,7 @@ int deletemenuslot()
         page = em_use(pagenr);
         memset(page,0,256);
         em_commit();
+        changesmade = 1;
     }
     
     return changesmade;
