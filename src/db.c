@@ -385,24 +385,6 @@ mainLoopBrowse(void)
           changeDir(context, devices, NULL, sorted);
           break;
 
-          // ----- switch context -----
-        case '0':
-        case CH_ESC:
-        case CH_LARROW:  // arrow left
-          {
-            if (SCREENW == 80 )
-            {
-              const BYTE prev_context = context;
-              context = context ^ 1;
-              drawDirFrame(context, context);
-              drawDirFrame(prev_context, context);
-              trace = 0;
-              depth = 0;
-              updateMenu();
-            }
-          }
-          break;
-
         case 'a':
           CheckMounttype(cwd->selected->dirent.name);
           if(mountflag==1) {
