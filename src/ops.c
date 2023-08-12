@@ -42,7 +42,7 @@
 
 const char *value2hex = "0123456789abcdef";
 
-Directory* dirs[] = {NULL,NULL};
+Directory* dirs = NULL;
 BYTE devices[] = {8,9};
 char linebuffer[81];
 char linebuffer2[81];
@@ -331,7 +331,7 @@ changeDir(const BYTE context, const BYTE device, const char *dirname, const BYTE
       CheckMounttype(dirname);
       if(mountflag==2 && trace == 1) {
         reuflag = 1;
-        strcpy(imagename,dirs[context]->selected->dirent.name );
+        strcpy(imagename,dirs->selected->dirent.name );
       }
 
       if (mountflag==1 ||
@@ -567,10 +567,10 @@ updateScreen(const BYTE context)
 void
 refreshDir(const BYTE context, const BYTE sorted, const BYTE mycontext)
 {
-  Directory * cwd = dirs[context];
+  Directory * cwd = dirs;
   textcolor(DC_COLOR_HIGHLIGHT);
   cwd = readDir(cwd, devices[context], sorted);
-  dirs[context]=cwd;
+  dirs = cwd;
   cwd->selected=cwd->firstelement;
   showDir(context, mycontext);
 }

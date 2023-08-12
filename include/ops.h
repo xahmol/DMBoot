@@ -55,7 +55,7 @@ extern const char* drivetype[];
 extern char linebuffer[81];
 extern BYTE devices[];
 extern char linebuffer2[];
-extern Directory* dirs[];
+extern Directory* dirs;
 
 void debugs(const char *s);
 void debugu(const unsigned u);

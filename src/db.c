@@ -115,7 +115,7 @@ mainLoopBrowse(void)
   mountflag = 0;
 
   DIR1H = DIR2H = SCREENH-2;
-  dirs[0] = dirs[1] = NULL;
+  dirs = NULL;
   
   updateScreen(context);
 
@@ -132,8 +132,8 @@ mainLoopBrowse(void)
     while(++i < MAXDEVID+1)
       {
         devices[context] = i;
-        dirs[context] = readDir(NULL, devices[context], sorted);
-        if (dirs[context])
+        dirs = readDir(NULL, devices[context], sorted);
+        if (dirs)
           {
             getDeviceType(devices[context]);
             showDir(context, context);
@@ -154,7 +154,7 @@ mainLoopBrowse(void)
         case '1':
         case CH_F1:
           textcolor(DC_COLOR_HIGHLIGHT);
-          dirs[context]=readDir(dirs[context], devices[context], sorted);
+          dirs=readDir(dirs, devices[context], sorted);
           showDir(context, context);
           break;
 
@@ -163,7 +163,7 @@ mainLoopBrowse(void)
         case '+':
           if (++devices[context] > MAXDEVID)
             devices[context]=8;
-          freeDir(&dirs[context]);
+          freeDir(&dirs);
           if (! devicetype[devices[context]])
             {
               getDeviceType(devices[context]);
@@ -173,7 +173,7 @@ mainLoopBrowse(void)
         
         case '-':
           if (--devices[context] < 8) { devices[context]=MAXDEVID; }
-          freeDir(&dirs[context]);
+          freeDir(&dirs);
           if (! devicetype[devices[context]])
             {
               getDeviceType(devices[context]);
@@ -187,7 +187,7 @@ mainLoopBrowse(void)
           cwd=GETCWD;
           if (trace == 0)
           {
-            execute(dirs[context]->selected->dirent.name,devices[context], EXEC_BOOT + EXEC_FRC8*forceeight + EXEC_FAST*fastflag, "");
+            execute(dirs->selected->dirent.name,devices[context], EXEC_BOOT + EXEC_FRC8*forceeight + EXEC_FAST*fastflag, "");
           }
           else
           {
@@ -323,11 +323,11 @@ mainLoopBrowse(void)
               {
                 if (trace == 0)
                 {
-                  execute(dirs[context]->selected->dirent.name,devices[context], EXEC_RUN64, "");
+                  execute(dirs->selected->dirent.name,devices[context], EXEC_RUN64, "");
                 }
                 else
                 {
-                  strcpy(pathfile, dirs[context]->selected->dirent.name );
+                  strcpy(pathfile, dirs->selected->dirent.name );
                   pathrunboot = EXEC_RUN64;
                   goto done;
                 }             
@@ -344,11 +344,11 @@ mainLoopBrowse(void)
             {
               if (trace == 0)
               {
-                execute(dirs[context]->selected->dirent.name,devices[context], EXEC_FRC8*forceeight + EXEC_FAST*fastflag, "");
+                execute(dirs->selected->dirent.name,devices[context], EXEC_FRC8*forceeight + EXEC_FAST*fastflag, "");
               }
               else
               {
-                strcpy(pathfile, dirs[context]->selected->dirent.name );
+                strcpy(pathfile, dirs->selected->dirent.name );
                 pathrunboot = EXEC_FRC8*forceeight + EXEC_FAST*fastflag;
                 goto done;
               }             
@@ -407,7 +407,7 @@ mainLoopBrowse(void)
           CheckMounttype(cwd->selected->dirent.name);
           if(mountflag==1) {
             addmountflag = 1;
-            strcpy(imageaname,dirs[context]->selected->dirent.name);
+            strcpy(imageaname,dirs->selected->dirent.name);
             goto done;
           }
         
@@ -415,14 +415,14 @@ mainLoopBrowse(void)
           CheckMounttype(cwd->selected->dirent.name);
           if(mountflag==1) {
             addmountflag = 2;
-            strcpy(imagebname,dirs[context]->selected->dirent.name);
+            strcpy(imagebname,dirs->selected->dirent.name);
             goto done;
           }
 
         case 'm':
           if(mountflag==1 && imageaid) {
             runmountflag = 1;
-            strcpy(pathfile, dirs[context]->selected->dirent.name );
+            strcpy(pathfile, dirs->selected->dirent.name );
             pathrunboot = EXEC_MOUNT + EXEC_FAST*fastflag;
             goto done;
           }
@@ -431,6 +431,5 @@ mainLoopBrowse(void)
     }
 
  done:;
- freeDir(&dirs[0]);
- if(SCREENW==80) { freeDir(&dirs[1]); }
+ freeDir(&dirs);
 }

@@ -75,7 +75,7 @@ typedef unsigned char BYTE;
 // y position of menu frame
 #define MENUY 0
 
-#define GETCWD dirs[context]
+#define GETCWD dirs
 #define DIRW  25
 #define DIR1X 0
 #define DIR1Y 0
