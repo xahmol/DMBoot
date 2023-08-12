@@ -429,43 +429,6 @@ printElement(const BYTE context, const Directory *dir, const BYTE xpos, const BY
 }
 
 void
-changeDeviceID(BYTE device)
-{
-  int i;
-  newscreen("change device ID");
-  cprintf("\n\rchange device ID %i to (0-255): ", device);
-  sprintf(linebuffer, "%i", device);
-  i = textInput(31, 2, linebuffer, 3);
-  if (i <= 0)
-    return;
-  i = atoi(linebuffer);
-
-  if (devicetype[device] == SD2IEC)
-    {
-      sprintf(linebuffer, "U0>%c", i);
-    }
-  else
-    {
-      // TODO: doesn't work
-
-      // Commodore drives:
-      // OPEN 15,8,15:PRINT#15,"M-W";CHR$(119);CHR$(0);CHR$(2);CHR$(device number+32);CHR$(device number+64):CLOSE 15
-      char *s = linebuffer;
-      *s++ = 'm';
-      *s++ = '-';
-      *s++ = 'w';
-      *s++ = 119; // addr lo
-      *s++ = 0;   // addr hi
-      *s++ = 2;   // number of bytes
-      *s++ = 32+i;// device num + 0x20 for LISTEN
-      *s++ = 64+i;// device num + 0x40 for TALK
-      *s = 0;
-    }
-
-  cmd(device, linebuffer);
-}
-
-void
 debugs(const char *s)
 {
   gotoxy(MENUXT,BOTTOM);
