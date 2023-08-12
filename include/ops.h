@@ -31,11 +31,11 @@
 
 int cmd(const BYTE device, const char *cmd);
 void execute(char * prg, BYTE device, BYTE boot, char * command);
-void updateScreen(const BYTE context, BYTE num_dirs);
+void updateScreen(const BYTE context);
 void updateMenu(void);
 void showDir(BYTE context, const BYTE mycontext);
 void mainLoopBrowse(void);
-void clrDir(BYTE context);
+void clrDir();
 void refreshDir(const BYTE context, const BYTE sorted, const BYTE mycontext);
 void printDir(const BYTE context, const BYTE xpos, const BYTE ypos);
 void printElement(const BYTE context, const Directory *dir, const BYTE xpos, const BYTE ypos);
@@ -46,9 +46,7 @@ int changeDir(const BYTE context, const BYTE device, const char *dirname, const 
 void changeDeviceID(BYTE device);
 void drawDirFrame(BYTE context, const BYTE mycontext);
 const char* getDeviceType(const BYTE device);
-void initDirWindowHeight(void);
 int textInput(const BYTE xpos, const BYTE ypos, char *str, const BYTE size);
-void doDOScommand(const BYTE context, const BYTE sorted, const BYTE use_linebuffer, const char *title);
 
 /// if you change this enum, also change the "drivetype" array in ops.c
 enum drive_e {NONE=0, PI1541, D1540, D1541, D1551, D1570, D1571, D1581, D1001, D2031, D8040, SD2IEC, CMD, VICE, U64, LAST_DRIVE_E};

@@ -53,7 +53,7 @@ static const char progressRev[4] = { 0,    0,    1,    1 };
  * @return new allocated Directory object.
  */
 Directory*
-readDir(Directory *dir, const BYTE device, const BYTE context, const BYTE sorted)
+readDir(Directory *dir, const BYTE device, const BYTE sorted)
 {
   DirElement * previous = NULL;
 

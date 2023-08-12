@@ -50,7 +50,9 @@
 #include "utils.h"
 #include "ultimate_common_lib.h"
 #include "ultimate_dos_lib.h"
+#include "ultimate_time_lib.h"
 #include "dmapi.h"
+#include "vdc.h"
 
 #ifndef min
 #define min(a,b) ( (a) < (b) ? (a) : (b) )
@@ -116,6 +118,7 @@ unsigned char utilbuffer[328];
 char configfilename[11] = "dmbcfgfile";
 unsigned int dm_apiversion = 0;
 unsigned char configversion = CFGVERSION;
+unsigned char vdcmemory;
 
 //Main program
 int main() {
@@ -176,11 +179,14 @@ int main() {
     // Load slot config
     cputs("\n\n\rReading slot data.");
     std_read("11:dmbootconf"); // Read config file
-    
+
+    // Detect VDC memory size
+    vdcmemory = VDC_DetectVDCMemSize();
+    if(vdcmemory==64) { VDC_SetExtendedVDCMemSize(); }
+
+    // Init screen and menu
     initScreen(DC_COLOR_BORDER, DC_COLOR_BG, DC_COLOR_TEXT);
-
     cmd(bootdevice,"cd:\xff");          // Go to root of partition
-
     do
     {
         menuselect = mainmenu();
@@ -500,4 +506,29 @@ unsigned char loadoverlay(char *name)
         printf("\nLoading overlay file failed\n");
         exit(1);
     }
+}
+
+void headertext(char* subtitle)
+{
+    // Draw header text
+    // Input: subtitle is text to draw on second line
+
+    revers(1);
+    textcolor(DMB_COLOR_HEADER1);
+    gotoxy(0,0);
+    cspaces(SCREENW);
+    gotoxy(0,0);  
+    cprintf("DMBoot 128: Device Manager Boot Menu");
+    textcolor(DMB_COLOR_HEADER2);
+    gotoxy(0,1);
+    cspaces(SCREENW);
+    gotoxy(0,1);
+    cprintf("%s\n\n\r", subtitle);
+    if(SCREENW == 80)
+    {
+        uii_get_time();
+        cputsxy(80-strlen((const char*)uii_data),1,(const char*)uii_data);
+    }
+    revers(0);
+    textcolor(DC_COLOR_TEXT);
 }

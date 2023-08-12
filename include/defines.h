@@ -80,9 +80,9 @@ typedef unsigned char BYTE;
 #define DIR1X 0
 #define DIR1Y 0
 
-#define DIRH (context?DIR2H:DIR1H)
-#define DIRX (context?DIR2X:DIR1X)
-#define DIRY (context?DIR2Y:DIR1Y)
+#define DIRH (DIR1H)
+#define DIRX (DIR1X)
+#define DIRY (DIR1Y)
 
 // Define highest device ID allowed
 #define MAXDEVID 30
@@ -154,6 +154,7 @@ extern char c128_ram;
 extern unsigned char dm_apipresent;
 extern unsigned int dm_apiversion;
 extern unsigned char configversion;
+extern unsigned char vdcmemory;
 
 // keyboard buffer
 #define KBCHARS 842

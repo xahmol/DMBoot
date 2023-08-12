@@ -53,21 +53,6 @@ char DOSstatus[40];
 const char* drivetype[LAST_DRIVE_E] = {"", "Pi1541", "1540", "1541", "1551", "1570", "1571", "1581", "1001", "2031", "8040", "sd2iec", "cmd", "vice", "u64"};/// enum drive_e value for each device 0-19.
 BYTE devicetype[MAXDEVID+1];
 
-void
-initDirWindowHeight(void)
-{
-  if (SCREENW == 80)
-  {
-    DIR1H = 23;
-    DIR2H = 23;
-  }
-  else
-  {
-    DIR1H = 11;
-    DIR2H = 10;
-  }
-}
-
 const char*
 getDeviceType(const BYTE device)
 {
@@ -235,7 +220,7 @@ execute(char * prg, BYTE device, BYTE boot, char * command)
 }
 
 void
-clrDir(BYTE context)
+clrDir()
 {
   clearArea(DIRX+1, DIRY+1, DIRW, DIRH);
 }
@@ -609,16 +594,11 @@ textInput(const BYTE xpos, const BYTE ypos, char *str, const BYTE size)
 #pragma rodata-name (push, "OVERLAY1");
 
 void
-updateScreen(const BYTE context, BYTE num_dirs)
+updateScreen(const BYTE context)
 {
   clrscr();
   updateMenu();
   showDir(context, context);
-  if (num_dirs > 1)
-    {
-      const BYTE other_context = context^1;
-      showDir(other_context, context);
-    }
 }
 
 void
@@ -626,7 +606,7 @@ refreshDir(const BYTE context, const BYTE sorted, const BYTE mycontext)
 {
   Directory * cwd = dirs[context];
   textcolor(DC_COLOR_HIGHLIGHT);
-  cwd = readDir(cwd, devices[context], context, sorted);
+  cwd = readDir(cwd, devices[context], sorted);
   dirs[context]=cwd;
   cwd->selected=cwd->firstelement;
   showDir(context, mycontext);
@@ -646,7 +626,7 @@ printDir(const BYTE context, const BYTE xpos, const BYTE ypos)
 
   if (dir==NULL)
     {
-      clrDir(context);
+      clrDir();
       return;
     }
 

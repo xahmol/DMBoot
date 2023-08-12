@@ -9,6 +9,7 @@ char* pathconcat();
 char getkey(BYTE mask);
 unsigned char dm_getdevicetype(unsigned char id);
 void dm_sethsidviaapi();
+void headertext(char* subtitle);
 //void checkdmdevices();
 //const char* deviceidtext (int id);
 

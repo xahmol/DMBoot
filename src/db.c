@@ -68,10 +68,6 @@ updateMenu(void)
   cputsxy(MENUXT+1,++menuy," 8 FORCE 8");
   cputsxy(MENUXT+1,++menuy," F FAST");
   cputsxy(MENUXT+1,++menuy," Q QUIT");
-  if (SCREENW == 80 )
-  {
-    cputsxy(MENUXT+1,++menuy," \xff SW WIN");
-  }
 
   menuy++;
   if (trace == 1)
@@ -110,7 +106,6 @@ mainLoopBrowse(void)
   BYTE lastpage = 0;
   BYTE nextpage = 0;
   BYTE context = 0;
-  BYTE num_windows;
   
   trace = 0;
   depth = 0;
@@ -121,17 +116,8 @@ mainLoopBrowse(void)
 
   DIR1H = DIR2H = SCREENH-2;
   dirs[0] = dirs[1] = NULL;
-
-  if (SCREENW == 80)
-  {
-    num_windows = 2;
-  }
-  else
-  {
-    num_windows = 1;
-  }
   
-  updateScreen(context, num_windows);
+  updateScreen(context);
 
   {
     BYTE i;
@@ -146,7 +132,7 @@ mainLoopBrowse(void)
     while(++i < MAXDEVID+1)
       {
         devices[context] = i;
-        dirs[context] = readDir(NULL, devices[context], context, sorted);
+        dirs[context] = readDir(NULL, devices[context], sorted);
         if (dirs[context])
           {
             getDeviceType(devices[context]);
@@ -156,22 +142,6 @@ mainLoopBrowse(void)
       }
 
     found_upper_drive:;
-    if (SCREENW == 80)
-    {
-      textcolor(DC_COLOR_TEXT);
-      while(++i < MAXDEVID+1)
-      {
-        devices[1] = i;
-        dirs[1] = readDir(NULL, devices[1], 1, sorted);
-        if (dirs[1])
-        {
-            getDeviceType(devices[1]);
-            showDir(1, context);
-            goto found_lower_drive;
-        }
-      }
-      found_lower_drive:;
-    }
   }
 
   while(1)
@@ -184,7 +154,7 @@ mainLoopBrowse(void)
         case '1':
         case CH_F1:
           textcolor(DC_COLOR_HIGHLIGHT);
-          dirs[context]=readDir(dirs[context], devices[context], context, sorted);
+          dirs[context]=readDir(dirs[context], devices[context], sorted);
           showDir(context, context);
           break;
 

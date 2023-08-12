@@ -2,7 +2,6 @@
 #define BOOTMENU_H_
 
 void pickmenuslot();
-void headertext(char* subtitle);
 char mainmenu();
 void runbootfrommenu(int select);
 void commandfrommenu(char * command, int confirm);

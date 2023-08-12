@@ -394,7 +394,8 @@ void information()
     config_headertext("Information and credits");
 
     cputs("\n\rDMBoot 128:\n\r");
-    cputs("Device Manager Boot Menu for the C128\n\n\r");
+    cputs("Device Manager Boot Menu for the C128\n\r");
+    cprintf("%dKB VDC memory detected.\n\n\r",vdcmemory);
     cprintf("Version: v%i%i-", VERSION_MAJOR, VERSION_MINOR);
     cprintf("%c%c%c%c", BUILD_YEAR_CH0, BUILD_YEAR_CH1, BUILD_YEAR_CH2, BUILD_YEAR_CH3);
     cprintf("%c%c%c%c-", BUILD_MONTH_CH0, BUILD_MONTH_CH1, BUILD_DAY_CH0, BUILD_DAY_CH1);

@@ -188,31 +188,6 @@ void pickmenuslot()
     }
 }
 
-void headertext(char* subtitle)
-{
-    // Draw header text
-    // Input: subtitle is text to draw on second line
-
-    revers(1);
-    textcolor(DMB_COLOR_HEADER1);
-    gotoxy(0,0);
-    cspaces(SCREENW);
-    gotoxy(0,0);  
-    cprintf("DMBoot 128: Device Manager Boot Menu");
-    textcolor(DMB_COLOR_HEADER2);
-    gotoxy(0,1);
-    cspaces(SCREENW);
-    gotoxy(0,1);
-    cprintf("%s\n\n\r", subtitle);
-    if(SCREENW == 80)
-    {
-        uii_get_time();
-        cputsxy(80-strlen((const char*)uii_data),1,(const char*)uii_data);
-    }
-    revers(0);
-    textcolor(DC_COLOR_TEXT);
-}
-
 char mainmenu()
 {
     // Draw main boot menu
