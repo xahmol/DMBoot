@@ -131,11 +131,11 @@ mainLoopBrowse(void)
     i = 7;
     while(++i < MAXDEVID+1)
       {
-        devices[context] = i;
-        dirs = readDir(NULL, devices[context], sorted);
+        devices = i;
+        dirs = readDir(NULL, devices, sorted);
         if (dirs)
           {
-            getDeviceType(devices[context]);
+            getDeviceType(devices);
             showDir(context, context);
             goto found_upper_drive;
           }
@@ -154,29 +154,29 @@ mainLoopBrowse(void)
         case '1':
         case CH_F1:
           textcolor(DC_COLOR_HIGHLIGHT);
-          dirs=readDir(dirs, devices[context], sorted);
+          dirs=readDir(dirs, devices, sorted);
           showDir(context, context);
           break;
 
         case '2':
         case CH_F2:
         case '+':
-          if (++devices[context] > MAXDEVID)
-            devices[context]=8;
+          if (++devices > MAXDEVID)
+            devices=8;
           freeDir(&dirs);
-          if (! devicetype[devices[context]])
+          if (! devicetype[devices])
             {
-              getDeviceType(devices[context]);
+              getDeviceType(devices);
             }
           showDir(context, context);
           break;
         
         case '-':
-          if (--devices[context] < 8) { devices[context]=MAXDEVID; }
+          if (--devices < 8) { devices=MAXDEVID; }
           freeDir(&dirs);
-          if (! devicetype[devices[context]])
+          if (! devicetype[devices])
             {
-              getDeviceType(devices[context]);
+              getDeviceType(devices);
             }
           showDir(context, context);
           break;
@@ -187,7 +187,7 @@ mainLoopBrowse(void)
           cwd=GETCWD;
           if (trace == 0)
           {
-            execute(dirs->selected->dirent.name,devices[context], EXEC_BOOT + EXEC_FRC8*forceeight + EXEC_FAST*fastflag, "");
+            execute(dirs->selected->dirent.name,devices, EXEC_BOOT + EXEC_FRC8*forceeight + EXEC_FAST*fastflag, "");
           }
           else
           {
@@ -209,8 +209,8 @@ mainLoopBrowse(void)
           if (trace == 0)
           {
             trace = 1;
-            pathdevice = devices[context];
-            changeDir(context, devices[context], NULL, sorted);
+            pathdevice = devices;
+            changeDir(context, devices, NULL, sorted);
           }
           else
           {
@@ -323,7 +323,7 @@ mainLoopBrowse(void)
               {
                 if (trace == 0)
                 {
-                  execute(dirs->selected->dirent.name,devices[context], EXEC_RUN64, "");
+                  execute(dirs->selected->dirent.name,devices, EXEC_RUN64, "");
                 }
                 else
                 {
@@ -344,7 +344,7 @@ mainLoopBrowse(void)
             {
               if (trace == 0)
               {
-                execute(dirs->selected->dirent.name,devices[context], EXEC_FRC8*forceeight + EXEC_FAST*fastflag, "");
+                execute(dirs->selected->dirent.name,devices, EXEC_FRC8*forceeight + EXEC_FAST*fastflag, "");
               }
               else
               {
@@ -362,7 +362,7 @@ mainLoopBrowse(void)
               if (trace == 1) {
                 strcpy(path[depth++],cwd->selected->dirent.name);
               }
-              changeDir(context, devices[context], cwd->selected->dirent.name, sorted);
+              changeDir(context, devices, cwd->selected->dirent.name, sorted);
             }
             if(reuflag) { goto done; }
           break;
@@ -374,7 +374,7 @@ mainLoopBrowse(void)
           {
             --depth;
           }
-          changeDir(context, devices[context], devicetype[devices[context]] == U64?"..":"\xff", sorted);
+          changeDir(context, devices, devicetype[devices] == U64?"..":"\xff", sorted);
           break;
 
         case CH_UARROW:
@@ -382,7 +382,7 @@ mainLoopBrowse(void)
           {
             depth = 0;
           }
-          changeDir(context, devices[context], NULL, sorted);
+          changeDir(context, devices, NULL, sorted);
           break;
 
           // ----- switch context -----

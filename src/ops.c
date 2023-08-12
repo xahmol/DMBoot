@@ -43,7 +43,7 @@
 const char *value2hex = "0123456789abcdef";
 
 Directory* dirs = NULL;
-BYTE devices[] = {8,9};
+BYTE devices = 8;
 char linebuffer[81];
 char linebuffer2[81];
 
@@ -253,8 +253,8 @@ void
 drawDirFrame(BYTE context, const BYTE mycontext)
 {
   const Directory *dir = GETCWD;
-  const char *dt = drivetype[devicetype[devices[context]]];
-  sprintf(linebuffer, "%i:%s", (int)devices[context], dir ? dir->name : "");
+  const char *dt = drivetype[devicetype[devices]];
+  sprintf(linebuffer, "%i:%s", (int)devices, dir ? dir->name : "");
   if (dir)
     {
       sprintf(linebuffer2, "%s>%u bl free<", dt, dir->free);
@@ -569,7 +569,7 @@ refreshDir(const BYTE context, const BYTE sorted, const BYTE mycontext)
 {
   Directory * cwd = dirs;
   textcolor(DC_COLOR_HIGHLIGHT);
-  cwd = readDir(cwd, devices[context], sorted);
+  cwd = readDir(cwd, devices, sorted);
   dirs = cwd;
   cwd->selected=cwd->firstelement;
   showDir(context, mycontext);

@@ -53,7 +53,7 @@ enum drive_e {NONE=0, PI1541, D1540, D1541, D1551, D1570, D1571, D1581, D1001, D
 extern BYTE devicetype[];
 extern const char* drivetype[];
 extern char linebuffer[81];
-extern BYTE devices[];
+extern BYTE devices;
 extern char linebuffer2[];
 extern Directory* dirs;
 
