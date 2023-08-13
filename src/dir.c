@@ -32,6 +32,7 @@
 #include "dir.h"
 #include "defines.h"
 #include "ops.h"
+#include "vdc.h"
 
 #define CBM_T_FREE 100
 
@@ -44,24 +45,40 @@
 static const char progressBar[4] = { 0xA5, 0xA1, 0xA7, ' ' };
 static const char progressRev[4] = { 0,    0,    1,    1 };
 
+struct DirElement PresentDir;
+struct Directory cwd;
+unsigned int previous;
+
+// VDC alloc functions
+
+unsigned char VDC_AllocDirEntry() {
+// Check if new entry fits and return 1 if space
+
+  unsigned int highaddress = (vdcmemory==64)?VDC64END:VDC16END;
+
+  if(highaddress - vdc_alloc_address < sizeof(PresentDir)) {
+    return 0;
+  } else {
+    vdc_alloc_address += sizeof(PresentDir);
+    return 1;
+  }
+}
+
 /**
  * read directory of device @p device.
- * @param[in,out] dir pointer to Directory object, if dir!=NULL it will be freed.
  * @param device CBM device number
  * @param sorted if true, return directory entries sorted.
  * @param context window context.
- * @return new allocated Directory object.
+ * @return 1 on success
  */
-Directory*
-readDir(Directory *dir, const BYTE device, const BYTE sorted)
+unsigned char readDir(const BYTE device, const BYTE sorted)
 {
-  DirElement * previous = NULL;
-
   BYTE cnt = 0xff;
-  const BYTE y = DIRY;
+  const BYTE y = 2;
   BYTE x = 0;
 
-  freeDir(&dir);
+  vdc_alloc_address = (vdcmemory==64)?VDC64START:VDC16START;
+  memset(&cwd,0,sizeof(cwd));
   memset(disk_id_buf, 0, DISK_ID_LEN);
 
   if (cbm_opendir(device, device) != 0)
@@ -73,27 +90,25 @@ readDir(Directory *dir, const BYTE device, const BYTE sorted)
   while(1)
     {
       BYTE ret;
-      DirElement * de = (DirElement *) calloc(1, sizeof(DirElement));
-      if (! de)
+      if (!VDC_AllocDirEntry())
         goto stop;
 
-      ret = myCbmReadDir(device, &(de->dirent));
+      memset(&PresentDir,0,sizeof(PresentDir));
+      ret = myCbmReadDir(device, &(PresentDir.dirent));
       if (ret != 0)
         {
-          debugu(ret);
-          free(de);
           goto stop;
         }
 
       // print progress bar
       if ((cnt>>2) >= DIRW)
         {
-          x = DIRX + 1;
+          x = 4;
           revers(0);
           cnt = 0;
           gotoxy(x, y);
           cclear(DIRW);
-          gotoxy(x+DIRW/2-2, y);
+          gotoxy(0, y);
           cprintf("[%02i]", device);
         }
       else
@@ -104,86 +119,86 @@ readDir(Directory *dir, const BYTE device, const BYTE sorted)
           ++cnt;
         }
 
-      if (dir==NULL)
+      if (!cwd.name[0])
         {
           // initialize directory
-          dir = (Directory *) calloc(1, sizeof(Directory));
-          if (! dir)
-            goto stop;
-          if (de->dirent.type == _CBM_T_HEADER)
+          if (PresentDir.dirent.type == _CBM_T_HEADER)
             {
               BYTE i;
-              for(i = 0; de->dirent.name[i]; ++i)
+              for(i = 0; PresentDir.dirent.name[i]; ++i)
                 {
-                  dir->name[i] = de->dirent.name[i];
+                  cwd.name[i] = PresentDir.dirent.name[i];
                 }
-              dir->name[i++] = ',';
-              memcpy(&dir->name[i], disk_id_buf, DISK_ID_LEN);
+              cwd.name[i++] = ',';
+              memcpy(&cwd.name[i], disk_id_buf, DISK_ID_LEN);
             }
           else
             {
-              strcpy(dir->name, "unknown type");
+              strcpy(cwd.name, "Unknown type");
             }
-          free(de);
+          vdc_alloc_address -= sizeof(PresentDir);
         }
-      else if (de->dirent.type==CBM_T_FREE)
+      else if (PresentDir.dirent.type==CBM_T_FREE)
         {
           // blocks free entry
-          dir->free=de->dirent.size;
-          free(de);
+          cwd.free=PresentDir.dirent.size;
           goto stop;
         }
-      else if (dir->firstelement==NULL)
+      else if (cwd.firstelement==NULL)
         {
           // first element
-          dir->firstelement = de;
-          previous=de;
+          cwd.firstelement = vdc_alloc_address;
+          VDC_CopyMemToVDC(vdc_alloc_address,(unsigned int)&PresentDir,sizeof(PresentDir));
+          previous = vdc_alloc_address;
         }
       else
         {
           // all other elements
-          if (sorted)
-            {
-              // iterate the sorted list
-              DirElement *e;
-              for(e = dir->firstelement; e->next; e = e->next)
-                {
-                  // if the new name is greater than the current list item,
-                  // it needs to be inserted in the previous position.
-                  if (strncmp(e->dirent.name, de->dirent.name, 16) > 0)
-                    {
-                      // if the previous position is NULL, insert at the front of the list
-                      if (! e->prev)
-                        {
-                          de->next = e;
-                          e->prev = de;
-                          dir->firstelement = de;
-                        }
-                      else
-                        {
-                          // insert somewhere in the middle
-                          DirElement *p = e->prev;
-                          assert(p->next == e);
-                          p->next = de;
-                          de->next = e;
-
-                          de->prev = p;
-                          e->prev = de;
-                        }
-                      goto inserted;
-                    }
-                }
-              assert(e->next == NULL);
-              e->next = de;
-              de->prev = e;
-            inserted:;
-            }
-          else
-            {
-              de->prev = previous;
-              previous->next = de;
-              previous = de;
-            }
+          //if (sorted)
+            //{
+            //  // iterate the sorted list
+            //  DirElement *e;
+            //  for(e = dir->firstelement; e->next; e = e->next)
+            //    {
+            //      // if the new name is greater than the current list item,
+            //      // it needs to be inserted in the previous position.
+            //      if (strncmp(e->dirent.name, de->dirent.name, 16) > 0)
+            //        {
+            //          // if the previous position is NULL, insert at the front of the list
+            //          if (! e->prev)
+            //            {
+            //              de->next = e;
+            //              e->prev = de;
+            //              dir->firstelement = de;
+            //            }
+            //          else
+            //            {
+            //              // insert somewhere in the middle
+            //              DirElement *p = e->prev;
+            //              assert(p->next == e);
+            //              p->next = de;
+            //              de->next = e;
+//
+            //              de->prev = p;
+            //              e->prev = de;
+            //            }
+            //          goto inserted;
+            //        }
+            //    }
+            //  assert(e->next == NULL);
+            //  e->next = de;
+            //  de->prev = e;
+            //inserted:;
+            //}
+          //else
+            //{
+              PresentDir.prev = previous;
+              VDC_CopyMemToVDC(vdc_alloc_address,(unsigned int)&PresentDir,sizeof(PresentDir));
+              VDC_CopyVDCToMem(previous,(unsigned int)&PresentDir,sizeof(PresentDir));
+              PresentDir.next = vdc_alloc_address;
+              VDC_CopyMemToVDC(previous,(unsigned int)&PresentDir,sizeof(PresentDir));
+              previous = vdc_alloc_address;
+            //}
         }
     }
 
@@ -191,11 +206,11 @@ readDir(Directory *dir, const BYTE device, const BYTE sorted)
   cbm_closedir(device);
   revers(0);
 
-  if (dir)
+  if (cwd.name[0])
     {
-      dir->selected = dir->firstelement;
+      cwd.selected = cwd.firstelement;
     }
-  return dir;
+  return 1;
 }
 
 /**
@@ -383,46 +398,4 @@ myCbmReadDir(const BYTE device, struct cbm_dirent* l_dirent)
   l_dirent->access = (linebuffer[i-4] == 0x3C) ? CBM_A_RO : CBM_A_RW;
 
   return 0;
-}
-
-/*
- * free memory of directory structure
- */
-void freeDir(Directory * * dir)
-{
-  DirElement * next;
-  DirElement * acurrent;
-  if (*dir==NULL)
-    return;
-
-  acurrent = (*dir)->firstelement;
-  while (acurrent)
-    {
-      next = acurrent->next;
-      free(acurrent);
-      acurrent = next;
-    }
-
-  free(*dir);
-  *dir=NULL;
-}
-
-
-/*
- * Remove an entry from its data structure (directory)
- */
-void removeFromDir(DirElement * current)
-{
-  if (current == NULL)
-    return;
-
-  if (current->prev)
-    {
-      current->prev->next = current->next;
-    }
-  if (current->next)
-    {
-      current->next->prev = current->prev;
-    }
-  free(current);
 }

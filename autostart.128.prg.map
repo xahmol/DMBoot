@@ -1,0 +1,2947 @@
+Modules list:
+-------------
+geosramroutine.o:
+    OVERLAY5          Offs=000000  Size=00009E  Align=00001  Fill=0000
+dmapiasm.o:
+    CODE              Offs=000000  Size=00009C  Align=00001  Fill=0000
+vdc_assembly.o:
+    CODE              Offs=00009C  Size=000279  Align=00001  Fill=0000
+main.o:
+    CODE              Offs=000315  Size=000794  Align=00001  Fill=0000
+    RODATA            Offs=000000  Size=000222  Align=00001  Fill=0000
+    BSS               Offs=000000  Size=000729  Align=00001  Fill=0000
+    DATA              Offs=000000  Size=00016F  Align=00001  Fill=0000
+bootmenu.o:
+    OVERLAY2          Offs=000000  Size=001D6A  Align=00001  Fill=0000
+screen.o:
+    CODE              Offs=000AA9  Size=000226  Align=00001  Fill=0000
+    BSS               Offs=000729  Size=000003  Align=00001  Fill=0000
+dir.o:
+    BSS               Offs=00072C  Size=00003B  Align=00001  Fill=0000
+    OVERLAY1          Offs=000000  Size=0008CC  Align=00001  Fill=0000
+base.o:
+    CODE              Offs=000CCF  Size=000031  Align=00001  Fill=0000
+    RODATA            Offs=000222  Size=000024  Align=00001  Fill=0000
+ops.o:
+    CODE              Offs=000D00  Size=000A55  Align=00001  Fill=0000
+    RODATA            Offs=000246  Size=0000D9  Align=00001  Fill=0000
+    BSS               Offs=000767  Size=0000ED  Align=00001  Fill=0000
+    DATA              Offs=00016F  Size=000037  Align=00001  Fill=0000
+    OVERLAY1          Offs=0008CC  Size=000089  Align=00001  Fill=0000
+db.o:
+    DATA              Offs=0001A6  Size=000001  Align=00001  Fill=0000
+    OVERLAY1          Offs=000955  Size=000423  Align=00001  Fill=0000
+ultimate_common_lib.o:
+    CODE              Offs=001755  Size=00037B  Align=00001  Fill=0000
+    RODATA            Offs=00031F  Size=0000EE  Align=00001  Fill=0000
+    BSS               Offs=000854  Size=000308  Align=00001  Fill=0000
+    DATA              Offs=0001A7  Size=00000D  Align=00001  Fill=0000
+ultimate_dos_lib.o:
+    CODE              Offs=001AD0  Size=0004FF  Align=00001  Fill=0000
+    RODATA            Offs=00040D  Size=000020  Align=00001  Fill=0000
+ultimate_time_lib.o:
+    CODE              Offs=001FCF  Size=0000C5  Align=00001  Fill=0000
+    RODATA            Offs=00042D  Size=000002  Align=00001  Fill=0000
+ultimate_network_lib.o:
+    CODE              Offs=002094  Size=0006C9  Align=00001  Fill=0000
+    RODATA            Offs=00042F  Size=000015  Align=00001  Fill=0000
+configcommon.o:
+    OVERLAY3          Offs=000000  Size=000469  Align=00001  Fill=0000
+u-time.o:
+    OVERLAY3          Offs=000469  Size=0003D3  Align=00001  Fill=0000
+dmbconfig.o:
+    DATA              Offs=0001B4  Size=000001  Align=00001  Fill=0000
+    OVERLAY3          Offs=00083C  Size=00135C  Align=00001  Fill=0000
+geosramboot.o:
+    CODE              Offs=00275D  Size=000027  Align=00001  Fill=0000
+    OVERLAY4          Offs=000000  Size=00039D  Align=00001  Fill=0000
+vdc.o:
+    CODE              Offs=002784  Size=00020C  Align=00001  Fill=0000
+c128-ram.o:
+    CODE              Offs=002990  Size=00012B  Align=00001  Fill=0000
+    BSS               Offs=000B5C  Size=000102  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(_cursor.o):
+    BSS               Offs=000C5E  Size=000001  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(_directerrno.o):
+    CODE              Offs=002ABB  Size=00000A  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(_file.o):
+    DATA              Offs=0001B5  Size=00001E  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(_heap.o):
+    DATA              Offs=0001D3  Size=00000A  Align=00001  Fill=0000
+    ONCE              Offs=000000  Size=000010  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(_hextab.o):
+    RODATA            Offs=000444  Size=000010  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(_longminstr.o):
+    RODATA            Offs=000454  Size=00000C  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(_mappederrno.o):
+    CODE              Offs=002AC5  Size=000010  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(_oserror.o):
+    BSS               Offs=000C5F  Size=000001  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(_printf.o):
+    CODE              Offs=002AD5  Size=0003A5  Align=00001  Fill=0000
+    BSS               Offs=000C60  Size=00002B  Align=00001  Fill=0000
+    DATA              Offs=0001DD  Size=000003  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(_seterrno.o):
+    CODE              Offs=002E7A  Size=000009  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(acc_c128_speed.o):
+    CODE              Offs=002E83  Size=000010  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(add.o):
+    CODE              Offs=002E93  Size=00001C  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(addeqsp.o):
+    CODE              Offs=002EAF  Size=000011  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(addysp.o):
+    CODE              Offs=002EC0  Size=00000E  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(aslax1.o):
+    CODE              Offs=002ECE  Size=000008  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(axlong.o):
+    CODE              Offs=002ED6  Size=00000D  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(bneg.o):
+    CODE              Offs=002EE3  Size=00000E  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(c_basin.o):
+    CODE              Offs=002EF1  Size=000006  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(c_chkin.o):
+    CODE              Offs=002EF7  Size=00000A  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(c_close.o):
+    CODE              Offs=002F01  Size=000004  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(c_clrch.o):
+/mnt/d/retro/cc65/lib/c128.lib(c_load.o):
+    CODE              Offs=002F05  Size=00001D  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(c_open.o):
+    CODE              Offs=002F22  Size=000009  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(c_readst.o):
+    CODE              Offs=002F2B  Size=000005  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(c_save.o):
+    CODE              Offs=002F30  Size=000016  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(c_setlfs.o):
+    CODE              Offs=002F46  Size=00000E  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(c_setnam.o):
+    CODE              Offs=002F54  Size=000013  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(callmain.o):
+    CODE              Offs=002F67  Size=000017  Align=00001  Fill=0000
+    DATA              Offs=0001E0  Size=000004  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(cbm_close.o):
+/mnt/d/retro/cc65/lib/c128.lib(cbm_dir.o):
+    CODE              Offs=002F7E  Size=00028B  Align=00001  Fill=0000
+    RODATA            Offs=000460  Size=00000C  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(cbm_filetype.o):
+    CODE              Offs=003209  Size=000013  Align=00001  Fill=0000
+    RODATA            Offs=00046C  Size=000014  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(cbm_load.o):
+    CODE              Offs=00321C  Size=000044  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(cbm_open.o):
+    CODE              Offs=003260  Size=000016  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(cbm_read.o):
+    CODE              Offs=003276  Size=00005B  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(cclear.o):
+    CODE              Offs=0032D1  Size=000015  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(cgetc.o):
+    CODE              Offs=0032E6  Size=000030  Align=00001  Fill=0000
+    INIT              Offs=000000  Size=000002  Align=00001  Fill=0000
+    ONCE              Offs=000010  Size=000013  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(chline.o):
+    CODE              Offs=003316  Size=000015  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(clinechars.o):
+/mnt/d/retro/cc65/lib/c128.lib(clrscr.o):
+/mnt/d/retro/cc65/lib/c128.lib(color.o):
+    CODE              Offs=00332B  Size=000060  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(condes.o):
+    CODE              Offs=00338B  Size=00000C  Align=00001  Fill=0000
+    DATA              Offs=0001E4  Size=000025  Align=00001  Fill=0000
+    ONCE              Offs=000023  Size=00000C  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(conio.o):
+/mnt/d/retro/cc65/lib/c128.lib(cprintf.o):
+    CODE              Offs=003397  Size=00002A  Align=00001  Fill=0000
+    BSS               Offs=000C8B  Size=000001  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(cputc.o):
+    CODE              Offs=0033C1  Size=000049  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(cputs.o):
+    CODE              Offs=00340A  Size=000023  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(crt0.o):
+    BSS               Offs=000C8C  Size=000002  Align=00001  Fill=0000
+    STARTUP           Offs=000000  Size=000051  Align=00001  Fill=0000
+    INIT              Offs=000002  Size=00001A  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(ctype.o):
+    RODATA            Offs=000480  Size=00008B  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(ctypemask.o):
+    CODE              Offs=00342D  Size=00001E  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(curdevice.o):
+    CODE              Offs=00344B  Size=000006  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(cursor.o):
+    CODE              Offs=003451  Size=00000A  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(cvline.o):
+    CODE              Offs=00345B  Size=000018  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(decax1.o):
+    CODE              Offs=003473  Size=000007  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(decax2.o):
+    CODE              Offs=00347A  Size=000007  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(decax3.o):
+    CODE              Offs=003481  Size=000007  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(decax4.o):
+    CODE              Offs=003488  Size=000007  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(decaxy.o):
+    CODE              Offs=00348F  Size=000009  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(decsp1.o):
+    CODE              Offs=003498  Size=000009  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(decsp2.o):
+    CODE              Offs=0034A1  Size=00000D  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(decsp3.o):
+    CODE              Offs=0034AE  Size=00000D  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(decsp4.o):
+    CODE              Offs=0034BB  Size=00000D  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(decsp5.o):
+    CODE              Offs=0034C8  Size=00000D  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(decsp6.o):
+    CODE              Offs=0034D5  Size=00000D  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(decsp7.o):
+    CODE              Offs=0034E2  Size=00000D  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(decsp8.o):
+    CODE              Offs=0034EF  Size=00000D  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(devnum.o):
+/mnt/d/retro/cc65/lib/c128.lib(div.o):
+    CODE              Offs=0034FC  Size=000015  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(divt.o):
+    CODE              Offs=003511  Size=000015  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(em-kernel.o):
+    RODATA            Offs=00050B  Size=000051  Align=00001  Fill=0000
+    BSS               Offs=000C8E  Size=000002  Align=00001  Fill=0000
+    DATA              Offs=000209  Size=000018  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(em_commit.o):
+/mnt/d/retro/cc65/lib/c128.lib(em_map.o):
+/mnt/d/retro/cc65/lib/c128.lib(em_use.o):
+/mnt/d/retro/cc65/lib/c128.lib(enter.o):
+    CODE              Offs=003526  Size=00000E  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(errno.o):
+    BSS               Offs=000C90  Size=000002  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(exehdr.o):
+    EXEHDR            Offs=000000  Size=00000C  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(filedes.o):
+    CODE              Offs=003534  Size=00000E  Align=00001  Fill=0000
+    DATA              Offs=000221  Size=000010  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(filevars.o):
+    INIT              Offs=00001C  Size=000001  Align=00001  Fill=0000
+    ONCE              Offs=00002F  Size=00000C  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(free.o):
+    CODE              Offs=003542  Size=0001D3  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(fwrite.o):
+    CODE              Offs=003715  Size=00007B  Align=00001  Fill=0000
+    BSS               Offs=000C92  Size=000002  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(gmtime.o):
+    CODE              Offs=003790  Size=00009A  Align=00001  Fill=0000
+    BSS               Offs=000C94  Size=000012  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(gotoxy.o):
+    CODE              Offs=00382A  Size=00000D  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(icmp.o):
+    CODE              Offs=003837  Size=00002E  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(incax1.o):
+    CODE              Offs=003865  Size=000007  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(incax2.o):
+    CODE              Offs=00386C  Size=000007  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(incax3.o):
+    CODE              Offs=003873  Size=000005  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(incax7.o):
+    CODE              Offs=003878  Size=000005  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(incaxy.o):
+    CODE              Offs=00387D  Size=00000B  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(incsp1.o):
+    CODE              Offs=003888  Size=000007  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(incsp2.o):
+    CODE              Offs=00388F  Size=000016  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(incsp3.o):
+    CODE              Offs=0038A5  Size=000005  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(incsp4.o):
+    CODE              Offs=0038AA  Size=000005  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(incsp5.o):
+    CODE              Offs=0038AF  Size=000005  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(incsp6.o):
+    CODE              Offs=0038B4  Size=000005  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(incsp7.o):
+    CODE              Offs=0038B9  Size=000005  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(incsp8.o):
+    CODE              Offs=0038BE  Size=000005  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(isdigit.o):
+    CODE              Offs=0038C3  Size=000008  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(islower.o):
+    CODE              Offs=0038CB  Size=000008  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(isprint.o):
+    CODE              Offs=0038D3  Size=00000A  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(isspace.o):
+    CODE              Offs=0038DD  Size=000008  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(isupper.o):
+    CODE              Offs=0038E5  Size=000008  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(kernal.o):
+/mnt/d/retro/cc65/lib/c128.lib(ladd.o):
+    CODE              Offs=0038ED  Size=000025  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(land.o):
+    CODE              Offs=003912  Size=000024  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(lcmp.o):
+    CODE              Offs=003936  Size=00003B  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(ldaxi.o):
+    CODE              Offs=003971  Size=00000D  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(ldaxsp.o):
+    CODE              Offs=00397E  Size=000009  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(ldeaxi.o):
+    CODE              Offs=003987  Size=000017  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(ldeaxysp.o):
+    CODE              Offs=00399E  Size=000013  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(leaaxsp.o):
+    CODE              Offs=0039B1  Size=00000C  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(leave.o):
+    CODE              Offs=0039BD  Size=00001D  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(leq.o):
+    CODE              Offs=0039DA  Size=000006  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(libref.o):
+/mnt/d/retro/cc65/lib/c128.lib(linc.o):
+    CODE              Offs=0039E0  Size=000011  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(lmul.o):
+    CODE              Offs=0039F1  Size=00005C  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(lneg.o):
+    CODE              Offs=003A4D  Size=00001E  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(loadaddr.o):
+    LOADADDR          Offs=000000  Size=000002  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(localtime.o):
+    CODE              Offs=003A6B  Size=00003C  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(lor.o):
+    CODE              Offs=003AA7  Size=000024  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(lpush.o):
+    CODE              Offs=003ACB  Size=000021  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(lsub.o):
+    CODE              Offs=003AEC  Size=000027  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(lsubeqsp.o):
+    CODE              Offs=003B13  Size=000027  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(ltoa.o):
+    CODE              Offs=003B3A  Size=000095  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(ludiv.o):
+    CODE              Offs=003BCF  Size=00007A  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(lugt.o):
+    CODE              Offs=003C49  Size=000006  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(lumod.o):
+    CODE              Offs=003C4F  Size=000019  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(makebool.o):
+    CODE              Offs=003C68  Size=00002C  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(malloc.o):
+    CODE              Offs=003C94  Size=00010E  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(memcpy.o):
+    CODE              Offs=003DA2  Size=00003C  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(memset.o):
+    CODE              Offs=003DDE  Size=00005D  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(mktime.o):
+    CODE              Offs=003E3B  Size=0003D6  Align=00001  Fill=0000
+    RODATA            Offs=00055C  Size=00002E  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(mod.o):
+    CODE              Offs=004211  Size=000011  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(mul.o):
+    CODE              Offs=004222  Size=000045  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(mul8.o):
+    CODE              Offs=004267  Size=00003A  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(mulax10.o):
+    CODE              Offs=0042A1  Size=000019  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(negabs.o):
+    CODE              Offs=0042BA  Size=000012  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(or.o):
+    CODE              Offs=0042CC  Size=000012  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(oserror.o):
+    CODE              Offs=0042DE  Size=000016  Align=00001  Fill=0000
+    RODATA            Offs=00058A  Size=00005A  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(overlayaddr.o):
+    OVL1ADDR          Offs=000000  Size=000002  Align=00001  Fill=0000
+    OVL2ADDR          Offs=000000  Size=000002  Align=00001  Fill=0000
+    OVL3ADDR          Offs=000000  Size=000002  Align=00001  Fill=0000
+    OVL4ADDR          Offs=000000  Size=000002  Align=00001  Fill=0000
+    OVL5ADDR          Offs=000000  Size=000002  Align=00001  Fill=0000
+    OVL6ADDR          Offs=000000  Size=000002  Align=00001  Fill=0000
+    OVL7ADDR          Offs=000000  Size=000002  Align=00001  Fill=0000
+    OVL8ADDR          Offs=000000  Size=000002  Align=00001  Fill=0000
+    OVL9ADDR          Offs=000000  Size=000002  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(popa.o):
+    CODE              Offs=0042F4  Size=00000C  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(popptr1.o):
+    CODE              Offs=004300  Size=00000E  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(printf.o):
+    CODE              Offs=00430E  Size=000033  Align=00001  Fill=0000
+    BSS               Offs=000CA6  Size=000001  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(push1.o):
+    CODE              Offs=004341  Size=000005  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(pusha.o):
+    CODE              Offs=004346  Size=000016  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(pushax.o):
+    CODE              Offs=00435C  Size=00001A  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(pushw.o):
+    CODE              Offs=004376  Size=00000F  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(pushwsp.o):
+    CODE              Offs=004385  Size=00001C  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(regswap2.o):
+    CODE              Offs=0043A1  Size=000016  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(return0.o):
+    CODE              Offs=0043B7  Size=000004  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(revers.o):
+    CODE              Offs=0043BB  Size=000014  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(rwcommon.o):
+    CODE              Offs=0043CF  Size=00001A  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(shelp.o):
+    CODE              Offs=0043E9  Size=000020  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(shrax2.o):
+    CODE              Offs=004409  Size=00000B  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(sprintf.o):
+    CODE              Offs=004414  Size=00002B  Align=00001  Fill=0000
+    BSS               Offs=000CA7  Size=000001  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(staspidx.o):
+    CODE              Offs=00443F  Size=000016  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(status.o):
+/mnt/d/retro/cc65/lib/c128.lib(staxsp.o):
+    CODE              Offs=004455  Size=00000B  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(staxspi.o):
+    CODE              Offs=004460  Size=00001B  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(steaxsp.o):
+    CODE              Offs=00447B  Size=000015  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(strcat.o):
+    CODE              Offs=004490  Size=000031  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(strcmp.o):
+    CODE              Offs=0044C1  Size=000021  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(strcpy.o):
+    CODE              Offs=0044E2  Size=00001F  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(strftime.o):
+    CODE              Offs=004501  Size=00067E  Align=00001  Fill=0000
+    RODATA            Offs=0005E4  Size=00011B  Align=00001  Fill=0000
+    BSS               Offs=000CA8  Size=00002F  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(strlen.o):
+    CODE              Offs=004B7F  Size=000016  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(strlower.o):
+    CODE              Offs=004B95  Size=000027  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(strncpy.o):
+    CODE              Offs=004BBC  Size=000042  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(strstr.o):
+    CODE              Offs=004BFE  Size=000052  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(strtol.o):
+    CODE              Offs=004C50  Size=000273  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(sub.o):
+    CODE              Offs=004EC3  Size=000015  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(subeqsp.o):
+    CODE              Offs=004ED8  Size=000015  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(subysp.o):
+    CODE              Offs=004EED  Size=00000D  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(timezone.o):
+    DATA              Offs=000231  Size=00000F  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(toslong.o):
+    CODE              Offs=004EFA  Size=000038  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(udiv.o):
+    CODE              Offs=004F32  Size=00004F  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(umod.o):
+    CODE              Offs=004F81  Size=000011  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(vcprintf.o):
+    CODE              Offs=004F92  Size=000078  Align=00001  Fill=0000
+    DATA              Offs=000240  Size=000008  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(vfprintf.o):
+    CODE              Offs=00500A  Size=000061  Align=00001  Fill=0000
+    DATA              Offs=000248  Size=000008  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(vsnprintf.o):
+    CODE              Offs=00506B  Size=0000DA  Align=00001  Fill=0000
+    DATA              Offs=000250  Size=000008  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(vsprintf.o):
+    CODE              Offs=005145  Size=000012  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(write.o):
+    CODE              Offs=005157  Size=000054  Align=00001  Fill=0000
+    ONCE              Offs=00003B  Size=000011  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(zerobss.o):
+    CODE              Offs=0051AB  Size=000023  Align=00001  Fill=0000
+/mnt/d/retro/cc65/lib/c128.lib(zeropage.o):
+    ZEROPAGE          Offs=000000  Size=00001A  Align=00001  Fill=0000
+
+
+Segment list:
+-------------
+Name                   Start     End    Size  Align
+----------------------------------------------------
+ZEROPAGE              000002  00001B  00001A  00001
+OVL5ADDR              000AFE  000AFF  000002  00001
+OVERLAY5              000B00  000B9D  00009E  00001
+OVL4ADDR              0012FE  0012FF  000002  00001
+OVERLAY4              001300  00169C  00039D  00001
+LOADADDR              001BFF  001C00  000002  00001
+EXEHDR                001C01  001C0C  00000C  00001
+STARTUP               001C0D  001C5D  000051  00001
+ONCE                  001C5E  001CB1  000054  00001
+CODE                  001CB2  006E7F  0051CE  00001
+RODATA                006E80  007580  000701  00001
+DATA                  007581  0077D8  000258  00001
+INIT                  0077D9  0077F5  00001D  00001
+BSS                   0077F6  0084CC  000CD7  00001
+OVL1ADDR              00A17E  00A17F  000002  00001
+OVL2ADDR              00A17E  00A17F  000002  00001
+OVL3ADDR              00A17E  00A17F  000002  00001
+OVL6ADDR              00A17E  00A17F  000002  00001
+OVL7ADDR              00A17E  00A17F  000002  00001
+OVL8ADDR              00A17E  00A17F  000002  00001
+OVL9ADDR              00A17E  00A17F  000002  00001
+OVERLAY1              00A180  00AEF7  000D78  00001
+OVERLAY2              00A180  00BEE9  001D6A  00001
+OVERLAY3              00A180  00BD17  001B98  00001
+
+
+Exports list by name:
+---------------------
+BASIN                     00FFCF RLA    BSOUT                     00FFD2 RLA    
+CHKIN                     00FFC6 RLA    CKOUT                     00FFC9 RLA    
+CLOSE                     00FFC3 RLA    CLRCH                     00FFCC RLA    
+CURS_X                    0000EC RLZ    CURS_Y                    0000EB RLZ    
+LOAD                      00FFD5 RLA    OPEN                      00FFC0 RLA    
+READST                    00FFB7 RLA    SAVE                      00FFD8 RLA    
+SETLFS                    00FFBA RLA    SETNAM                    00FFBD RLA    
+ST                        000090 RLZ    _DIRW                     0077F7 RLA    
+_MENUX                    0077F8 RLA    _SCREENW                  0077F6 RLA    
+_Slot                     0078AF RLA    _VDC_CopyMemToVDC         00458C RLA    
+_VDC_CopyMemToVDC_core    001F1A RLA    _VDC_CopyVDCToMem         0045C5 RLA    
+_VDC_CopyVDCToMem_core    001F5D RLA    _VDC_DetectVDCMemSize     004462 RLA    
+_VDC_DetectVDCMemSize_core 001DD1 RLA    _VDC_FillArea_core        001FAD RLA    
+_VDC_HChar_core           001E7E RLA    _VDC_MemCopy_core         001E37 RLA    
+_VDC_Peek_core            001DB9 RLA    _VDC_Poke_core            001DA1 RLA    
+_VDC_ReadRegister_core    001D8D RLA    _VDC_SetExtendedVDCMemSize 001E29 RLA    
+_VDC_VChar_core           001ED0 RLA    _VDC_WriteRegister_core   001D97 RLA    
+_VDC_addrh                001D50 RLA    _VDC_addrl                001D51 RLA    
+_VDC_desth                001D52 RLA    _VDC_destl                001D53 RLA    
+_VDC_regadd               001D4E RLA    _VDC_regval               001D4F RLA    
+_VDC_tmp1                 001D57 RLA    _VDC_tmp2                 001D58 RLA    
+_VDC_tmp3                 001D59 RLA    _VDC_tmp4                 001D5A RLA    
+_VDC_value                001D56 RLA    __BSS_RUN__               0077F6 RLA    
+__BSS_SIZE__              000CD7 REA    __CONSTRUCTOR_COUNT__     000004 REA    
+__CONSTRUCTOR_TABLE__     001CAA RLA    __DESTRUCTOR_COUNT__      000001 REA    
+__DESTRUCTOR_TABLE__      00757F RLA    __EXEHDR__                000001 REA    
+__LOADADDR__              000001 REA    __MAIN_SIZE__             007D73 REA    
+__MAIN_START__            001C0D RLA    __OVERLAYADDR__           000001 REA    
+__OVERLAYSIZE__           001E80 REA    __STACKSIZE__             000800 REA    
+__STARTUP__               000001 REA    __ZP_START__              000002 RLA    
+__bzero                   005A90 RLA    __cbm_filetype            004EBB RLA    
+__ctype                   007300 RLA    __ctypeidx                00730B RLA    
+__directerrno             00476D RLA    __errno                   008486 RLA    
+__heapend                 007758 RLA    __heapfirst               00775A RLA    
+__heaplast                00775C RLA    __heapptr                 007756 RLA    
+__hextab                  0072C4 RLA    __longminstr              0072D4 RLA    
+__mappederrno             004777 RLA    __oserror                 008455 RLA    
+__osmaperrno              005F90 RLA    __printf                  00487A RLA    
+__seterrno                004B2C RLA    __tz                      0077B2 RLA    
+_addmountflag             007587 RLA    _bgcolor                  005006 RLA    
+_bordercolor              00502C RLA    _c128_ram                 004642 RLA    
+_cbm_close                004BB3 REA    _cbm_closedir             004EAE RLA    
+_cbm_k_basin              004BA3 RLA    _cbm_k_chkin              004BA9 RLA    
+_cbm_k_close              004BB3 RLA    _cbm_k_clrch              00FFCC REA    
+_cbm_k_load               004BB7 RLA    _cbm_k_open               004BD4 RLA    
+_cbm_k_readst             004BDD RLA    _cbm_k_save               004BE2 RLA    
+_cbm_k_setlfs             004BF8 RLA    _cbm_k_setnam             004C06 RLA    
+_cbm_load                 004ECE RLA    _cbm_open                 004F12 RLA    
+_cbm_opendir              004C30 RLA    _cbm_read                 004F28 RLA    
+_cclear                   004F88 RLA    _cclearxy                 004F83 RLA    
+_cgetc                    004F98 RLA    _chline                   004FCD RLA    
+_clearArea                00275B RLA    _clrscr                   00C142 REA    
+_cmd                      0029B2 RLA    _commandfrommenu          00AC96 RLA    
+_config_main              00BCD6 RLA    _configfilename           0076E2 RLA    
+_cprintf                  005049 RLA    _cputc                    005078 RLA    
+_cputcxy                  005073 RLA    _cputs                    0050C6 RLA    
+_cputsxy                  0050BC RLA    _cspaces                  0022B5 RLA    
+_cursor                   005103 RLA    _cvlinexy                 00510D RLA    
+_depth                    007581 RLA    _device                   007708 RLA    
+_devicetype               007F5D RLA    _div                      0051C3 RLA    
+_dm_apipresent            001D34 RLA    _dm_apiverhigb            001D35 RLA    
+_dm_apiverlowb            001D36 RLA    _dm_apiversion            0076ED RLA    
+_dm_devid                 001D4D RLA    _dm_devtype               001D37 RLA    
+_dm_getapiversion_core    001CB2 RLA    _dm_getdevicetype         001FDB RLA    
+_dm_getdevicetype_core    001CDF RLA    _dm_prglen                001D4C RLA    
+_dm_prgnam                001D38 RLA    _dm_run64                 001CFB RLA    
+_dm_sethsidviaapi         001CEF RLA    _editmenuoptions          00ACED RLA    
+_em_commit                007799 REA    _em_install               00738F RLA    
+_em_map                   007793 REA    _em_uninstall             0073CF RLA    
+_em_use                   007796 REA    _errorcode                000B9D RLA    
+_execute                  0029D1 RLA    _exit                     001C42 RLA    
+_exitScreen               002967 RLA    _fastflag                 007584 RLA    
+_forceeight               007583 RLA    _free                     0051F4 RLA    
+_fwrite                   0053C7 RLA    _geosboot_main            0014AB RLA    
+_getDeviceType            003055 RLA    _getcurrentdevice         0050FD RLA    
+_getkey                   002371 RLA    _getslotfromem            00BB48 RLA    
+_gmtime                   005442 RLA    _gotoxy                   0054DF RLA    
+_headertext               0026C7 RLA    _host                     00758F RLA    
+_imageaid                 00767F RLA    _imageaname               00762F RLA    
+_imageapath               007643 RLA    _imagebid                 0076D0 RLA    
+_imagebname               007680 RLA    _imagebpath               007694 RLA    
+_imagename                0075DF RLA    _information              00BACD RLA    
+_initScreen               002940 RLA    _isdigit                  005575 RLA    
+_islower                  00557D RLA    _isprint                  005585 RLA    
+_isspace                  00558F RLA    _isupper                  005597 RLA    
+_keytomenuslot            00BEAF RLA    _linebuffer               007F7C RLA    
+_linebuffer2              007FCD RLA    _localtime                00571D RLA    
+_ltoa                     005804 RLA    _main                     0024DC RLA    
+_mainLoopBrowse           00AE79 RLA    _mainmenu                 00A8C7 RLA    
+_malloc                   005946 RLA    _memcpy                   005A54 RLA    
+_mid                      002246 RLA    _mktime                   005AED RLA    
+_mountflag                007589 RLA    _newmenuname              007A97 RLA    
+_newmenuoldslot           007D8B RLA    _pathconcat               0022D7 RLA    
+_pathdevice               0078AD RLA    _pathfile                 007899 RLA    
+_pathrunboot              0078AE RLA    _pickmenuslot             00A5B4 RLA    
+_printf                   005FC0 RLA    _putslottoem              00BCE3 RLA    
+_readDir                  00A19C RLA    _readconfigfile           00A3A4 RLA    
+_reufilepath              0075F3 RLA    _reuflag                  007586 RLA    
+_reusize                  0076D1 RLA    _reusizelist              0076D2 RLA    
+_revers                   00606D RLA    _runbootfrommenu          00ABA6 RLA    
+_runmountflag             007588 RLA    _secondsfromutc           00758A RLA    
+_set_c128_speed           004B35 RLA    _sprintf                  0060C6 RLA    
+_startgeos                000B00 RLA    _std_write                00206C RLA    
+_stdout                   007750 RLA    _strcat                   006142 RLA    
+_strcmp                   006173 RLA    _strcpy                   006194 RLA    
+_strftime                 0061B3 RLA    _strlen                   006831 RLA    
+_strlower                 006847 RLA    _strncpy                  00686E RLA    
+_strstr                   0068B0 RLA    _strtol                   006902 RLA    
+_temp_string_onechar      00834C RLA    _textInput                00314C RLA    
+_textcolor                004FDD RLA    _time_main                00A9B1 RLA    
+_timeonflag               00758E RLA    _trace                    007582 RLA    
+_uii_accept               00361E RLA    _uii_change_dir           0037FE RLA    
+_uii_close_file           003A56 RLA    _uii_data                 00814B RLA    
+_uii_data_index           00834E RLA    _uii_data_len             008350 RLA    
+_uii_delete_file          003B7D RLA    _uii_detect               003407 RLA    
+_uii_get_time             003C81 RLA    _uii_load_reu             003C28 RLA    
+_uii_mount_disk           0038D6 RLA    _uii_open_file            003996 RLA    
+_uii_read_file            003B47 RLA    _uii_readdata             0036B6 RLA    
+_uii_readstatus           00371C RLA    _uii_sendcommand          0034FA RLA    
+_uii_set_time             003CAD RLA    _uii_settarget            003430 RLA    
+_uii_socketclose          003D70 RLA    _uii_socketread           003DB4 RLA    
+_uii_status               00804A RLA    _uii_target               007734 RLA    
+_uii_udpconnect           003D5B RLA    _uii_write_file           003A82 RLA    
+_ultoa                    005845 RLA    _updateMenu               00ABD7 RLA    
+_updateScreen             00AA4C RLA    _utilbuffer               007DD4 RLA    
+_vcprintf                 006C8C RLA    _vdc_alloc_address        007F1D RLA    
+_vdcmemory                007F1C RLA    _vfprintf                 006CF4 RLA    
+_vsprintf                 006DF7 RLA    _write                    006E09 RLA    
+_writeconfigfile          00A1BC RLA    addeq0sp                  004B61 RLA    
+addeqysp                  004B63 RLA    addysp                    004B73 RLA    
+addysp1                   004B72 RLA    aslax1                    004B80 RLA    
+axlong                    004B88 RLA    axulong                   004B8E RLA    
+bnega                     004B99 RLA    booleq                    005920 RLA    
+boolugt                   00593F RLA    callmain                  004C19 RLA    
+chlinechar                000040 REZ    cputdirect                005094 RLA    
+ctypemask                 0050DF RLA    ctypemaskdirect           0050E3 RLA    
+cursor                    008454 RLA    curunit                   0077F5 RLA    
+cvlinechar                00005D REZ    decax1                    005125 RLA    
+decax2                    00512C RLA    decax3                    005133 RLA    
+decax4                    00513A RLA    decaxy                    005141 RLA    
+decsp1                    00514A RLA    decsp2                    005153 RLA    
+decsp3                    005160 RLA    decsp4                    00516D RLA    
+decsp5                    00517A RLA    decsp6                    005187 RLA    
+decsp7                    005194 RLA    decsp8                    0051A1 RLA    
+devnum                    0000BA RLZ    donecgetc                 004FB9  LAI   
+donelib                   00503D RLA    em_libref                 001C42 RLA    
+emd_commit                007799 RLA    emd_map                   007793 RLA    
+emd_use                   007796 RLA    enter                     0051D8 RLA    
+fdtab                     0077A2 RLA    getlop                    005892 RLA    
+gotoxy                    0054DC RLA    incax1                    005517 RLA    
+incax2                    00551E RLA    incax3                    005525 RLA    
+incax4                    00552F RLA    incax7                    00552A RLA    
+incaxy                    005531 RLA    inceaxy                   005692 RLA    
+incsp1                    00553A RLA    incsp2                    005549 RLA    
+incsp3                    005557 RLA    incsp4                    00555C RLA    
+incsp5                    005561 RLA    incsp6                    005566 RLA    
+incsp7                    00556B RLA    incsp8                    005570 RLA    
+initcgetc                 001C6E  LAI   initcurunit               001C8D  LAI   
+initheap                  001C5E  LAI   initlib                   001C81 RLA    
+initstdout                001C99  LAI   ldax0sp                   005630 RLA    
+ldaxi                     005623 RLA    ldaxidx                   005625 RLA    
+ldaxysp                   005632 RLA    ldeax0sp                  005650 RLA    
+ldeaxi                    005639 RLA    ldeaxysp                  005652 RLA    
+leaa0sp                   005663 RLA    leavey                    005679 RLA    
+lsubeqysp                 0057C7 RLA    mul8x16                   005F1B RLA    
+mul8x16a                  005F25 RLA    mulax10                   005F53 RLA    
+negax                     005F70 RLA    negeax                    0056FF RLA    
+newline                   00C363 REA    plot                      0050B4 RLA    
+popa                      005FA6 RLA    popax                     005541 RLA    
+popptr1                   005FB2 RLA    popsargsudiv16            00609B RLA    
+ptr1                      00000A RLZ    ptr2                      00000C RLZ    
+ptr3                      00000E RLZ    ptr4                      000010 RLZ    
+push0                     00600E RLA    push1                     005FF3 RLA    
+pusha                     005FFC RLA    pusha0                    006010 RLA    
+pushax                    006012 RLA    pusheax                   005786 RLA    
+pushl0                    00577D RLA    pushw                     006028 RLA    
+pushw0sp                  006037 RLA    pushwidx                  00602A RLA    
+pushwysp                  006039 RLA    putchar                   00CC2F REA    
+regbank                   000016 RLZ    regsave                   000006 RLZ    
+regswap2                  006053 RLA    return0                   006069 RLA    
+rwcommon                  006081 RLA    shrax2                    0060BB RLA    
+sp                        000002 RLZ    sreg                      000004 RLZ    
+staspidx                  0060F1 RLA    stax0sp                   006107 RLA    
+staxspidx                 006112 RLA    staxysp                   006109 RLA    
+steax0sp                  00612D RLA    steaxysp                  00612F RLA    
+subeq0sp                  006B8A RLA    subeqysp                  006B8C RLA    
+subysp                    006B9F RLA    tmp1                      000012 RLZ    
+tmp2                      000013 RLZ    tmp3                      000014 RLZ    
+tmp4                      000015 RLZ    tosaddax                  004B47 RLA    
+tosaddeax                 0055A5 RLA    tosandeax                 0055CA RLA    
+tosdiva0                  0051AE RLA    tosdivax                  0051B0 RLA    
+toseqeax                  00568C RLA    tosicmp                   0054EB RLA    
+toslcmp                   0055E8 RLA    tosmoda0                  005EC3 RLA    
+tosmula0                  005F19 RLA    tosorax                   005F80 RLA    
+tosoreax                  00575F RLA    tossubax                  006B77 RLA    
+tossubeax                 0057A4 RLA    tosudiv0ax                005881 RLA    
+tosudiva0                 006BE4 RLA    tosudivax                 006BE6 RLA    
+tosudiveax                005887 RLA    tosugteax                 0058FB RLA    
+tosulong                  006BAC RLA    tosumod0ax                005901 RLA    
+tosumoda0                 006C33 RLA    tosumodax                 006C35 RLA    
+tosumodeax                005907 RLA    tosumul0ax                0056A3 RLA    
+tosumula0                 005F19 RLA    tosumulax                 005ED4 RLA    
+tosumuleax                0056A9 RLA    udiv16                    006BF5 RLA    
+udiv32                    0058B6 RLA    vsnprintf                 006D20 RLA    
+zerobss                   006E5D RLA    
+
+
+Exports list by value:
+----------------------
+__DESTRUCTOR_COUNT__      000001 REA    __EXEHDR__                000001 REA    
+__LOADADDR__              000001 REA    __OVERLAYADDR__           000001 REA    
+__STARTUP__               000001 REA    __ZP_START__              000002 RLA    
+sp                        000002 RLZ    __CONSTRUCTOR_COUNT__     000004 REA    
+sreg                      000004 RLZ    regsave                   000006 RLZ    
+ptr1                      00000A RLZ    ptr2                      00000C RLZ    
+ptr3                      00000E RLZ    ptr4                      000010 RLZ    
+tmp1                      000012 RLZ    tmp2                      000013 RLZ    
+tmp3                      000014 RLZ    tmp4                      000015 RLZ    
+regbank                   000016 RLZ    chlinechar                000040 REZ    
+cvlinechar                00005D REZ    ST                        000090 RLZ    
+devnum                    0000BA RLZ    CURS_Y                    0000EB RLZ    
+CURS_X                    0000EC RLZ    __STACKSIZE__             000800 REA    
+_startgeos                000B00 RLA    _errorcode                000B9D RLA    
+__BSS_SIZE__              000CD7 REA    _geosboot_main            0014AB RLA    
+__MAIN_START__            001C0D RLA    _exit                     001C42 RLA    
+em_libref                 001C42 RLA    initheap                  001C5E  LAI   
+initcgetc                 001C6E  LAI   initlib                   001C81 RLA    
+initcurunit               001C8D  LAI   initstdout                001C99  LAI   
+__CONSTRUCTOR_TABLE__     001CAA RLA    _dm_getapiversion_core    001CB2 RLA    
+_dm_getdevicetype_core    001CDF RLA    _dm_sethsidviaapi         001CEF RLA    
+_dm_run64                 001CFB RLA    _dm_apipresent            001D34 RLA    
+_dm_apiverhigb            001D35 RLA    _dm_apiverlowb            001D36 RLA    
+_dm_devtype               001D37 RLA    _dm_prgnam                001D38 RLA    
+_dm_prglen                001D4C RLA    _dm_devid                 001D4D RLA    
+_VDC_regadd               001D4E RLA    _VDC_regval               001D4F RLA    
+_VDC_addrh                001D50 RLA    _VDC_addrl                001D51 RLA    
+_VDC_desth                001D52 RLA    _VDC_destl                001D53 RLA    
+_VDC_value                001D56 RLA    _VDC_tmp1                 001D57 RLA    
+_VDC_tmp2                 001D58 RLA    _VDC_tmp3                 001D59 RLA    
+_VDC_tmp4                 001D5A RLA    _VDC_ReadRegister_core    001D8D RLA    
+_VDC_WriteRegister_core   001D97 RLA    _VDC_Poke_core            001DA1 RLA    
+_VDC_Peek_core            001DB9 RLA    _VDC_DetectVDCMemSize_core 001DD1 RLA    
+_VDC_SetExtendedVDCMemSize 001E29 RLA    _VDC_MemCopy_core         001E37 RLA    
+_VDC_HChar_core           001E7E RLA    __OVERLAYSIZE__           001E80 REA    
+_VDC_VChar_core           001ED0 RLA    _VDC_CopyMemToVDC_core    001F1A RLA    
+_VDC_CopyVDCToMem_core    001F5D RLA    _VDC_FillArea_core        001FAD RLA    
+_dm_getdevicetype         001FDB RLA    _std_write                00206C RLA    
+_mid                      002246 RLA    _cspaces                  0022B5 RLA    
+_pathconcat               0022D7 RLA    _getkey                   002371 RLA    
+_main                     0024DC RLA    _headertext               0026C7 RLA    
+_clearArea                00275B RLA    _initScreen               002940 RLA    
+_exitScreen               002967 RLA    _cmd                      0029B2 RLA    
+_execute                  0029D1 RLA    _getDeviceType            003055 RLA    
+_textInput                00314C RLA    _uii_detect               003407 RLA    
+_uii_settarget            003430 RLA    _uii_sendcommand          0034FA RLA    
+_uii_accept               00361E RLA    _uii_readdata             0036B6 RLA    
+_uii_readstatus           00371C RLA    _uii_change_dir           0037FE RLA    
+_uii_mount_disk           0038D6 RLA    _uii_open_file            003996 RLA    
+_uii_close_file           003A56 RLA    _uii_write_file           003A82 RLA    
+_uii_read_file            003B47 RLA    _uii_delete_file          003B7D RLA    
+_uii_load_reu             003C28 RLA    _uii_get_time             003C81 RLA    
+_uii_set_time             003CAD RLA    _uii_udpconnect           003D5B RLA    
+_uii_socketclose          003D70 RLA    _uii_socketread           003DB4 RLA    
+_VDC_DetectVDCMemSize     004462 RLA    _VDC_CopyMemToVDC         00458C RLA    
+_VDC_CopyVDCToMem         0045C5 RLA    _c128_ram                 004642 RLA    
+__directerrno             00476D RLA    __mappederrno             004777 RLA    
+__printf                  00487A RLA    __seterrno                004B2C RLA    
+_set_c128_speed           004B35 RLA    tosaddax                  004B47 RLA    
+addeq0sp                  004B61 RLA    addeqysp                  004B63 RLA    
+addysp1                   004B72 RLA    addysp                    004B73 RLA    
+aslax1                    004B80 RLA    axlong                    004B88 RLA    
+axulong                   004B8E RLA    bnega                     004B99 RLA    
+_cbm_k_basin              004BA3 RLA    _cbm_k_chkin              004BA9 RLA    
+_cbm_close                004BB3 REA    _cbm_k_close              004BB3 RLA    
+_cbm_k_load               004BB7 RLA    _cbm_k_open               004BD4 RLA    
+_cbm_k_readst             004BDD RLA    _cbm_k_save               004BE2 RLA    
+_cbm_k_setlfs             004BF8 RLA    _cbm_k_setnam             004C06 RLA    
+callmain                  004C19 RLA    _cbm_opendir              004C30 RLA    
+_cbm_closedir             004EAE RLA    __cbm_filetype            004EBB RLA    
+_cbm_load                 004ECE RLA    _cbm_open                 004F12 RLA    
+_cbm_read                 004F28 RLA    _cclearxy                 004F83 RLA    
+_cclear                   004F88 RLA    _cgetc                    004F98 RLA    
+donecgetc                 004FB9  LAI   _chline                   004FCD RLA    
+_textcolor                004FDD RLA    _bgcolor                  005006 RLA    
+_bordercolor              00502C RLA    donelib                   00503D RLA    
+_cprintf                  005049 RLA    _cputcxy                  005073 RLA    
+_cputc                    005078 RLA    cputdirect                005094 RLA    
+plot                      0050B4 RLA    _cputsxy                  0050BC RLA    
+_cputs                    0050C6 RLA    ctypemask                 0050DF RLA    
+ctypemaskdirect           0050E3 RLA    _getcurrentdevice         0050FD RLA    
+_cursor                   005103 RLA    _cvlinexy                 00510D RLA    
+decax1                    005125 RLA    decax2                    00512C RLA    
+decax3                    005133 RLA    decax4                    00513A RLA    
+decaxy                    005141 RLA    decsp1                    00514A RLA    
+decsp2                    005153 RLA    decsp3                    005160 RLA    
+decsp4                    00516D RLA    decsp5                    00517A RLA    
+decsp6                    005187 RLA    decsp7                    005194 RLA    
+decsp8                    0051A1 RLA    tosdiva0                  0051AE RLA    
+tosdivax                  0051B0 RLA    _div                      0051C3 RLA    
+enter                     0051D8 RLA    _free                     0051F4 RLA    
+_fwrite                   0053C7 RLA    _gmtime                   005442 RLA    
+gotoxy                    0054DC RLA    _gotoxy                   0054DF RLA    
+tosicmp                   0054EB RLA    incax1                    005517 RLA    
+incax2                    00551E RLA    incax3                    005525 RLA    
+incax7                    00552A RLA    incax4                    00552F RLA    
+incaxy                    005531 RLA    incsp1                    00553A RLA    
+popax                     005541 RLA    incsp2                    005549 RLA    
+incsp3                    005557 RLA    incsp4                    00555C RLA    
+incsp5                    005561 RLA    incsp6                    005566 RLA    
+incsp7                    00556B RLA    incsp8                    005570 RLA    
+_isdigit                  005575 RLA    _islower                  00557D RLA    
+_isprint                  005585 RLA    _isspace                  00558F RLA    
+_isupper                  005597 RLA    tosaddeax                 0055A5 RLA    
+tosandeax                 0055CA RLA    toslcmp                   0055E8 RLA    
+ldaxi                     005623 RLA    ldaxidx                   005625 RLA    
+ldax0sp                   005630 RLA    ldaxysp                   005632 RLA    
+ldeaxi                    005639 RLA    ldeax0sp                  005650 RLA    
+ldeaxysp                  005652 RLA    leaa0sp                   005663 RLA    
+leavey                    005679 RLA    toseqeax                  00568C RLA    
+inceaxy                   005692 RLA    tosumul0ax                0056A3 RLA    
+tosumuleax                0056A9 RLA    negeax                    0056FF RLA    
+_localtime                00571D RLA    tosoreax                  00575F RLA    
+pushl0                    00577D RLA    pusheax                   005786 RLA    
+tossubeax                 0057A4 RLA    lsubeqysp                 0057C7 RLA    
+_ltoa                     005804 RLA    _ultoa                    005845 RLA    
+tosudiv0ax                005881 RLA    tosudiveax                005887 RLA    
+getlop                    005892 RLA    udiv32                    0058B6 RLA    
+tosugteax                 0058FB RLA    tosumod0ax                005901 RLA    
+tosumodeax                005907 RLA    booleq                    005920 RLA    
+boolugt                   00593F RLA    _malloc                   005946 RLA    
+_memcpy                   005A54 RLA    __bzero                   005A90 RLA    
+_mktime                   005AED RLA    tosmoda0                  005EC3 RLA    
+tosumulax                 005ED4 RLA    tosmula0                  005F19 RLA    
+tosumula0                 005F19 RLA    mul8x16                   005F1B RLA    
+mul8x16a                  005F25 RLA    mulax10                   005F53 RLA    
+negax                     005F70 RLA    tosorax                   005F80 RLA    
+__osmaperrno              005F90 RLA    popa                      005FA6 RLA    
+popptr1                   005FB2 RLA    _printf                   005FC0 RLA    
+push1                     005FF3 RLA    pusha                     005FFC RLA    
+push0                     00600E RLA    pusha0                    006010 RLA    
+pushax                    006012 RLA    pushw                     006028 RLA    
+pushwidx                  00602A RLA    pushw0sp                  006037 RLA    
+pushwysp                  006039 RLA    regswap2                  006053 RLA    
+return0                   006069 RLA    _revers                   00606D RLA    
+rwcommon                  006081 RLA    popsargsudiv16            00609B RLA    
+shrax2                    0060BB RLA    _sprintf                  0060C6 RLA    
+staspidx                  0060F1 RLA    stax0sp                   006107 RLA    
+staxysp                   006109 RLA    staxspidx                 006112 RLA    
+steax0sp                  00612D RLA    steaxysp                  00612F RLA    
+_strcat                   006142 RLA    _strcmp                   006173 RLA    
+_strcpy                   006194 RLA    _strftime                 0061B3 RLA    
+_strlen                   006831 RLA    _strlower                 006847 RLA    
+_strncpy                  00686E RLA    _strstr                   0068B0 RLA    
+_strtol                   006902 RLA    tossubax                  006B77 RLA    
+subeq0sp                  006B8A RLA    subeqysp                  006B8C RLA    
+subysp                    006B9F RLA    tosulong                  006BAC RLA    
+tosudiva0                 006BE4 RLA    tosudivax                 006BE6 RLA    
+udiv16                    006BF5 RLA    tosumoda0                 006C33 RLA    
+tosumodax                 006C35 RLA    _vcprintf                 006C8C RLA    
+_vfprintf                 006CF4 RLA    vsnprintf                 006D20 RLA    
+_vsprintf                 006DF7 RLA    _write                    006E09 RLA    
+zerobss                   006E5D RLA    __hextab                  0072C4 RLA    
+__longminstr              0072D4 RLA    __ctype                   007300 RLA    
+__ctypeidx                00730B RLA    _em_install               00738F RLA    
+_em_uninstall             0073CF RLA    __DESTRUCTOR_TABLE__      00757F RLA    
+_depth                    007581 RLA    _trace                    007582 RLA    
+_forceeight               007583 RLA    _fastflag                 007584 RLA    
+_reuflag                  007586 RLA    _addmountflag             007587 RLA    
+_runmountflag             007588 RLA    _mountflag                007589 RLA    
+_secondsfromutc           00758A RLA    _timeonflag               00758E RLA    
+_host                     00758F RLA    _imagename                0075DF RLA    
+_reufilepath              0075F3 RLA    _imageaname               00762F RLA    
+_imageapath               007643 RLA    _imageaid                 00767F RLA    
+_imagebname               007680 RLA    _imagebpath               007694 RLA    
+_imagebid                 0076D0 RLA    _reusize                  0076D1 RLA    
+_reusizelist              0076D2 RLA    _configfilename           0076E2 RLA    
+_dm_apiversion            0076ED RLA    _device                   007708 RLA    
+_uii_target               007734 RLA    _stdout                   007750 RLA    
+__heapptr                 007756 RLA    __heapend                 007758 RLA    
+__heapfirst               00775A RLA    __heaplast                00775C RLA    
+_em_map                   007793 REA    emd_map                   007793 RLA    
+_em_use                   007796 REA    emd_use                   007796 RLA    
+_em_commit                007799 REA    emd_commit                007799 RLA    
+fdtab                     0077A2 RLA    __tz                      0077B2 RLA    
+curunit                   0077F5 RLA    _SCREENW                  0077F6 RLA    
+__BSS_RUN__               0077F6 RLA    _DIRW                     0077F7 RLA    
+_MENUX                    0077F8 RLA    _pathfile                 007899 RLA    
+_pathdevice               0078AD RLA    _pathrunboot              0078AE RLA    
+_Slot                     0078AF RLA    _newmenuname              007A97 RLA    
+__MAIN_SIZE__             007D73 REA    _newmenuoldslot           007D8B RLA    
+_utilbuffer               007DD4 RLA    _vdcmemory                007F1C RLA    
+_vdc_alloc_address        007F1D RLA    _devicetype               007F5D RLA    
+_linebuffer               007F7C RLA    _linebuffer2              007FCD RLA    
+_uii_status               00804A RLA    _uii_data                 00814B RLA    
+_temp_string_onechar      00834C RLA    _uii_data_index           00834E RLA    
+_uii_data_len             008350 RLA    cursor                    008454 RLA    
+__oserror                 008455 RLA    __errno                   008486 RLA    
+_readDir                  00A19C RLA    _writeconfigfile          00A1BC RLA    
+_readconfigfile           00A3A4 RLA    _pickmenuslot             00A5B4 RLA    
+_mainmenu                 00A8C7 RLA    _time_main                00A9B1 RLA    
+_updateScreen             00AA4C RLA    _runbootfrommenu          00ABA6 RLA    
+_updateMenu               00ABD7 RLA    _commandfrommenu          00AC96 RLA    
+_editmenuoptions          00ACED RLA    _mainLoopBrowse           00AE79 RLA    
+_information              00BACD RLA    _getslotfromem            00BB48 RLA    
+_config_main              00BCD6 RLA    _putslottoem              00BCE3 RLA    
+_keytomenuslot            00BEAF RLA    _clrscr                   00C142 REA    
+newline                   00C363 REA    putchar                   00CC2F REA    
+READST                    00FFB7 RLA    SETLFS                    00FFBA RLA    
+SETNAM                    00FFBD RLA    OPEN                      00FFC0 RLA    
+CLOSE                     00FFC3 RLA    CHKIN                     00FFC6 RLA    
+CKOUT                     00FFC9 RLA    CLRCH                     00FFCC RLA    
+_cbm_k_clrch              00FFCC REA    BASIN                     00FFCF RLA    
+BSOUT                     00FFD2 RLA    LOAD                      00FFD5 RLA    
+SAVE                      00FFD8 RLA    
+
+
+Imports list:
+-------------
+BASIN (kernal.o):
+    cbm_read.o                cbm/cbm.inc:47
+    c_basin.o                 cbm/cbm.inc:47
+BSOUT (kernal.o):
+    write.o                   cbm/cbm.inc:49
+    crt0.o                    c128/crt0.s:10
+CHKIN (kernal.o):
+    cbm_read.o                cbm/cbm.inc:44
+    c_chkin.o                 cbm/cbm.inc:44
+CKOUT (kernal.o):
+    write.o                   cbm/cbm.inc:45
+CLOSE (kernal.o):
+    c_close.o                 cbm/cbm.inc:36
+CLRCH (kernal.o):
+    write.o                   cbm/cbm.inc:46
+    cbm_read.o                cbm/cbm.inc:46
+    c_clrch.o                 cbm/cbm.inc:46
+CURS_X (conio.o):
+    gotoxy.o                  cbm/gotoxy.s:9
+CURS_Y (conio.o):
+    gotoxy.o                  cbm/gotoxy.s:9
+LOAD (kernal.o):
+    c_load.o                  cbm/cbm.inc:37
+OPEN (kernal.o):
+    write.o                   cbm/cbm.inc:35
+    c_open.o                  cbm/cbm.inc:35
+READST (kernal.o):
+    write.o                   cbm/cbm.inc:32
+    cbm_read.o                cbm/cbm.inc:32
+    c_readst.o                cbm/cbm.inc:32
+SAVE (kernal.o):
+    c_save.o                  cbm/cbm.inc:38
+SETLFS (kernal.o):
+    write.o                   cbm/cbm.inc:33
+    c_setlfs.o                cbm/cbm.inc:33
+SETNAM (kernal.o):
+    c_setnam.o                cbm/cbm.inc:34
+ST (status.o):
+    crt0.o                    c128/crt0.s:12
+_DIRW (main.o):
+    ops.o                     src/ops.s:14
+    dir.o                     src/dir.s:27
+_MENUX (main.o):
+    db.o                      src/db.s:14
+_SCREENW (main.o):
+    dmbconfig.o               src/dmbconfig.s:28
+    db.o                      src/db.s:13
+    ops.o                     src/ops.s:13
+    screen.o                  src/screen.s:27
+    bootmenu.o                src/bootmenu.s:30
+_Slot (main.o):
+    bootmenu.o                src/bootmenu.s:38
+_VDC_CopyMemToVDC (vdc.o):
+    dir.o                     src/dir.s:37
+_VDC_CopyMemToVDC_core (vdc_assembly.o):
+    vdc.o                     src/vdc.s:32
+_VDC_CopyVDCToMem (vdc.o):
+    dir.o                     src/dir.s:38
+_VDC_CopyVDCToMem_core (vdc_assembly.o):
+    vdc.o                     src/vdc.s:33
+_VDC_DetectVDCMemSize (vdc.o):
+    main.o                    src/main.s:107
+_VDC_DetectVDCMemSize_core (vdc_assembly.o):
+    vdc.o                     src/vdc.s:28
+_VDC_FillArea_core (vdc_assembly.o):
+    vdc.o                     src/vdc.s:34
+_VDC_HChar_core (vdc_assembly.o):
+    vdc.o                     src/vdc.s:30
+_VDC_MemCopy_core (vdc_assembly.o):
+    vdc.o                     src/vdc.s:29
+_VDC_Peek_core (vdc_assembly.o):
+    vdc.o                     src/vdc.s:27
+_VDC_Poke_core (vdc_assembly.o):
+    vdc.o                     src/vdc.s:26
+_VDC_ReadRegister_core (vdc_assembly.o):
+    vdc.o                     src/vdc.s:24
+_VDC_SetExtendedVDCMemSize (vdc_assembly.o):
+    main.o                    src/main.s:106
+_VDC_VChar_core (vdc_assembly.o):
+    vdc.o                     src/vdc.s:31
+_VDC_WriteRegister_core (vdc_assembly.o):
+    vdc.o                     src/vdc.s:25
+_VDC_addrh (vdc_assembly.o):
+    vdc.o                     src/vdc.s:15
+_VDC_addrl (vdc_assembly.o):
+    vdc.o                     src/vdc.s:16
+_VDC_desth (vdc_assembly.o):
+    vdc.o                     src/vdc.s:17
+_VDC_destl (vdc_assembly.o):
+    vdc.o                     src/vdc.s:18
+_VDC_regadd (vdc_assembly.o):
+    vdc.o                     src/vdc.s:13
+_VDC_regval (vdc_assembly.o):
+    vdc.o                     src/vdc.s:14
+_VDC_tmp1 (vdc_assembly.o):
+    vdc.o                     src/vdc.s:20
+_VDC_tmp2 (vdc_assembly.o):
+    vdc.o                     src/vdc.s:21
+_VDC_tmp3 (vdc_assembly.o):
+    vdc.o                     src/vdc.s:22
+_VDC_tmp4 (vdc_assembly.o):
+    vdc.o                     src/vdc.s:23
+_VDC_value (vdc_assembly.o):
+    vdc.o                     src/vdc.s:19
+__BSS_RUN__ ([linker generated]):
+    _heap.o                   common/_heap.s:8
+    zerobss.o                 common/zerobss.s:8
+__BSS_SIZE__ ([linker generated]):
+    _heap.o                   common/_heap.s:8
+    zerobss.o                 common/zerobss.s:8
+__CONSTRUCTOR_COUNT__ ([linker generated]):
+    condes.o                  runtime/condes.s:18
+__CONSTRUCTOR_TABLE__ ([linker generated]):
+    condes.o                  runtime/condes.s:18
+__DESTRUCTOR_COUNT__ ([linker generated]):
+    condes.o                  runtime/condes.s:19
+__DESTRUCTOR_TABLE__ ([linker generated]):
+    condes.o                  runtime/condes.s:19
+__EXEHDR__ (exehdr.o):
+    [linker generated]        dmboot-cc65.cfg:3
+__LOADADDR__ (loadaddr.o):
+    [linker generated]        dmboot-cc65.cfg:2
+__MAIN_SIZE__ ([linker generated]):
+    crt0.o                    c128/crt0.s:11
+__MAIN_START__ ([linker generated]):
+    crt0.o                    c128/crt0.s:11
+__OVERLAYADDR__ (overlayaddr.o):
+    [linker generated]        dmboot-cc65.cfg:4
+__OVERLAYSIZE__ ([linker generated]):
+    [linker generated]        dmboot-cc65.cfg:30
+    [linker generated]        dmboot-cc65.cfg:30
+    [linker generated]        dmboot-cc65.cfg:29
+    [linker generated]        dmboot-cc65.cfg:28
+    [linker generated]        dmboot-cc65.cfg:28
+    [linker generated]        dmboot-cc65.cfg:27
+    [linker generated]        dmboot-cc65.cfg:26
+    [linker generated]        dmboot-cc65.cfg:26
+    [linker generated]        dmboot-cc65.cfg:25
+    [linker generated]        dmboot-cc65.cfg:24
+    [linker generated]        dmboot-cc65.cfg:24
+    [linker generated]        dmboot-cc65.cfg:23
+    [linker generated]        dmboot-cc65.cfg:18
+    [linker generated]        dmboot-cc65.cfg:18
+    [linker generated]        dmboot-cc65.cfg:17
+    [linker generated]        dmboot-cc65.cfg:16
+    [linker generated]        dmboot-cc65.cfg:16
+    [linker generated]        dmboot-cc65.cfg:15
+    [linker generated]        dmboot-cc65.cfg:14
+    [linker generated]        dmboot-cc65.cfg:14
+    [linker generated]        dmboot-cc65.cfg:13
+    [linker generated]        dmboot-cc65.cfg:12
+__STACKSIZE__ ([linker generated]):
+    _heap.o                   common/_heap.s:8
+    crt0.o                    c128/crt0.s:11
+    [linker generated]        dmboot-cc65.cfg:12
+__STARTUP__ (crt0.o):
+    main.o                    src/main.s:13
+__ZP_START__ ([linker generated]):
+    c128-ram.o                c128-ram.s:312
+__bzero (memset.o):
+    configcommon.o            src/configcommon.s:595
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+__cbm_filetype (cbm_filetype.o):
+    cbm_dir.o                 ../libwrk/c128/cbm_dir.s:13
+__ctype (ctype.o):
+    ctypemask.o               common/ctypemask.s:23
+__ctypeidx (ctype.o):
+    ctypemask.o               common/ctypemask.s:24
+__directerrno (_directerrno.o):
+    write.o                   /mnt/d/retro/cc65/asminc/errno.inc:10
+    vsnprintf.o               /mnt/d/retro/cc65/asminc/errno.inc:10
+__errno (errno.o):
+    _seterrno.o               /mnt/d/retro/cc65/asminc/errno.inc:7
+__heapend (_heap.o):
+    malloc.o                  /mnt/d/retro/cc65/asminc/_heap.inc:33
+__heapfirst (_heap.o):
+    malloc.o                  /mnt/d/retro/cc65/asminc/_heap.inc:34
+    free.o                    /mnt/d/retro/cc65/asminc/_heap.inc:34
+__heaplast (_heap.o):
+    malloc.o                  /mnt/d/retro/cc65/asminc/_heap.inc:35
+    free.o                    /mnt/d/retro/cc65/asminc/_heap.inc:35
+__heapptr (_heap.o):
+    malloc.o                  /mnt/d/retro/cc65/asminc/_heap.inc:32
+    free.o                    /mnt/d/retro/cc65/asminc/_heap.inc:32
+__hextab (_hextab.o):
+    ltoa.o                    common/ltoa.s:10
+__longminstr (_longminstr.o):
+    ltoa.o                    common/ltoa.s:10
+__mappederrno (_mappederrno.o):
+    write.o                   /mnt/d/retro/cc65/asminc/errno.inc:10
+__oserror (_oserror.o):
+    _mappederrno.o            /mnt/d/retro/cc65/asminc/errno.inc:7
+    _directerrno.o            /mnt/d/retro/cc65/asminc/errno.inc:7
+    write.o                   /mnt/d/retro/cc65/asminc/errno.inc:7
+    cbm_read.o                cbm/cbm_read.s:44
+    cbm_open.o                cbm/cbm_open.s:24
+    cbm_dir.o                 ../libwrk/c128/cbm_dir.s:23
+    c_load.o                  cbm/c_load.s:10
+    ops.o                     src/ops.s:38
+__osmaperrno (oserror.o):
+    _mappederrno.o            /mnt/d/retro/cc65/asminc/errno.inc:8
+__printf (_printf.o):
+    vsnprintf.o               common/vsnprintf.s:10
+    vfprintf.o                common/vfprintf.s:10
+    vcprintf.o                conio/vcprintf.s:9
+__seterrno (_seterrno.o):
+    _mappederrno.o            /mnt/d/retro/cc65/asminc/errno.inc:9
+    _directerrno.o            /mnt/d/retro/cc65/asminc/errno.inc:9
+    fwrite.o                  /mnt/d/retro/cc65/asminc/errno.inc:9
+    strtol.o                  ../libwrk/c128/strtol.s:17
+__tz (timezone.o):
+    mktime.o                  ../libwrk/c128/mktime.s:14
+    strftime.o                ../libwrk/c128/strftime.s:16
+    localtime.o               ../libwrk/c128/localtime.s:13
+    u-time.o                  src/u-time.s:113
+_addmountflag (main.o):
+    db.o                      src/db.s:21
+    bootmenu.o                src/bootmenu.s:36
+_bgcolor (color.o):
+    screen.o                  src/screen.s:19
+_bordercolor (color.o):
+    screen.o                  src/screen.s:20
+_c128_ram (c128-ram.o):
+    main.o                    src/main.s:72
+_cbm_close (cbm_close.o):
+    cbm_dir.o                 ../libwrk/c128/cbm_dir.s:19
+    db.o                      src/db.s:24
+    ops.o                     src/ops.s:22
+_cbm_closedir (cbm_dir.o):
+    db.o                      src/db.s:25
+    dir.o                     src/dir.s:21
+_cbm_k_basin (c_basin.o):
+    cbm_dir.o                 ../libwrk/c128/cbm_dir.s:14
+    dir.o                     src/dir.s:16
+_cbm_k_chkin (c_chkin.o):
+    cbm_dir.o                 ../libwrk/c128/cbm_dir.s:15
+    dir.o                     src/dir.s:17
+_cbm_k_close (c_close.o):
+    cbm_close.o               cbm/cbm_close.s:7
+_cbm_k_clrch (c_clrch.o):
+    cbm_dir.o                 ../libwrk/c128/cbm_dir.s:16
+    dir.o                     src/dir.s:18
+_cbm_k_load (c_load.o):
+    cbm_load.o                ../libwrk/c128/cbm_load.s:13
+    main.o                    src/main.s:19
+_cbm_k_open (c_open.o):
+    cbm_open.o                cbm/cbm_open.s:23
+_cbm_k_readst (c_readst.o):
+    cbm_dir.o                 ../libwrk/c128/cbm_dir.s:17
+    dir.o                     src/dir.s:19
+_cbm_k_save (c_save.o):
+    main.o                    src/main.s:20
+_cbm_k_setlfs (c_setlfs.o):
+    cbm_open.o                cbm/cbm_open.s:23
+    cbm_load.o                ../libwrk/c128/cbm_load.s:14
+    main.o                    src/main.s:21
+_cbm_k_setnam (c_setnam.o):
+    cbm_open.o                cbm/cbm_open.s:23
+    cbm_load.o                ../libwrk/c128/cbm_load.s:15
+    main.o                    src/main.s:22
+_cbm_load (cbm_load.o):
+    main.o                    src/main.s:23
+_cbm_open (cbm_open.o):
+    cbm_dir.o                 ../libwrk/c128/cbm_dir.s:18
+    ops.o                     src/ops.s:21
+_cbm_opendir (cbm_dir.o):
+    dir.o                     src/dir.s:20
+_cbm_read (cbm_read.o):
+    ops.o                     src/ops.s:23
+_cclear (cclear.o):
+    dir.o                     src/dir.s:26
+_cclearxy (cclear.o):
+    screen.o                  src/screen.s:23
+_cgetc (cgetc.o):
+    dmbconfig.o               src/dmbconfig.s:22
+    db.o                      src/db.s:27
+    ops.o                     src/ops.s:31
+    base.o                    src/base.s:15
+    bootmenu.o                src/bootmenu.s:22
+    main.o                    src/main.s:30
+_chline (chline.o):
+    screen.o                  src/screen.s:21
+_clearArea (screen.o):
+    dmbconfig.o               src/dmbconfig.s:49
+    db.o                      src/db.s:23
+    bootmenu.o                src/bootmenu.s:49
+_clrscr (clrscr.o):
+    dmbconfig.o               src/dmbconfig.s:17
+    ops.o                     src/ops.s:24
+    screen.o                  src/screen.s:13
+    bootmenu.o                src/bootmenu.s:17
+    main.o                    src/main.s:24
+_cmd (ops.o):
+    bootmenu.o                src/bootmenu.s:45
+    main.o                    src/main.s:78
+_commandfrommenu (bootmenu.o):
+    main.o                    src/main.s:86
+_config_main (dmbconfig.o):
+    main.o                    src/main.s:91
+_configfilename (main.o):
+    dmbconfig.o               src/dmbconfig.s:42
+_cprintf (cprintf.o):
+    dmbconfig.o               src/dmbconfig.s:21
+    ops.o                     src/ops.s:30
+    dir.o                     src/dir.s:24
+    bootmenu.o                src/bootmenu.s:21
+    main.o                    src/main.s:29
+_cputc (cputc.o):
+    vcprintf.o                conio/vcprintf.s:9
+    cputs.o                   conio/cputs.s:9
+    ops.o                     src/ops.s:26
+    dir.o                     src/dir.s:23
+    screen.o                  src/screen.s:15
+    main.o                    src/main.s:26
+_cputcxy (cputc.o):
+    ops.o                     src/ops.s:27
+_cputs (cputs.o):
+    dmbconfig.o               src/dmbconfig.s:19
+    ops.o                     src/ops.s:28
+    base.o                    src/base.s:14
+    screen.o                  src/screen.s:16
+    bootmenu.o                src/bootmenu.s:19
+    main.o                    src/main.s:27
+_cputsxy (cputs.o):
+    dmbconfig.o               src/dmbconfig.s:20
+    db.o                      src/db.s:26
+    ops.o                     src/ops.s:29
+    bootmenu.o                src/bootmenu.s:20
+    main.o                    src/main.s:28
+_cspaces (main.o):
+    dmbconfig.o               src/dmbconfig.s:46
+_cursor (cursor.o):
+    ops.o                     src/ops.s:32
+_cvlinexy (cvline.o):
+    screen.o                  src/screen.s:22
+_depth (main.o):
+    db.o                      src/db.s:15
+_device (ops.o):
+    db.o                      src/db.s:35
+_devicetype (ops.o):
+    bootmenu.o                src/bootmenu.s:48
+    main.o                    src/main.s:80
+_div (divt.o):
+    mktime.o                  ../libwrk/c128/mktime.s:13
+_dm_apipresent (dmapiasm.o):
+    ops.o                     src/ops.s:18
+    main.o                    src/main.s:73
+_dm_apiverhigb (dmapiasm.o):
+    main.o                    src/main.s:103
+_dm_apiverlowb (dmapiasm.o):
+    main.o                    src/main.s:104
+_dm_apiversion (main.o):
+    ops.o                     src/ops.s:19
+_dm_devid (dmapiasm.o):
+    ops.o                     src/ops.s:61
+_dm_devtype (dmapiasm.o):
+    main.o                    src/main.s:105
+_dm_getapiversion_core (dmapiasm.o):
+    main.o                    src/main.s:101
+_dm_getdevicetype (main.o):
+    ops.o                     src/ops.s:55
+_dm_getdevicetype_core (dmapiasm.o):
+    main.o                    src/main.s:102
+_dm_prglen (dmapiasm.o):
+    ops.o                     src/ops.s:60
+_dm_prgnam (dmapiasm.o):
+    ops.o                     src/ops.s:59
+_dm_run64 (dmapiasm.o):
+    ops.o                     src/ops.s:58
+_dm_sethsidviaapi (dmapiasm.o):
+    ops.o                     src/ops.s:56
+_editmenuoptions (bootmenu.o):
+    main.o                    src/main.s:87
+_em_commit (em_commit.o):
+    bootmenu.o                src/bootmenu.s:29
+_em_install (em-kernel.o):
+    main.o                    src/main.s:36
+_em_map (em_map.o):
+    bootmenu.o                src/bootmenu.s:27
+_em_uninstall (em-kernel.o):
+    screen.o                  src/screen.s:26
+_em_use (em_use.o):
+    bootmenu.o                src/bootmenu.s:28
+_errorcode (geosramroutine.o):
+    geosramboot.o             src/geosramboot.s:32
+_execute (ops.o):
+    bootmenu.o                src/bootmenu.s:46
+_exit (crt0.o):
+    libref.o                  c128/libref.s:11
+    ops.o                     src/ops.s:37
+    bootmenu.o                src/bootmenu.s:25
+    main.o                    src/main.s:33
+_exitScreen (screen.o):
+    ops.o                     src/ops.s:20
+    bootmenu.o                src/bootmenu.s:50
+    main.o                    src/main.s:82
+_fastflag (main.o):
+    db.o                      src/db.s:18
+_forceeight (main.o):
+    db.o                      src/db.s:17
+    bootmenu.o                src/bootmenu.s:34
+_free (free.o):
+    ultimate_network_lib.o    src/ultimate_network_lib.s:16
+    ultimate_time_lib.o       src/ultimate_time_lib.s:14
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:15
+_fwrite (fwrite.o):
+    vfprintf.o                common/vfprintf.s:10
+_geosboot_main (geosramboot.o):
+    main.o                    src/main.s:92
+_getDeviceType (ops.o):
+    db.o                      src/db.s:34
+_getcurrentdevice (curdevice.o):
+    main.o                    src/main.s:34
+_getkey (main.o):
+    dmbconfig.o               src/dmbconfig.s:47
+    bootmenu.o                src/bootmenu.s:53
+_getslotfromem (bootmenu.o):
+    main.o                    src/main.s:88
+_gmtime (gmtime.o):
+    localtime.o               ../libwrk/c128/localtime.s:14
+_gotoxy (gotoxy.o):
+    dmbconfig.o               src/dmbconfig.s:18
+    ops.o                     src/ops.s:25
+    dir.o                     src/dir.s:22
+    screen.o                  src/screen.s:14
+    bootmenu.o                src/bootmenu.s:18
+    main.o                    src/main.s:25
+_headertext (main.o):
+    ops.o                     src/ops.s:57
+    bootmenu.o                src/bootmenu.s:54
+_host (main.o):
+    dmbconfig.o               src/dmbconfig.s:31
+    u-time.o                  src/u-time.s:30
+    configcommon.o            src/configcommon.s:29
+_imageaid (main.o):
+    geosramboot.o             src/geosramboot.s:26
+    dmbconfig.o               src/dmbconfig.s:36
+    configcommon.o            src/configcommon.s:34
+_imageaname (main.o):
+    geosramboot.o             src/geosramboot.s:24
+    dmbconfig.o               src/dmbconfig.s:34
+    configcommon.o            src/configcommon.s:32
+    bootmenu.o                src/bootmenu.s:42
+_imageapath (main.o):
+    geosramboot.o             src/geosramboot.s:25
+    dmbconfig.o               src/dmbconfig.s:35
+    configcommon.o            src/configcommon.s:33
+_imagebid (main.o):
+    geosramboot.o             src/geosramboot.s:29
+    dmbconfig.o               src/dmbconfig.s:39
+    configcommon.o            src/configcommon.s:37
+_imagebname (main.o):
+    geosramboot.o             src/geosramboot.s:27
+    dmbconfig.o               src/dmbconfig.s:37
+    configcommon.o            src/configcommon.s:35
+    bootmenu.o                src/bootmenu.s:43
+_imagebpath (main.o):
+    geosramboot.o             src/geosramboot.s:28
+    dmbconfig.o               src/dmbconfig.s:38
+    configcommon.o            src/configcommon.s:36
+_imagename (main.o):
+    geosramboot.o             src/geosramboot.s:22
+    dmbconfig.o               src/dmbconfig.s:32
+    configcommon.o            src/configcommon.s:30
+    bootmenu.o                src/bootmenu.s:41
+_information (dmbconfig.o):
+    main.o                    src/main.s:95
+_initScreen (screen.o):
+    main.o                    src/main.s:81
+_isdigit (isdigit.o):
+    strtol.o                  ../libwrk/c128/strtol.s:13
+_islower (islower.o):
+    strtol.o                  ../libwrk/c128/strtol.s:14
+_isprint (isprint.o):
+    ops.o                     src/ops.s:39
+_isspace (isspace.o):
+    strtol.o                  ../libwrk/c128/strtol.s:15
+_isupper (isupper.o):
+    strtol.o                  ../libwrk/c128/strtol.s:16
+_keytomenuslot (bootmenu.o):
+    main.o                    src/main.s:90
+_linebuffer (ops.o):
+    dir.o                     src/dir.s:35
+_linebuffer2 (ops.o):
+    dir.o                     src/dir.s:36
+_localtime (localtime.o):
+    u-time.o                  src/u-time.s:14
+_ltoa (ltoa.o):
+    _printf.o                 common/_printf.s:12
+_main (main.o):
+    callmain.o                runtime/callmain.s:11
+_mainLoopBrowse (db.o):
+    main.o                    src/main.s:79
+_mainmenu (bootmenu.o):
+    main.o                    src/main.s:84
+_malloc (malloc.o):
+    ultimate_network_lib.o    src/ultimate_network_lib.s:15
+    ultimate_time_lib.o       src/ultimate_time_lib.s:13
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:14
+_memcpy (memcpy.o):
+    vsnprintf.o               common/vsnprintf.s:10
+    strftime.o                ../libwrk/c128/strftime.s:14
+    dir.o                     src/dir.s:14
+_mid (main.o):
+    dmbconfig.o               src/dmbconfig.s:45
+_mktime (mktime.o):
+    gmtime.o                  ../libwrk/c128/gmtime.s:14
+_mountflag (main.o):
+    db.o                      src/db.s:19
+    ops.o                     src/ops.s:16
+_newmenuname (main.o):
+    bootmenu.o                src/bootmenu.s:39
+_newmenuoldslot (main.o):
+    bootmenu.o                src/bootmenu.s:40
+_pathconcat (main.o):
+    ops.o                     src/ops.s:54
+    bootmenu.o                src/bootmenu.s:52
+_pathdevice (main.o):
+    bootmenu.o                src/bootmenu.s:32
+_pathfile (main.o):
+    bootmenu.o                src/bootmenu.s:31
+_pathrunboot (main.o):
+    bootmenu.o                src/bootmenu.s:33
+_pickmenuslot (bootmenu.o):
+    main.o                    src/main.s:83
+_printf (printf.o):
+    geosramboot.o             src/geosramboot.s:13
+    u-time.o                  src/u-time.s:13
+    configcommon.o            src/configcommon.s:13
+    main.o                    src/main.s:14
+_putslottoem (bootmenu.o):
+    main.o                    src/main.s:89
+_readDir (dir.o):
+    db.o                      src/db.s:30
+_readconfigfile (configcommon.o):
+    main.o                    src/main.s:94
+_reufilepath (main.o):
+    geosramboot.o             src/geosramboot.s:23
+    dmbconfig.o               src/dmbconfig.s:33
+    configcommon.o            src/configcommon.s:31
+_reuflag (main.o):
+    db.o                      src/db.s:20
+    bootmenu.o                src/bootmenu.s:35
+_reusize (main.o):
+    geosramboot.o             src/geosramboot.s:30
+    dmbconfig.o               src/dmbconfig.s:40
+    configcommon.o            src/configcommon.s:38
+_reusizelist (main.o):
+    dmbconfig.o               src/dmbconfig.s:41
+    bootmenu.o                src/bootmenu.s:44
+_revers (revers.o):
+    dmbconfig.o               src/dmbconfig.s:23
+    db.o                      src/db.s:28
+    base.o                    src/base.s:16
+    dir.o                     src/dir.s:25
+    screen.o                  src/screen.s:17
+    bootmenu.o                src/bootmenu.s:23
+    main.o                    src/main.s:31
+_runbootfrommenu (bootmenu.o):
+    main.o                    src/main.s:85
+_runmountflag (main.o):
+    db.o                      src/db.s:22
+    bootmenu.o                src/bootmenu.s:37
+_secondsfromutc (main.o):
+    dmbconfig.o               src/dmbconfig.s:29
+    u-time.o                  src/u-time.s:28
+    configcommon.o            src/configcommon.s:27
+_set_c128_speed (acc_c128_speed.o):
+    screen.o                  src/screen.s:25
+    main.o                    src/main.s:35
+_sprintf (sprintf.o):
+    strftime.o                ../libwrk/c128/strftime.s:15
+    dmbconfig.o               src/dmbconfig.s:13
+    bootmenu.o                src/bootmenu.s:13
+_startgeos (geosramroutine.o):
+    geosramboot.o             src/geosramboot.s:31
+_std_write (main.o):
+    bootmenu.o                src/bootmenu.s:51
+_stdout (_file.o):
+    printf.o                  common/printf.s:8
+_strcat (strcat.o):
+    dmbconfig.o               src/dmbconfig.s:14
+    main.o                    src/main.s:15
+_strcmp (strcmp.o):
+    geosramboot.o             src/geosramboot.s:14
+    configcommon.o            src/configcommon.s:14
+_strcpy (strcpy.o):
+    dmbconfig.o               src/dmbconfig.s:15
+    configcommon.o            src/configcommon.s:15
+    ops.o                     src/ops.s:34
+    dir.o                     src/dir.s:13
+    bootmenu.o                src/bootmenu.s:14
+    main.o                    src/main.s:16
+_strftime (strftime.o):
+    u-time.o                  src/u-time.s:15
+_strlen (strlen.o):
+    _printf.o                 common/_printf.s:13
+    strftime.o                ../libwrk/c128/strftime.s:13
+    dmbconfig.o               src/dmbconfig.s:16
+    configcommon.o            src/configcommon.s:16
+    ultimate_network_lib.o    src/ultimate_network_lib.s:13
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:13
+    ops.o                     src/ops.s:35
+    screen.o                  src/screen.s:24
+    bootmenu.o                src/bootmenu.s:15
+    main.o                    src/main.s:17
+_strlower (strlower.o):
+    _printf.o                 common/_printf.s:13
+_strncpy (strncpy.o):
+    main.o                    src/main.s:18
+_strstr (strstr.o):
+    ops.o                     src/ops.s:36
+_strtol (strtol.o):
+    dmbconfig.o               src/dmbconfig.s:25
+    bootmenu.o                src/bootmenu.s:26
+_temp_string_onechar (ultimate_common_lib.o):
+    ultimate_network_lib.o    src/ultimate_network_lib.s:19
+_textInput (ops.o):
+    dmbconfig.o               src/dmbconfig.s:48
+    bootmenu.o                src/bootmenu.s:47
+_textcolor (color.o):
+    dmbconfig.o               src/dmbconfig.s:24
+    db.o                      src/db.s:29
+    ops.o                     src/ops.s:33
+    base.o                    src/base.s:17
+    screen.o                  src/screen.s:18
+    bootmenu.o                src/bootmenu.s:24
+    main.o                    src/main.s:32
+_time_main (u-time.o):
+    main.o                    src/main.s:93
+_timeonflag (main.o):
+    dmbconfig.o               src/dmbconfig.s:30
+    u-time.o                  src/u-time.s:29
+    configcommon.o            src/configcommon.s:28
+_trace (main.o):
+    db.o                      src/db.s:16
+    ops.o                     src/ops.s:15
+_uii_accept (ultimate_common_lib.o):
+    u-time.o                  src/u-time.s:20
+    configcommon.o            src/configcommon.s:20
+    ultimate_network_lib.o    src/ultimate_network_lib.s:25
+    ultimate_time_lib.o       src/ultimate_time_lib.s:17
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:18
+_uii_change_dir (ultimate_dos_lib.o):
+    geosramboot.o             src/geosramboot.s:17
+    bootmenu.o                src/bootmenu.s:55
+    main.o                    src/main.s:99
+_uii_close_file (ultimate_dos_lib.o):
+    geosramboot.o             src/geosramboot.s:20
+    configcommon.o            src/configcommon.s:23
+    bootmenu.o                src/bootmenu.s:58
+_uii_data (ultimate_common_lib.o):
+    geosramboot.o             src/geosramboot.s:16
+    dmbconfig.o               src/dmbconfig.s:26
+    u-time.o                  src/u-time.s:17
+    configcommon.o            src/configcommon.s:19
+    ultimate_network_lib.o    src/ultimate_network_lib.s:18
+    main.o                    src/main.s:97
+_uii_data_index (ultimate_common_lib.o):
+    ultimate_network_lib.o    src/ultimate_network_lib.s:20
+_uii_data_len (ultimate_common_lib.o):
+    ultimate_network_lib.o    src/ultimate_network_lib.s:21
+_uii_delete_file (ultimate_dos_lib.o):
+    configcommon.o            src/configcommon.s:26
+_uii_detect (ultimate_common_lib.o):
+    main.o                    src/main.s:98
+_uii_get_time (ultimate_time_lib.o):
+    dmbconfig.o               src/dmbconfig.s:27
+    u-time.o                  src/u-time.s:22
+    main.o                    src/main.s:100
+_uii_load_reu (ultimate_dos_lib.o):
+    geosramboot.o             src/geosramboot.s:21
+    bootmenu.o                src/bootmenu.s:59
+_uii_mount_disk (ultimate_dos_lib.o):
+    geosramboot.o             src/geosramboot.s:18
+    bootmenu.o                src/bootmenu.s:56
+_uii_open_file (ultimate_dos_lib.o):
+    geosramboot.o             src/geosramboot.s:19
+    configcommon.o            src/configcommon.s:22
+    bootmenu.o                src/bootmenu.s:57
+_uii_read_file (ultimate_dos_lib.o):
+    configcommon.o            src/configcommon.s:25
+_uii_readdata (ultimate_common_lib.o):
+    configcommon.o            src/configcommon.s:21
+    ultimate_network_lib.o    src/ultimate_network_lib.s:26
+    ultimate_time_lib.o       src/ultimate_time_lib.s:18
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:19
+_uii_readstatus (ultimate_common_lib.o):
+    u-time.o                  src/u-time.s:21
+    ultimate_network_lib.o    src/ultimate_network_lib.s:27
+    ultimate_time_lib.o       src/ultimate_time_lib.s:19
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:20
+_uii_sendcommand (ultimate_common_lib.o):
+    u-time.o                  src/u-time.s:19
+    ultimate_network_lib.o    src/ultimate_network_lib.s:24
+    ultimate_time_lib.o       src/ultimate_time_lib.s:16
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:17
+_uii_set_time (ultimate_time_lib.o):
+    u-time.o                  src/u-time.s:23
+_uii_settarget (ultimate_common_lib.o):
+    u-time.o                  src/u-time.s:18
+    ultimate_network_lib.o    src/ultimate_network_lib.s:23
+    ultimate_time_lib.o       src/ultimate_time_lib.s:15
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:16
+_uii_socketclose (ultimate_network_lib.o):
+    u-time.o                  src/u-time.s:25
+_uii_socketread (ultimate_network_lib.o):
+    u-time.o                  src/u-time.s:26
+_uii_status (ultimate_common_lib.o):
+    geosramboot.o             src/geosramboot.s:15
+    u-time.o                  src/u-time.s:16
+    configcommon.o            src/configcommon.s:18
+    ultimate_network_lib.o    src/ultimate_network_lib.s:17
+    main.o                    src/main.s:96
+_uii_target (ultimate_common_lib.o):
+    ultimate_network_lib.o    src/ultimate_network_lib.s:22
+_uii_udpconnect (ultimate_network_lib.o):
+    u-time.o                  src/u-time.s:24
+_uii_write_file (ultimate_dos_lib.o):
+    configcommon.o            src/configcommon.s:24
+_ultoa (ltoa.o):
+    _printf.o                 common/_printf.s:12
+_updateMenu (db.o):
+    ops.o                     src/ops.s:43
+_updateScreen (ops.o):
+    db.o                      src/db.s:31
+_utilbuffer (main.o):
+    configcommon.o            src/configcommon.s:39
+    ops.o                     src/ops.s:17
+_vcprintf (vcprintf.o):
+    cprintf.o                 conio/cprintf.s:8
+_vdc_alloc_address (main.o):
+    dir.o                     src/dir.s:29
+_vdcmemory (main.o):
+    dmbconfig.o               src/dmbconfig.s:43
+    dir.o                     src/dir.s:28
+_vfprintf (vfprintf.o):
+    printf.o                  common/printf.s:8
+_vsprintf (vsprintf.o):
+    sprintf.o                 common/sprintf.s:8
+_write (write.o):
+    fwrite.o                  common/fwrite.s:10
+_writeconfigfile (configcommon.o):
+    dmbconfig.o               src/dmbconfig.s:44
+addeq0sp (addeqsp.o):
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_common_lib.o     src/ultimate_common_lib.s:719
+    ultimate_common_lib.o     src/ultimate_common_lib.s:719
+    ops.o                     src/ops.s:1661
+    bootmenu.o                src/bootmenu.s:3286
+    main.o                    src/main.s:1307
+addeqysp (addeqsp.o):
+    strtol.o                  ../libwrk/c128/strtol.s:320
+    strftime.o                ../libwrk/c128/strftime.s:827
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_time_lib.o       src/ultimate_time_lib.s:142
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    ultimate_common_lib.o     src/ultimate_common_lib.s:719
+    ops.o                     src/ops.s:1661
+    screen.o                  src/screen.s:359
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+addysp (addysp.o):
+    mktime.o                  ../libwrk/c128/mktime.s:612
+    fwrite.o                  common/fwrite.s:11
+    strtol.o                  ../libwrk/c128/strtol.s:320
+    sprintf.o                 common/sprintf.s:8
+    printf.o                  common/printf.s:8
+    leave.o                   runtime/leave.s:14
+    incsp8.o                  runtime/incsp8.s:8
+    incsp7.o                  runtime/incsp7.s:8
+    incsp6.o                  runtime/incsp6.s:8
+    incsp5.o                  runtime/incsp5.s:8
+    incsp4.o                  runtime/incsp4.s:8
+    incsp3.o                  runtime/incsp3.s:8
+    cprintf.o                 conio/cprintf.s:8
+    dmbconfig.o               src/dmbconfig.s:1637
+    dmbconfig.o               src/dmbconfig.s:1637
+    u-time.o                  src/u-time.s:465
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    ops.o                     src/ops.s:1661
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    main.o                    src/main.s:1307
+    main.o                    src/main.s:1307
+    main.o                    src/main.s:1307
+addysp1 (addysp.o):
+    lsub.o                    runtime/lsub.s:11
+    ludiv.o                   runtime/ludiv.s:9
+    lmul.o                    runtime/lmul.s:9
+    ladd.o                    runtime/ladd.s:8
+    sub.o                     runtime/sub.s:8
+    or.o                      runtime/or.s:9
+    lor.o                     runtime/lor.s:9
+    land.o                    runtime/land.s:9
+aslax1 (aslax1.o):
+    mktime.o                  ../libwrk/c128/mktime.s:612
+    strftime.o                ../libwrk/c128/strftime.s:827
+    bootmenu.o                src/bootmenu.s:3286
+axlong (axlong.o):
+    _printf.o                 common/_printf.s:11
+    strtol.o                  ../libwrk/c128/strtol.s:320
+axulong (axlong.o):
+    mktime.o                  ../libwrk/c128/mktime.s:612
+    _printf.o                 common/_printf.s:11
+    strtol.o                  ../libwrk/c128/strtol.s:320
+    u-time.o                  src/u-time.s:465
+    configcommon.o            src/configcommon.s:595
+bnega (bneg.o):
+    ultimate_common_lib.o     src/ultimate_common_lib.s:719
+    main.o                    src/main.s:1307
+booleq (makebool.o):
+    leq.o                     runtime/leq.s:8
+    strftime.o                ../libwrk/c128/strftime.s:827
+    cbm_load.o                ../libwrk/c128/cbm_load.s:61
+    ops.o                     src/ops.s:1661
+boolugt (makebool.o):
+    lugt.o                    runtime/lugt.s:8
+callmain (callmain.o):
+    crt0.o                    c128/crt0.s:9
+chlinechar (clinechars.o):
+    chline.o                  cbm/chline.s:10
+cputdirect (cputc.o):
+    chline.o                  cbm/chline.s:9
+    cclear.o                  cbm/cclear.s:9
+ctypemask (ctypemask.o):
+    isupper.o                 common/isupper.s:15
+    isspace.o                 common/isspace.s:15
+    islower.o                 common/islower.s:15
+    isdigit.o                 common/isdigit.s:15
+    isprint.o                 common/isprint.s:15
+ctypemaskdirect (ctypemask.o):
+    strlower.o                common/strlower.s:14
+cursor (_cursor.o):
+    cursor.o                  conio/cursor.s:8
+    cgetc.o                   c128/cgetc.s:11
+curunit (filevars.o):
+    curdevice.o               cbm/curdevice.s:8
+cvlinechar (clinechars.o):
+    cvline.o                  cbm/cvline.s:10
+decax1 (decax1.o):
+    mktime.o                  ../libwrk/c128/mktime.s:612
+    strftime.o                ../libwrk/c128/strftime.s:827
+    ops.o                     src/ops.s:1661
+    dir.o                     src/dir.s:1176
+    bootmenu.o                src/bootmenu.s:3286
+    main.o                    src/main.s:1307
+decax2 (decax2.o):
+    ops.o                     src/ops.s:1661
+    dir.o                     src/dir.s:1176
+decax3 (decax3.o):
+    ops.o                     src/ops.s:1661
+    dir.o                     src/dir.s:1176
+decax4 (decax4.o):
+    ops.o                     src/ops.s:1661
+    dir.o                     src/dir.s:1176
+decaxy (decaxy.o):
+    mktime.o                  ../libwrk/c128/mktime.s:612
+    strtol.o                  ../libwrk/c128/strtol.s:320
+    ops.o                     src/ops.s:1661
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+decsp1 (decsp1.o):
+    cbm_dir.o                 ../libwrk/c128/cbm_dir.s:374
+    configcommon.o            src/configcommon.s:595
+    configcommon.o            src/configcommon.s:595
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    db.o                      src/db.s:490
+    ops.o                     src/ops.s:1661
+    ops.o                     src/ops.s:1661
+    ops.o                     src/ops.s:1661
+    dir.o                     src/dir.s:1176
+    screen.o                  src/screen.s:359
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    main.o                    src/main.s:1307
+    main.o                    src/main.s:1307
+decsp2 (decsp2.o):
+    toslong.o                 runtime/toslong.s:8
+    cbm_dir.o                 ../libwrk/c128/cbm_dir.s:374
+    vdc.o                     src/vdc.s:433
+    dmbconfig.o               src/dmbconfig.s:1637
+    dmbconfig.o               src/dmbconfig.s:1637
+    u-time.o                  src/u-time.s:465
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_time_lib.o       src/ultimate_time_lib.s:142
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    ultimate_common_lib.o     src/ultimate_common_lib.s:719
+    ultimate_common_lib.o     src/ultimate_common_lib.s:719
+    ultimate_common_lib.o     src/ultimate_common_lib.s:719
+    ultimate_common_lib.o     src/ultimate_common_lib.s:719
+    ops.o                     src/ops.s:1661
+    ops.o                     src/ops.s:1661
+    dir.o                     src/dir.s:1176
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    main.o                    src/main.s:1307
+    main.o                    src/main.s:1307
+decsp3 (decsp3.o):
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    main.o                    src/main.s:1307
+decsp4 (decsp4.o):
+    mktime.o                  ../libwrk/c128/mktime.s:612
+    gmtime.o                  ../libwrk/c128/gmtime.s:96
+    sprintf.o                 common/sprintf.s:8
+    lpush.o                   runtime/lpush.s:12
+    localtime.o               ../libwrk/c128/localtime.s:53
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+decsp5 (decsp5.o):
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+decsp6 (decsp6.o):
+    _printf.o                 common/_printf.s:11
+    strtol.o                  ../libwrk/c128/strtol.s:320
+    bootmenu.o                src/bootmenu.s:3286
+decsp7 (decsp7.o):
+    dmbconfig.o               src/dmbconfig.s:1637
+decsp8 (decsp8.o):
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+devnum (devnum.o):
+    filevars.o                cbm/filevars.s:9
+donelib (condes.o):
+    crt0.o                    c128/crt0.s:7
+em_libref (libref.o):
+    em-kernel.o               em/em-kernel.s:7
+emd_commit (em-kernel.o):
+    em_commit.o               /mnt/d/retro/cc65/asminc/em-kernel.inc:84
+emd_map (em-kernel.o):
+    em_map.o                  /mnt/d/retro/cc65/asminc/em-kernel.inc:82
+emd_use (em-kernel.o):
+    em_use.o                  /mnt/d/retro/cc65/asminc/em-kernel.inc:83
+enter (enter.o):
+    cbm_dir.o                 ../libwrk/c128/cbm_dir.s:374
+fdtab (filedes.o):
+    write.o                   cbm/filedes.inc:7
+getlop (ludiv.o):
+    lumod.o                   runtime/lumod.s:9
+gotoxy (gotoxy.o):
+    cvline.o                  cbm/cvline.s:9
+    cputs.o                   conio/cputs.s:9
+    cputc.o                   c128/cputc.s:11
+    chline.o                  cbm/chline.s:9
+    cclear.o                  cbm/cclear.s:9
+incax1 (incax1.o):
+    mktime.o                  ../libwrk/c128/mktime.s:612
+    strtol.o                  ../libwrk/c128/strtol.s:320
+    strftime.o                ../libwrk/c128/strftime.s:827
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_time_lib.o       src/ultimate_time_lib.s:142
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    ops.o                     src/ops.s:1661
+    bootmenu.o                src/bootmenu.s:3286
+incax2 (incax2.o):
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_time_lib.o       src/ultimate_time_lib.s:142
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+incax3 (incax3.o):
+    cbm_dir.o                 ../libwrk/c128/cbm_dir.s:374
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    ops.o                     src/ops.s:1661
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+incax4 (incaxy.o):
+    mktime.o                  ../libwrk/c128/mktime.s:612
+    cbm_dir.o                 ../libwrk/c128/cbm_dir.s:374
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+incax7 (incax7.o):
+    strftime.o                ../libwrk/c128/strftime.s:827
+incaxy (incaxy.o):
+    incax7.o                  runtime/incax7.s:8
+    strftime.o                ../libwrk/c128/strftime.s:827
+    incax3.o                  runtime/incax3.s:8
+    configcommon.o            src/configcommon.s:595
+    configcommon.o            src/configcommon.s:595
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+inceaxy (linc.o):
+    gmtime.o                  ../libwrk/c128/gmtime.s:96
+incsp1 (incsp1.o):
+    cbm_dir.o                 ../libwrk/c128/cbm_dir.s:374
+    vdc.o                     src/vdc.s:433
+    ultimate_common_lib.o     src/ultimate_common_lib.s:719
+    db.o                      src/db.s:490
+    db.o                      src/db.s:490
+    ops.o                     src/ops.s:1661
+    ops.o                     src/ops.s:1661
+    ops.o                     src/ops.s:1661
+    base.o                    src/base.s:59
+    dir.o                     src/dir.s:1176
+    screen.o                  src/screen.s:359
+    bootmenu.o                src/bootmenu.s:3286
+    main.o                    src/main.s:1307
+incsp2 (incsp2.o):
+    vsnprintf.o               common/vsnprintf.s:9
+    mktime.o                  ../libwrk/c128/mktime.s:612
+    staxspi.o                 runtime/staxspi.s:9
+    staspidx.o                runtime/staspidx.s:8
+    popptr1.o                 runtime/popptr1.s:8
+    vdc.o                     src/vdc.s:433
+    vdc.o                     src/vdc.s:433
+    dmbconfig.o               src/dmbconfig.s:1637
+    dmbconfig.o               src/dmbconfig.s:1637
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_time_lib.o       src/ultimate_time_lib.s:142
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    ultimate_common_lib.o     src/ultimate_common_lib.s:719
+    ultimate_common_lib.o     src/ultimate_common_lib.s:719
+    ultimate_common_lib.o     src/ultimate_common_lib.s:719
+    ultimate_common_lib.o     src/ultimate_common_lib.s:719
+    ultimate_common_lib.o     src/ultimate_common_lib.s:719
+    ultimate_common_lib.o     src/ultimate_common_lib.s:719
+    ops.o                     src/ops.s:1661
+    dir.o                     src/dir.s:1176
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    main.o                    src/main.s:1307
+    main.o                    src/main.s:1307
+    main.o                    src/main.s:1307
+    main.o                    src/main.s:1307
+    main.o                    src/main.s:1307
+incsp3 (incsp3.o):
+    vdc.o                     src/vdc.s:433
+    configcommon.o            src/configcommon.s:595
+    configcommon.o            src/configcommon.s:595
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_common_lib.o     src/ultimate_common_lib.s:719
+    ops.o                     src/ops.s:1661
+    ops.o                     src/ops.s:1661
+    screen.o                  src/screen.s:359
+incsp4 (incsp4.o):
+    lcmp.o                    runtime/lcmp.s:9
+    vdc.o                     src/vdc.s:433
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    db.o                      src/db.s:490
+    screen.o                  src/screen.s:359
+    bootmenu.o                src/bootmenu.s:3286
+incsp5 (incsp5.o):
+    cbm_load.o                ../libwrk/c128/cbm_load.s:61
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    dir.o                     src/dir.s:1176
+    screen.o                  src/screen.s:359
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    main.o                    src/main.s:1307
+incsp6 (incsp6.o):
+    vsnprintf.o               common/vsnprintf.s:9
+    gmtime.o                  ../libwrk/c128/gmtime.s:96
+    fwrite.o                  common/fwrite.s:11
+    vfprintf.o                common/vfprintf.s:9
+    localtime.o               ../libwrk/c128/localtime.s:53
+    vdc.o                     src/vdc.s:433
+    vdc.o                     src/vdc.s:433
+    vdc.o                     src/vdc.s:433
+    ultimate_time_lib.o       src/ultimate_time_lib.s:142
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    dir.o                     src/dir.s:1176
+    bootmenu.o                src/bootmenu.s:3286
+incsp7 (incsp7.o):
+    cbm_dir.o                 ../libwrk/c128/cbm_dir.s:374
+    vdc.o                     src/vdc.s:433
+    vdc.o                     src/vdc.s:433
+    dmbconfig.o               src/dmbconfig.s:1637
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    ops.o                     src/ops.s:1661
+    ops.o                     src/ops.s:1661
+    bootmenu.o                src/bootmenu.s:3286
+incsp8 (incsp8.o):
+    strftime.o                ../libwrk/c128/strftime.s:827
+    vdc.o                     src/vdc.s:433
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    ultimate_common_lib.o     src/ultimate_common_lib.s:719
+    screen.o                  src/screen.s:359
+initlib (condes.o):
+    crt0.o                    c128/crt0.s:7
+ldax0sp (ldaxsp.o):
+    mktime.o                  ../libwrk/c128/mktime.s:612
+    strftime.o                ../libwrk/c128/strftime.s:827
+    vdc.o                     src/vdc.s:433
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_time_lib.o       src/ultimate_time_lib.s:142
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    ultimate_common_lib.o     src/ultimate_common_lib.s:719
+    ultimate_common_lib.o     src/ultimate_common_lib.s:719
+    ops.o                     src/ops.s:1661
+    ops.o                     src/ops.s:1661
+    ops.o                     src/ops.s:1661
+    dir.o                     src/dir.s:1176
+    screen.o                  src/screen.s:359
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    main.o                    src/main.s:1307
+    main.o                    src/main.s:1307
+    main.o                    src/main.s:1307
+ldaxi (ldaxi.o):
+    mktime.o                  ../libwrk/c128/mktime.s:612
+    strftime.o                ../libwrk/c128/strftime.s:827
+    cbm_dir.o                 ../libwrk/c128/cbm_dir.s:374
+    ops.o                     src/ops.s:1661
+    ops.o                     src/ops.s:1661
+    bootmenu.o                src/bootmenu.s:3286
+ldaxidx (ldaxi.o):
+    strftime.o                ../libwrk/c128/strftime.s:827
+    u-time.o                  src/u-time.s:465
+ldaxysp (ldaxsp.o):
+    vsnprintf.o               common/vsnprintf.s:9
+    mktime.o                  ../libwrk/c128/mktime.s:612
+    gmtime.o                  ../libwrk/c128/gmtime.s:96
+    fwrite.o                  common/fwrite.s:11
+    strtol.o                  ../libwrk/c128/strtol.s:320
+    strftime.o                ../libwrk/c128/strftime.s:827
+    localtime.o               ../libwrk/c128/localtime.s:53
+    cbm_load.o                ../libwrk/c128/cbm_load.s:61
+    cbm_dir.o                 ../libwrk/c128/cbm_dir.s:374
+    u-time.o                  src/u-time.s:465
+    configcommon.o            src/configcommon.s:595
+    configcommon.o            src/configcommon.s:595
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_time_lib.o       src/ultimate_time_lib.s:142
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    ultimate_common_lib.o     src/ultimate_common_lib.s:719
+    ops.o                     src/ops.s:1661
+    ops.o                     src/ops.s:1661
+    ops.o                     src/ops.s:1661
+    ops.o                     src/ops.s:1661
+    dir.o                     src/dir.s:1176
+    screen.o                  src/screen.s:359
+    screen.o                  src/screen.s:359
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    main.o                    src/main.s:1307
+    main.o                    src/main.s:1307
+    main.o                    src/main.s:1307
+ldeax0sp (ldeaxysp.o):
+    gmtime.o                  ../libwrk/c128/gmtime.s:96
+ldeaxi (ldeaxi.o):
+    gmtime.o                  ../libwrk/c128/gmtime.s:96
+    localtime.o               ../libwrk/c128/localtime.s:53
+ldeaxysp (ldeaxysp.o):
+    strtol.o                  ../libwrk/c128/strtol.s:320
+    u-time.o                  src/u-time.s:465
+leaa0sp (leaaxsp.o):
+    cbm_dir.o                 ../libwrk/c128/cbm_dir.s:374
+    dmbconfig.o               src/dmbconfig.s:1637
+    dmbconfig.o               src/dmbconfig.s:1637
+    dmbconfig.o               src/dmbconfig.s:1637
+    u-time.o                  src/u-time.s:465
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    main.o                    src/main.s:1307
+    main.o                    src/main.s:1307
+leavey (leave.o):
+    cbm_dir.o                 ../libwrk/c128/cbm_dir.s:374
+lsubeqysp (lsubeqsp.o):
+    u-time.o                  src/u-time.s:465
+mul8x16 (mul8.o):
+    mul.o                     runtime/mul.s:8
+mul8x16a (mul8.o):
+    mul.o                     runtime/mul.s:8
+mulax10 (mulax10.o):
+    ops.o                     src/ops.s:1661
+negax (negabs.o):
+    divt.o                    common/divt.s:17
+    mod.o                     runtime/mod.s:11
+    shelp.o                   runtime/shelp.s:11
+    div.o                     runtime/div.s:11
+negeax (lneg.o):
+    ltoa.o                    common/ltoa.s:9
+    strtol.o                  ../libwrk/c128/strtol.s:320
+newline (cputc.o):
+    cvline.o                  cbm/cvline.s:9
+plot (cputc.o):
+    gotoxy.o                  cbm/gotoxy.s:8
+popa (popa.o):
+    gotoxy.o                  cbm/gotoxy.s:8
+    cbm_read.o                cbm/cbm_read.s:43
+    cbm_open.o                cbm/cbm_open.s:22
+    c_setlfs.o                cbm/c_setlfs.s:12
+    c_load.o                  cbm/c_load.s:11
+popax (incsp2.o):
+    rwcommon.o                cbm/rwcommon.s:9
+    vsnprintf.o               common/vsnprintf.s:9
+    ltoa.o                    common/ltoa.s:9
+    _printf.o                 common/_printf.s:11
+    vcprintf.o                conio/vcprintf.s:8
+    strncpy.o                 common/strncpy.s:8
+    strcpy.o                  common/strcpy.s:8
+    strcat.o                  common/strcat.s:9
+    shelp.o                   runtime/shelp.s:11
+    memset.o                  common/memset.s:19
+    memcpy.o                  common/memcpy.s:14
+    cbm_read.o                cbm/cbm_read.s:43
+popptr1 (popptr1.o):
+    rwcommon.o                cbm/rwcommon.s:9
+    umod.o                    runtime/umod.s:8
+    mul.o                     runtime/mul.s:9
+    ltoa.o                    common/ltoa.s:9
+    vcprintf.o                conio/vcprintf.s:8
+    udiv.o                    runtime/udiv.s:9
+    strstr.o                  common/strstr.s:8
+    strncpy.o                 common/strncpy.s:8
+    strcmp.o                  common/strcmp.s:8
+    mul8.o                    runtime/mul8.s:9
+    memcpy.o                  common/memcpy.s:14
+    c_save.o                  cbm/c_save.s:10
+popsargsudiv16 (shelp.o):
+    mod.o                     runtime/mod.s:11
+    div.o                     runtime/div.s:11
+ptr1 (zeropage.o):
+    lcmp.o                    runtime/lcmp.s:10
+    write.o                   cbm/write.s:11
+    vsnprintf.o               common/vsnprintf.s:11
+    strlower.o                common/strlower.s:13
+    mul.o                     runtime/mul.s:10
+    mktime.o                  ../libwrk/c128/mktime.s:11
+    ludiv.o                   runtime/ludiv.s:10
+    ltoa.o                    common/ltoa.s:11
+    lmul.o                    runtime/lmul.s:10
+    ldeaxi.o                  runtime/ldeaxi.s:8
+    fwrite.o                  common/fwrite.s:14
+    _printf.o                 /mnt/d/retro/cc65/asminc/zeropage.inc:12
+    zerobss.o                 common/zerobss.s:9
+    vfprintf.o                common/vfprintf.s:11
+    vcprintf.o                conio/vcprintf.s:10
+    udiv.o                    runtime/udiv.s:10
+    strtol.o                  ../libwrk/c128/strtol.s:11
+    strstr.o                  common/strstr.s:9
+    strncpy.o                 common/strncpy.s:9
+    strftime.o                ../libwrk/c128/strftime.s:11
+    strcpy.o                  common/strcpy.s:9
+    strcmp.o                  common/strcmp.s:9
+    strcat.o                  common/strcat.s:10
+    staxspi.o                 runtime/staxspi.s:10
+    staspidx.o                runtime/staspidx.s:9
+    sprintf.o                 common/sprintf.s:9
+    shelp.o                   runtime/shelp.s:12
+    pushw.o                   runtime/pushw.s:9
+    printf.o                  common/printf.s:9
+    popptr1.o                 runtime/popptr1.s:9
+    mulax10.o                 runtime/mulax10.s:9
+    mul8.o                    runtime/mul8.s:10
+    memset.o                  common/memset.s:20
+    memcpy.o                  common/memcpy.s:15
+    malloc.o                  common/malloc.s:108
+    ldaxi.o                   runtime/ldaxi.s:8
+    free.o                    common/free.s:62
+    em-kernel.o               em/em-kernel.s:8
+    div.o                     runtime/div.s:12
+    cputs.o                   conio/cputs.s:10
+    cprintf.o                 conio/cprintf.s:9
+    cbm_read.o                cbm/cbm_read.s:42
+    cbm_dir.o                 ../libwrk/c128/cbm_dir.s:11
+    c_setnam.o                cbm/c_setnam.s:10
+    c_save.o                  cbm/c_save.s:11
+    c_load.o                  cbm/c_load.s:12
+    vdc.o                     src/vdc.s:11
+    u-time.o                  src/u-time.s:11
+    configcommon.o            src/configcommon.s:11
+    ultimate_network_lib.o    src/ultimate_network_lib.s:11
+    ultimate_time_lib.o       src/ultimate_time_lib.s:11
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:11
+    ultimate_common_lib.o     src/ultimate_common_lib.s:11
+    ops.o                     src/ops.s:11
+    dir.o                     src/dir.s:11
+    screen.o                  src/screen.s:11
+    bootmenu.o                src/bootmenu.s:11
+    main.o                    src/main.s:11
+ptr2 (zeropage.o):
+    rwcommon.o                cbm/rwcommon.s:10
+    write.o                   cbm/write.s:11
+    strlower.o                common/strlower.s:13
+    lumod.o                   runtime/lumod.s:10
+    ludiv.o                   runtime/ludiv.s:10
+    ltoa.o                    common/ltoa.s:11
+    _printf.o                 /mnt/d/retro/cc65/asminc/zeropage.inc:12
+    vcprintf.o                conio/vcprintf.s:10
+    strstr.o                  common/strstr.s:9
+    strncpy.o                 common/strncpy.s:9
+    strlen.o                  common/strlen.s:12
+    strcpy.o                  common/strcpy.s:9
+    strcmp.o                  common/strcmp.s:9
+    strcat.o                  common/strcat.s:10
+    memset.o                  common/memset.s:20
+    memcpy.o                  common/memcpy.s:15
+    malloc.o                  common/malloc.s:108
+    free.o                    common/free.s:62
+    cbm_read.o                cbm/cbm_read.s:42
+ptr3 (zeropage.o):
+    rwcommon.o                cbm/rwcommon.s:10
+    write.o                   cbm/write.s:11
+    ludiv.o                   runtime/ludiv.s:10
+    ltoa.o                    common/ltoa.s:11
+    lmul.o                    runtime/lmul.s:10
+    vcprintf.o                conio/vcprintf.s:10
+    strstr.o                  common/strstr.s:9
+    memset.o                  common/memset.s:20
+    memcpy.o                  common/memcpy.s:15
+    malloc.o                  common/malloc.s:108
+    free.o                    common/free.s:62
+    cbm_read.o                cbm/cbm_read.s:42
+ptr4 (zeropage.o):
+    umod.o                    runtime/umod.s:9
+    mul.o                     runtime/mul.s:10
+    ludiv.o                   runtime/ludiv.s:10
+    lmul.o                    runtime/lmul.s:10
+    linc.o                    runtime/linc.s:8
+    udiv.o                    runtime/udiv.s:10
+    strstr.o                  common/strstr.s:9
+    shelp.o                   runtime/shelp.s:12
+    mul8.o                    runtime/mul8.s:10
+    free.o                    common/free.s:62
+push0 (pushax.o):
+    strtol.o                  ../libwrk/c128/strtol.s:320
+    dmbconfig.o               src/dmbconfig.s:1637
+    dmbconfig.o               src/dmbconfig.s:1637
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_time_lib.o       src/ultimate_time_lib.s:142
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    ultimate_common_lib.o     src/ultimate_common_lib.s:719
+    ultimate_common_lib.o     src/ultimate_common_lib.s:719
+    ultimate_common_lib.o     src/ultimate_common_lib.s:719
+    db.o                      src/db.s:490
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+push1 (push1.o):
+    _printf.o                 common/_printf.s:11
+    vfprintf.o                common/vfprintf.s:9
+pusha (pusha.o):
+    strtol.o                  ../libwrk/c128/strtol.s:320
+    cbm_load.o                ../libwrk/c128/cbm_load.s:61
+    cbm_dir.o                 ../libwrk/c128/cbm_dir.s:374
+    cbm_dir.o                 ../libwrk/c128/cbm_dir.s:374
+    cbm_dir.o                 ../libwrk/c128/cbm_dir.s:374
+    vdc.o                     src/vdc.s:433
+    vdc.o                     src/vdc.s:433
+    vdc.o                     src/vdc.s:433
+    vdc.o                     src/vdc.s:433
+    vdc.o                     src/vdc.s:433
+    vdc.o                     src/vdc.s:433
+    vdc.o                     src/vdc.s:433
+    geosramboot.o             src/geosramboot.s:350
+    dmbconfig.o               src/dmbconfig.s:1637
+    dmbconfig.o               src/dmbconfig.s:1637
+    dmbconfig.o               src/dmbconfig.s:1637
+    dmbconfig.o               src/dmbconfig.s:1637
+    u-time.o                  src/u-time.s:465
+    configcommon.o            src/configcommon.s:595
+    configcommon.o            src/configcommon.s:595
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    ultimate_common_lib.o     src/ultimate_common_lib.s:719
+    ultimate_common_lib.o     src/ultimate_common_lib.s:719
+    db.o                      src/db.s:490
+    db.o                      src/db.s:490
+    ops.o                     src/ops.s:1661
+    ops.o                     src/ops.s:1661
+    ops.o                     src/ops.s:1661
+    ops.o                     src/ops.s:1661
+    ops.o                     src/ops.s:1661
+    ops.o                     src/ops.s:1661
+    ops.o                     src/ops.s:1661
+    ops.o                     src/ops.s:1661
+    base.o                    src/base.s:59
+    dir.o                     src/dir.s:1176
+    dir.o                     src/dir.s:1176
+    screen.o                  src/screen.s:359
+    screen.o                  src/screen.s:359
+    screen.o                  src/screen.s:359
+    screen.o                  src/screen.s:359
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    main.o                    src/main.s:1307
+    main.o                    src/main.s:1307
+    main.o                    src/main.s:1307
+    main.o                    src/main.s:1307
+    main.o                    src/main.s:1307
+    main.o                    src/main.s:1307
+    main.o                    src/main.s:1307
+    main.o                    src/main.s:1307
+pusha0 (pushax.o):
+    push1.o                   runtime/push1.s:8
+    vdc.o                     src/vdc.s:433
+    dmbconfig.o               src/dmbconfig.s:1637
+    dmbconfig.o               src/dmbconfig.s:1637
+    dmbconfig.o               src/dmbconfig.s:1637
+    dmbconfig.o               src/dmbconfig.s:1637
+    dmbconfig.o               src/dmbconfig.s:1637
+    u-time.o                  src/u-time.s:465
+    configcommon.o            src/configcommon.s:595
+    ops.o                     src/ops.s:1661
+    ops.o                     src/ops.s:1661
+    dir.o                     src/dir.s:1176
+    screen.o                  src/screen.s:359
+    screen.o                  src/screen.s:359
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    main.o                    src/main.s:1307
+pushax (pushax.o):
+    mktime.o                  ../libwrk/c128/mktime.s:612
+    mktime.o                  ../libwrk/c128/mktime.s:612
+    gmtime.o                  ../libwrk/c128/gmtime.s:96
+    fwrite.o                  common/fwrite.s:11
+    callmain.o                runtime/callmain.s:11
+    _printf.o                 common/_printf.s:11
+    vcprintf.o                conio/vcprintf.s:8
+    strtol.o                  ../libwrk/c128/strtol.s:320
+    strftime.o                ../libwrk/c128/strftime.s:827
+    pushw.o                   runtime/pushw.s:8
+    printf.o                  common/printf.s:8
+    localtime.o               ../libwrk/c128/localtime.s:53
+    cprintf.o                 conio/cprintf.s:8
+    cbm_load.o                ../libwrk/c128/cbm_load.s:61
+    cbm_dir.o                 ../libwrk/c128/cbm_dir.s:374
+    cbm_dir.o                 ../libwrk/c128/cbm_dir.s:374
+    vdc.o                     src/vdc.s:433
+    vdc.o                     src/vdc.s:433
+    vdc.o                     src/vdc.s:433
+    vdc.o                     src/vdc.s:433
+    vdc.o                     src/vdc.s:433
+    vdc.o                     src/vdc.s:433
+    vdc.o                     src/vdc.s:433
+    geosramboot.o             src/geosramboot.s:350
+    geosramboot.o             src/geosramboot.s:350
+    dmbconfig.o               src/dmbconfig.s:1637
+    dmbconfig.o               src/dmbconfig.s:1637
+    dmbconfig.o               src/dmbconfig.s:1637
+    dmbconfig.o               src/dmbconfig.s:1637
+    dmbconfig.o               src/dmbconfig.s:1637
+    u-time.o                  src/u-time.s:465
+    u-time.o                  src/u-time.s:465
+    configcommon.o            src/configcommon.s:595
+    configcommon.o            src/configcommon.s:595
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_time_lib.o       src/ultimate_time_lib.s:142
+    ultimate_time_lib.o       src/ultimate_time_lib.s:142
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    ultimate_common_lib.o     src/ultimate_common_lib.s:719
+    ultimate_common_lib.o     src/ultimate_common_lib.s:719
+    ultimate_common_lib.o     src/ultimate_common_lib.s:719
+    ultimate_common_lib.o     src/ultimate_common_lib.s:719
+    ultimate_common_lib.o     src/ultimate_common_lib.s:719
+    ultimate_common_lib.o     src/ultimate_common_lib.s:719
+    ops.o                     src/ops.s:1661
+    ops.o                     src/ops.s:1661
+    ops.o                     src/ops.s:1661
+    ops.o                     src/ops.s:1661
+    ops.o                     src/ops.s:1661
+    ops.o                     src/ops.s:1661
+    dir.o                     src/dir.s:1176
+    dir.o                     src/dir.s:1176
+    dir.o                     src/dir.s:1176
+    screen.o                  src/screen.s:359
+    screen.o                  src/screen.s:359
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    main.o                    src/main.s:1307
+    main.o                    src/main.s:1307
+    main.o                    src/main.s:1307
+    main.o                    src/main.s:1307
+    main.o                    src/main.s:1307
+    main.o                    src/main.s:1307
+    main.o                    src/main.s:1307
+pusheax (lpush.o):
+    mktime.o                  ../libwrk/c128/mktime.s:612
+    gmtime.o                  ../libwrk/c128/gmtime.s:96
+    _printf.o                 common/_printf.s:11
+    strtol.o                  ../libwrk/c128/strtol.s:320
+    localtime.o               ../libwrk/c128/localtime.s:53
+    dmbconfig.o               src/dmbconfig.s:1637
+    dmbconfig.o               src/dmbconfig.s:1637
+    u-time.o                  src/u-time.s:465
+    configcommon.o            src/configcommon.s:595
+    configcommon.o            src/configcommon.s:595
+pushl0 (lpush.o):
+    strtol.o                  ../libwrk/c128/strtol.s:320
+pushw (pushw.o):
+    strftime.o                ../libwrk/c128/strftime.s:827
+    dmbconfig.o               src/dmbconfig.s:1637
+    dmbconfig.o               src/dmbconfig.s:1637
+    bootmenu.o                src/bootmenu.s:3286
+pushw0sp (pushwsp.o):
+    mktime.o                  ../libwrk/c128/mktime.s:612
+    vsprintf.o                common/vsprintf.s:8
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_time_lib.o       src/ultimate_time_lib.s:142
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    bootmenu.o                src/bootmenu.s:3286
+    main.o                    src/main.s:1307
+pushwidx (pushw.o):
+    strftime.o                ../libwrk/c128/strftime.s:827
+    dir.o                     src/dir.s:1176
+pushwysp (pushwsp.o):
+    fwrite.o                  common/fwrite.s:11
+    vfprintf.o                common/vfprintf.s:9
+    strftime.o                ../libwrk/c128/strftime.s:827
+    dmbconfig.o               src/dmbconfig.s:1637
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    ops.o                     src/ops.s:1661
+    dir.o                     src/dir.s:1176
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    main.o                    src/main.s:1307
+    main.o                    src/main.s:1307
+    main.o                    src/main.s:1307
+putchar (cputc.o):
+    cvline.o                  cbm/cvline.s:9
+regbank (zeropage.o):
+    mktime.o                  ../libwrk/c128/mktime.s:10
+    _printf.o                 /mnt/d/retro/cc65/asminc/zeropage.inc:14
+    strtol.o                  ../libwrk/c128/strtol.s:10
+    regswap2.o                runtime/regswap2.s:8
+    cbm_dir.o                 ../libwrk/c128/cbm_dir.s:10
+regsave (zeropage.o):
+    bootmenu.o                src/bootmenu.s:10
+regswap2 (regswap2.o):
+    mktime.o                  ../libwrk/c128/mktime.s:612
+    cbm_dir.o                 ../libwrk/c128/cbm_dir.s:374
+return0 (return0.o):
+    em-kernel.o               em/em-kernel.s:7
+    color.o                   c128/color.s:10
+rwcommon (rwcommon.o):
+    write.o                   cbm/write.s:10
+shrax2 (shrax2.o):
+    mktime.o                  ../libwrk/c128/mktime.s:612
+sp (zeropage.o):
+    lsub.o                    runtime/lsub.s:12
+    lcmp.o                    runtime/lcmp.s:10
+    vsnprintf.o               common/vsnprintf.s:11
+    mktime.o                  ../libwrk/c128/mktime.s:10
+    ludiv.o                   runtime/ludiv.s:10
+    lmul.o                    runtime/lmul.s:10
+    ladd.o                    runtime/ladd.s:9
+    gmtime.o                  ../libwrk/c128/gmtime.s:10
+    _printf.o                 /mnt/d/retro/cc65/asminc/zeropage.inc:11
+    _heap.o                   common/_heap.s:9
+    vfprintf.o                common/vfprintf.s:11
+    vcprintf.o                conio/vcprintf.s:10
+    toslong.o                 runtime/toslong.s:9
+    subysp.o                  runtime/subysp.s:9
+    subeqsp.o                 runtime/subeqsp.s:8
+    sub.o                     runtime/sub.s:9
+    strtol.o                  ../libwrk/c128/strtol.s:10
+    strftime.o                ../libwrk/c128/strftime.s:10
+    steaxsp.o                 runtime/steaxsp.s:8
+    staxspi.o                 runtime/staxspi.s:10
+    staxsp.o                  runtime/staxsp.s:8
+    staspidx.o                runtime/staspidx.s:9
+    sprintf.o                 common/sprintf.s:9
+    regswap2.o                runtime/regswap2.s:8
+    pushwsp.o                 runtime/pushwsp.s:8
+    pushax.o                  runtime/pushax.s:8
+    pusha.o                   runtime/pusha.s:8
+    printf.o                  common/printf.s:9
+    popptr1.o                 runtime/popptr1.s:9
+    popa.o                    runtime/popa.s:8
+    or.o                      runtime/or.s:10
+    memset.o                  common/memset.s:20
+    memcpy.o                  common/memcpy.s:15
+    lsubeqsp.o                runtime/lsubeqsp.s:8
+    lpush.o                   runtime/lpush.s:13
+    lor.o                     runtime/lor.s:10
+    localtime.o               ../libwrk/c128/localtime.s:10
+    leave.o                   runtime/leave.s:15
+    leaaxsp.o                 runtime/leaaxsp.s:8
+    ldeaxysp.o                runtime/ldeaxysp.s:12
+    ldaxsp.o                  runtime/ldaxsp.s:8
+    land.o                    runtime/land.s:10
+    incsp2.o                  runtime/incsp2.s:8
+    incsp1.o                  runtime/incsp1.s:8
+    icmp.o                    runtime/icmp.s:9
+    enter.o                   runtime/enter.s:8
+    decsp8.o                  runtime/decsp8.s:8
+    decsp7.o                  runtime/decsp7.s:8
+    decsp6.o                  runtime/decsp6.s:8
+    decsp5.o                  runtime/decsp5.s:8
+    decsp4.o                  runtime/decsp4.s:8
+    decsp3.o                  runtime/decsp3.s:8
+    decsp2.o                  runtime/decsp2.s:8
+    decsp1.o                  runtime/decsp1.s:8
+    crt0.o                    /mnt/d/retro/cc65/asminc/zeropage.inc:11
+    cprintf.o                 conio/cprintf.s:9
+    cbm_load.o                ../libwrk/c128/cbm_load.s:10
+    cbm_dir.o                 ../libwrk/c128/cbm_dir.s:10
+    addysp.o                  runtime/addysp.s:8
+    addeqsp.o                 runtime/addeqsp.s:8
+    add.o                     runtime/add.s:12
+    vdc.o                     src/vdc.s:10
+    dmbconfig.o               src/dmbconfig.s:10
+    u-time.o                  src/u-time.s:10
+    configcommon.o            src/configcommon.s:10
+    ultimate_network_lib.o    src/ultimate_network_lib.s:10
+    ultimate_time_lib.o       src/ultimate_time_lib.s:10
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:10
+    ultimate_common_lib.o     src/ultimate_common_lib.s:10
+    db.o                      src/db.s:10
+    ops.o                     src/ops.s:10
+    base.o                    src/base.s:10
+    dir.o                     src/dir.s:10
+    screen.o                  src/screen.s:10
+    bootmenu.o                src/bootmenu.s:10
+    main.o                    src/main.s:10
+sreg (zeropage.o):
+    lsub.o                    runtime/lsub.s:12
+    lcmp.o                    runtime/lcmp.s:10
+    divt.o                    common/divt.s:18
+    umod.o                    runtime/umod.s:9
+    mod.o                     runtime/mod.s:12
+    mktime.o                  ../libwrk/c128/mktime.s:10
+    lumod.o                   runtime/lumod.s:10
+    ludiv.o                   runtime/ludiv.s:10
+    ltoa.o                    common/ltoa.s:11
+    lneg.o                    runtime/lneg.s:11
+    lmul.o                    runtime/lmul.s:10
+    linc.o                    runtime/linc.s:8
+    ldeaxi.o                  runtime/ldeaxi.s:8
+    ladd.o                    runtime/ladd.s:9
+    gmtime.o                  ../libwrk/c128/gmtime.s:10
+    _printf.o                 /mnt/d/retro/cc65/asminc/zeropage.inc:11
+    udiv.o                    runtime/udiv.s:10
+    strtol.o                  ../libwrk/c128/strtol.s:10
+    steaxsp.o                 runtime/steaxsp.s:8
+    lsubeqsp.o                runtime/lsubeqsp.s:8
+    lpush.o                   runtime/lpush.s:13
+    lor.o                     runtime/lor.s:10
+    localtime.o               ../libwrk/c128/localtime.s:10
+    ldeaxysp.o                runtime/ldeaxysp.s:12
+    land.o                    runtime/land.s:10
+    icmp.o                    runtime/icmp.s:9
+    axlong.o                  runtime/axlong.s:9
+    dmbconfig.o               src/dmbconfig.s:10
+    u-time.o                  src/u-time.s:10
+    configcommon.o            src/configcommon.s:10
+    ultimate_network_lib.o    src/ultimate_network_lib.s:10
+    ultimate_time_lib.o       src/ultimate_time_lib.s:10
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:10
+    ultimate_common_lib.o     src/ultimate_common_lib.s:10
+    ops.o                     src/ops.s:10
+    dir.o                     src/dir.s:10
+    bootmenu.o                src/bootmenu.s:10
+staspidx (staspidx.o):
+    cbm_dir.o                 ../libwrk/c128/cbm_dir.s:374
+stax0sp (staxsp.o):
+    mktime.o                  ../libwrk/c128/mktime.s:612
+    cbm_dir.o                 ../libwrk/c128/cbm_dir.s:374
+    vdc.o                     src/vdc.s:433
+    dmbconfig.o               src/dmbconfig.s:1637
+    ultimate_common_lib.o     src/ultimate_common_lib.s:719
+    ultimate_common_lib.o     src/ultimate_common_lib.s:719
+    ops.o                     src/ops.s:1661
+    ops.o                     src/ops.s:1661
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    main.o                    src/main.s:1307
+    main.o                    src/main.s:1307
+    main.o                    src/main.s:1307
+staxspidx (staxspi.o):
+    mktime.o                  ../libwrk/c128/mktime.s:612
+    cbm_dir.o                 ../libwrk/c128/cbm_dir.s:374
+    dir.o                     src/dir.s:1176
+staxysp (staxsp.o):
+    mktime.o                  ../libwrk/c128/mktime.s:612
+    vsprintf.o                common/vsprintf.s:8
+    strtol.o                  ../libwrk/c128/strtol.s:320
+    cbm_dir.o                 ../libwrk/c128/cbm_dir.s:374
+    u-time.o                  src/u-time.s:465
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_time_lib.o       src/ultimate_time_lib.s:142
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    ops.o                     src/ops.s:1661
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+    bootmenu.o                src/bootmenu.s:3286
+steax0sp (steaxsp.o):
+    gmtime.o                  ../libwrk/c128/gmtime.s:96
+    localtime.o               ../libwrk/c128/localtime.s:53
+steaxysp (steaxsp.o):
+    strtol.o                  ../libwrk/c128/strtol.s:320
+    u-time.o                  src/u-time.s:465
+subeq0sp (subeqsp.o):
+    vdc.o                     src/vdc.s:433
+    vdc.o                     src/vdc.s:433
+subeqysp (subeqsp.o):
+    cbm_dir.o                 ../libwrk/c128/cbm_dir.s:374
+    bootmenu.o                src/bootmenu.s:3286
+subysp (subysp.o):
+    dmbconfig.o               src/dmbconfig.s:1637
+    dmbconfig.o               src/dmbconfig.s:1637
+    u-time.o                  src/u-time.s:465
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    bootmenu.o                src/bootmenu.s:3286
+    main.o                    src/main.s:1307
+    main.o                    src/main.s:1307
+tmp1 (zeropage.o):
+    divt.o                    common/divt.s:18
+    shrax2.o                  runtime/shrax2.s:8
+    mul.o                     runtime/mul.s:10
+    mod.o                     runtime/mod.s:12
+    mktime.o                  ../libwrk/c128/mktime.s:11
+    ltoa.o                    common/ltoa.s:11
+    ladd.o                    runtime/ladd.s:9
+    _printf.o                 /mnt/d/retro/cc65/asminc/zeropage.inc:13
+    vcprintf.o                conio/vcprintf.s:10
+    strtol.o                  ../libwrk/c128/strtol.s:11
+    strstr.o                  common/strstr.s:9
+    strncpy.o                 common/strncpy.s:9
+    staxspi.o                 runtime/staxspi.s:10
+    staspidx.o                runtime/staspidx.s:9
+    shelp.o                   runtime/shelp.s:12
+    or.o                      runtime/or.s:10
+    lor.o                     runtime/lor.s:10
+    land.o                    runtime/land.s:10
+    incaxy.o                  runtime/incaxy.s:8
+    div.o                     runtime/div.s:12
+    decaxy.o                  runtime/decaxy.s:8
+    cvline.o                  cbm/cvline.s:10
+    cputs.o                   conio/cputs.s:10
+    chline.o                  cbm/chline.s:10
+    cclear.o                  cbm/cclear.s:10
+    cbm_read.o                cbm/cbm_read.s:42
+    c_setlfs.o                cbm/c_setlfs.s:13
+    c_save.o                  cbm/c_save.s:11
+    aslax1.o                  runtime/aslax1.s:8
+    add.o                     runtime/add.s:12
+    ultimate_common_lib.o     src/ultimate_common_lib.s:11
+    ops.o                     src/ops.s:11
+tmp2 (zeropage.o):
+    rwcommon.o                cbm/rwcommon.s:10
+    lmul.o                    runtime/lmul.s:10
+    strncpy.o                 common/strncpy.s:9
+    shelp.o                   runtime/shelp.s:12
+    div.o                     runtime/div.s:12
+tmp3 (zeropage.o):
+    lumod.o                   runtime/lumod.s:10
+    ludiv.o                   runtime/ludiv.s:10
+    lmul.o                    runtime/lmul.s:10
+    strncpy.o                 common/strncpy.s:9
+    strcat.o                  common/strcat.s:10
+tmp4 (zeropage.o):
+    lumod.o                   runtime/lumod.s:10
+    ludiv.o                   runtime/ludiv.s:10
+    lmul.o                    runtime/lmul.s:10
+tosaddax (add.o):
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ops.o                     src/ops.s:1661
+    screen.o                  src/screen.s:359
+tosaddeax (ladd.o):
+    mktime.o                  ../libwrk/c128/mktime.s:612
+    strtol.o                  ../libwrk/c128/strtol.s:320
+    localtime.o               ../libwrk/c128/localtime.s:53
+tosandeax (land.o):
+    configcommon.o            src/configcommon.s:595
+tosdiva0 (div.o):
+    strftime.o                ../libwrk/c128/strftime.s:827
+    screen.o                  src/screen.s:359
+tosdivax (div.o):
+    divt.o                    common/divt.s:17
+toseqeax (leq.o):
+    strtol.o                  ../libwrk/c128/strtol.s:320
+tosicmp (icmp.o):
+    mktime.o                  ../libwrk/c128/mktime.s:612
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_network_lib.o    src/ultimate_network_lib.s:1106
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    ultimate_dos_lib.o        src/ultimate_dos_lib.s:805
+    ops.o                     src/ops.s:1661
+    screen.o                  src/screen.s:359
+toslcmp (lcmp.o):
+    lugt.o                    runtime/lugt.s:8
+    leq.o                     runtime/leq.s:8
+tosmoda0 (mod.o):
+    strftime.o                ../libwrk/c128/strftime.s:827
+tosmula0 (mul8.o):
+    bootmenu.o                src/bootmenu.s:3286
+    main.o                    src/main.s:1307
+tosorax (or.o):
+    cbm_dir.o                 ../libwrk/c128/cbm_dir.s:374
+    dir.o                     src/dir.s:1176
+tosoreax (lor.o):
+    u-time.o                  src/u-time.s:465
+    configcommon.o            src/configcommon.s:595
+tossubax (sub.o):
+    strftime.o                ../libwrk/c128/strftime.s:827
+    dmbconfig.o               src/dmbconfig.s:1637
+    main.o                    src/main.s:1307
+tossubeax (lsub.o):
+    mktime.o                  ../libwrk/c128/mktime.s:612
+tosudiv0ax (ludiv.o):
+    gmtime.o                  ../libwrk/c128/gmtime.s:96
+tosudiva0 (udiv.o):
+    ops.o                     src/ops.s:1661
+tosudivax (udiv.o):
+    fwrite.o                  common/fwrite.s:12
+tosudiveax (ludiv.o):
+    gmtime.o                  ../libwrk/c128/gmtime.s:96
+    strtol.o                  ../libwrk/c128/strtol.s:320
+tosugteax (lugt.o):
+    strtol.o                  ../libwrk/c128/strtol.s:320
+tosulong (toslong.o):
+    u-time.o                  src/u-time.s:465
+    configcommon.o            src/configcommon.s:595
+tosumod0ax (lumod.o):
+    gmtime.o                  ../libwrk/c128/gmtime.s:96
+tosumoda0 (umod.o):
+    mktime.o                  ../libwrk/c128/mktime.s:612
+    mktime.o                  ../libwrk/c128/mktime.s:612
+tosumodax (umod.o):
+    mktime.o                  ../libwrk/c128/mktime.s:612
+tosumodeax (lumod.o):
+    strtol.o                  ../libwrk/c128/strtol.s:320
+tosumul0ax (lmul.o):
+    mktime.o                  ../libwrk/c128/mktime.s:612
+tosumula0 (mul8.o):
+    mktime.o                  ../libwrk/c128/mktime.s:612
+    vdc.o                     src/vdc.s:433
+tosumulax (mul.o):
+    mktime.o                  ../libwrk/c128/mktime.s:612
+    fwrite.o                  common/fwrite.s:12
+tosumuleax (lmul.o):
+    mktime.o                  ../libwrk/c128/mktime.s:612
+    strtol.o                  ../libwrk/c128/strtol.s:320
+udiv16 (udiv.o):
+    umod.o                    runtime/umod.s:8
+    shelp.o                   runtime/shelp.s:11
+udiv32 (ludiv.o):
+    lumod.o                   runtime/lumod.s:9
+vsnprintf (vsnprintf.o):
+    vsprintf.o                common/vsprintf.s:9
+zerobss (zerobss.o):
+    crt0.o                    c128/crt0.s:8
+

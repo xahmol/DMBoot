@@ -31,19 +31,19 @@
 
 int cmd(const BYTE device, const char *cmd);
 void execute(char * prg, BYTE device, BYTE boot, char * command);
-void updateScreen();
+void updateScreen(const BYTE context);
 void updateMenu(void);
 void showDir(BYTE context, const BYTE mycontext);
 void mainLoopBrowse(void);
 void clrDir();
-//void refreshDir(const BYTE context, const BYTE sorted, const BYTE mycontext);
-//void printDir(const BYTE context, const BYTE xpos, const BYTE ypos);
-//void printElement(const BYTE context, const Directory *dir, const BYTE xpos, const BYTE ypos);
+void refreshDir(const BYTE context, const BYTE sorted, const BYTE mycontext);
+void printDir(const BYTE context, const BYTE xpos, const BYTE ypos);
+void printElement(const BYTE context, const Directory *dir, const BYTE xpos, const BYTE ypos);
 const char* fileTypeToStr(BYTE ft);
 BYTE dosCommand(const BYTE lfn, const BYTE drive, const BYTE sec_addr, const char *cmd);
 void CheckMounttype(const char *dirname);
-//int changeDir(const BYTE context, const BYTE device, const char *dirname, const BYTE sorted);
-//void drawDirFrame(BYTE context, const BYTE mycontext);
+int changeDir(const BYTE context, const BYTE device, const char *dirname, const BYTE sorted);
+void drawDirFrame(BYTE context, const BYTE mycontext);
 const char* getDeviceType(const BYTE device);
 int textInput(const BYTE xpos, const BYTE ypos, char *str, const BYTE size);
 
@@ -53,7 +53,11 @@ enum drive_e {NONE=0, PI1541, D1540, D1541, D1551, D1570, D1571, D1581, D1001, D
 extern BYTE devicetype[];
 extern const char* drivetype[];
 extern char linebuffer[81];
-extern BYTE device;
+extern BYTE devices;
 extern char linebuffer2[];
+extern Directory* dirs;
+
+void debugs(const char *s);
+void debugu(const unsigned u);
 
 #endif

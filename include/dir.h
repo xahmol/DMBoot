@@ -28,31 +28,32 @@
 #include "defines.h"
 #include <cbm.h>
 
-typedef struct direlement {
+struct DirElement {
   struct cbm_dirent dirent;
-  struct direlement * next;
-  struct direlement * prev;
+  unsigned int next;
+  unsigned int  prev;
   unsigned char flags;
-} DirElement;
+};
+extern struct DirElement PresentDir;
 
-
-typedef struct {
+struct Directory {
   /// 16 characters name
   /// 1 comma
   /// 5 characters ID
   /// NUL
   char name[16+1+5+1];
-  struct direlement * firstelement;
-  struct direlement * selected;
+  unsigned int firstelement;
+  unsigned int selected;
   /// current cursor position
   unsigned int pos;
   /// number of free blocks
   unsigned int free;
-} Directory;
+};
+extern struct Directory cwd;
 
-void freeDir(Directory* *dir);
-void removeFromDir(DirElement *current);
-Directory* readDir(Directory *dir, const BYTE device, const BYTE sorted);
+extern unsigned int previous;
+
+unsigned char readDir(const BYTE device, const BYTE sorted);
 unsigned char myCbmReadDir(const BYTE device, struct cbm_dirent* l_dirent);
 
 #endif /* DIR_H_ */

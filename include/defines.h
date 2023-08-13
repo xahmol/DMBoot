@@ -57,6 +57,12 @@
 // Config version
 #define CFGVERSION              0x01
 
+// VDC addresses
+#define VDC16START              0x1000
+#define VDC16END                0x1FFF
+#define VDC64START              0x4000
+#define VDC64END                0xFFFF
+
 typedef unsigned char BYTE;
 
 #define OK 0
@@ -75,27 +81,13 @@ typedef unsigned char BYTE;
 // y position of menu frame
 #define MENUY 0
 
-#define GETCWD dirs
-#define DIRW  25
-#define DIR1X 0
-#define DIR1Y 0
-
-#define DIRH (DIR1H)
-#define DIRX (DIR1X)
-#define DIRY (DIR1Y)
-
 // Define highest device ID allowed
 #define MAXDEVID 30
 
 // Global variables
-extern BYTE DIR1H;
-extern BYTE DIR2H;
-extern unsigned int SCREENW;
-extern unsigned int MENUX;
-extern unsigned int MENUXT;
-extern unsigned int MENUW;
-extern unsigned int DIR2X;
-extern unsigned int DIR2Y;
+extern BYTE SCREENW;
+extern BYTE DIRW;
+extern BYTE MENUX; 
 extern unsigned int validdriveid;
 extern unsigned int idnr[30];
 extern char path[8][20];
@@ -148,13 +140,12 @@ extern unsigned char reusize;
 extern char* reusizelist[8];
 extern unsigned char utilbuffer[328];
 extern char configfilename[11];
-//extern unsigned int validdriveid;
-//extern unsigned int idnr[30];
 extern char c128_ram;
 extern unsigned char dm_apipresent;
 extern unsigned int dm_apiversion;
 extern unsigned char configversion;
 extern unsigned char vdcmemory;
+extern unsigned int vdc_alloc_address;
 
 // keyboard buffer
 #define KBCHARS 842

@@ -41,58 +41,56 @@ static BYTE sorted = 0;
 void
 updateMenu(void)
 {
-  BYTE menuy=MENUY;
+  BYTE menuy=2;
 
-  clearArea(MENUXT+1,MENUY+1,MENUW-2,MENUH-2);
+  clearArea(MENUX,3,SCREENW-1,24);
   revers(0);
   textcolor(DC_COLOR_TEXT);
-  drawFrame(" DMBoot ",MENUX,MENUY,MENUW,MENUH,NULL);
 
+  cputsxy(MENUX+1,++menuy,"F1 Dir refresh");
+  cputsxy(MENUX+1,++menuy,"+- Device");
+  cputsxy(MENUX+1,++menuy,"F5 Boot");
+  cputsxy(MENUX+1,++menuy,"CR Run/Select");
+  cputsxy(MENUX+1,++menuy,"BS Dir up");
+  cputsxy(MENUX+1,++menuy," \x5e Parent dir");
+  cputsxy(MENUX+1,++menuy," T Top");
+  cputsxy(MENUX+1,++menuy," E End");
+  cputsxy(MENUX+1,++menuy," S Sort");
   menuy++;
-  cputsxy(MENUXT+1,++menuy,"F1 DIR");
-  cputsxy(MENUXT+1,++menuy,"+- DEVICE");
-  cputsxy(MENUXT+1,++menuy,"F5 BOOT");
-  cputsxy(MENUXT+1,++menuy,"CR RUN/CD");
-  cputsxy(MENUXT+1,++menuy,"BS DIR UP");
-  cputsxy(MENUXT+1,++menuy," \x5e PAR DIR");
-  cputsxy(MENUXT+1,++menuy," T TOP");
-  cputsxy(MENUXT+1,++menuy," E END");
-  cputsxy(MENUXT+1,++menuy," S SORT");
-  menuy++;
-  cputsxy(MENUXT+1,++menuy," D DIRTRAC");
+  cputsxy(MENUX+1,++menuy," D Dirtrace");
   if(trace) {
-    cputsxy(MENUXT+1,++menuy,"AB ADD MNT");
-    cputsxy(MENUXT+1,++menuy," M RUN MNT");
+    cputsxy(MENUX+1,++menuy,"AB Add mount");
+    cputsxy(MENUX+1,++menuy," M Run mount");
   } else { menuy += 2; }
-  cputsxy(MENUXT+1,++menuy," 6 RUN 64");
-  cputsxy(MENUXT+1,++menuy," 8 FORCE 8");
-  cputsxy(MENUXT+1,++menuy," F FAST");
-  cputsxy(MENUXT+1,++menuy," Q QUIT");
+  cputsxy(MENUX+1,++menuy," 6 Run in C64");
+  cputsxy(MENUX+1,++menuy," 8 Force ID 8");
+  cputsxy(MENUX+1,++menuy," F Fast mode");
+  cputsxy(MENUX+1,++menuy," Q Quit");
 
   menuy++;
   if (trace == 1)
   {
-    cputsxy(MENUXT,++menuy," TRACE ON ");
+    cputsxy(MENUX,++menuy," Trace   ON ");
   }
   else
   {
-    cputsxy(MENUXT,++menuy," TRACE OFF");
+    cputsxy(MENUX,++menuy," Trace   OFF");
   }
   if (forceeight == 1)
   {
-    cputsxy(MENUXT,++menuy," Frc 8 ON ");
+    cputsxy(MENUX,++menuy," Force 8 ON ");
   }
   else
   {
-    cputsxy(MENUXT,++menuy," Frc 8 OFF");
+    cputsxy(MENUX,++menuy," Force 8 OFF");
   }
   if (fastflag == 1)
   {
-    cputsxy(MENUXT,++menuy," FAST  ON ");
+    cputsxy(MENUX,++menuy," Fast    ON ");
   }
   else
   {
-    cputsxy(MENUXT,++menuy," FAST  OFF");
+    cputsxy(MENUX,++menuy," Fast    OFF");
   }
   
 }
@@ -100,12 +98,9 @@ updateMenu(void)
 void
 mainLoopBrowse(void)
 {
-  Directory * cwd = NULL;
-  DirElement * current = NULL;
   unsigned int pos = 0;
   BYTE lastpage = 0;
   BYTE nextpage = 0;
-  BYTE context = 0;
   
   trace = 0;
   depth = 0;
@@ -114,10 +109,7 @@ mainLoopBrowse(void)
   runmountflag = 0;
   mountflag = 0;
 
-  DIR1H = DIR2H = SCREENH-2;
-  dirs = NULL;
-  
-  updateScreen(context);
+  updateScreen();
 
   {
     BYTE i;
@@ -131,12 +123,11 @@ mainLoopBrowse(void)
     i = 7;
     while(++i < MAXDEVID+1)
       {
-        devices = i;
-        dirs = readDir(NULL, devices, sorted);
-        if (dirs)
+        device = i;
+        if(readDir(device, sorted))
           {
-            getDeviceType(devices);
-            showDir(context, context);
+            getDeviceType(device);
+            //showDir(context, context);
             goto found_upper_drive;
           }
       }
@@ -144,274 +135,276 @@ mainLoopBrowse(void)
     found_upper_drive:;
   }
 
-  while(1)
-    {
-      switch (cgetc())
-        {
-        case 's':
-          sorted = ! sorted;
-          // fallthrough
-        case '1':
-        case CH_F1:
-          textcolor(DC_COLOR_HIGHLIGHT);
-          dirs=readDir(dirs, devices, sorted);
-          showDir(context, context);
-          break;
-
-        case '2':
-        case CH_F2:
-        case '+':
-          if (++devices > MAXDEVID)
-            devices=8;
-          freeDir(&dirs);
-          if (! devicetype[devices])
-            {
-              getDeviceType(devices);
-            }
-          showDir(context, context);
-          break;
-        
-        case '-':
-          if (--devices < 8) { devices=MAXDEVID; }
-          freeDir(&dirs);
-          if (! devicetype[devices])
-            {
-              getDeviceType(devices);
-            }
-          showDir(context, context);
-          break;
-
-        // --- boot directory
-        case '5':
-        case CH_F5:
-          cwd=GETCWD;
-          if (trace == 0)
-          {
-            execute(dirs->selected->dirent.name,devices, EXEC_BOOT + EXEC_FRC8*forceeight + EXEC_FAST*fastflag, "");
-          }
-          else
-          {
-            strcpy(pathfile, "" );
-            pathrunboot = EXEC_BOOT + EXEC_FRC8*forceeight + EXEC_FAST*fastflag;
-            goto done;
-          }   
-          break;
-
-        case 't':
-        case CH_HOME:
-          cwd=GETCWD;
-          cwd->selected=cwd->firstelement;
-          cwd->pos=0;
-          printDir(context, DIRX+1, DIRY);
-          break;
-
-        case 'd':
-          if (trace == 0)
-          {
-            trace = 1;
-            pathdevice = devices;
-            changeDir(context, devices, NULL, sorted);
-          }
-          else
-          {
-            trace = 0;
-            depth = 0;
-          }
-          updateMenu();
-          break;
-
-        case '8':
-          if (forceeight == 0)
-          {
-            forceeight = 1;
-          }
-          else
-          {
-            forceeight = 0;
-          }
-          updateMenu();
-          break;
-        
-        case 'f':
-          if (fastflag == 0)
-          {
-            fastflag = 1;
-          }
-          else
-          {
-            fastflag = 0;
-          }
-          updateMenu();
-          break;
-
-        case 'e':
-          cwd=GETCWD;
-          current = cwd->firstelement;
-          pos=0;
-          while (1)
-            {
-              if (current->next!=NULL)
-                {
-                  current=current->next;
-                  pos++;
-                }
-              else
-                {
-                  break;
-                }
-            }
-          cwd->selected=current;
-          cwd->pos=pos;
-          printDir(context, DIRX+1, DIRY);
-          break;
-
-        case 'q':
-          trace = 0;
-          goto done;
-
-        case CH_CURS_DOWN:
-          cwd=GETCWD;
-          if (cwd->selected!=NULL && cwd->selected->next!=NULL)
-            {
-              cwd->selected=cwd->selected->next;
-              pos=cwd->pos;
-              lastpage=pos/DIRH;
-              nextpage=(pos+1)/DIRH;
-              if (lastpage!=nextpage)
-                {
-                  cwd->pos++;
-                  printDir(context, DIRX+1, DIRY);
-                }
-              else
-                {
-                  printElement(context, cwd, DIRX+1, DIRY);
-                  cwd->pos++;
-                  printElement(context, cwd, DIRX+1, DIRY);
-                }
-
-            }
-          break;
-
-        case CH_CURS_UP:
-          cwd=GETCWD;
-          if (cwd->selected!=NULL && cwd->selected->prev!=NULL)
-            {
-              cwd->selected=cwd->selected->prev;
-              pos=cwd->pos;
-              lastpage=pos/DIRH;
-              nextpage=(pos-1)/DIRH;
-              if (lastpage!=nextpage)
-                {
-                  cwd->pos--;
-                  printDir(context, DIRX+1, DIRY);
-                }
-              else
-                {
-                  printElement(context, cwd, DIRX+1, DIRY);
-                  cwd->pos--;
-                  printElement(context, cwd, DIRX+1, DIRY);
-                }
-            }
-          break;
-
-        // --- Run in 64 mode
-        case '6':
-          if(dm_apipresent==1 && dm_apiversion>1)
-          {
-            cwd=GETCWD;
-            if (cwd->selected && cwd->selected->dirent.type==CBM_T_PRG)
-              {
-                if (trace == 0)
-                {
-                  execute(dirs->selected->dirent.name,devices, EXEC_RUN64, "");
-                }
-                else
-                {
-                  strcpy(pathfile, dirs->selected->dirent.name );
-                  pathrunboot = EXEC_RUN64;
-                  goto done;
-                }             
-              }
-          }
-          break;
-
-          // --- start / enter directory
-        case '7':
-        case CH_F7:
-        case CH_ENTER:
-          cwd=GETCWD;
-          if (cwd->selected && cwd->selected->dirent.type==CBM_T_PRG)
-            {
-              if (trace == 0)
-              {
-                execute(dirs->selected->dirent.name,devices, EXEC_FRC8*forceeight + EXEC_FAST*fastflag, "");
-              }
-              else
-              {
-                strcpy(pathfile, dirs->selected->dirent.name );
-                pathrunboot = EXEC_FRC8*forceeight + EXEC_FAST*fastflag;
-                goto done;
-              }             
-            }
-          // else fallthrough to CURS_RIGHT
-
-        case CH_CURS_RIGHT:
-          cwd=GETCWD;
-          if (cwd->selected)
-            {
-              if (trace == 1) {
-                strcpy(path[depth++],cwd->selected->dirent.name);
-              }
-              changeDir(context, devices, cwd->selected->dirent.name, sorted);
-            }
-            if(reuflag) { goto done; }
-          break;
-
-          // --- leave directory
-        case CH_DEL:
-        case CH_CURS_LEFT:
-          if (trace == 1)
-          {
-            --depth;
-          }
-          changeDir(context, devices, devicetype[devices] == U64?"..":"\xff", sorted);
-          break;
-
-        case CH_UARROW:
-          if (trace == 1)
-          {
-            depth = 0;
-          }
-          changeDir(context, devices, NULL, sorted);
-          break;
-
-        case 'a':
-          CheckMounttype(cwd->selected->dirent.name);
-          if(mountflag==1) {
-            addmountflag = 1;
-            strcpy(imageaname,dirs->selected->dirent.name);
-            goto done;
-          }
-        
-        case 'b':
-          CheckMounttype(cwd->selected->dirent.name);
-          if(mountflag==1) {
-            addmountflag = 2;
-            strcpy(imagebname,dirs->selected->dirent.name);
-            goto done;
-          }
-
-        case 'm':
-          if(mountflag==1 && imageaid) {
-            runmountflag = 1;
-            strcpy(pathfile, dirs->selected->dirent.name );
-            pathrunboot = EXEC_MOUNT + EXEC_FAST*fastflag;
-            goto done;
-          }
-
-        }
-    }
-
- done:;
- freeDir(&dirs);
+  cgetc();
+//
+  //while(1)
+  //  {
+  //    switch (cgetc())
+  //      {
+  //      case 's':
+  //        sorted = ! sorted;
+  //        // fallthrough
+  //      case '1':
+  //      case CH_F1:
+  //        textcolor(DC_COLOR_HIGHLIGHT);
+  //        dirs=readDir(dirs, devices, sorted);
+  //        showDir(context, context);
+  //        break;
+//
+  //      case '2':
+  //      case CH_F2:
+  //      case '+':
+  //        if (++devices > MAXDEVID)
+  //          devices=8;
+  //        freeDir(&dirs);
+  //        if (! devicetype[devices])
+  //          {
+  //            getDeviceType(devices);
+  //          }
+  //        showDir(context, context);
+  //        break;
+  //      
+  //      case '-':
+  //        if (--devices < 8) { devices=MAXDEVID; }
+  //        freeDir(&dirs);
+  //        if (! devicetype[devices])
+  //          {
+  //            getDeviceType(devices);
+  //          }
+  //        showDir(context, context);
+  //        break;
+//
+  //      // --- boot directory
+  //      case '5':
+  //      case CH_F5:
+  //        cwd=GETCWD;
+  //        if (trace == 0)
+  //        {
+  //          execute(dirs->selected->dirent.name,devices, EXEC_BOOT + EXEC_FRC8*forceeight + EXEC_FAST*fastflag, "");
+  //        }
+  //        else
+  //        {
+  //          strcpy(pathfile, "" );
+  //          pathrunboot = EXEC_BOOT + EXEC_FRC8*forceeight + EXEC_FAST*fastflag;
+  //          goto done;
+  //        }   
+  //        break;
+//
+  //      case 't':
+  //      case CH_HOME:
+  //        cwd=GETCWD;
+  //        cwd->selected=cwd->firstelement;
+  //        cwd->pos=0;
+  //        printDir(context, DIRX+1, DIRY);
+  //        break;
+//
+  //      case 'd':
+  //        if (trace == 0)
+  //        {
+  //          trace = 1;
+  //          pathdevice = devices;
+  //          changeDir(context, devices, NULL, sorted);
+  //        }
+  //        else
+  //        {
+  //          trace = 0;
+  //          depth = 0;
+  //        }
+  //        updateMenu();
+  //        break;
+//
+  //      case '8':
+  //        if (forceeight == 0)
+  //        {
+  //          forceeight = 1;
+  //        }
+  //        else
+  //        {
+  //          forceeight = 0;
+  //        }
+  //        updateMenu();
+  //        break;
+  //      
+  //      case 'f':
+  //        if (fastflag == 0)
+  //        {
+  //          fastflag = 1;
+  //        }
+  //        else
+  //        {
+  //          fastflag = 0;
+  //        }
+  //        updateMenu();
+  //        break;
+//
+  //      case 'e':
+  //        cwd=GETCWD;
+  //        current = cwd->firstelement;
+  //        pos=0;
+  //        while (1)
+  //          {
+  //            if (current->next!=NULL)
+  //              {
+  //                current=current->next;
+  //                pos++;
+  //              }
+  //            else
+  //              {
+  //                break;
+  //              }
+  //          }
+  //        cwd->selected=current;
+  //        cwd->pos=pos;
+  //        printDir(context, DIRX+1, DIRY);
+  //        break;
+//
+  //      case 'q':
+  //        trace = 0;
+  //        goto done;
+//
+  //      case CH_CURS_DOWN:
+  //        cwd=GETCWD;
+  //        if (cwd->selected!=NULL && cwd->selected->next!=NULL)
+  //          {
+  //            cwd->selected=cwd->selected->next;
+  //            pos=cwd->pos;
+  //            lastpage=pos/DIRH;
+  //            nextpage=(pos+1)/DIRH;
+  //            if (lastpage!=nextpage)
+  //              {
+  //                cwd->pos++;
+  //                printDir(context, DIRX+1, DIRY);
+  //              }
+  //            else
+  //              {
+  //                printElement(context, cwd, DIRX+1, DIRY);
+  //                cwd->pos++;
+  //                printElement(context, cwd, DIRX+1, DIRY);
+  //              }
+//
+  //          }
+  //        break;
+//
+  //      case CH_CURS_UP:
+  //        cwd=GETCWD;
+  //        if (cwd->selected!=NULL && cwd->selected->prev!=NULL)
+  //          {
+  //            cwd->selected=cwd->selected->prev;
+  //            pos=cwd->pos;
+  //            lastpage=pos/DIRH;
+  //            nextpage=(pos-1)/DIRH;
+  //            if (lastpage!=nextpage)
+  //              {
+  //                cwd->pos--;
+  //                printDir(context, DIRX+1, DIRY);
+  //              }
+  //            else
+  //              {
+  //                printElement(context, cwd, DIRX+1, DIRY);
+  //                cwd->pos--;
+  //                printElement(context, cwd, DIRX+1, DIRY);
+  //              }
+  //          }
+  //        break;
+//
+  //      // --- Run in 64 mode
+  //      case '6':
+  //        if(dm_apipresent==1 && dm_apiversion>1)
+  //        {
+  //          cwd=GETCWD;
+  //          if (cwd->selected && cwd->selected->dirent.type==CBM_T_PRG)
+  //            {
+  //              if (trace == 0)
+  //              {
+  //                execute(dirs->selected->dirent.name,devices, EXEC_RUN64, "");
+  //              }
+  //              else
+  //              {
+  //                strcpy(pathfile, dirs->selected->dirent.name );
+  //                pathrunboot = EXEC_RUN64;
+  //                goto done;
+  //              }             
+  //            }
+  //        }
+  //        break;
+//
+  //        // --- start / enter directory
+  //      case '7':
+  //      case CH_F7:
+  //      case CH_ENTER:
+  //        cwd=GETCWD;
+  //        if (cwd->selected && cwd->selected->dirent.type==CBM_T_PRG)
+  //          {
+  //            if (trace == 0)
+  //            {
+  //              execute(dirs->selected->dirent.name,devices, EXEC_FRC8*forceeight + EXEC_FAST*fastflag, "");
+  //            }
+  //            else
+  //            {
+  //              strcpy(pathfile, dirs->selected->dirent.name );
+  //              pathrunboot = EXEC_FRC8*forceeight + EXEC_FAST*fastflag;
+  //              goto done;
+  //            }             
+  //          }
+  //        // else fallthrough to CURS_RIGHT
+//
+  //      case CH_CURS_RIGHT:
+  //        cwd=GETCWD;
+  //        if (cwd->selected)
+  //          {
+  //            if (trace == 1) {
+  //              strcpy(path[depth++],cwd->selected->dirent.name);
+  //            }
+  //            changeDir(context, devices, cwd->selected->dirent.name, sorted);
+  //          }
+  //          if(reuflag) { goto done; }
+  //        break;
+//
+  //        // --- leave directory
+  //      case CH_DEL:
+  //      case CH_CURS_LEFT:
+  //        if (trace == 1)
+  //        {
+  //          --depth;
+  //        }
+  //        changeDir(context, devices, devicetype[devices] == U64?"..":"\xff", sorted);
+  //        break;
+//
+  //      case CH_UARROW:
+  //        if (trace == 1)
+  //        {
+  //          depth = 0;
+  //        }
+  //        changeDir(context, devices, NULL, sorted);
+  //        break;
+//
+  //      case 'a':
+  //        CheckMounttype(cwd->selected->dirent.name);
+  //        if(mountflag==1) {
+  //          addmountflag = 1;
+  //          strcpy(imageaname,dirs->selected->dirent.name);
+  //          goto done;
+  //        }
+  //      
+  //      case 'b':
+  //        CheckMounttype(cwd->selected->dirent.name);
+  //        if(mountflag==1) {
+  //          addmountflag = 2;
+  //          strcpy(imagebname,dirs->selected->dirent.name);
+  //          goto done;
+  //        }
+//
+  //      case 'm':
+  //        if(mountflag==1 && imageaid) {
+  //          runmountflag = 1;
+  //          strcpy(pathfile, dirs->selected->dirent.name );
+  //          pathrunboot = EXEC_MOUNT + EXEC_FAST*fastflag;
+  //          goto done;
+  //        }
+//
+  //      }
+  //  }
+//
+ //done:;
+ //freeDir(&dirs);
 }

@@ -73,16 +73,9 @@ char getkey(BYTE mask);
 unsigned char loadoverlay(char* name);
 
 // Global variables
-BYTE DIR1H;
-BYTE DIR2H;
-unsigned int SCREENW;
-unsigned int MENUX;
-unsigned int MENUXT;
-unsigned int MENUW;
-unsigned int DIR2X;
-unsigned int DIR2Y;
-//unsigned int validdriveid;
-//unsigned int idnr[30];
+BYTE SCREENW;
+BYTE DIRW;
+BYTE MENUX;
 char path[8][20];
 char pathfile[20];
 BYTE pathdevice;
@@ -119,6 +112,7 @@ char configfilename[11] = "dmbcfgfile";
 unsigned int dm_apiversion = 0;
 unsigned char configversion = CFGVERSION;
 unsigned char vdcmemory;
+unsigned int vdc_alloc_address;
 
 //Main program
 int main() {
@@ -130,21 +124,15 @@ int main() {
     if ( PEEK(0xee) == 79) //Memory position $ee is present screen width
     {
         SCREENW = 80;  //Set flag for 80 column
-        MENUX = 58; // x position of menu
-        MENUXT = MENUX + 2; // x position of menu items
-        MENUW = 15; // width of menu frame
-        DIR2X = DIRW+4;
-        DIR2Y = 0;
+        DIRW = 50;
+        MENUX = 65;
         set_c128_speed(SPEED_FAST);
     }
     else
     {
         SCREENW = 40;  //Set flag for 40 column
-        MENUX = 27; // x position of menu
-        MENUXT = MENUX + 1; // x position of menu items
-        MENUW = 13; // width of menu frame
-        DIR2X = 0;
-        DIR2Y = (DIR1Y+2+DIR1H);
+        DIRW = 25;
+        MENUX = 25;
     }
 
     if(!uii_detect()) {
@@ -182,7 +170,8 @@ int main() {
 
     // Detect VDC memory size
     vdcmemory = VDC_DetectVDCMemSize();
-    if(vdcmemory==64) { VDC_SetExtendedVDCMemSize(); }
+    if(vdcmemory==64) {VDC_SetExtendedVDCMemSize(); }
+
 
     // Init screen and menu
     initScreen(DC_COLOR_BORDER, DC_COLOR_BG, DC_COLOR_TEXT);
