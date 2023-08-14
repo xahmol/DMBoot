@@ -124,7 +124,7 @@ int main() {
     if ( PEEK(0xee) == 79) //Memory position $ee is present screen width
     {
         SCREENW = 80;  //Set flag for 80 column
-        DIRW = 50;
+        DIRW = 51;
         MENUX = 65;
         set_c128_speed(SPEED_FAST);
     }

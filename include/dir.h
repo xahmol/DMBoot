@@ -35,6 +35,7 @@ struct DirElement {
   unsigned char flags;
 };
 extern struct DirElement PresentDir;
+extern struct DirElement BufferDir;
 
 struct Directory {
   /// 16 characters name
@@ -52,6 +53,8 @@ struct Directory {
 extern struct Directory cwd;
 
 extern unsigned int previous;
+extern unsigned int current;
+extern unsigned int next;
 
 unsigned char readDir(const BYTE device, const BYTE sorted);
 unsigned char myCbmReadDir(const BYTE device, struct cbm_dirent* l_dirent);

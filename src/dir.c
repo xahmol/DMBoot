@@ -46,8 +46,11 @@ static const char progressBar[4] = { 0xA5, 0xA1, 0xA7, ' ' };
 static const char progressRev[4] = { 0,    0,    1,    1 };
 
 struct DirElement PresentDir;
+struct DirElement BufferDir;
 struct Directory cwd;
 unsigned int previous;
+unsigned int current;
+unsigned int next;
 
 // VDC alloc functions
 
@@ -74,7 +77,7 @@ unsigned char VDC_AllocDirEntry() {
 unsigned char readDir(const BYTE device, const BYTE sorted)
 {
   BYTE cnt = 0xff;
-  const BYTE y = 2;
+  const BYTE y = 3;
   BYTE x = 0;
 
   vdc_alloc_address = (vdcmemory==64)?VDC64START:VDC16START;
@@ -101,13 +104,13 @@ unsigned char readDir(const BYTE device, const BYTE sorted)
         }
 
       // print progress bar
-      if ((cnt>>2) >= DIRW)
+      if ((cnt>>2) >= DIRW-4)
         {
           x = 4;
           revers(0);
           cnt = 0;
           gotoxy(x, y);
-          cclear(DIRW);
+          cclear(DIRW-4);
           gotoxy(0, y);
           cprintf("[%02i]", device);
         }
@@ -206,7 +209,7 @@ unsigned char readDir(const BYTE device, const BYTE sorted)
   cbm_closedir(device);
   revers(0);
 
-  if (cwd.name[0])
+  if (cwd.firstelement)
     {
       cwd.selected = cwd.firstelement;
     }
