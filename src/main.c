@@ -251,8 +251,13 @@ unsigned char dm_getdevicetype(unsigned char id)
 {
     if(dm_apipresent==1)
     {
-        dm_devtype = id;
-        dm_getdevicetype_core();
+        dm_gethsidviaapi();
+        if(dm_devid==id) {
+            dm_devtype = 0x08;
+        } else {
+            dm_devtype = id;
+            dm_getdevicetype_core();
+        }
     }
     else
     {

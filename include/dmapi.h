@@ -4,6 +4,7 @@
 extern void dm_getapiversion_core();
 extern void dm_getdevicetype_core();
 extern void dm_sethsidviaapi();
+extern void dm_gethsidviaapi();
 
 extern void* dm_run64;
 
