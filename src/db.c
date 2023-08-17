@@ -44,29 +44,30 @@ updateMenu(void)
 {
   BYTE menuy=2;
 
-  clearArea(MENUX,3,SCREENW-1,24);
+  clearArea(MENUX,3,15,22);
   revers(0);
   textcolor(DC_COLOR_TEXT);
 
-  cputsxy(MENUX+1,++menuy,"F1 Dir refresh");
-  cputsxy(MENUX+1,++menuy,"+- Device");
-  cputsxy(MENUX+1,++menuy,"F5 Boot");
-  cputsxy(MENUX+1,++menuy,"CR Run/Select");
-  cputsxy(MENUX+1,++menuy,"BS Dir up");
-  cputsxy(MENUX+1,++menuy," \x5e Parent dir");
-  cputsxy(MENUX+1,++menuy," T Top");
-  cputsxy(MENUX+1,++menuy," E End");
-  cputsxy(MENUX+1,++menuy," S Sort");
-  menuy++;
-  cputsxy(MENUX+1,++menuy," D Dirtrace");
+  cputsxy(MENUX+1,++menuy," F1 Dir refr.");
+  cputsxy(MENUX+1,++menuy,"+/- Device");
+  cputsxy(MENUX+1,++menuy," F5 Boot");
+  cputsxy(MENUX+1,++menuy,"ENT Run/Select");
+  cputsxy(MENUX+1,++menuy,"DEL Dir up");
+  cputsxy(MENUX+1,++menuy,"  \x5e Root dir");
+  cputsxy(MENUX+1,++menuy,"  T Top");
+  cputsxy(MENUX+1,++menuy,"  E End");
+  cputsxy(MENUX+1,++menuy,"  S Sort");
+  cputsxy(MENUX+1,++menuy,"P/U Page up/do");
+  cputsxy(MENUX+1,++menuy,"Cur Navigate");
+  cputsxy(MENUX+1,++menuy,"  D Dirtrace");
   if(trace) {
-    cputsxy(MENUX+1,++menuy,"AB Add mount");
-    cputsxy(MENUX+1,++menuy," M Run mount");
+    cputsxy(MENUX+1,++menuy," AB Add mount");
+    cputsxy(MENUX+1,++menuy,"  M Run mount");
   } else { menuy += 2; }
-  cputsxy(MENUX+1,++menuy," 6 Run in C64");
-  cputsxy(MENUX+1,++menuy," 8 Force ID 8");
-  cputsxy(MENUX+1,++menuy," F Fast mode");
-  cputsxy(MENUX+1,++menuy," Q Quit");
+  cputsxy(MENUX+1,++menuy,"  6 Run in C64");
+  cputsxy(MENUX+1,++menuy,"  8 Force ID 8");
+  cputsxy(MENUX+1,++menuy,"  F Fast mode");
+  cputsxy(MENUX+1,++menuy,"  Q Quit");
 
   menuy++;
   if (trace == 1)
@@ -103,6 +104,7 @@ void mainLoopBrowse(void)
   BYTE nextpage = 0;
   int DIRH = (SCREENW==80)? 38:19;
   int xpos,ypos,yoff;
+  unsigned char count;
   
   trace = 0;
   depth = 0;
@@ -214,6 +216,7 @@ void mainLoopBrowse(void)
           {
             trace = 0;
             depth = 0;
+            showDir();
           }
           updateMenu();
           break;
@@ -278,6 +281,7 @@ void mainLoopBrowse(void)
               cwd.pos++;
               if (lastpage!=nextpage)
                 {
+                  cwd.firstprinted = current;
                   printDir();
                 }
               else
@@ -304,6 +308,13 @@ void mainLoopBrowse(void)
               cwd.pos--;
               if (lastpage!=nextpage)
                 {
+                  for(count=0;count<DIRH;count++) {
+                    if(PresentDir.prev != NULL) {
+                      current=PresentDir.prev;
+                      VDC_CopyVDCToMem(current,(unsigned int)&PresentDir,sizeof(PresentDir));
+                    }
+                  }
+                  cwd.firstprinted = current;
                   printDir();
                 }
               else
@@ -340,10 +351,37 @@ void mainLoopBrowse(void)
           }
           break;
 
+        case CH_CURS_RIGHT:
+          // Check if two columns and not already last item? If yes, Cursor right moves to right
+          if(SCREENW==80 && PresentDir.next!=NULL) {
+            // Check if not already in right column
+            if(xpos==0) {
+              cwd.selected = 0;
+              printElementPriv(xpos, ypos);
+              for(count=0;count<19;count++)
+              {
+                if(PresentDir.next) {
+                  current=PresentDir.next;
+                  VDC_CopyVDCToMem(current,(unsigned int)&PresentDir,sizeof(PresentDir));
+                  cwd.pos++;
+                  cwd.selected=current;
+                }
+              }
+              pos=cwd.pos;
+              yoff=pos-(lastpage*DIRH);
+              xpos = (yoff>18)?26:0;
+              ypos = (yoff>18)?yoff-14:yoff+5;
+              printElementPriv(xpos, ypos);
+            }
+            break;
+
+          } // Else fallthrough
+
           // --- start / enter directory
         case '7':
         case CH_F7:
         case CH_ENTER:
+          // Executable PRG?
           if (cwd.selected && PresentDir.dirent.type==CBM_T_PRG)
             {
               if (trace == 0)
@@ -357,9 +395,7 @@ void mainLoopBrowse(void)
                 goto done;
               }             
             }
-          // else fallthrough to CURS_RIGHT
-
-        case CH_CURS_RIGHT:
+          // else change dir
           if (cwd.selected)
             {
               if (trace == 1) {
@@ -370,14 +406,87 @@ void mainLoopBrowse(void)
             if(reuflag) { goto done; }
           break;
 
+        case CH_CURS_LEFT:
+        // Check if two columns and not already first item? If yes, Cursor right moves to left
+          if(SCREENW==80 && PresentDir.prev!=NULL) {
+          // Check if not already in left column
+            if(xpos==26) {
+              cwd.selected = 0;
+              printElementPriv(xpos, ypos);
+              for(count=0;count<19;count++)
+              {
+                if(PresentDir.prev) {
+                  current=PresentDir.prev;
+                  VDC_CopyVDCToMem(current,(unsigned int)&PresentDir,sizeof(PresentDir));
+                  cwd.pos--;
+                  cwd.selected=current;
+                }
+              }
+              pos=cwd.pos;
+              yoff=pos-(lastpage*DIRH);
+              xpos = (yoff>18)?26:0;
+              ypos = (yoff>18)?yoff-14:yoff+5;
+              printElementPriv(xpos, ypos);
+            }
+            break;
+
+          } // Else fallthrough
+
           // --- leave directory
         case CH_DEL:
-        case CH_CURS_LEFT:
           if (trace == 1)
           {
             --depth;
           }
           changeDir(device, devicetype[device] == U64?"..":"\xff", sorted);
+          break;
+
+        // Page down
+        case 'p':
+        // Check if not already last item? If no, page down
+          if(PresentDir.next!=NULL) {
+              cwd.selected = 0;
+              printElementPriv(xpos, ypos);
+              for(count=0;count<DIRH;count++)
+              {
+                if(PresentDir.next) {
+                  current=PresentDir.next;
+                  VDC_CopyVDCToMem(current,(unsigned int)&PresentDir,sizeof(PresentDir));
+                  cwd.pos++;
+                  cwd.selected=current;
+                  cwd.firstprinted=current;
+                }
+              }
+              pos=cwd.pos;
+              yoff=pos-(lastpage*DIRH);
+              xpos = (yoff>18)?26:0;
+              ypos = (yoff>18)?yoff-14:yoff+5;
+              printDir();
+          }
+          break;
+
+        // Page up
+        case 'u':
+        // Check if not already first item? If no, page up
+          if(PresentDir.prev!=NULL) {
+              cwd.selected = 0;
+              printElementPriv(xpos, ypos);
+              for(count=0;count<DIRH;count++)
+              {
+                if(PresentDir.prev) {
+                  current=PresentDir.prev;
+                  VDC_CopyVDCToMem(current,(unsigned int)&PresentDir,sizeof(PresentDir));
+                  cwd.pos--;
+                  cwd.selected=current;
+                  cwd.firstprinted=current;
+                }
+              }
+              pos=cwd.pos;
+              yoff=pos-(lastpage*DIRH);
+              xpos = (yoff>18)?26:0;
+              ypos = (yoff>18)?yoff-14:yoff+5;
+              printDir();
+          }
           break;
 
         case CH_UARROW:

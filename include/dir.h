@@ -45,6 +45,7 @@ struct Directory {
   char name[16+1+5+1];
   unsigned int firstelement;
   unsigned int selected;
+  unsigned int firstprinted;
   /// current cursor position
   unsigned int pos;
   /// number of free blocks
@@ -54,7 +55,6 @@ extern struct Directory cwd;
 
 extern unsigned int previous;
 extern unsigned int current;
-extern unsigned int next;
 
 unsigned char readDir(const BYTE device, const BYTE sorted);
 unsigned char myCbmReadDir(const BYTE device, struct cbm_dirent* l_dirent);

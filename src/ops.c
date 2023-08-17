@@ -537,11 +537,14 @@ void printDir()
   int selidx = 0;
   int page = 0;
   int skip = 0;
-  int pos = 0;
+  int pos = cwd.pos;
+  BYTE lastpage = 0;
   int idx = 0;
-  int xpos,ypos;
+  int xpos,ypos,yoff;
   int DIRH = (SCREENW==80)? 38:19;
   const char *typestr = NULL;
+
+  lastpage=pos/DIRH;
 
   if (!cwd.firstelement)
     {
@@ -549,35 +552,10 @@ void printDir()
       return;
     }
 
+  clrDir();
   revers(0);
-  current = cwd.firstelement;
-  idx=0;
-  while (current!=NULL)
-    {
-      if (current==cwd.selected)
-        {
-          break;
-        }
-      idx++;
-      VDC_CopyVDCToMem(current,(unsigned int)&PresentDir,sizeof(PresentDir));
-      current=PresentDir.next;
-    }
-
-  page=idx/DIRH;
-  skip=page*DIRH;
-
-  current = cwd.firstelement;
-
-  // skip pages
-  if (page>0)
-    {
-      for (idx=0; (idx < skip) && (current != NULL); ++idx)
-        {
-          VDC_CopyVDCToMem(current,(unsigned int)&PresentDir,sizeof(PresentDir));
-          current=PresentDir.next;
-          pos++;
-        }
-    }
+  current = cwd.firstprinted;
+  VDC_CopyVDCToMem(current,(unsigned int)&PresentDir,sizeof(PresentDir));
 
   for(idx=0; (current != NULL) && (idx < DIRH); ++idx)
     {

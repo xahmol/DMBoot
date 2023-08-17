@@ -50,7 +50,6 @@ struct DirElement BufferDir;
 struct Directory cwd;
 unsigned int previous;
 unsigned int current;
-unsigned int next;
 
 // VDC alloc functions
 
@@ -79,6 +78,7 @@ unsigned char readDir(const BYTE device, const BYTE sorted)
   BYTE cnt = 0xff;
   const BYTE y = 3;
   BYTE x = 0;
+  int iterate_address;
 
   vdc_alloc_address = (vdcmemory==64)?VDC64START:VDC16START;
   memset(&cwd,0,sizeof(cwd));
@@ -157,51 +157,63 @@ unsigned char readDir(const BYTE device, const BYTE sorted)
       else
         {
           // all other elements
-          //if (sorted)
-            //{
-            //  // iterate the sorted list
-            //  DirElement *e;
-            //  for(e = dir->firstelement; e->next; e = e->next)
-            //    {
-            //      // if the new name is greater than the current list item,
-            //      // it needs to be inserted in the previous position.
-            //      if (strncmp(e->dirent.name, de->dirent.name, 16) > 0)
-            //        {
-            //          // if the previous position is NULL, insert at the front of the list
-            //          if (! e->prev)
-            //            {
-            //              de->next = e;
-            //              e->prev = de;
-            //              dir->firstelement = de;
-            //            }
-            //          else
-            //            {
-            //              // insert somewhere in the middle
-            //              DirElement *p = e->prev;
-            //              assert(p->next == e);
-            //              p->next = de;
-            //              de->next = e;
-//
-            //              de->prev = p;
-            //              e->prev = de;
-            //            }
-            //          goto inserted;
-            //        }
-            //    }
-            //  assert(e->next == NULL);
-            //  e->next = de;
-            //  de->prev = e;
-            //inserted:;
-            //}
-          //else
-            //{
+          if (sorted)
+            {
+              // iterate the sorted list
+              iterate_address = cwd.firstelement;
+
+              do
+              {
+                VDC_CopyVDCToMem(iterate_address,(unsigned int)&BufferDir,sizeof(BufferDir));
+
+                if (strncmp(BufferDir.dirent.name, PresentDir.dirent.name, 16) > 0)
+                {
+                  // if the previous position is NULL, insert at the front of the list
+                  if (!BufferDir.prev)
+                    {
+                      PresentDir.prev = NULL;
+                      PresentDir.next = iterate_address;
+                      BufferDir.prev = vdc_alloc_address;
+                      cwd.firstelement = vdc_alloc_address;
+                      VDC_CopyMemToVDC(vdc_alloc_address,(unsigned int)&PresentDir,sizeof(PresentDir));
+                      VDC_CopyMemToVDC(iterate_address,(unsigned int)&BufferDir,sizeof(BufferDir));
+                    }
+                  else
+                    {
+                      // insert somewhere in the middle
+                      PresentDir.next = iterate_address;
+                      PresentDir.prev = BufferDir.prev;
+                      BufferDir.prev = vdc_alloc_address;
+                      VDC_CopyMemToVDC(vdc_alloc_address,(unsigned int)&PresentDir,sizeof(PresentDir));
+                      VDC_CopyMemToVDC(iterate_address,(unsigned int)&BufferDir,sizeof(BufferDir));
+                      VDC_CopyVDCToMem(PresentDir.prev,(unsigned int)&BufferDir,sizeof(BufferDir));
+                      BufferDir.next = vdc_alloc_address;
+                      VDC_CopyMemToVDC(PresentDir.prev,(unsigned int)&BufferDir,sizeof(BufferDir));
+                    }
+                  goto inserted;
+                }
+
+                iterate_address = BufferDir.next;
+              } while (iterate_address);
+           
+
               PresentDir.prev = previous;
               VDC_CopyMemToVDC(vdc_alloc_address,(unsigned int)&PresentDir,sizeof(PresentDir));
               VDC_CopyVDCToMem(previous,(unsigned int)&PresentDir,sizeof(PresentDir));
               PresentDir.next = vdc_alloc_address;
               VDC_CopyMemToVDC(previous,(unsigned int)&PresentDir,sizeof(PresentDir));
               previous = vdc_alloc_address;
-            //}
+            inserted:;
+            }
+          else
+            {
+              PresentDir.prev = previous;
+              VDC_CopyMemToVDC(vdc_alloc_address,(unsigned int)&PresentDir,sizeof(PresentDir));
+              VDC_CopyVDCToMem(previous,(unsigned int)&PresentDir,sizeof(PresentDir));
+              PresentDir.next = vdc_alloc_address;
+              VDC_CopyMemToVDC(previous,(unsigned int)&PresentDir,sizeof(PresentDir));
+              previous = vdc_alloc_address;
+            }
         }
     }
 
@@ -212,6 +224,7 @@ unsigned char readDir(const BYTE device, const BYTE sorted)
   if (cwd.firstelement)
     {
       cwd.selected = cwd.firstelement;
+      cwd.firstprinted = cwd.firstelement;
     }
   return 1;
 }
