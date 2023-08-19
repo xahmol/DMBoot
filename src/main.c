@@ -46,11 +46,13 @@
 #include "screen.h"
 #include "version.h"
 #include "base.h"
-#include "cat.h"
 #include "bootmenu.h"
 #include "utils.h"
-#include "ultimate_lib.h"
+#include "ultimate_common_lib.h"
+#include "ultimate_dos_lib.h"
+#include "ultimate_time_lib.h"
 #include "dmapi.h"
+#include "vdc.h"
 
 #ifndef min
 #define min(a,b) ( (a) < (b) ? (a) : (b) )
@@ -71,16 +73,9 @@ char getkey(BYTE mask);
 unsigned char loadoverlay(char* name);
 
 // Global variables
-BYTE DIR1H;
-BYTE DIR2H;
-unsigned int SCREENW;
-unsigned int MENUX;
-unsigned int MENUXT;
-unsigned int MENUW;
-unsigned int DIR2X;
-unsigned int DIR2Y;
-//unsigned int validdriveid;
-//unsigned int idnr[30];
+BYTE SCREENW;
+BYTE DIRW;
+BYTE MENUX;
 char path[8][20];
 char pathfile[20];
 BYTE pathdevice;
@@ -89,6 +84,12 @@ BYTE depth = 0;
 BYTE trace = 0;
 BYTE forceeight = 0;
 BYTE fastflag = 0;
+BYTE commandflag = 0;
+BYTE reuflag = 0;
+BYTE addmountflag = 0;
+BYTE runmountflag = 0;
+BYTE mountflag = 0;
+
 struct SlotStruct Slot;
 char newmenuname[36][21];
 unsigned int newmenuoldslot[36];
@@ -96,7 +97,7 @@ BYTE bootdevice;
 long secondsfromutc = 0; 
 unsigned char timeonflag = 1;
 char host[80] = "pool.ntp.org";
-char reufilename[20] = "default.reu";
+char imagename[20] = "default.reu";
 char reufilepath[60] = "/usb*/11/";
 char imageaname[20] = "";
 char imageapath[60] = "";
@@ -109,33 +110,35 @@ char* reusizelist[8] = { "128 KB","256 KB","512 KB","1 MB","2 MB","4 MB","8 MB",
 unsigned char utilbuffer[328];
 char configfilename[11] = "dmbcfgfile";
 unsigned int dm_apiversion = 0;
+unsigned char configversion = CFGVERSION;
+unsigned char vdcmemory;
+unsigned int vdc_alloc_address;
 
 //Main program
 int main() {
     int menuselect;
+
+    cputs("Starting DMBoot.\n\r");
  
     //Check column width of present screen
     if ( PEEK(0xee) == 79) //Memory position $ee is present screen width
     {
         SCREENW = 80;  //Set flag for 80 column
-        MENUX = 58; // x position of menu
-        MENUXT = MENUX + 2; // x position of menu items
-        MENUW = 15; // width of menu frame
-        DIR2X = DIRW+4;
-        DIR2Y = 0;
+        DIRW = 51;
+        MENUX = 65;
         set_c128_speed(SPEED_FAST);
     }
     else
     {
         SCREENW = 40;  //Set flag for 40 column
-        MENUX = 27; // x position of menu
-        MENUXT = MENUX + 1; // x position of menu items
-        MENUW = 13; // width of menu frame
-        DIR2X = 0;
-        DIR2Y = (DIR1Y+2+DIR1H);
+        DIRW = 25;
+        MENUX = 25;
     }
 
-    cputs("Starting: Reading config file.");
+    if(!uii_detect()) {
+        cputs("No Ultimate Command Interface enabled.");
+        return 1;
+    }
 
     //checkdmdevices();
     bootdevice = getcurrentdevice();    // Get device number program started from
@@ -157,16 +160,22 @@ int main() {
     // Set time from NTP server
     time_main();
 
-    loadoverlay("11:dmb-menu");        // Load overlay of main DMBoot menu routines
+    // Initialize drivers and memory for boot menu
+    loadoverlay("11:dmb-menu");         // Load overlay of main DMBoot menu routines
+    em_install(&c128_ram);              // Load extended memory driver
 
-    em_install(&c128_ram); // Load extended memory driver
-
+    // Load slot config
+    cputs("\n\n\rReading slot data.");
     std_read("11:dmbootconf"); // Read config file
-    
+
+    // Detect VDC memory size
+    vdcmemory = VDC_DetectVDCMemSize();
+    if(vdcmemory==64) {VDC_SetExtendedVDCMemSize(); }
+
+
+    // Init screen and menu
     initScreen(DC_COLOR_BORDER, DC_COLOR_BG, DC_COLOR_TEXT);
-
     cmd(bootdevice,"cd:\xff");          // Go to root of partition
-
     do
     {
         menuselect = mainmenu();
@@ -211,7 +220,9 @@ int main() {
 
         case CH_F2:
             // Information and credits
+            loadoverlay("11:dmb-util");      // Load util routines
             information();
+            loadoverlay("11:dmb-menu");      // Load overlay of main DMBoot menu routines
             break;
         
         case CH_F7:
@@ -240,8 +251,13 @@ unsigned char dm_getdevicetype(unsigned char id)
 {
     if(dm_apipresent==1)
     {
-        dm_devtype = id;
-        dm_getdevicetype_core();
+        dm_gethsidviaapi();
+        if(dm_devid==id) {
+            dm_devtype = 0x08;
+        } else {
+            dm_devtype = id;
+            dm_getdevicetype_core();
+        }
     }
     else
     {
@@ -298,69 +314,6 @@ unsigned char dm_getdevicetype(unsigned char id)
     }
 }
 
-//void checkdmdevices() {
-//    //Read memory for devices recognised by Device Manager Rom
-//
-//    unsigned int checksum = 0x42; // Set base value for checksum
-//    unsigned int x;
-//
-//    for (x=0; x<30; ++x) // Check for device number 0 to 30
-//    {
-//        idnr[x] = PEEK(0x0c00 + x);
-//        checksum = checksum ^ idnr[x]; // Perform bitwise exlusive OR with checksum for each memory position
-//    }
-//
-//    if (checksum == PEEK(0x0c00+31) ) // Compare calculated checsum with memory position where valid checksum would be
-//    {
-//        validdriveid = 1;
-//    }
-//    else
-//    {
-//        validdriveid = 0;
-//    }   
-//}
-//
-//const char* deviceidtext (int id)
-//{
-//    // Function to return device ID string based on ID value
-//
-//    switch( id )
-//    {
-//    //    case 0:
-//    //        return "";
-//    //    case 1:
-//    //        return "";
-//        case 2:
-//            return "u64";
-//        case 3:
-//            return "u64";
-//        case 4:
-//            return "sd2iec";
-//    //    case 5:
-//    //        return "";
-//    //    case 6:
-//    //        return "";
-//    //    case 7:
-//    //        return "";
-//        case 8:
-//            return "u64";
-//        case 40:
-//            return "1540";
-//        case 41:
-//            return "1541";
-//        case 51:
-//            return "1551";
-//        case 70:
-//            return "1570";
-//        case 71:
-//            return "1571";
-//        case 81:
-//            return "1581";
-//        default:
-//            return "";
-//    }
-//}
-
 void std_write(char * file_name)
 {
     char cmdbuf[20] = "s:";
@@ -370,25 +323,7 @@ void std_write(char * file_name)
     // Set directory of boot partition to root
     cmd(bootdevice,"cp11");             // Set working partition to autoboot partition
     cmd(bootdevice,"cd:\xff");          // Go to root of partition
-
-    // For reference: old sequential config file
-    //_filetype = 's';
-    //if(file = fopen(file_name, "w"))
-    //{
-    //    for (x=0 ; x<36 ; ++x)
-    //    {
-    //        getslotfromem(x);
-    //        fwrite(Slot.menu, sizeof(Slot.menu),1, file);
-    //        fwrite(Slot.path, sizeof(Slot.path),1, file);
-    //        fwrite(Slot.file, sizeof(Slot.file),1, file);
-    //        fwrite(Slot.cmd, sizeof(Slot.cmd),1, file);
-    //        fputc(Slot.device, file);
-    //        fputc(Slot.runboot, file);
-    //        fputc(Slot.command, file);
-    //    }
-    //    fclose(file);
-    //}
-    
+   
     // Remove old file
     strcat(cmdbuf,file_name);
     cmd(bootdevice,cmdbuf);
@@ -407,7 +342,7 @@ void std_write(char * file_name)
 		);
 
     // Save BANK 1 slots
-	cbm_k_save(0x0400, 0x0400 + (256*36));
+	cbm_k_save(0x0400, 0x0400 + (256*72));
 
     // Set load/save bank back to 0
     __asm__ (
@@ -433,24 +368,6 @@ void std_read(char * file_name)
     cmd(bootdevice,"cd:\xff");          // Go to root of partition
     cmd(bootdevice,"cp0");              // Go back to main partition
 
-    // For reference: old sequential config file
-    //_filetype = 's';
-    //if(file = fopen(file_name, "r"))
-    //{
-    //    for (x=0 ; x<36 ; ++x)
-    //    {
-    //        fread(Slot.menu, sizeof(Slot.menu),1, file);
-    //        fread(Slot.path, sizeof(Slot.path),1, file);
-    //        fread(Slot.file, sizeof(Slot.file),1, file);
-    //        fread(Slot.cmd, sizeof(Slot.cmd),1, file);
-    //        Slot.device = fgetc(file);
-    //        Slot.runboot = fgetc(file);
-    //        Slot.command = fgetc(file);
-    //        putslottoem(x);
-    //    }
-    //    fclose(file);
-    //}
-
     // Set device ID
 	cbm_k_setlfs(0, bootdevice, 0);
 
@@ -475,11 +392,25 @@ void std_read(char * file_name)
             strcpy(Slot.path,"");
             strcpy(Slot.file,"");
             strcpy(Slot.cmd,"");
-            strcpy(Slot.image,"");
+            strcpy(Slot.reu_image,"");
             Slot.device = 0;
             Slot.runboot = 0;
             Slot.command = 0;
+            Slot.cfgvs = CFGVERSION;
+            strcpy(Slot.image_a_path,"");
+            strcpy(Slot.image_a_file,"");
+            Slot.image_a_id = 0;
+            strcpy(Slot.image_b_path,"");
+            strcpy(Slot.image_b_file,"");
+            Slot.image_b_id = 0;
             putslottoem(x);
+        }
+    } else {
+        getslotfromem(0);
+        if(Slot.cfgvs < CFGVERSION) {
+            printf("\n\rOld configuration file format.");
+            printf("\n\rRun upgrade tool first.");
+            exit(1);
         }
     }
 
@@ -569,4 +500,29 @@ unsigned char loadoverlay(char *name)
         printf("\nLoading overlay file failed\n");
         exit(1);
     }
+}
+
+void headertext(char* subtitle)
+{
+    // Draw header text
+    // Input: subtitle is text to draw on second line
+
+    revers(1);
+    textcolor(DMB_COLOR_HEADER1);
+    gotoxy(0,0);
+    cspaces(SCREENW);
+    gotoxy(0,0);  
+    cprintf("DMBoot 128: Device Manager Boot Menu");
+    textcolor(DMB_COLOR_HEADER2);
+    gotoxy(0,1);
+    cspaces(SCREENW);
+    gotoxy(0,1);
+    cprintf("%s\n\n\r", subtitle);
+    if(SCREENW == 80)
+    {
+        uii_get_time();
+        cputsxy(80-strlen((const char*)uii_data),1,(const char*)uii_data);
+    }
+    revers(0);
+    textcolor(DC_COLOR_TEXT);
 }

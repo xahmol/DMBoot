@@ -37,7 +37,8 @@
 #include <string.h>
 #include <conio.h>
 #include <stdlib.h>
-#include "ultimate_lib.h"
+#include "ultimate_common_lib.h"
+#include "ultimate_dos_lib.h"
 #include "defines.h"
 #include "geosramboot.h"
 #include "configcommon.h"
@@ -59,7 +60,7 @@ void geosboot_main()
 	}	
 
     printf("\nOpen REU file");
-	uii_open_file(1, reufilename);
+	uii_open_file(1, imagename);
 	printf("\nStatus: %s", uii_status);
 
 	// Exit if REU file is not found

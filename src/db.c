@@ -27,12 +27,13 @@
 #include <stdlib.h>
 #include <screen.h>
 #include <conio.h>
-#include "cat.h"
 #include "dir.h"
 #include "base.h"
 #include "defines.h"
 #include "ops.h"
 #include "version.h"
+#include "vdc.h"
+#include "dmapi.h"
 
 #pragma code-name ("OVERLAY1");
 #pragma rodata-name ("OVERLAY1");
@@ -42,89 +43,78 @@ static BYTE sorted = 0;
 void
 updateMenu(void)
 {
-  BYTE menuy=MENUY;
+  BYTE menuy=2;
 
+  clearArea(MENUX,3,15,22);
   revers(0);
   textcolor(DC_COLOR_TEXT);
-  drawFrame(" DMBoot ",MENUX,MENUY,MENUW,MENUH,NULL);
 
-  ++menuy;
-  cputsxy(MENUXT+1,++menuy,"F1 DIR");
-  cputsxy(MENUXT+1,++menuy,"+- DEVICE");
-  cputsxy(MENUXT+1,++menuy,"F3 HEX");
-  cputsxy(MENUXT+1,++menuy,"F4 ASC");
-  cputsxy(MENUXT+1,++menuy,"F5 BOOT");
-  cputsxy(MENUXT+1,++menuy,"F7 RUN");
-  cputsxy(MENUXT+1,++menuy,"CR RUN/CD");
-  cputsxy(MENUXT+1,++menuy,"BS DIR UP");
-  cputsxy(MENUXT+1,++menuy," \x5e PAR DIR");
-  cputsxy(MENUXT+1,++menuy," T TOP");
-  cputsxy(MENUXT+1,++menuy," B BOTTOM");
-  cputsxy(MENUXT+1,++menuy," S SORT");
-  cputsxy(MENUXT+1,++menuy," D DIRTRAC");
-  cputsxy(MENUXT+1,++menuy," 6 RUN 64");
-  cputsxy(MENUXT+1,++menuy," 8 FORCE 8");
-  cputsxy(MENUXT+1,++menuy," F FAST");
-  cputsxy(MENUXT+1,++menuy," @ DOScmd");
-  cputsxy(MENUXT+1,++menuy," Q QUIT");
-  if (SCREENW == 80 )
-  {
-    cputsxy(MENUXT+1,++menuy," \xff SW WIN");
-  }
+  cputsxy(MENUX+1,++menuy," F1 Dir refr.");
+  cputsxy(MENUX+1,++menuy,"+/- Device");
+  cputsxy(MENUX+1,++menuy," F5 Boot");
+  cputsxy(MENUX+1,++menuy,"ENT Run/Select");
+  cputsxy(MENUX+1,++menuy,"DEL Dir up");
+  cputsxy(MENUX+1,++menuy,"  \x5e Root dir");
+  cputsxy(MENUX+1,++menuy,"  T Top");
+  cputsxy(MENUX+1,++menuy,"  E End");
+  cputsxy(MENUX+1,++menuy,"  S Sort");
+  cputsxy(MENUX+1,++menuy,"P/U Page up/do");
+  cputsxy(MENUX+1,++menuy,"Cur Navigate");
+  cputsxy(MENUX+1,++menuy,"  D Dirtrace");
+  if(trace) {
+    cputsxy(MENUX+1,++menuy," AB Add mount");
+    cputsxy(MENUX+1,++menuy,"  M Run mount");
+  } else { menuy += 2; }
+  cputsxy(MENUX+1,++menuy,"  6 Run in C64");
+  cputsxy(MENUX+1,++menuy,"  8 Force ID 8");
+  cputsxy(MENUX+1,++menuy,"  F Fast mode");
+  cputsxy(MENUX+1,++menuy,"  Q Quit");
+
+  menuy++;
   if (trace == 1)
   {
-    cputsxy(MENUXT,++menuy," TRACE ON ");
+    cputsxy(MENUX,++menuy," Trace   ON ");
   }
   else
   {
-    cputsxy(MENUXT,++menuy," TRACE OFF");
+    cputsxy(MENUX,++menuy," Trace   OFF");
   }
   if (forceeight == 1)
   {
-    cputsxy(MENUXT,++menuy," Frc 8 ON ");
+    cputsxy(MENUX,++menuy," Force 8 ON ");
   }
   else
   {
-    cputsxy(MENUXT,++menuy," Frc 8 OFF");
+    cputsxy(MENUX,++menuy," Force 8 OFF");
   }
   if (fastflag == 1)
   {
-    cputsxy(MENUXT,++menuy," FAST  ON ");
+    cputsxy(MENUX,++menuy," Fast    ON ");
   }
   else
   {
-    cputsxy(MENUXT,++menuy," FAST  OFF");
+    cputsxy(MENUX,++menuy," Fast    OFF");
   }
   
 }
 
-void
-mainLoopBrowse(void)
+void mainLoopBrowse(void)
 {
-  Directory * cwd = NULL;
-  DirElement * current = NULL;
   unsigned int pos = 0;
   BYTE lastpage = 0;
   BYTE nextpage = 0;
-  BYTE context = 0;
-  BYTE num_windows;
-
+  int DIRH = (SCREENW==80)? 38:19;
+  int xpos,ypos,yoff;
+  unsigned char count;
+  
   trace = 0;
   depth = 0;
+  reuflag = 0;
+  addmountflag = 0;
+  runmountflag = 0;
+  mountflag = 0;
 
-  DIR1H = DIR2H = SCREENH-2;
-  dirs[0] = dirs[1] = NULL;
-
-  if (SCREENW == 80)
-  {
-    num_windows = 2;
-  }
-  else
-  {
-    num_windows = 1;
-  }
-  
-  updateScreen(context, num_windows);
+  updateScreen();
 
   {
     BYTE i;
@@ -134,41 +124,35 @@ mainLoopBrowse(void)
         cbm_closedir(i);
       }
 
-    textcolor(DC_COLOR_HIGHLIGHT);
-    i = 7;
+    textcolor(DC_COLOR_TEXT);
+    dm_devid=0;
+    dm_gethsidviaapi();
+    i = (dm_devid)?dm_devid-1:7;
+
     while(++i < MAXDEVID+1)
       {
-        devices[context] = i;
-        dirs[context] = readDir(NULL, devices[context], context, sorted);
-        if (dirs[context])
+        device = i;
+        if(readDir(device, sorted))
           {
-            getDeviceType(devices[context]);
-            showDir(context, context);
-            goto found_upper_drive;
+            getDeviceType(device);
+            showDir();
+            goto found_first_drive;
           }
       }
 
-    found_upper_drive:;
-    if (SCREENW == 80)
-    {
-      textcolor(DC_COLOR_TEXT);
-      while(++i < MAXDEVID+1)
-      {
-        devices[1] = i;
-        dirs[1] = readDir(NULL, devices[1], 1, sorted);
-        if (dirs[1])
-        {
-            getDeviceType(devices[1]);
-            showDir(1, context);
-            goto found_lower_drive;
-        }
-      }
-      found_lower_drive:;
-    }
+    found_first_drive:;
   }
 
   while(1)
     {
+      current = cwd.selected;
+      if(current) { VDC_CopyVDCToMem(current,(unsigned int)&PresentDir,sizeof(PresentDir)); }
+      pos=cwd.pos;
+      lastpage=pos/DIRH;
+      yoff=pos-(lastpage*DIRH);
+      xpos = (yoff>18)?26:0;
+      ypos = (yoff>18)?yoff-14:yoff+5;
+
       switch (cgetc())
         {
         case 's':
@@ -176,81 +160,67 @@ mainLoopBrowse(void)
           // fallthrough
         case '1':
         case CH_F1:
-          textcolor(DC_COLOR_HIGHLIGHT);
-          dirs[context]=readDir(dirs[context], devices[context], context, sorted);
-          showDir(context, context);
+          readDir(device, sorted);
+          showDir();
           break;
 
         case '2':
         case CH_F2:
         case '+':
-          if (++devices[context] > MAXDEVID)
-            devices[context]=8;
-          freeDir(&dirs[context]);
-          if (! devicetype[devices[context]])
+          if (++device > MAXDEVID)
+            device=8;
+          if (! devicetype[device])
             {
-              getDeviceType(devices[context]);
+              getDeviceType(device);
             }
-          showDir(context, context);
+          memset(&cwd,0,sizeof(cwd));
+          showDir();
           break;
         
         case '-':
-          if (--devices[context] < 8) { devices[context]=MAXDEVID; }
-          freeDir(&dirs[context]);
-          if (! devicetype[devices[context]])
+          if (--device < 8) { device=MAXDEVID; }
+          if (! devicetype[device])
             {
-              getDeviceType(devices[context]);
+              getDeviceType(device);
             }
-          showDir(context, context);
-          break;
-
-        case '3':
-        case CH_F3:
-          cathex(devices[context],dirs[context]->selected->dirent.name);
-          updateScreen(context, num_windows);
-          break;
-
-        case '4':
-        case CH_F4:
-          catasc(devices[context],dirs[context]->selected->dirent.name);
-          updateScreen(context, num_windows);
+          memset(&cwd,0,sizeof(cwd));
+          showDir();
           break;
 
         // --- boot directory
         case '5':
         case CH_F5:
-          cwd=GETCWD;
           if (trace == 0)
           {
-            execute(dirs[context]->selected->dirent.name,devices[context], 1 + 2*forceeight + 10*fastflag, "");
+            execute(PresentDir.dirent.name,device, EXEC_BOOT + EXEC_FRC8*forceeight + EXEC_FAST*fastflag, "");
           }
           else
           {
             strcpy(pathfile, "" );
-            pathrunboot = 1 + 2*forceeight + 10*fastflag;
+            pathrunboot = EXEC_BOOT + EXEC_FRC8*forceeight + EXEC_FAST*fastflag;
             goto done;
           }   
           break;
 
         case 't':
         case CH_HOME:
-          cwd=GETCWD;
-          cwd->selected=cwd->firstelement;
-          cwd->pos=0;
-          printDir(context, DIRX+1, DIRY);
+          cwd.selected=cwd.firstelement;
+          cwd.pos=0;
+          printDir();
           break;
 
         case 'd':
           if (trace == 0)
           {
             trace = 1;
-            pathdevice = devices[context];
-            changeDir(context, devices[context], NULL, sorted);
+            pathdevice = device;
+            changeDir(device, NULL, sorted);
           }
           else
           {
             trace = 0;
             depth = 0;
+            showDir();
           }
           updateMenu();
           break;
@@ -279,15 +249,16 @@ mainLoopBrowse(void)
           updateMenu();
           break;
 
-        case 'b':
-          cwd=GETCWD;
-          current = cwd->firstelement;
+        case 'e':
+          current = cwd.firstelement;
+          VDC_CopyVDCToMem(current,(unsigned int)&PresentDir,sizeof(PresentDir));
           pos=0;
           while (1)
             {
-              if (current->next!=NULL)
+              if (PresentDir.next!=NULL)
                 {
-                  current=current->next;
+                  current=PresentDir.next;
+                  VDC_CopyVDCToMem(current,(unsigned int)&PresentDir,sizeof(PresentDir));
                   pos++;
                 }
               else
@@ -295,61 +266,71 @@ mainLoopBrowse(void)
                   break;
                 }
             }
-          cwd->selected=current;
-          cwd->pos=pos;
-          printDir(context, DIRX+1, DIRY);
+          cwd.selected=current;
+          cwd.pos=pos;
+          printDir();
           break;
 
         case 'q':
           trace = 0;
           goto done;
 
-        case '@':
-          doDOScommand(context, sorted, 0, "DOS command");
-          updateScreen(context, num_windows);
-          break;
-
         case CH_CURS_DOWN:
-          cwd=GETCWD;
-          if (cwd->selected!=NULL && cwd->selected->next!=NULL)
+          if (cwd.selected!=NULL && PresentDir.next!=NULL)
             {
-              cwd->selected=cwd->selected->next;
-              pos=cwd->pos;
-              lastpage=pos/DIRH;
+              current=PresentDir.next;
+              VDC_CopyVDCToMem(current,(unsigned int)&PresentDir,sizeof(PresentDir));
+              cwd.selected=current;
               nextpage=(pos+1)/DIRH;
+              cwd.pos++;
               if (lastpage!=nextpage)
                 {
-                  cwd->pos++;
-                  printDir(context, DIRX+1, DIRY);
+                  cwd.firstprinted = current;
+                  printDir();
                 }
               else
                 {
-                  printElement(context, cwd, DIRX+1, DIRY);
-                  cwd->pos++;
-                  printElement(context, cwd, DIRX+1, DIRY);
+                  current=PresentDir.prev;
+                  VDC_CopyVDCToMem(current,(unsigned int)&PresentDir,sizeof(PresentDir));
+                  printElementPriv(xpos, ypos);
+                  xpos = (++yoff>18)?26:0;
+                  ypos = (yoff>18)?yoff-14:yoff+5;
+                  current=PresentDir.next;
+                  VDC_CopyVDCToMem(current,(unsigned int)&PresentDir,sizeof(PresentDir));
+                  printElementPriv(xpos, ypos);
                 }
-
             }
           break;
 
         case CH_CURS_UP:
-          cwd=GETCWD;
-          if (cwd->selected!=NULL && cwd->selected->prev!=NULL)
+          if (cwd.selected!=NULL && PresentDir.prev!=NULL)
             {
-              cwd->selected=cwd->selected->prev;
-              pos=cwd->pos;
-              lastpage=pos/DIRH;
+              current=PresentDir.prev;
+              VDC_CopyVDCToMem(current,(unsigned int)&PresentDir,sizeof(PresentDir));
+              cwd.selected=current;
               nextpage=(pos-1)/DIRH;
+              cwd.pos--;
               if (lastpage!=nextpage)
                 {
-                  cwd->pos--;
-                  printDir(context, DIRX+1, DIRY);
+                  for(count=0;count<DIRH;count++) {
+                    if(PresentDir.prev != NULL) {
+                      current=PresentDir.prev;
+                      VDC_CopyVDCToMem(current,(unsigned int)&PresentDir,sizeof(PresentDir));
+                    }
+                  }
+                  cwd.firstprinted = current;
+                  printDir();
                 }
               else
                 {
-                  printElement(context, cwd, DIRX+1, DIRY);
-                  cwd->pos--;
-                  printElement(context, cwd, DIRX+1, DIRY);
+                  current=PresentDir.next;
+                  VDC_CopyVDCToMem(current,(unsigned int)&PresentDir,sizeof(PresentDir));
+                  printElementPriv(xpos, ypos);
+                  xpos = (--yoff>18)?26:0;
+                  ypos = (yoff>18)?yoff-14:yoff+5;
+                  current=PresentDir.prev;
+                  VDC_CopyVDCToMem(current,(unsigned int)&PresentDir,sizeof(PresentDir));
+                  printElementPriv(xpos, ypos);
                 }
             }
           break;
@@ -358,63 +339,158 @@ mainLoopBrowse(void)
         case '6':
           if(dm_apipresent==1 && dm_apiversion>1)
           {
-            cwd=GETCWD;
-            if (cwd->selected && cwd->selected->dirent.type==CBM_T_PRG)
+            if (cwd.selected && PresentDir.dirent.type==CBM_T_PRG)
               {
                 if (trace == 0)
                 {
-                  execute(dirs[context]->selected->dirent.name,devices[context], 5, "");
+                  execute(PresentDir.dirent.name,device, EXEC_RUN64, "");
                 }
                 else
                 {
-                  strcpy(pathfile, dirs[context]->selected->dirent.name );
-                  pathrunboot = 5;
+                  strcpy(pathfile, PresentDir.dirent.name );
+                  pathrunboot = EXEC_RUN64;
                   goto done;
                 }             
               }
           }
           break;
 
+        case CH_CURS_RIGHT:
+          // Check if two columns and not already last item? If yes, Cursor right moves to right
+          if(SCREENW==80 && PresentDir.next!=NULL) {
+            // Check if not already in right column
+            if(xpos==0) {
+              cwd.selected = 0;
+              printElementPriv(xpos, ypos);
+              for(count=0;count<19;count++)
+              {
+                if(PresentDir.next) {
+                  current=PresentDir.next;
+                  VDC_CopyVDCToMem(current,(unsigned int)&PresentDir,sizeof(PresentDir));
+                  cwd.pos++;
+                  cwd.selected=current;
+                }
+              }
+              pos=cwd.pos;
+              yoff=pos-(lastpage*DIRH);
+              xpos = (yoff>18)?26:0;
+              ypos = (yoff>18)?yoff-14:yoff+5;
+              printElementPriv(xpos, ypos);
+            }
+            break;
+
+          } // Else fallthrough
+
           // --- start / enter directory
         case '7':
         case CH_F7:
         case CH_ENTER:
-          cwd=GETCWD;
-          if (cwd->selected && cwd->selected->dirent.type==CBM_T_PRG)
+          // Executable PRG?
+          if (cwd.selected && PresentDir.dirent.type==CBM_T_PRG)
             {
               if (trace == 0)
               {
-                execute(dirs[context]->selected->dirent.name,devices[context], 0 + 2*forceeight + 10*fastflag, "");
+                execute(PresentDir.dirent.name,device, EXEC_FRC8*forceeight + EXEC_FAST*fastflag, "");
               }
               else
               {
-                strcpy(pathfile, dirs[context]->selected->dirent.name );
-                pathrunboot = 0 + 2*forceeight + 10*fastflag;
+                strcpy(pathfile, PresentDir.dirent.name );
+                pathrunboot = EXEC_FRC8*forceeight + EXEC_FAST*fastflag;
                 goto done;
               }             
             }
-          // else fallthrough to CURS_RIGHT
-
-        case CH_CURS_RIGHT:
-          cwd=GETCWD;
-          if (cwd->selected)
+          // else change dir
+          if (cwd.selected)
             {
-              if (trace == 1)
-              {
-                strcpy(path[depth++],cwd->selected->dirent.name);
+              if (trace == 1) {
+                strcpy(path[depth++],PresentDir.dirent.name);
               }
-              changeDir(context, devices[context], cwd->selected->dirent.name, sorted);
+              changeDir(device, PresentDir.dirent.name, sorted);
             }
+            if(reuflag) { goto done; }
           break;
+
+        case CH_CURS_LEFT:
+        // Check if two columns and not already first item? If yes, Cursor right moves to left
+          if(SCREENW==80 && PresentDir.prev!=NULL) {
+          // Check if not already in left column
+            if(xpos==26) {
+              cwd.selected = 0;
+              printElementPriv(xpos, ypos);
+              for(count=0;count<19;count++)
+              {
+                if(PresentDir.prev) {
+                  current=PresentDir.prev;
+                  VDC_CopyVDCToMem(current,(unsigned int)&PresentDir,sizeof(PresentDir));
+                  cwd.pos--;
+                  cwd.selected=current;
+                }
+              }
+              pos=cwd.pos;
+              yoff=pos-(lastpage*DIRH);
+              xpos = (yoff>18)?26:0;
+              ypos = (yoff>18)?yoff-14:yoff+5;
+              printElementPriv(xpos, ypos);
+            }
+            break;
+
+          } // Else fallthrough
 
           // --- leave directory
         case CH_DEL:
-        case CH_CURS_LEFT:
           if (trace == 1)
           {
             --depth;
           }
-          changeDir(context, devices[context], devicetype[devices[context]] == U64?"..":"\xff", sorted);
+          changeDir(device, devicetype[device] == U64?"..":"\xff", sorted);
+          break;
+
+        // Page down
+        case 'p':
+        // Check if not already last item? If no, page down
+          if(PresentDir.next!=NULL) {
+              cwd.selected = 0;
+              printElementPriv(xpos, ypos);
+              for(count=0;count<DIRH;count++)
+              {
+                if(PresentDir.next) {
+                  current=PresentDir.next;
+                  VDC_CopyVDCToMem(current,(unsigned int)&PresentDir,sizeof(PresentDir));
+                  cwd.pos++;
+                  cwd.selected=current;
+                  cwd.firstprinted=current;
+                }
+              }
+              pos=cwd.pos;
+              yoff=pos-(lastpage*DIRH);
+              xpos = (yoff>18)?26:0;
+              ypos = (yoff>18)?yoff-14:yoff+5;
+              printDir();
+          }
+          break;
+
+        // Page up
+        case 'u':
+        // Check if not already first item? If no, page up
+          if(PresentDir.prev!=NULL) {
+              cwd.selected = 0;
+              printElementPriv(xpos, ypos);
+              for(count=0;count<DIRH;count++)
+              {
+                if(PresentDir.prev) {
+                  current=PresentDir.prev;
+                  VDC_CopyVDCToMem(current,(unsigned int)&PresentDir,sizeof(PresentDir));
+                  cwd.pos--;
+                  cwd.selected=current;
+                  cwd.firstprinted=current;
+                }
+              }
+              pos=cwd.pos;
+              yoff=pos-(lastpage*DIRH);
+              xpos = (yoff>18)?26:0;
+              ypos = (yoff>18)?yoff-14:yoff+5;
+              printDir();
+          }
           break;
 
         case CH_UARROW:
@@ -422,30 +498,35 @@ mainLoopBrowse(void)
           {
             depth = 0;
           }
-          changeDir(context, devices[context], NULL, sorted);
+          changeDir(device, NULL, sorted);
           break;
 
-          // ----- switch context -----
-        case '0':
-        case CH_ESC:
-        case CH_LARROW:  // arrow left
-          {
-            if (SCREENW == 80 )
-            {
-              const BYTE prev_context = context;
-              context = context ^ 1;
-              drawDirFrame(context, context);
-              drawDirFrame(prev_context, context);
-              trace = 0;
-              depth = 0;
-              updateMenu();
-            }
+        case 'a':
+          CheckMounttype(PresentDir.dirent.name);
+          if(mountflag==1) {
+            addmountflag = 1;
+            strcpy(imageaname,PresentDir.dirent.name);
+            goto done;
           }
-          break;
+        
+        case 'b':
+          CheckMounttype(PresentDir.dirent.name);
+          if(mountflag==1) {
+            addmountflag = 2;
+            strcpy(imagebname,PresentDir.dirent.name);
+            goto done;
+          }
+
+        case 'm':
+          if(mountflag==1 && imageaid) {
+            runmountflag = 1;
+            strcpy(pathfile, PresentDir.dirent.name );
+            pathrunboot = EXEC_MOUNT + EXEC_FAST*fastflag;
+            goto done;
+          }
+
         }
     }
 
  done:;
- freeDir(&dirs[0]);
- if(SCREENW==80) { freeDir(&dirs[1]); }
 }

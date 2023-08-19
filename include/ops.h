@@ -31,23 +31,21 @@
 
 int cmd(const BYTE device, const char *cmd);
 void execute(char * prg, BYTE device, BYTE boot, char * command);
-void updateScreen(const BYTE context, BYTE num_dirs);
+void updateScreen();
 void updateMenu(void);
-void showDir(BYTE context, const BYTE mycontext);
+void showDir();
 void mainLoopBrowse(void);
-void clrDir(BYTE context);
-void refreshDir(const BYTE context, const BYTE sorted, const BYTE mycontext);
-void printDir(const BYTE context, const BYTE xpos, const BYTE ypos);
-void printElement(const BYTE context, const Directory *dir, const BYTE xpos, const BYTE ypos);
+void clrDir();
+void refreshDir(const BYTE sorted);
+void printDir();
+void printElementPriv(const BYTE xpos, const BYTE ypos);
 const char* fileTypeToStr(BYTE ft);
 BYTE dosCommand(const BYTE lfn, const BYTE drive, const BYTE sec_addr, const char *cmd);
-int changeDir(const BYTE context, const BYTE device, const char *dirname, const BYTE sorted);
-void changeDeviceID(BYTE device);
-void drawDirFrame(BYTE context, const BYTE mycontext);
+void CheckMounttype(const char *dirname);
+int changeDir(const BYTE device, const char *dirname, const BYTE sorted);
+void drawDirFrame();
 const char* getDeviceType(const BYTE device);
-void initDirWindowHeight(void);
 int textInput(const BYTE xpos, const BYTE ypos, char *str, const BYTE size);
-void doDOScommand(const BYTE context, const BYTE sorted, const BYTE use_linebuffer, const char *title);
 
 /// if you change this enum, also change the "drivetype" array in ops.c
 enum drive_e {NONE=0, PI1541, D1540, D1541, D1551, D1570, D1571, D1581, D1001, D2031, D8040, SD2IEC, CMD, VICE, U64, LAST_DRIVE_E};
@@ -55,11 +53,7 @@ enum drive_e {NONE=0, PI1541, D1540, D1541, D1551, D1570, D1571, D1581, D1001, D
 extern BYTE devicetype[];
 extern const char* drivetype[];
 extern char linebuffer[81];
-extern BYTE devices[];
+extern BYTE device;
 extern char linebuffer2[];
-extern Directory* dirs[];
-
-void debugs(const char *s);
-void debugu(const unsigned u);
 
 #endif

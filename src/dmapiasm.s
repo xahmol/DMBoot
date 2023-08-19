@@ -4,6 +4,7 @@
 
 .export _dm_getapiversion_core
 .export _dm_getdevicetype_core
+.export _dm_gethsidviaapi
 .export _dm_sethsidviaapi
 .export _dm_run64
 .export _dm_apipresent
@@ -17,6 +18,7 @@
 api_header          = $807b
 api_version         = $807e
 ext_get_drivetype   = $8083
+ext_get_hs_id       = $8086
 ext_set_hs_id       = $8089
 ext_run128          = $808c
 ext_run64           = $808f
@@ -95,6 +97,19 @@ _dm_getdevicetype_core:
     jsr ext_get_drivetype               ; Call DM ext_get_drivetype  function
     sta _dm_devtype                     ; Store obtained device type
     
+    jsr restoremmu                      ; Restore MMU config
+    rts
+
+; ------------------------------------------------------------------------------
+_dm_gethsidviaapi:
+; Function to set the hyperdrive drive ID to 8
+; ------------------------------------------------------------------------------
+    jsr setmmu                          ; Safeguard old MMU config and set new one to %00101010  
+
+    ; Set hyperspeed drive ID to 8 via DM API call
+    jsr ext_get_hs_id                   ; Call DM ext_get_hs_id function
+    sta _dm_devid                       ; Store outcome in variable
+
     jsr restoremmu                      ; Restore MMU config
     rts
 

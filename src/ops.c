@@ -1,28 +1,35 @@
-/* -*- c-basic-offset: 2; tab-width: 2; indent-tabs-mode: nil -*-
- * vi: set shiftwidth=2 tabstop=2 expandtab:
- * :indentSize=2:tabSize=2:noTabs=true:
- */
-/** @file
- * \date 10.01.2009
- * \author bader
- *
- * DraCopy (dc*) is a simple copy program.
- * DraBrowse (db*) is a simple file browser.
- *
- * Since both programs make use of kernal routines they shall
- * be able to work with most file oriented IEC devices.
- *
- * Created 2009 by Sascha Bader
- *
- * The code can be used freely as long as you retain
- * a notice describing original source and author.
- *
- * THE PROGRAMS ARE DISTRIBUTED IN THE HOPE THAT THEY WILL BE USEFUL,
- * BUT WITHOUT ANY WARRANTY. USE THEM AT YOUR OWN RISK!
- *
- * https://github.com/doj/dracopy
- */
+// DMBoot 128:
+// Device Manager Boot Menu for the Commodore 128
+// Written in 2020 by Xander Mol
+// https://github.com/xahmol/DMBoot
+// https://www.idreamtin8bits.com/
+//
+// Based on DraBrowse:
+// DraBrowse (db*) is a simple file browser.
+// Originally created 2009 by Sascha Bader.
+// Used version adapted by Dirk Jagdmann (doj)
+// https://github.com/doj/dracopy
+//
+// Uses code from:
+// Ultimate 64/II+ Command Library
+// Scott Hutter, Francesco Sblendorio
+// https://github.com/xlar54/ultimateii-dos-lib
+//
+// Requires and made possible by the C128 Device Manager ROM,
+// Created by Bart van Leeuwen
+// https://www.bartsplace.net/content/publications/devicemanager128.shtml
+//
+// Requires and made possible by the Ultimate II+ cartridge,
+// Created by Gideon Zweijtzer
+// https://ultimate64.com/
+//
+// The code can be used freely as long as you retain
+// a notice describing original source and author.
+//
+// THE PROGRAMS ARE DISTRIBUTED IN THE HOPE THAT THEY WILL BE USEFUL,
+// BUT WITHOUT ANY WARRANTY. USE THEM AT YOUR OWN RISK!
 
+//Includes
 #include "screen.h"
 #include "version.h"
 #include "base.h"
@@ -39,37 +46,23 @@
 #include "base.h"
 #include "main.h"
 #include "dmapi.h"
+#include "vdc.h"
 
 const char *value2hex = "0123456789abcdef";
+const char *reg_types[] = { "SEQ","PRG","URS","REL","VRP" };
+const char *oth_types[] = { "DEL","CBM","DIR","LNK","OTH","HDR"};
+char bad_type[4];
 
-Directory* dirs[] = {NULL,NULL};
-BYTE devices[] = {8,9};
+BYTE device = 8;
 char linebuffer[81];
 char linebuffer2[81];
-
 char DOSstatus[40];
 
 /// string descriptions of enum drive_e
 const char* drivetype[LAST_DRIVE_E] = {"", "Pi1541", "1540", "1541", "1551", "1570", "1571", "1581", "1001", "2031", "8040", "sd2iec", "cmd", "vice", "u64"};/// enum drive_e value for each device 0-19.
 BYTE devicetype[MAXDEVID+1];
 
-void
-initDirWindowHeight(void)
-{
-  if (SCREENW == 80)
-  {
-    DIR1H = 23;
-    DIR2H = 23;
-  }
-  else
-  {
-    DIR1H = 11;
-    DIR2H = 10;
-  }
-}
-
-const char*
-getDeviceType(const BYTE device)
+const char* getDeviceType(const BYTE device)
 {
   BYTE idx;
 
@@ -111,6 +104,7 @@ dosCommand(const BYTE lfn, const BYTE drive, const BYTE sec_addr, const char *cm
   int res;
   if (cbm_open(lfn, drive, sec_addr, cmd) != 0)
     {
+      cbm_close(lfn);
       return _oserror;
     }
 
@@ -153,13 +147,12 @@ execute(char * prg, BYTE device, BYTE boot, char * command)
   // Input:
   // prg:     Filename
   // device:  device number
-  // boot:    flag to boot or execute, with or without drive set to 8
-  //          0: Run without drive set to 8
-  //          1: Boot from dir without drive set to 8
-  //          3: Run without drive set to 8
-  //          4: Boot from dir without drive set to 8
-  //          5: Run in C64 mode
-  //          Add 10 to option to execute in FAST mode
+  // boot:    Execute flag
+  //          bit 0: Run from mount
+  //          bit 1: Force 8
+  //          bit 2: Run 64
+  //          bit 3: Fast
+  //          bit 4: Boot
   // command: User defined command to be executed before execution.
   //          Empty is no command.
 
@@ -181,99 +174,46 @@ execute(char * prg, BYTE device, BYTE boot, char * command)
     numberenter++;
   }
 
-  switch (boot)
-  {
-  case 0:
-    cprintf("run\"%s\",u%i", prg, device);
-    break;
-
-  case 1:
-    cprintf("boot u%i", device);
-    break;
-
-  case 2:
-    if(dm_apipresent==1 && dm_apiversion>0)
-    {
-      dm_sethsidviaapi();
-    }
-    else
-    {
-      cputs("poke 673,8");
-      gotoxy(0,ypos+3);
-      numberenter++;
-    }
-    cprintf("run\"%s\",u%i", prg, 8);
-    break;
-  
-  case 3:
-    if(dm_apipresent==1 && dm_apiversion>0)
-    {
-      dm_sethsidviaapi();
-    }
-    else
-    {
-      cputs("poke 673,8");
-      gotoxy(0,ypos+3);
-      numberenter++;
-    }
-    cprintf("boot u%i", 8);
-    break;
-
-  case 5:
+  if(boot & EXEC_RUN64) {
+    // Run in C65 mode
     if(dm_apipresent==1 && dm_apiversion>1)
     {
       // Set filename
 	    strcpy(dm_prgnam,prg);
-
       // Set filename length
       dm_prglen = strlen(prg);
-
       // Set file drive ID
       dm_devid = device;
-
       // Print call to start in 64 mode function
       cprintf("sys %i",&dm_run64);
     }
-    break;
+  } else {
+    // Force 8 mode
+    if(boot & EXEC_FRC8) {
+      if(dm_apipresent==1 && dm_apiversion>0)
+      {
+        dm_sethsidviaapi();
+      }
+      else
+      {
+        cputs("poke 673,8");
+        gotoxy(0,ypos+3);
+        numberenter++;
+      }
+      device = 8;
+    }
 
-  case 10:
-    cprintf("fast:run\"%s\",u%i", prg, device);
-    break;
+    // Fast mode
+    if(boot & EXEC_FAST) {
+      cprintf("fast:");
+    }
 
-  case 11:
-    cprintf("fast:boot u%i", device);
-    break;
-
-  case 12:
-    if(dm_apipresent==1 && dm_apiversion>0)
-    {
-      dm_sethsidviaapi();
+    // Boot or just run
+    if(boot & EXEC_BOOT) {
+      cprintf("boot u%i", device);
+    } else {
+      cprintf("run\"%s\",u%i", prg, device);
     }
-    else
-    {
-      cputs("poke 673,8");
-      gotoxy(0,ypos+3);
-      numberenter++;
-    }
-    cprintf("run\"%s\",u%i", prg, 8);
-    break;
-  
-  case 13:
-    if(dm_apipresent==1 && dm_apiversion>0)
-    {
-      dm_sethsidviaapi();
-    }
-    else
-    {
-      cputs("poke 673,8");
-      gotoxy(0,ypos+3);
-      numberenter++;
-    }
-    cprintf("boot u%i", 8);
-    break;
-  
-  default:
-    break;
   }
 
   // put CRs in keyboard buffer
@@ -288,15 +228,6 @@ execute(char * prg, BYTE device, BYTE boot, char * command)
   exit(0);
 }
 
-void
-clrDir(BYTE context)
-{
-  clearArea(DIRX+1, DIRY+1, DIRW, DIRH);
-}
-
-const char *reg_types[] = { "SEQ","PRG","URS","REL","VRP" };
-const char *oth_types[] = { "DEL","CBM","DIR","LNK","OTH","HDR"};
-char bad_type[4];
 const char*
 fileTypeToStr(BYTE ft)
 {
@@ -318,59 +249,106 @@ fileTypeToStr(BYTE ft)
   return bad_type;
 }
 
-void
-drawDirFrame(BYTE context, const BYTE mycontext)
+void drawDirFrame()
 {
-  const Directory *dir = GETCWD;
-  const char *dt = drivetype[devicetype[devices[context]]];
-  sprintf(linebuffer, "%i:%s", (int)devices[context], dir ? dir->name : "");
-  if (dir)
-    {
-      sprintf(linebuffer2, "%s>%u bl free<", dt, dir->free);
-      dt = linebuffer2;
+  unsigned char length;
+
+  clearArea(0,3,DIRW,22);
+
+  gotoxy(0,3);
+  cprintf("[%02i] %s",device,cwd.name);
+
+  gotoxy(0,24);
+  cprintf("(%s) %u blocks free",drivetype[devicetype[device]],cwd.free);
+
+  if(trace) {
+    strcpy((char*)utilbuffer,pathconcat());
+    length = strlen((char*)utilbuffer);
+    if(length > DIRW) {
+      strcpy(linebuffer,(char*)utilbuffer+length-DIRW);
+    } else {
+      strcpy(linebuffer,(char*)utilbuffer);
     }
-  textcolor((mycontext==context) ? DC_COLOR_HIGHLIGHT : DC_COLOR_TEXT);
-  drawFrame(linebuffer, DIRX, DIRY, DIRW+2, DIRH+2, dt);
-  textcolor(DC_COLOR_TEXT);
+  } else {
+    strcpy(linebuffer,"No dirtrace active.");
+  }
+  gotoxy(0,4);
+  cputs(linebuffer);
 }
 
-void
-showDir(BYTE context, const BYTE mycontext)
+void showDir()
 {
-  drawDirFrame(context, mycontext);
-  printDir(context, DIRX+1, DIRY);
+  drawDirFrame();
+  printDir();
 }
 
-int
-changeDir(const BYTE context, const BYTE device, const char *dirname, const BYTE sorted)
+void clrDir()
+{
+  clearArea(0,5,DIRW,19);
+}
+
+void CheckMounttype(const char *dirname) {
+  register BYTE l = strlen(dirname);
+
+  mountflag = 0;
+  
+  if(dirname) {
+      if (l > 4 && dirname[l-4] == '.')
+      {
+        if ((dirname[l-3] == 'd' || dirname[l-3] == 'D') &&
+            (dirname[l-2] == '6') &&
+            (dirname[l-1] == '4'))
+          {
+            mountflag = 1;
+          }
+        if ((dirname[l-3] == 'g' || dirname[l-3] == 'G') &&
+          (dirname[l-2] == '6') &&
+          (dirname[l-1] == '4'))
+        {
+          mountflag = 1;
+        }
+        else if ((dirname[l-3] == 'd' || dirname[l-3] == 'D') &&
+                 (dirname[l-2] == '7' || dirname[l-2] == '8') &&
+                 (dirname[l-1] == '1'))
+          {
+            mountflag = 1;
+          }
+        else if ((dirname[l-3] == 'g' || dirname[l-3] == 'G') &&
+                 (dirname[l-2] == '7' || dirname[l-2] == '8') &&
+                 (dirname[l-1] == '1'))
+          {
+            mountflag = 1;
+          }
+        else if ((dirname[l-3] == 'd' || dirname[l-3] == 'D') &&
+                 (dirname[l-2] == 'n' || dirname[l-2] == 'N') &&
+                 (dirname[l-1] == 'p' || dirname[l-1] == 'P'))
+          {
+            mountflag = 1;
+          }
+        else if ((dirname[l-3] == 'r' || dirname[l-3] == 'R') &&
+                 (dirname[l-2] == 'e' || dirname[l-2] == 'E') &&
+                 (dirname[l-1] == 'u' || dirname[l-1] == 'U'))
+          {
+            mountflag = 2;
+          }
+      }
+  }
+}
+
+int changeDir(const BYTE device, const char *dirname, const BYTE sorted)
 {
   int ret;
+  register BYTE l = strlen(dirname);
+  
   if (dirname)
     {
-      BYTE mount = 0;
-      register BYTE l = strlen(dirname);
-      if (l > 4 && dirname[l-4] == '.')
-        {
-          if ((dirname[l-3] == 'd' || dirname[l-3] == 'D') &&
-              (dirname[l-2] == '6') &&
-              (dirname[l-1] == '4'))
-            {
-              mount = 1;
-            }
-          else if ((dirname[l-3] == 'd' || dirname[l-3] == 'D') &&
-                   (dirname[l-2] == '7' || dirname[l-2] == '8') &&
-                   (dirname[l-1] == '1'))
-            {
-              mount = 1;
-            }
-          else if ((dirname[l-3] == 'd' || dirname[l-3] == 'D') &&
-                   (dirname[l-2] == 'n' || dirname[l-2] == 'N') &&
-                   (dirname[l-1] == 'p' || dirname[l-1] == 'P'))
-            {
-              mount = 1;
-            }
-        }
-      if (mount ||
+      CheckMounttype(dirname);
+      if(mountflag==2 && trace == 1) {
+        reuflag = 1;
+        strcpy(imagename,dirname );
+      }
+
+      if (mountflag==1 ||
           (l == 1 && dirname[0]==CH_LARROW) ||
           devicetype[device] == VICE || devicetype[device] == U64)
         {
@@ -392,131 +370,40 @@ changeDir(const BYTE context, const BYTE device, const char *dirname, const BYTE
   ret = cmd(device, linebuffer);
   if (ret == 0)
     {
-      refreshDir(context, sorted, context);
+      refreshDir(sorted);
     }
   return ret;
 }
 
-static void
-printElementPriv(const BYTE context, const Directory *dir, const DirElement *current, const BYTE xpos, const BYTE ypos)
+void printElementPriv(const BYTE xpos, const BYTE ypos)
 {
-  Directory * cwd = GETCWD;
+  textcolor(DC_COLOR_HIGHLIGHT);
   gotoxy(xpos,ypos);
-  if ((current == dir->selected) && (cwd == dir))
+  if ((current == cwd.selected))
     {
+      textcolor(DMB_COLOR_SELECT);
       revers(1);
     }
-
   // if blocks are >= 10000 shorten the file type to 2 characters
-  strcpy(linebuffer2, fileTypeToStr(current->dirent.type));
-  if (current->dirent.size >= 10000 &&
-      strlen(current->dirent.name) == 16)
+  strcpy(linebuffer2, fileTypeToStr(PresentDir.dirent.type));
+  if (PresentDir.dirent.size >= 10000 &&
+      strlen(PresentDir.dirent.name) == 16)
     {
       linebuffer2[0] = linebuffer2[1];
       linebuffer2[1] = linebuffer2[2];
       linebuffer2[2] = 0;
     }
-  cprintf((current->dirent.size < 10000) ? "%4u %-16s %s" : "%u %-15s %s",
-          current->dirent.size,
-          current->dirent.name,
+  cprintf((PresentDir.dirent.size < 10000) ? "%4u %-16s %s" : "%u %-15s %s",
+          PresentDir.dirent.size,
+          PresentDir.dirent.name,
           linebuffer2);
-
-  if (current->flags!=0)
+  if (PresentDir.flags!=0)
     {
       gotoxy(xpos,ypos);
-      textcolor(DC_COLOR_HIGHLIGHT);
       cputc('>');
     }
-
   textcolor(DC_COLOR_TEXT);
   revers(0);
-}
-
-void
-printElement(const BYTE context, const Directory *dir, const BYTE xpos, const BYTE ypos)
-{
-  const DirElement *current;
-
-  int page = 0;
-  int idx = 0;
-  int pos = 0;
-  int yoff=0;
-
-  if (dir==NULL || dir->firstelement == NULL)
-    {
-      return;
-    }
-
-  revers(0);
-  current = dir->firstelement;
-
-  pos = dir->pos;
-
-  idx=pos;
-  while (current!=NULL && (idx--) >0)
-    {
-      current=current->next;
-    }
-
-  page=pos/DIRH;
-  yoff=pos-(page*DIRH);
-
-  printElementPriv(context, dir, current, xpos, ypos+yoff+1);
-}
-
-void
-changeDeviceID(BYTE device)
-{
-  int i;
-  newscreen("change device ID");
-  cprintf("\n\rchange device ID %i to (0-255): ", device);
-  sprintf(linebuffer, "%i", device);
-  i = textInput(31, 2, linebuffer, 3);
-  if (i <= 0)
-    return;
-  i = atoi(linebuffer);
-
-  if (devicetype[device] == SD2IEC)
-    {
-      sprintf(linebuffer, "U0>%c", i);
-    }
-  else
-    {
-      // TODO: doesn't work
-
-      // Commodore drives:
-      // OPEN 15,8,15:PRINT#15,"M-W";CHR$(119);CHR$(0);CHR$(2);CHR$(device number+32);CHR$(device number+64):CLOSE 15
-      char *s = linebuffer;
-      *s++ = 'm';
-      *s++ = '-';
-      *s++ = 'w';
-      *s++ = 119; // addr lo
-      *s++ = 0;   // addr hi
-      *s++ = 2;   // number of bytes
-      *s++ = 32+i;// device num + 0x20 for LISTEN
-      *s++ = 64+i;// device num + 0x40 for TALK
-      *s = 0;
-    }
-
-  cmd(device, linebuffer);
-}
-
-void
-debugs(const char *s)
-{
-  gotoxy(MENUXT,BOTTOM);
-  cclear(SCREENW-MENUXT);
-  gotoxy(MENUXT,BOTTOM);
-  cputs(s);
-}
-
-void
-debugu(const unsigned u)
-{
-  gotoxy(MENUXT,BOTTOM);
-  cclear(SCREENW-MENUXT);
-  gotoxy(MENUXT,BOTTOM);
-  cprintf("%04x", u);
 }
 
 /**
@@ -626,108 +513,65 @@ textInput(const BYTE xpos, const BYTE ypos, char *str, const BYTE size)
   return 0;
 }
 
-void
-doDOScommand(const BYTE context, const BYTE sorted, const BYTE use_linebuffer, const char *title)
-{
-  int i;
-  const BYTE device = devices[context];
-  newscreen(title);
-  cprintf("\n\r%s on device %i:", title, device);
-  linebuffer[use_linebuffer ? SCREENW : 0] = 0;
-  i = textInput(0, 3, linebuffer, SCREENW);
-  if (i > 0)
-    {
-      i = cmd(device, linebuffer);
-      gotoxy(0,5);
-      cprintf("result: %i\n\r", i);
-      waitKey(0);
-      dirs[context] = readDir(dirs[context], device, context, sorted);
-    }
-}
-
 #pragma code-name (push, "OVERLAY1");
 #pragma rodata-name (push, "OVERLAY1");
 
-void
-updateScreen(const BYTE context, BYTE num_dirs)
+void updateScreen()
 {
   clrscr();
+  headertext("Filebrowser");
+  textcolor(DC_COLOR_TEXT);
   updateMenu();
-  showDir(context, context);
-  if (num_dirs > 1)
-    {
-      const BYTE other_context = context^1;
-      showDir(other_context, context);
-    }
+  showDir();
 }
 
-void
-refreshDir(const BYTE context, const BYTE sorted, const BYTE mycontext)
+void refreshDir(const BYTE sorted)
 {
-  Directory * cwd = dirs[context];
-  textcolor(DC_COLOR_HIGHLIGHT);
-  cwd = readDir(cwd, devices[context], context, sorted);
-  dirs[context]=cwd;
-  cwd->selected=cwd->firstelement;
-  showDir(context, mycontext);
+  readDir(device, sorted);
+  cwd.selected=cwd.firstelement;
+  showDir();
 }
 
-void
-printDir(const BYTE context, const BYTE xpos, const BYTE ypos)
+void printDir()
 {
-  const Directory *dir = GETCWD;
-  DirElement * current;
   int selidx = 0;
   int page = 0;
   int skip = 0;
-  int pos = 0;
+  int pos = cwd.pos;
+  BYTE lastpage = 0;
   int idx = 0;
+  int xpos,ypos;
+  int DIRH = (SCREENW==80)? 38:19;
   const char *typestr = NULL;
 
-  if (dir==NULL)
+  lastpage=pos/DIRH;
+
+  if (!cwd.firstelement)
     {
-      clrDir(context);
+      clrDir();
       return;
     }
 
+  clrDir();
   revers(0);
-  current = dir->firstelement;
-  idx=0;
-  while (current!=NULL)
-    {
-      if (current==dir->selected)
-        {
-          break;
-        }
-      idx++;
-      current=current->next;
-    }
-
-  page=idx/DIRH;
-  skip=page*DIRH;
-
-  current = dir->firstelement;
-
-  // skip pages
-  if (page>0)
-    {
-      for (idx=0; (idx < skip) && (current != NULL); ++idx)
-        {
-          current=current->next;
-          pos++;
-        }
-    }
+  current = cwd.firstprinted;
+  VDC_CopyVDCToMem(current,(unsigned int)&PresentDir,sizeof(PresentDir));
 
   for(idx=0; (current != NULL) && (idx < DIRH); ++idx)
     {
-      printElementPriv(context, dir, current, xpos, ypos+idx+1);
-      current = current->next;
+      xpos = (idx>18)?26:0;
+      ypos = (idx>18)?idx-14:idx+5;
+      VDC_CopyVDCToMem(current,(unsigned int)&PresentDir,sizeof(PresentDir));
+      printElementPriv(xpos,ypos);
+      current = PresentDir.next;
     }
 
   // clear empty lines
   for (;idx < DIRH; ++idx)
     {
-      gotoxy(xpos,ypos+idx+1);
+      xpos = (idx>18)?26:1;
+      ypos = (idx>18)?idx-14:idx+5;
+      gotoxy(xpos,ypos);
       cputs("                         ");
     }
 }

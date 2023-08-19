@@ -41,6 +41,28 @@
 #define DMB_COLOR_HEADER1 COLOR_GREEN
 #define DMB_COLOR_HEADER2 COLOR_LIGHTGREEN
 
+// Command flag values
+#define COMMAND_CMD             0x01
+#define COMMAND_REU             0x02
+#define COMMAND_IMGA            0x04
+#define COMMAND_IMGB            0x08
+
+// Execute flag values
+#define EXEC_MOUNT              0x01
+#define EXEC_FRC8               0x02
+#define EXEC_RUN64              0x04
+#define EXEC_FAST               0x08
+#define EXEC_BOOT               0x10
+
+// Config version
+#define CFGVERSION              0x01
+
+// VDC addresses
+#define VDC16START              0x1000
+#define VDC16END                0x1FFF
+#define VDC64START              0x4000
+#define VDC64END                0xFFFF
+
 typedef unsigned char BYTE;
 
 #define OK 0
@@ -59,27 +81,13 @@ typedef unsigned char BYTE;
 // y position of menu frame
 #define MENUY 0
 
-#define GETCWD dirs[context]
-#define DIRW  25
-#define DIR1X 0
-#define DIR1Y 0
-
-#define DIRH (context?DIR2H:DIR1H)
-#define DIRX (context?DIR2X:DIR1X)
-#define DIRY (context?DIR2Y:DIR1Y)
-
 // Define highest device ID allowed
 #define MAXDEVID 30
 
 // Global variables
-extern BYTE DIR1H;
-extern BYTE DIR2H;
-extern unsigned int SCREENW;
-extern unsigned int MENUX;
-extern unsigned int MENUXT;
-extern unsigned int MENUW;
-extern unsigned int DIR2X;
-extern unsigned int DIR2Y;
+extern BYTE SCREENW;
+extern BYTE DIRW;
+extern BYTE MENUX; 
 extern unsigned int validdriveid;
 extern unsigned int idnr[30];
 extern char path[8][20];
@@ -90,15 +98,28 @@ extern BYTE depth;
 extern BYTE trace;
 extern BYTE forceeight;
 extern BYTE fastflag;
+extern BYTE commandflag;
+extern BYTE mountflag;
+extern BYTE reuflag;
+extern BYTE addmountflag;
+extern BYTE runmountflag;
 extern struct SlotStruct {
     char path[100];
     char menu[21];
     char file[20];
     char cmd[80];
-    char image[20];
+    char reu_image[20];
+    BYTE reusize;
     BYTE runboot;
     BYTE device;
     BYTE command;
+    BYTE cfgvs;
+    char image_a_path[100];
+    char image_a_file[20];
+    BYTE image_a_id;
+    char image_b_path[100];
+    char image_b_file[20];
+    BYTE image_b_id;
 };
 extern struct SlotStruct Slot;
 extern char newmenuname[36][21];
@@ -107,7 +128,7 @@ extern BYTE bootdevice;
 extern long secondsfromutc; 
 extern unsigned char timeonflag;
 extern char host[80];
-extern char reufilename[20];
+extern char imagename[20];
 extern char reufilepath[60];
 extern char imageaname[20];
 extern char imageapath[60];
@@ -119,11 +140,12 @@ extern unsigned char reusize;
 extern char* reusizelist[8];
 extern unsigned char utilbuffer[328];
 extern char configfilename[11];
-//extern unsigned int validdriveid;
-//extern unsigned int idnr[30];
 extern char c128_ram;
 extern unsigned char dm_apipresent;
 extern unsigned int dm_apiversion;
+extern unsigned char configversion;
+extern unsigned char vdcmemory;
+extern unsigned int vdc_alloc_address;
 
 // keyboard buffer
 #define KBCHARS 842
