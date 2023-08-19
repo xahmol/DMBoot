@@ -540,7 +540,7 @@ void printDir()
   int pos = cwd.pos;
   BYTE lastpage = 0;
   int idx = 0;
-  int xpos,ypos,yoff;
+  int xpos,ypos;
   int DIRH = (SCREENW==80)? 38:19;
   const char *typestr = NULL;
 

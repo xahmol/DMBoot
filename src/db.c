@@ -33,6 +33,7 @@
 #include "ops.h"
 #include "version.h"
 #include "vdc.h"
+#include "dmapi.h"
 
 #pragma code-name ("OVERLAY1");
 #pragma rodata-name ("OVERLAY1");
@@ -124,7 +125,10 @@ void mainLoopBrowse(void)
       }
 
     textcolor(DC_COLOR_TEXT);
-    i = 7;
+    dm_devid=0;
+    dm_gethsidviaapi();
+    i = (dm_devid)?dm_devid-1:7;
+
     while(++i < MAXDEVID+1)
       {
         device = i;
@@ -132,11 +136,11 @@ void mainLoopBrowse(void)
           {
             getDeviceType(device);
             showDir();
-            goto found_upper_drive;
+            goto found_first_drive;
           }
       }
 
-    found_upper_drive:;
+    found_first_drive:;
   }
 
   while(1)

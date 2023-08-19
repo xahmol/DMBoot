@@ -70,6 +70,7 @@ void VDC_Poke_core();
 void VDC_Peek_core();
 void VDC_DetectVDCMemSize_core();
 void VDC_SetExtendedVDCMemSize();
+void VDC_DefaultVDCMemSize();
 void VDC_CopyCharsetsfromROM();
 void VDC_MemCopy_core();
 void VDC_HChar_core();

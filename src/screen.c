@@ -29,6 +29,7 @@
 #include <accelerator.h>
 #include <em.h>
 #include "defines.h"
+#include "vdc.h"
 
 static unsigned char screen_bgc;
 static unsigned char screen_borderc;
@@ -120,7 +121,8 @@ exitScreen(void)
   bordercolor(COLOR_BLACK);
   bgcolor(COLOR_BLACK);
   textcolor(COLOR_YELLOW);
-  clrscr();
   set_c128_speed(SPEED_SLOW);
   em_uninstall();
+  VDC_DefaultVDCMemSize();
+  clrscr();
 }

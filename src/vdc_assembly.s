@@ -32,6 +32,7 @@
 	.export		_VDC_Peek_core
 	.export		_VDC_DetectVDCMemSize_core
 	.export		_VDC_SetExtendedVDCMemSize
+	.export		_VDC_DefaultVDCMemSize
 	.export		_VDC_MemCopy_core
 	.export		_VDC_HChar_core
 	.export		_VDC_VChar_core
@@ -276,10 +277,75 @@ dmsend:									; Label for end of routine
 	rts									; Return
 
 ; ------------------------------------------------------------------------------------------
+vdc_disable_display:
+; Function to disable VDC display
+; ------------------------------------------------------------------------------------------
+        lda #$80
+        ldx #$22
+        jsr VDC_Write
+        rts
+
+; ------------------------------------------------------------------------------------------
+vdc_enable_display:
+; ------------------------------------------------------------------------------------------
+        lda #$7d
+        ldx #$22
+        jsr VDC_Write
+        rts
+
+; ------------------------------------------------------------------------------------------
+WipeVDCMem:
+; Function to wipe VDC memory to avoid visible screen corruption on VDC mem lauout change
+; ------------------------------------------------------------------------------------------
+
+	; Set start variables
+	ldy #$FF							; Set page counter at 255
+	lda #$00							; Set value for start address low and high
+	sta _VDC_addrh						; Store high byte
+	sta _VDC_addrl						; Store low byte
+
+loopWipePage:
+	; Hi-byte of the destination address to register 18
+	ldx #$12    						; Load $12 for register 18 (VDC RAM address high) in X	
+	lda _VDC_addrh	        			; Load high byte of start in A
+	jsr VDC_Write						; Write VDC
+
+	; Lo-byte of the destination address to register 19
+	ldx #$13    						; Load $13 for register 19 (VDC RAM address high) in X	
+	lda _VDC_addrl		        		; Load high byte of start in A
+	jsr VDC_Write						; Write VDC
+
+	; Store character to write in data register 31
+	ldx #$1f    						; Load $1f for register 31 (VDC data) in X	
+	lda #$00			        		; Load zero to wipe
+	jsr VDC_Write						; Write VDC
+
+	; Clear the copy bit (bit 7) of register 24 (block copy mode)
+	ldx #$18    						; Load $18 for register 24 (block copy mode) in X	
+	lda #$00				        	; Load 0 in A
+	jsr VDC_Write						; Write VDC
+
+	; Store lenth in data register 30
+	ldx #$1e    						; Load $1f for register 30 (word count) in X	
+	lda #$ff				        	; Load 255 in A for full page
+	jsr VDC_Write						; Write VDC
+
+	; Increase start address with 80 for next line
+	inc _VDC_addrh						; Increase high byte
+
+	; Decrease line counter and loop until zero
+	dey									; Decrease page counter
+	bne loopWipePage					; Continue until counter is zero
+	rts
+
+; ------------------------------------------------------------------------------------------
 _VDC_SetExtendedVDCMemSize:
 ; Function to set VDC in 64k memory configuration
 ; NB: Charsets need to be copied from ROM again after doing this
 ; ------------------------------------------------------------------------------------------
+
+	jsr vdc_disable_display				; Disable VDC display
+	jsr WipeVDCMem						; Wiping memory
 
 	; Setting memory mode to 64KB
 	; Reading register 28, safeguarding value, setting bit 4 and storing back to register 28
@@ -290,6 +356,30 @@ _VDC_SetExtendedVDCMemSize:
 
 	; Kernal call to DLCHR kernal function to copy charsets from ROM to VDC
 	jsr	$FF62							; initialize 8563 char. defns.
+	
+	jsr	vdc_enable_display				; Enable VDC display
+	rts
+
+; ------------------------------------------------------------------------------------------
+_VDC_DefaultVDCMemSize:
+; Function to set VDC in default memory configuration
+; NB: Charsets need to be copied from ROM again after doing this
+; ------------------------------------------------------------------------------------------
+
+	jsr vdc_disable_display				; Disable VDC display
+	jsr WipeVDCMem						; Wiping memory
+
+	; Setting memory mode to 64KB
+	; Reading register 28, safeguarding value, setting bit 4 and storing back to register 28
+	ldx #$1c							; Load $1c for register 28 in X
+	jsr VDC_Read						; Read VDCregister
+	and #$EF							; Clear bit 4 of A
+	jsr VDC_Write						; Write VDC
+
+	; Kernal call to DLCHR kernal function to copy charsets from ROM to VDC
+	jsr	$FF62							; initialize 8563 char. defns.
+
+	jsr	vdc_enable_display				; Enable VDC display
 	rts
 
 ; ------------------------------------------------------------------------------------------
