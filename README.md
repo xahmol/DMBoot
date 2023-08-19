@@ -10,9 +10,9 @@ Written in 2020-2023 by Xander Mol
 
 ### Changelog release versions
 
-**Version v391-20230819-1733:**
+**Version v391-20230819-1737:**
 
-[Link to build of version](https://github.com/xahmol/DMBoot/raw/main/DMBoot-v391-20230819-1733.zip)
+[Link to build of version](https://github.com/xahmol/DMBoot/raw/main/DMBoot-v391-20230819-1737.zip)
 
 * Second public alpha of DMBoot v4 with a completely new filebrowser.
 * The file browser part that in previous version was just a slightly adapted DraBrowse has now for a large part been rewritten to be able to store the directory entries in free VDC memory. On C128s with 16 KB VDC memory this already solves memory issues I had, causing the maximum amount of direntries that could be loaded to be too low for my taste (less than 70 entries). Now it loads up to 175 entries, IMHO perfectly acceptable.
@@ -170,11 +170,12 @@ I personally think these limitations are acceptable as setting up the configirat
 * Refresh directory by **F1** if needed (empty column)
 * Start a directory trace by pressing **D**
   
+
 ![](https://github.com/xahmol/DMBoot/raw/main/pictures/dmboot%20-%20highlightdirtrace.png)
-  
+
   This starts a trace of your movements through the directory tree, starting from the root directory of your device. You should see the directory refreshing to this root directory.
   You should also see the TRACE toggle switched to ON in the lower right corner of the screen.
-  
+
 ![](https://github.com/xahmol/DMBoot/raw/main/pictures/dmboot%20-%20toggledirtraceon.png).
 
 * Also note the other two toggles Frc 8 and FAST: these are toggled by pressing the **8** and **F** keys.
@@ -252,7 +253,7 @@ Menu options are similar, but have diverged in newer DMBoot versions.
 Shows information screen. Also shouws how much VDC memory is detected. Press key to return to main menu.
 
 ![](https://github.com/xahmol/DMBoot/raw/main/pictures/dmboot%20-%20information%20screen.png)
-  
+
 **F3: Quit to C128 Basic**
 
 Exit the bootmenu to the C128 BASIC Ready prompt. Memory will be erased on exit, SLOW mode will be selected also in 80 column mode for compatibility purposes.
@@ -283,15 +284,15 @@ The screens shows you the present settings and allows you to edit them.
 ![](https://github.com/xahmol/DMBoot/blob/main/pictures/dmboot%20-%20geossettings.png?raw=true)
 
   * **F1** Enables editing of the path to and the filename of the REU file to use on your UII+ device. Gives this screen:
-  
+
 ![](https://github.com/xahmol/DMBoot/blob/main/pictures/dmboot%20-%20geosreupath.png?raw=true)
 
   * **F3** Enables editing the REU file size to match the image you have chosen. Choose **+** to increase size, **-** to decrease.
-  
+
   ![](https://github.com/xahmol/DMBoot/blob/main/pictures/dmboot%20-%20geosreusize.png?raw=true)
 
   * **F5** Edits the device IDs, paths and the filenames of the images you want to mount.
-  
+
   ![](https://github.com/xahmol/DMBoot/blob/main/pictures/dmboot%20-%20geosimages.png?raw=true)
 
   * **F7** Back to main menu
@@ -334,7 +335,7 @@ Enables to rename menuslots, re-order the slots or delete a slot. Selecting prov
 * **F5** enables deleting a menu slot. Choose slot to be re-ordered by pressing **0-9** or **A_Z**. Confirm by pressing **Y** for yes, or **N** for no.
 
 ![](https://github.com/xahmol/DMBoot/raw/main/pictures/dmboot%20-%20delete.png)
-  
+
 * **F7** takes you back to main menu. Changes made are saved only now.
 
 ### Screenshot from real device
