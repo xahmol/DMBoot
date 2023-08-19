@@ -52,7 +52,7 @@ updateMenu(void)
   cputsxy(MENUX+1,++menuy," F1 Dir refr.");
   cputsxy(MENUX+1,++menuy,"+/- Device");
   cputsxy(MENUX+1,++menuy," F5 Boot");
-  cputsxy(MENUX+1,++menuy,"ENT Run/Select");
+  cputsxy(MENUX+1,++menuy,"RET Run/Select");
   cputsxy(MENUX+1,++menuy,"DEL Dir up");
   cputsxy(MENUX+1,++menuy,"  \x5e Root dir");
   cputsxy(MENUX+1,++menuy,"  T Top");

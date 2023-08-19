@@ -1,6 +1,6 @@
 // DMBoot 128:
 // Device Manager Boot Menu for the Commodore 128
-// Written in 2020 by Xander Mol
+// Written in 2020-2023 by Xander Mol
 // https://github.com/xahmol/DMBoot
 // https://www.idreamtin8bits.com/
 //
