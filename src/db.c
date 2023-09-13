@@ -312,7 +312,7 @@ void mainLoopBrowse(void)
               cwd.pos--;
               if (lastpage!=nextpage)
                 {
-                  for(count=0;count<DIRH;count++) {
+                  for(count=0;count<DIRH-1;count++) {
                     if(PresentDir.prev != NULL) {
                       current=PresentDir.prev;
                       VDC_CopyVDCToMem(current,(unsigned int)&PresentDir,sizeof(PresentDir));
