@@ -114,12 +114,12 @@ void pickmenuslot()
     }
     if ( selected == 1)
     {
-        clearArea(0,22,80,3);
+        clearArea(0,22,SCREENW,3);
         gotoxy(0,23);
         cputs("Choose name for slot:");
         textInput(0,24,Slot.menu,20);
 
-        clearArea(0,23,80,2);
+        clearArea(0,23,SCREENW,2);
         gotoxy(0,23);
         if(reuflag || addmountflag) {
             if(reuflag) {
@@ -787,7 +787,7 @@ int reordermenuslot()
 
         if (key != CH_F7)
         {
-            clearArea(0,22,40,2);
+            clearArea(0,22,SCREENW,2);
             menuslot = keytomenuslot(key);
             getslotfromem(menuslot);
             if (menuslot>17)
