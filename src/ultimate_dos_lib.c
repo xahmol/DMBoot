@@ -44,17 +44,14 @@ void uii_get_dir(void)
 void uii_change_dir(char* directory)
 {
 	int x = 0;
-	unsigned char* fullcmd = (unsigned char *)malloc(strlen(directory)+2);
-	fullcmd[0] = 0x00;
-	fullcmd[1] = DOS_CMD_CHANGE_DIR;
+	uii_command[0] = 0x00;
+	uii_command[1] = DOS_CMD_CHANGE_DIR;
 	
 	for(x=0;x<strlen(directory);x++)
-		fullcmd[x+2] = directory[x];
+		uii_command[x+2] = directory[x];
 
 	uii_settarget(TARGET_DOS1);
-	uii_sendcommand(fullcmd, strlen(directory)+2);
-	
-	free(fullcmd);
+	uii_sendcommand((unsigned char*)uii_command,strlen(directory)+2);
 	
 	uii_readstatus();
 	uii_accept();
@@ -74,19 +71,16 @@ void uii_change_dir_home(void)
 void uii_mount_disk(unsigned char id, char *filename)
 {
 	int x = 0;
-	unsigned char* fullcmd = (unsigned char *)malloc(strlen(filename)+3);
-	fullcmd[0] = 0x00;
-	fullcmd[1] = DOS_CMD_MOUNT_DISK;
-	fullcmd[2] = id;
+	uii_command[0] = 0x00;
+	uii_command[1] = DOS_CMD_MOUNT_DISK;
+	uii_command[2] = id;
 	
 	for(x=0;x<strlen(filename);x++)
-		fullcmd[x+3] = filename[x];
+		uii_command[x+3] = filename[x];
 	
 	uii_settarget(TARGET_DOS1);
-	uii_sendcommand(fullcmd, strlen(filename)+3);
-	
-	free(fullcmd);
-	
+	uii_sendcommand((unsigned char*)uii_command, strlen(filename)+3);
+		
 	uii_readdata();
 	uii_readstatus();
 	uii_accept();
@@ -101,18 +95,15 @@ void uii_open_file(unsigned char attrib, char *filename)
 	// 0x0E = Create (overwriting an existing file)
 	
 	int x = 0;
-	unsigned char* fullcmd = (unsigned char *)malloc(strlen(filename)+3);
-	fullcmd[0] = 0x00;
-	fullcmd[1] = DOS_CMD_OPEN_FILE;
-	fullcmd[2] = attrib;
+	uii_command[0] = 0x00;
+	uii_command[1] = DOS_CMD_OPEN_FILE;
+	uii_command[2] = attrib;
 	
 	for(x=0;x<strlen(filename);x++)
-		fullcmd[x+3] = filename[x];
+		uii_command[x+3] = filename[x];
 	
 	uii_settarget(TARGET_DOS1);
-	uii_sendcommand(fullcmd, strlen(filename)+3);
-	
-	free(fullcmd);
+	uii_sendcommand((unsigned char*)uii_command, strlen(filename)+3);
 	
 	uii_readdata();
 	uii_readstatus();
@@ -134,19 +125,16 @@ void uii_close_file(void)
 void uii_write_file(unsigned char* data, int length)
 {
 	int x = 0;
-	unsigned char *fullcmd = (unsigned char *)malloc(length+4);
-	fullcmd[0] = 0x00;
-	fullcmd[1] = DOS_CMD_WRITE_DATA;
-	fullcmd[2] = 0x00;
-	fullcmd[3] = 0x00;
+	uii_command[0] = 0x00;
+	uii_command[1] = DOS_CMD_WRITE_DATA;
+	uii_command[2] = 0x00;
+	uii_command[3] = 0x00;
 	
 	for(x=0;x<length;x++)
-		fullcmd[x+4] = data[x];
+		uii_command[x+4] = data[x];
 	
 	uii_settarget(TARGET_DOS1);
-	uii_sendcommand(fullcmd, length+4);
-
-	free(fullcmd);
+	uii_sendcommand((unsigned char*)uii_command, length+4);
 
 	uii_readdata();
 	uii_readstatus();
@@ -172,17 +160,14 @@ void uii_read_file(unsigned char length)
 void uii_delete_file(char* filename)
 {
 	int x = 0;
-	unsigned char* fullcmd = (unsigned char *)malloc(strlen(filename)+2);
-	fullcmd[0] = 0x00;
-	fullcmd[1] = DOS_CMD_DELETE_FILE;
+	uii_command[0] = 0x00;
+	uii_command[1] = DOS_CMD_DELETE_FILE;
 	
 	for(x=0;x<strlen(filename);x++)
-		fullcmd[x+2] = filename[x];
+		uii_command[x+2] = filename[x];
 	
 	uii_settarget(TARGET_DOS1);
-	uii_sendcommand(fullcmd, strlen(filename)+2);
-	
-	free(fullcmd);
+	uii_sendcommand((unsigned char*)uii_command, strlen(filename)+2);
 	
 	uii_readstatus();
 	uii_accept();

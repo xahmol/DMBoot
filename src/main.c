@@ -53,6 +53,7 @@
 #include "ultimate_time_lib.h"
 #include "dmapi.h"
 #include "vdc.h"
+#include "exec.h"
 
 #ifndef min
 #define min(a,b) ( (a) < (b) ? (a) : (b) )
@@ -183,6 +184,7 @@ int main() {
         if((menuselect>47 && menuselect<58) || (menuselect>64 && menuselect<91))
         // Menuslots 0-9, a-z
         {
+            loadoverlay("11:dmb-exec");
             runbootfrommenu(keytomenuslot(menuselect));
         }
 
@@ -201,6 +203,7 @@ int main() {
         
         case CH_F5:
             // Go to C64 mode
+            loadoverlay("11:dmb-exec");
             commandfrommenu("go 64", 1);
             break;
 
@@ -236,6 +239,7 @@ int main() {
     } while (menuselect != CH_F3);
 
     exitScreen();
+    loadoverlay("11:dmb-exec");
     commandfrommenu("scnclr:new",0);    // Erase memory and clear screen on exit
     return 0;
 }

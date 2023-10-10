@@ -56,9 +56,6 @@
 void pickmenuslot();
 void headertext(char* subtitle);
 char mainmenu();
-void runbootfrommenu(int select);
-void commandfrommenu(char * command, int confirm);
-void bootfromfloppy();
 void information();
 char* completeVersion();
 void editmenuoptions();
@@ -129,7 +126,7 @@ void pickmenuslot()
                 do
                 {
                   gotoxy(0,24);
-                  cprintf("REU file size: (%i) %s",Slot.reusize,reusizelist[Slot.reusize]);
+                  cprintf("REU file size: (%i) %s  ",Slot.reusize,reusizelist[Slot.reusize]);
                   do
                   {
                     plusmin = cgetc();
@@ -145,6 +142,7 @@ void pickmenuslot()
                       else { Slot.reusize--; }       
                   }
                 } while (plusmin != CH_ENTER);
+                strcpy(Slot.image_a_path, pathconcat());
                 strcpy(Slot.reu_image,imagename);
                 Slot.command = Slot.command | COMMAND_REU;
             } else {
@@ -348,79 +346,6 @@ char mainmenu()
         }
     } while (select == 0);
     return key;    
-}
-
-void mountimage(unsigned char device, char* path, char* image) {
-    uii_change_dir(path);
-    uii_mount_disk(device,image);
-}
-
-void runbootfrommenu(int select)
-{
-    // Function to execute selected boot option choice slot 0-9
-    // Input: select: chosen menuslot 0-9
-
-    getslotfromem(select);
-
-    clrscr();
-    gotoxy(0,0);
-    if(Slot.command & COMMAND_IMGA) {
-        cprintf("%s on ID %d.\n\r",Slot.image_a_file,Slot.image_a_id);
-        mountimage(Slot.image_a_id,Slot.image_a_path,Slot.image_a_file);
-    }
-    if(Slot.command & COMMAND_IMGB) {
-        cprintf("%s on ID %d.\n\r",Slot.image_b_file,Slot.image_b_id);
-        mountimage(Slot.image_b_id,Slot.image_b_path,Slot.image_b_file);
-    }
-    if(Slot.command & COMMAND_REU) {
-        cprintf("REU file %s",Slot.reu_image);
-        uii_change_dir(Slot.image_a_path);
-        uii_open_file(1, Slot.reu_image);
-        uii_load_reu(Slot.reusize);
-        uii_close_file();
-    }
-
-    // Enter correct directory path on correct device number
-    if(Slot.runboot & EXEC_MOUNT) {
-        // Run from mounted disk
-        execute(Slot.file,Slot.image_a_id,Slot.runboot,Slot.cmd);
-    } else {
-        // Run from hyperspeed filesystem
-        cmd(Slot.device,Slot.path);
-        execute(Slot.file,Slot.device,Slot.runboot,Slot.cmd);
-    }
-}
-
-void commandfrommenu(char * command, int confirm)
-{
-    // Function to type specified command and execute by placing chars
-    // in keyboard buffer.
-    // Input:
-    // command: command to be executed
-    // confirm: is confirmation of command needed. 0 is no, 1 is yes.
-
-    // prepare the screen with the basic command to load the next program
-    exitScreen();
-    gotoxy(0,2);
-
-    cprintf("%s",command);
-
-    // put CR in keyboard buffer
-    *((unsigned char *)KBCHARS)=13;
-    if (confirm == 1)  // if confirm is 1 also put 'y'+CR in buffer
-    {
-        *((unsigned char *)KBCHARS+1)=89;  // place 'y'
-        *((unsigned char *)KBCHARS+2)=13;  // place CR
-        *((unsigned char *)KBNUM)=3;
-    }
-    else
-    {
-        *((unsigned char *)KBNUM)=1;
-    }
-
-    // exit DraCopy, which will execute the BASIC LOAD above
-    gotoxy(0,0);
-    exit(0);
 }
 
 void editmenuoptions()

@@ -23,6 +23,7 @@ unsigned char *statusdatareg = (unsigned char *)STATUS_DATA_REG;
 
 char uii_status[STATUS_QUEUE_SZ+1];
 char uii_data[(DATA_QUEUE_SZ*2)+1];
+char uii_command[128];
 char temp_string_onechar[2];
 int uii_data_index;
 int uii_data_len;

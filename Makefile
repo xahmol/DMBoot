@@ -11,7 +11,7 @@
 # - ZIP packages installed: sudo apt-get install zip
 # - wput command installed: sudo apt-get install wput
 
-SOURCESMAIN = src/main.c src/bootmenu.c src/screen.c src/dir.c src/base.c src/ops.c src/db.c src/ultimate_common_lib.c src/ultimate_dos_lib.c src/ultimate_time_lib.c src/ultimate_network_lib.c src/configcommon.c src/u-time.c src/dmbconfig.c src/geosramboot.c src/vdc.c
+SOURCESMAIN = src/main.c src/bootmenu.c src/screen.c src/dir.c src/base.c src/ops.c src/db.c src/exec.c src/ultimate_common_lib.c src/ultimate_dos_lib.c src/ultimate_time_lib.c src/ultimate_network_lib.c src/configcommon.c src/u-time.c src/dmbconfig.c src/geosramboot.c src/vdc.c
 LIBMAIN = src/geosramroutine.s src/dmapiasm.s src/vdc_assembly.s
 SOURCESUPD = src/dmb-confupd-3-4.c
 README = README.pdf
@@ -24,7 +24,7 @@ ULTHOST3 = ftp://192.168.1.80/usb1/11/
 
 MAIN = autostart.128.prg
 UPDATE = dmb-confupd-3-4.prg
-DEPLOYS = $(MAIN) $(UPDATE) dmb-fb.prg dmb-menu.prg dmb-util.prg dmb-lowc.prg dmb-geos.prg
+DEPLOYS = $(MAIN) $(UPDATE) dmb-fb.prg dmb-menu.prg dmb-util.prg dmb-exec.prg dmb-lowc.prg dmb-geos.prg
 
 CC65_TARGET = c128
 CC = cl65

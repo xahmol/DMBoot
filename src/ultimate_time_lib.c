@@ -28,17 +28,15 @@ void uii_get_time(void)
 void uii_set_time(char* data) 
 {
 	int x = 0;
-	unsigned char* fullcmd = (unsigned char *)malloc(8);
-	fullcmd[0] = 0x00;
-	fullcmd[1] = DOS_CMD_SET_TIME;
+	uii_command[0] = 0x00;
+	uii_command[1] = DOS_CMD_SET_TIME;
 	
 	for(x=0;x<6;x++)
-		fullcmd[x+2] = data[x];
+		uii_command[x+2] = data[x];
 	
 	uii_settarget(TARGET_DOS1);
-	uii_sendcommand(fullcmd, 8);
+	uii_sendcommand((unsigned char*)uii_command, 8);
 	
-	free(fullcmd);
 	uii_readstatus();
 	uii_accept();
 }

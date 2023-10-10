@@ -346,6 +346,7 @@ int changeDir(const BYTE device, const char *dirname, const BYTE sorted)
       if(mountflag==2 && trace == 1) {
         reuflag = 1;
         strcpy(imagename,dirname );
+        return 0;
       }
 
       if (mountflag==1 ||

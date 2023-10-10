@@ -407,7 +407,7 @@ void mainLoopBrowse(void)
               }
               changeDir(device, PresentDir.dirent.name, sorted);
             }
-            if(reuflag) { goto done; }
+            if(reuflag) { depth--; goto done; }
           break;
 
         case CH_CURS_LEFT:

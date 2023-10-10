@@ -34,21 +34,18 @@ unsigned char uii_connect(char* host, unsigned short port, char cmd)
 {
 	unsigned char tempTarget = uii_target;
 	int x=0;
-	unsigned char* fullcmd = (unsigned char *)malloc(4 + strlen(host)+ 1);
-	fullcmd[0] = 0x00;
-	fullcmd[1] = cmd;
-	fullcmd[2] = port & 0xff;
-	fullcmd[3] = (port>>8) & 0xff;
+	uii_command[0] = 0x00;
+	uii_command[1] = cmd;
+	uii_command[2] = port & 0xff;
+	uii_command[3] = (port>>8) & 0xff;
 	
 	for(x=0;x<strlen(host);x++)
-		fullcmd[x+4] = host[x];
+		uii_command[x+4] = host[x];
 	
-	fullcmd[4+strlen(host)] = 0x00;
+	uii_command[4+strlen(host)] = 0x00;
 	
 	uii_settarget(TARGET_NETWORK);
-	uii_sendcommand(fullcmd, 4+strlen(host)+1);
-
-	free(fullcmd);
+	uii_sendcommand((unsigned char*)uii_command, 4+strlen(host)+1);
 
 	uii_readdata();
 	uii_readstatus();
@@ -178,10 +175,9 @@ void uii_socketwrite_convert_parameter(unsigned char socketid, char *data, int a
 	unsigned char tempTarget = uii_target;
 	int x;
 	char c;
-	unsigned char* fullcmd = (unsigned char *)malloc(3 + strlen(data));
-	fullcmd[0] = 0x00;
-	fullcmd[1] = NET_CMD_SOCKET_WRITE;
-	fullcmd[2] = socketid;
+	uii_command[0] = 0x00;
+	uii_command[1] = NET_CMD_SOCKET_WRITE;
+	uii_command[2] = socketid;
 	
 	for(x=0;x<strlen(data);x++){
 		c = data[x];
@@ -190,15 +186,13 @@ void uii_socketwrite_convert_parameter(unsigned char socketid, char *data, int a
             else if (c>=65 && c<=90) c |= 32;
             else if (c==13) c=10;
 		}
-		fullcmd[x+3] = c;
+		uii_command[x+3] = c;
 	}
 	
-	fullcmd[3+strlen(data)+1] = 0;
+	uii_command[3+strlen(data)+1] = 0;
 	
 	uii_settarget(TARGET_NETWORK);
-	uii_sendcommand(fullcmd, 3+strlen(data));
-
-	free(fullcmd);
+	uii_sendcommand((unsigned char*)uii_command, 3+strlen(data));
 
 	uii_readdata();
 	uii_readstatus();
