@@ -137,7 +137,7 @@ int main() {
     }
 
     if(!uii_detect()) {
-        cputs("No Ultimate Command Interface enabled.");
+        cputs("No Ultimate Command Interface enabled.\n\r");
         return 1;
     }
 
@@ -151,11 +151,11 @@ int main() {
     dm_getapiversion();
     if(dm_apipresent==1)
     {
-        printf("\nDM API version: %i",dm_apiversion);
+        cprintf("\n\rDM API version: %i\n\r",dm_apiversion);
     }
 
     uii_change_dir("/usb*/11/");
-	printf("\nDir changed\nStatus: %s", uii_status);
+	cprintf("\n\rDir changed\n\rStatus: %s\n\n\r", uii_status);
 	readconfigfile(configfilename);
 
     // Set time from NTP server
@@ -166,13 +166,15 @@ int main() {
     em_install(&c128_ram);              // Load extended memory driver
 
     // Load slot config
-    cputs("\n\n\rReading slot data.");
+    cputs("\n\rReading slot data.");
     std_read("11:dmbootconf"); // Read config file
+
+    //Uncomment to debug based on init feedback
+    //cgetc();
 
     // Detect VDC memory size
     vdcmemory = VDC_DetectVDCMemSize();
     if(vdcmemory==64) {VDC_SetExtendedVDCMemSize(); }
-
 
     // Init screen and menu
     initScreen(DC_COLOR_BORDER, DC_COLOR_BG, DC_COLOR_TEXT);
@@ -201,6 +203,24 @@ int main() {
             }
             break;
         
+        case CH_F2:
+            // Information and credits
+            loadoverlay("11:dmb-util");      // Load util routines
+            information();
+            loadoverlay("11:dmb-menu");      // Load overlay of main DMBoot menu routines
+            break;
+        
+        case CH_F3:
+            // Edit / re-order and delete menuslots
+            editmenuoptions();
+            break;
+
+        case CH_F4:
+            loadoverlay("11:dmb-util");      // Load util routines
+            config_main();
+            loadoverlay("11:dmb-menu");      // Load overlay of main DMBoot menu routines
+            break;
+        
         case CH_F5:
             // Go to C64 mode
             loadoverlay("11:dmb-exec");
@@ -215,28 +235,10 @@ int main() {
             geosboot_main();
             break;
 
-        case CH_F4:
-            loadoverlay("11:dmb-util");      // Load util routines
-            config_main();
-            loadoverlay("11:dmb-menu");      // Load overlay of main DMBoot menu routines
-            break;
-
-        case CH_F2:
-            // Information and credits
-            loadoverlay("11:dmb-util");      // Load util routines
-            information();
-            loadoverlay("11:dmb-menu");      // Load overlay of main DMBoot menu routines
-            break;
-        
-        case CH_F7:
-            // Edit / re-order and delete menuslots
-            editmenuoptions();
-            break;
-        
         default:
             break;
         }
-    } while (menuselect != CH_F3);
+    } while (menuselect != CH_F7);
 
     exitScreen();
     loadoverlay("11:dmb-exec");

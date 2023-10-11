@@ -10,6 +10,15 @@ Written in 2020-2023 by Xander Mol
 
 ### Changelog release versions
 
+**Version v391-20231011-1210:**
+
+[Link to build of version](https://github.com/xahmol/DMBoot/raw/main/DMBoot-v391-20231011-1210.zip)
+
+* Fix of a serious bug causing changing directories to fail via UCI on mounting images or loading a REU file. This causes that mounting images and REU files only succeeded if they were placed in the present working directory (which is usally /11)
+* Made F7 exit in the main menu for consistency throughout the program, so F3 became Edit/Reorder/Rename/Delete slots
+* Memory optimalisations, a.o. moving image mounting and REU loading functions to a seperate overlay (dmb-exec.prg)
+* Added much more comprehensive error handling and text feedback on mounting images and loading REU
+
 **Version v391-20230819-1737:**
 
 [Link to build of version](https://github.com/xahmol/DMBoot/raw/main/DMBoot-v391-20230819-1737.zip)
@@ -127,6 +136,8 @@ I personally think these limitations are acceptable as setting up the configirat
   * dmb-menu.prg: Memory overlay for the DMBoot main menu functions (cannot be executed as stand alone program)
 
   * dmb-util.prg: Memory overlay for the NTP time set and GEOS configuration settings and UI.
+
+  * dmb-exec.prg: Memory overlay for mounting disks and images on launching programs
 
   * dmb-confupd-3-4.prg: Utility to upgrade the configuration file of the DM Boot main program from the 1.99 version to the 2.99 version. Only needed if coming from a previous version.
 
@@ -254,9 +265,11 @@ Shows information screen. Also shouws how much VDC memory is detected. Press key
 
 ![](https://github.com/xahmol/DMBoot/raw/main/pictures/dmboot%20-%20information%20screen.png)
 
-**F3: Quit to C128 Basic**
+**F3: Edit / re-order / delete**
 
-Exit the bootmenu to the C128 BASIC Ready prompt. Memory will be erased on exit, SLOW mode will be selected also in 80 column mode for compatibility purposes.
+Enables to rename menuslots, re-order the slots or delete a slot. Selecting provides this menu:
+
+![](https://github.com/xahmol/DMBoot/raw/main/pictures/dmboot%20-%20editreorderdelete.png)
 
 **F4: NTP time / GEOS config**
 
@@ -311,10 +324,9 @@ Demonstration of booting GEOS via DMBoot (click picture to see video on Youtube)
 
 [![](https://img.youtube.com/vi/u9hQ0eEtpeI/0.jpg)](https://www.youtube.com/watch?v=u9hQ0eEtpeI)
 
-**F7: Edit / re-order / delete**
+**F7: Quit to C128 Basic**
 
-Enables to rename menuslots, re-order the slots or delete a slot. Selecting provides this menu:
-![](https://github.com/xahmol/DMBoot/raw/main/pictures/dmboot%20-%20editreorderdelete.png)
+Exit the bootmenu to the C128 BASIC Ready prompt. Memory will be erased on exit, SLOW mode will be selected also in 80 column mode for compatibility purposes.
 
 * **F1** enables renaming a menuslot. Choose slot to be renamed by pressing **0-9** or **A-Z**. Enter new name. Enter to confirm.
 

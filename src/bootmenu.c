@@ -269,7 +269,7 @@ char mainmenu()
     cputs(" F3 ");
     revers(0);
     textcolor(DC_COLOR_TEXT);
-    cputs(" Quit to C128 Basic");
+    cputs(" Edit/Reorder/Delete menu");  
     
     if(SCREENW==80)
     {
@@ -320,7 +320,7 @@ char mainmenu()
     cputs(" F7 ");
     revers(0);
     textcolor(DC_COLOR_TEXT);
-    cputs(" Edit/Reorder/Delete menu");
+    cputs(" Quit to C128 Basic");
 
     cputsxy(0,24,"Make your choice.");
 

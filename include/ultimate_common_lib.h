@@ -115,10 +115,6 @@ struct DirectoryEntry {
 	unsigned char *filename;
 };
 
-// GEOS addition protptypes by Xander Mol
-void enableIO();
-void restoreIO();
-
 // prototypes
 unsigned char uii_detect(void);
 
