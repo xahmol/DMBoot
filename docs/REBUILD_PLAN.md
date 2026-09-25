@@ -131,7 +131,7 @@ is put in place when the slot runs.
 | `$00000`–`$0BFFF` | 48 KB | Slots: 36 × `SLOTSIZE` (≤ 1360 B → 48,960 B), `SLOT_REU_START = 0` |
 | `$0C000`–`$0C5FF` | 1.5 KB | Scratch slot (swap buffer for reorder, saves bank 0 RAM) |
 | `$0C600`–`$0FFFF` | ~14.5 KB | Reserved: overflow overlay store, only used if §4.5 step 3 is needed |
-| `$10000`–top of REU | ≥ 64 KB | Directory listing heap: DirElement linked list, bounded by `maxreuaddress = reudetected × 64 KB − 1` (~970 entries on a 128 KB REU, far more on larger ones) |
+| `$10000`–top of REU | ≥ 64 KB | Slot backup while re-ordering in the slot editor (`SLOT_REU_BACKUP`, 48 KB; editor and browser are never active together). Directory listing heap: DirElement linked list, bounded by `maxreuaddress = reudetected × 64 KB − 1` (~970 entries on a 128 KB REU, far more on larger ones) |
 
 Rules:
 - A slot boot does the steps in this order: mount A → mount B → run command setup → **REU image load last**. After the REU load nothing may return to the menu. Every later error goes to `errorexit()` to BASIC, because the slot data (and any overflow overlays) in the REU has been overwritten.
@@ -518,6 +518,10 @@ Each phase ends with a build, a deploy to hardware (`192.168.1.237`), a c64bridg
     - A Colour Spectrum boots the same way but hangs in Krill's loader: that loader needs real drive emulation (drive code upload) and a single drive on the bus. Slot changed by hand to "mount on drive A (ID 8) + demo mode + BOOT" (runboot `0x51`): works. Demo mode + mount + BOOT verified.
   - Compared with v4 on the same stick: R Keynes shows nothing on the 80-column screen in v4 too (a 40-column program). A Colour Spectrum hangs in Krill's loader in v4 (cd + BOOT); v5 runs it with mount + demo mode. Everything that worked in v4 works in v5.
   - To test: drive power-on from off; C64 mode (C, D, F5) later.
+- **Phase 3: implemented, not yet hardware-tested.**
+  - Slot list drawing and slot picking moved to the resident `slotlist.c`, shared by the main menu (overlay 1) and the editor (overlay 2, `slotedit.c`, 4.3 KB).
+  - Editor (F3 in the main menu): F1 rename, F2 command (an empty slot becomes a command-only slot), F3 re-order with cursor keys (wrap-around, cancel restores from an REU backup at `$10000`), F4 auto-boot timeout (off/1/3/5/10 s), F5 delete, F6 default slot, F7 back (saves slots and/or config when changed).
+  - UBoot64 bug not carried over: `editmenuoptions` overwrote its "changes made" flag per action, so an earlier edit could stay unsaved.
 
 ## 13. Risks and verification items
 

@@ -44,6 +44,7 @@ bank 0 under ROM, REU DMA at 2 MHz, Device Manager API, test mailbox).
 #include "core.h"
 #include "fileio.h"
 #include "slotmenu.h"
+#include "slotedit.h"
 #include "exec.h"
 
 // Resident program region: everything below the overlay load slot
@@ -69,7 +70,7 @@ char overlay_active = OVERLAY_NONE;
 // An empty name marks an overlay of a later phase.
 static const struct OverlayStore overlay_store[OVERLAY_COUNT] = {
     { BNK_1_FULL, OVERLAY_STORE_BANK1_1, "dmbovl1", "main menu" },
-    { BNK_1_FULL, OVERLAY_STORE_BANK1_2, "",        "slot editing" },   // Phase 3
+    { BNK_1_FULL, OVERLAY_STORE_BANK1_2, "dmbovl2", "slot editing" },
     { BNK_1_FULL, OVERLAY_STORE_BANK1_3, "",        "file browser" },   // Phase 4
     { BNK_1_FULL, OVERLAY_STORE_BANK1_4, "",        "configuration" },  // Phase 5
     { BNK_0_FULL, OVERLAY_STORE_BANK0_1, "dmbovl5", "slot start" },
@@ -454,7 +455,8 @@ int main(void)
             not_yet_available("Information");
             break;
         case KEY_F3:
-            not_yet_available("Edit/order/delete");
+            loadoverlay(OVERLAY_EDIT);
+            slotedit();
             break;
         case KEY_F4:
             not_yet_available("Configuration");

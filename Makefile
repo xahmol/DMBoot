@@ -43,7 +43,7 @@ CC = /home/xahmol/oscar64/bin/oscar64
 MAIN = dmboot
 AUTOSTART = autostart.128.prg
 LMC = dmblmc
-OVERLAYS = dmbovl1 dmbovl5
+OVERLAYS = dmbovl1 dmbovl2 dmbovl5
 
 # Build versioning
 VERSION_MAJOR = 5
@@ -77,6 +77,8 @@ CFLAGSTEST = $(CFLAGS) -dTESTMODE
 # about them, so every transitively compiled .c/.h is listed here.
 MAIN_SRCS = src/main.c \
             src/slotmenu.c src/slotmenu.h \
+            src/slotlist.c src/slotlist.h \
+            src/slotedit.c src/slotedit.h \
             src/exec.c src/exec.h \
             src/dmpaths.c src/dmpaths.h \
             src/core.c src/core.h \

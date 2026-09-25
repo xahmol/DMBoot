@@ -5,10 +5,9 @@ Written in 2020-2026 by Xander Mol
 https://github.com/xahmol/DMBoot
 
 Menu and auto-boot countdown ported from src/slotmenu.c of my UBoot64-v2
-project (https://github.com/xahmol/UBoot64-v2); adapted: 36 slots in two
-columns (80 columns) or two pages (40 columns), DMBoot F-key layout, the
-countdown returns the slot key instead of starting it (overlays cannot
-call each other).
+project (https://github.com/xahmol/UBoot64-v2); adapted: DMBoot F-key
+layout, the countdown returns the slot key instead of starting it
+(overlays cannot call each other). The slot list itself is in slotlist.c.
 */
 
 #include <string.h>
@@ -19,6 +18,7 @@ call each other).
 #include "testmode.h"
 #include "core.h"
 #include "fileio.h"
+#include "slotlist.h"
 #include "slotmenu.h"
 
 #pragma overlay(dmbovl1, 2)
@@ -31,69 +31,7 @@ call each other).
 #pragma data(dataovl1)
 #pragma bss(bssovl1)
 
-#define MENU_FIRST_ROW      3
-#define MENU_ROWS           18      // Slots per column / page
-#define MENU_COLUMN_WIDTH   40      // 80 columns: two columns of 40
-#define MENU_NAME_OFFSET    4       // Name starts after " k "
-#define LEGEND_ROW          21
-#define PROMPT_ROW          24
-#define NO_SLOT             0xff
-#define KEY_CURSOR_LEFT     0x9d
-#define KEY_CURSOR_RIGHT    0x1d
-#define DEFAULT_MARK        " [D]"
-#define NAME_TEXT_MAX       (MAXMENUNAME + sizeof(DEFAULT_MARK))
-#define TIMEOUT_OPTIONS     5
-
-// Auto-boot timeout in seconds per cfg.timeoutidx (0 = off)
-static const char timeoutseconds[TIMEOUT_OPTIONS] = { 0, 1, 3, 5, 10 };
-
-// ---------------------------------------------------------------------------
-// Title:       Print a function key hint
-// Description: Prints " Fx " in reverse followed by its description.
-// Syntax:      void menu_fkey(char x, char y, const char *key,
-//                             const char *text);
-// Input:       x, y - screen position
-//              key  - key label, e.g. " F1 "
-//              text - description
-// Output:      None
-// ---------------------------------------------------------------------------
-static void menu_fkey(char x, char y, const char *key, const char *text)
-{
-    char len = dwin_putat_string_reverse(&screenwin, x, y, key, cfg.colors.key);
-    dwin_putat_string(&screenwin, x + len + 1, y, text, cfg.colors.text);
-}
-
-// ---------------------------------------------------------------------------
-// Title:       Draw one slot line
-// Description: Draws the key and name of a non-empty slot at a screen
-//              position ("[D]" marks the auto-boot default slot).
-// Syntax:      void menu_draw_slot(char slot, char x, char y);
-// Input:       slot - slot number
-//              x, y - screen position
-// Output:      None
-// ---------------------------------------------------------------------------
-static void menu_draw_slot(char slot, char x, char y)
-{
-    char label[4] = { ' ', 0, ' ', 0 };
-    char name[NAME_TEXT_MAX];
-
-    get_slot_from_reu(slot);
-    if (!Slot.menu[0])
-    {
-        return;
-    }
-
-    label[1] = menuslotlabel(slot);
-    dwin_putat_string_reverse(&screenwin, x, y, label, cfg.colors.key);
-
-    strncpy(name, Slot.menu, MAXMENUNAME - 1);
-    name[MAXMENUNAME - 1] = 0;
-    if (Slot.isdefault == 1)
-    {
-        strncat(name, DEFAULT_MARK, sizeof(name) - 1 - strlen(name));
-    }
-    dwin_putat_string(&screenwin, x + MENU_NAME_OFFSET, y, name, cfg.colors.text);
-}
+#define TIMEOUT_TEXT_X      13      // Column of the countdown seconds
 
 // ---------------------------------------------------------------------------
 // Title:       Draw the main menu
@@ -108,36 +46,29 @@ static void menu_draw(char page)
     dwin_clear(&screenwin);
     headertext("Welcome to your C128.", 1);
 
+    slotlist_draw(page);
     if (dwin_is80())
     {
-        for (char slot = 0; slot < SLOTS; slot++)
-        {
-            menu_draw_slot(slot, (slot / MENU_ROWS) * MENU_COLUMN_WIDTH, MENU_FIRST_ROW + slot % MENU_ROWS);
-        }
-        menu_fkey(0, LEGEND_ROW, " F1 ", "Filebrowser");
-        menu_fkey(20, LEGEND_ROW, " F2 ", "Information");
-        menu_fkey(40, LEGEND_ROW, " F3 ", "Edit/order/del");
-        menu_fkey(60, LEGEND_ROW, " F4 ", "Configuration");
-        menu_fkey(0, LEGEND_ROW + 1, " F5 ", "Go 64");
-        menu_fkey(20, LEGEND_ROW + 1, " F6 ", "GEOS RAM boot");
-        menu_fkey(40, LEGEND_ROW + 1, " F7 ", "Quit to BASIC");
+        fkey_hint(0, SLOTLIST_LEGEND_ROW, " F1 ", "Filebrowser");
+        fkey_hint(20, SLOTLIST_LEGEND_ROW, " F2 ", "Information");
+        fkey_hint(40, SLOTLIST_LEGEND_ROW, " F3 ", "Edit/order/del");
+        fkey_hint(60, SLOTLIST_LEGEND_ROW, " F4 ", "Configuration");
+        fkey_hint(0, SLOTLIST_LEGEND_ROW + 1, " F5 ", "Go 64");
+        fkey_hint(20, SLOTLIST_LEGEND_ROW + 1, " F6 ", "GEOS RAM boot");
+        fkey_hint(40, SLOTLIST_LEGEND_ROW + 1, " F7 ", "Quit to BASIC");
     }
     else
     {
-        for (char row = 0; row < MENU_ROWS; row++)
-        {
-            menu_draw_slot(page * MENU_ROWS + row, 0, MENU_FIRST_ROW + row);
-        }
-        menu_fkey(0, LEGEND_ROW, " F1 ", "Browse");
-        menu_fkey(13, LEGEND_ROW, " F2 ", "Info");
-        menu_fkey(24, LEGEND_ROW, " F3 ", "Edit");
-        menu_fkey(0, LEGEND_ROW + 1, " F4 ", "Config");
-        menu_fkey(13, LEGEND_ROW + 1, " F5 ", "Go 64");
-        menu_fkey(24, LEGEND_ROW + 1, " F6 ", "GEOS");
-        menu_fkey(0, LEGEND_ROW + 2, " F7 ", "Quit");
-        menu_fkey(13, LEGEND_ROW + 2, " <> ", page ? "Page 2/2" : "Page 1/2");
+        fkey_hint(0, SLOTLIST_LEGEND_ROW, " F1 ", "Browse");
+        fkey_hint(13, SLOTLIST_LEGEND_ROW, " F2 ", "Info");
+        fkey_hint(24, SLOTLIST_LEGEND_ROW, " F3 ", "Edit");
+        fkey_hint(0, SLOTLIST_LEGEND_ROW + 1, " F4 ", "Config");
+        fkey_hint(13, SLOTLIST_LEGEND_ROW + 1, " F5 ", "Go 64");
+        fkey_hint(24, SLOTLIST_LEGEND_ROW + 1, " F6 ", "GEOS");
+        fkey_hint(0, SLOTLIST_LEGEND_ROW + 2, " F7 ", "Quit");
+        fkey_hint(13, SLOTLIST_LEGEND_ROW + 2, " <> ", page ? "Page 2/2" : "Page 1/2");
     }
-    dwin_putat_string(&screenwin, 0, PROMPT_ROW, "Make your choice.", cfg.colors.text);
+    dwin_putat_string(&screenwin, 0, SLOTLIST_PROMPT_ROW, "Make your choice.", cfg.colors.text);
 }
 
 // ---------------------------------------------------------------------------
@@ -224,10 +155,10 @@ static char autobootcountdown(void)
 
     dwin_clear(&screenwin);
     headertext("Welcome to your C128.", 1);
-    dwin_putat_string(&screenwin, 0, MENU_FIRST_ROW, "Default boot slot:", cfg.colors.text);
-    dwin_putat_string(&screenwin, 0, MENU_FIRST_ROW + 1, Slot.menu, cfg.colors.key);
-    dwin_putat_string(&screenwin, 0, MENU_FIRST_ROW + 3, "Auto-boot in    sec.", cfg.colors.text);
-    dwin_putat_string(&screenwin, 0, MENU_FIRST_ROW + 4, "Press any key to open the menu.", cfg.colors.text);
+    dwin_putat_string(&screenwin, 0, SLOTLIST_FIRST_ROW, "Default boot slot:", cfg.colors.text);
+    dwin_putat_string(&screenwin, 0, SLOTLIST_FIRST_ROW + 1, Slot.menu, cfg.colors.key);
+    dwin_putat_string(&screenwin, 0, SLOTLIST_FIRST_ROW + 3, "Auto-boot in    sec.", cfg.colors.text);
+    dwin_putat_string(&screenwin, 0, SLOTLIST_FIRST_ROW + 4, "Press any key to open the menu.", cfg.colors.text);
 
     cia1.todt = 0;
     cia1.tods = 0;
@@ -240,7 +171,7 @@ static char autobootcountdown(void)
             char text[3] = { ' ', ' ', 0 };
             text[0] = remaining >= 10 ? '1' : ' ';
             text[1] = '0' + remaining % 10;
-            dwin_putat_string(&screenwin, 13, MENU_FIRST_ROW + 3, text, cfg.colors.text);
+            dwin_putat_string(&screenwin, TIMEOUT_TEXT_X, SLOTLIST_FIRST_ROW + 3, text, cfg.colors.text);
             lastshown = remaining;
         }
         if (key_poll() != KEY_NONE)

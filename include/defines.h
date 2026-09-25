@@ -102,6 +102,7 @@ BUT WITHOUT ANY WARRANTY. USE THEM AT YOUR OWN RISK!
 #define SLOTS               36      // Number of boot menu slots (keys 0-9, a-z)
 #define SLOTSIZE            1360    // sizeof(struct SlotStruct), checked below
 #define SLOT_REU_START      0x00000UL   // REU address of slot 0
+#define SLOT_REU_BACKUP     0x10000UL   // Slot backup while re-ordering (directory area: browser not active then)
 #define SAVE_BUF_SIZE       500     // Bytes per UCI write (data queue is 512)
 
 // String buffer sizes, including the terminator
