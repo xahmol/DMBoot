@@ -12,6 +12,7 @@ Adapted: Oscar64 inline assembly, placed in the low-memory code overlay
 
 #include <string.h>
 #include "dmapi.h"
+#include <petscii.h>
 #include "banking.h"
 
 // Device Manager ROM extended API jump table
@@ -43,7 +44,7 @@ char dm_present;
 char dm_version_low;
 char dm_version_high;
 char dm_hsid;
-char dm_devtype;
+volatile char dm_devtype;
 
 // Program to start in C64 mode (read by dm_run64 after DMBoot has exited,
 // so it must stay in the LMC area)
@@ -196,6 +197,8 @@ char dm_api_get_drivetype(char device)
         lda dm_saved_mmu
         sta $ff00
     }
+    // dm_devtype is volatile: Oscar64 does not see the store in the __asm
+    // block and otherwise returns the device ID passed in
     return dm_devtype;
 }
 
