@@ -1129,6 +1129,17 @@ void     bnk1_writem(void *dst, const void *src, unsigned len);
   the assembler stored. A `*(volatile char *)&x` read-back is also folded
   away. Declare the variable itself `volatile` (or return via `accu` from
   the assembler). Found in DMBoot's Device Manager drive type call.
+- **Code used only through its address is dropped, and the address becomes 0.**
+  `__asm entry { ... }` whose only use is `(unsigned)entry` (for a BASIC
+  `SYS`) was removed by the linker, and `sprintf("sys %u", (unsigned)entry)`
+  compiled to a constant 0. A C function with an `__asm` body plus
+  `#pragma reference(entry)` keeps the code, but the C expression
+  `(unsigned)entry` was still folded to 0, even through a `volatile`
+  function pointer (which was optimised away too). What works: take the
+  address in assembler,
+  `unsigned entry_address(void) { return __asm { lda #<entry \n sta accu \n lda #>entry \n sta accu + 1 }; }`.
+  Always check such addresses in the generated `.asm`. Found in DMBoot's
+  C64-mode `SYS` entry (it typed `SYS 0`).
 - **An `__asm name { ... }` function cannot also have a C prototype.**
   Declaring `void name(void);` in a header gives "error 3023: Duplicate
   definition". To call assembler from C, write a normal function whose body
