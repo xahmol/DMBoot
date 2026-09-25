@@ -87,6 +87,7 @@ MAIN_SRCS = src/main.c \
             src/fileio.c src/fileio.h \
             src/cfgdefaults.c src/cfgdefaults.h \
             src/petconv.c src/petconv.h \
+            src/basicexit.c src/basicexit.h \
             include/ultimate_common_lib.c include/ultimate_common_lib.h \
             include/ultimate_dos_lib.c include/ultimate_dos_lib.h \
             include/ultimate_time_lib.c include/ultimate_time_lib.h \

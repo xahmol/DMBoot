@@ -11,9 +11,6 @@ https://github.com/xahmol/DMBoot
 #include "defines.h"
 
 void errorexit(const char *message);
-void dmb_exit(void);
-void dmb_zp_save(void);
-void dmb_fkeys_raw(void);
 void delay(char seconds);
 void spinning(void);
 void headertext(const char *subtitle, char showtime);
@@ -43,6 +40,7 @@ char key_wait(void);
 extern char DOSstatus[DOS_STATUS_MAX];
 
 #include "petconv.h"
+#include "basicexit.h"
 
 #pragma compile("core.c")
 
