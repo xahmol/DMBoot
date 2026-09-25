@@ -48,6 +48,9 @@ C64 mode, FAST, BOOT) as in DMBoot v4 (branch legacy-cc65, src/ops.c).
 #define TEXT_MAX            81
 #define DEVICE_FORCED       8
 #define DELAY_SHOW_STATUS   2       // Seconds to show the path status
+#define DELAY_DRIVE_READY   2       // Seconds for an Ultimate drive to start after power on
+#define EXEC_DRIVE_A        0       // uii_devinfo index of drive A
+#define EXEC_DRIVE_B        1       // uii_devinfo index of drive B
 #define DM_API_RUN64_MIN    2       // run64 needs API version > 1 (as DMBoot v4)
 #define DM_API_HSID_MIN     1       // set hyperspeed ID needs API version > 0
 
@@ -217,6 +220,39 @@ static void exec_ask_stick(void)
     {
         errorexit("USB stick not found.");
     }
+}
+
+// ---------------------------------------------------------------------------
+// Title:       Power on an Ultimate drive
+// Description: Switches Ultimate drive A or B on when it is off and waits
+//              until it is ready, as UBoot64-v2 ToggleDrivePower does.
+//              Mounting right after switching a drive on fails with
+//              "90,drive not present".
+// Syntax:      static void exec_drive_power_on(char drive);
+// Input:       drive - EXEC_DRIVE_A or EXEC_DRIVE_B
+// Output:      None (errors exit through ErrorCheckMounting)
+// ---------------------------------------------------------------------------
+static void exec_drive_power_on(char drive)
+{
+    if (!uii_parse_deviceinfo())
+    {
+        ErrorCheckMounting();
+    }
+    if (uii_devinfo[drive].power)
+    {
+        return;
+    }
+
+    if (drive == EXEC_DRIVE_A)
+    {
+        uii_enable_drive_a();
+    }
+    else
+    {
+        uii_enable_drive_b();
+    }
+    dwin_printf(&console, cfg.colors.text, "Drive %c powered on.\n", 'A' + drive);
+    delay(DELAY_DRIVE_READY);
 }
 
 // ---------------------------------------------------------------------------
@@ -450,15 +486,15 @@ void runbootfrommenu(char select)
 
     if (Slot.command & COMMAND_IMGA)
     {
+        exec_drive_power_on(EXEC_DRIVE_A);
         exec_print("Mount A: ", Slot.image_a_file);
-        uii_enable_drive_a();
         mountimage(Slot.image_a_id, Slot.image_a_path, Slot.image_a_file);
         delay(1);
     }
     if (Slot.command & COMMAND_IMGB)
     {
+        exec_drive_power_on(EXEC_DRIVE_B);
         exec_print("Mount B: ", Slot.image_b_file);
-        uii_enable_drive_b();
         mountimage(Slot.image_b_id, Slot.image_b_path, Slot.image_b_file);
         delay(1);
     }
