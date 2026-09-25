@@ -1123,6 +1123,12 @@ void     bnk1_writem(void *dst, const void *src, unsigned len);
   editor expands F1-F8/HELP (F7 = `LIST` + RETURN) before `GETIN` sees
   them. Set the key store vector `$033C` to `$C6B7` (past the expansion;
   as cc65 `libsrc/c128/cgetc.s`) and restore the saved value on exit.
+- **A global written inside an `__asm` block can be "forgotten".** In
+  `x = param; __asm { lda x \n jsr ... \n sta x } return x;` the compiler
+  returns the parameter it still holds in a register (`T0`), not the value
+  the assembler stored. A `*(volatile char *)&x` read-back is also folded
+  away. Declare the variable itself `volatile` (or return via `accu` from
+  the assembler). Found in DMBoot's Device Manager drive type call.
 - **An `__asm name { ... }` function cannot also have a C prototype.**
   Declaring `void name(void);` in a header gives "error 3023: Duplicate
   definition". To call assembler from C, write a normal function whose body
