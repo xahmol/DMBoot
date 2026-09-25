@@ -7,8 +7,7 @@ https://github.com/xahmol/DMBoot
 Converts the DMBoot v4 slot file (dmbootconf.prg) and utility settings
 (DMBCFGFILE) in the DMBoot directory (11 on the USB stick) into the v5 files
 dmbslots.cfg and dmbconf.cfg. The v4 files are left untouched as a backup.
-Rules: docs/REBUILD_PLAN.md §10; reference implementation and test data:
-tests/tools/convert_v4_slots.py, tests/data/.
+The conversion itself is in v4convert.c (tested on the PC: tests/host).
 
 Code and resources from others used:
 -   Oscar64 by DrMortalWombat (https://github.com/drmortalwombat/oscar64)
@@ -26,58 +25,12 @@ Code and resources from others used:
 #include "petconv.h"
 #include "cfgdefaults.h"
 #include "basicexit.h"
+#include "v4convert.h"
 
 #define UCI_TIMEOUT_SECS    10
 #define FILE_READ           0x01
 #define FILE_CREATE         0x06
 #define KEY_NONE            0x00
-
-// v4 slot file: load address, then 36 slots of 512 bytes (two 256-byte
-// pages: path..cfgvs, then the image fields; see v4 getslotfromem)
-#define V4_LOADADDR_BYTES   2
-#define V4_SLOT_STRIDE      512
-#define V4_PAGE             256
-#define V4_SLOTS_BYTES      (SLOTS * V4_SLOT_STRIDE)
-#define V4_PATH             0
-#define V4_PATH_LEN         100
-#define V4_MENU             100
-#define V4_MENU_LEN         21
-#define V4_FILE             121
-#define V4_FILE_LEN         20
-#define V4_CMD              141
-#define V4_CMD_LEN          80
-#define V4_REUIMAGE         221
-#define V4_REUIMAGE_LEN     20
-#define V4_REUSIZE          241
-#define V4_RUNBOOT          242
-#define V4_DEVICE           243
-#define V4_COMMAND          244
-#define V4_IMGA_PATH        (V4_PAGE + 0)
-#define V4_IMGA_FILE        (V4_PAGE + 100)
-#define V4_IMGA_ID          (V4_PAGE + 120)
-#define V4_IMGB_PATH        (V4_PAGE + 121)
-#define V4_IMGB_FILE        (V4_PAGE + 221)
-#define V4_IMGB_ID          (V4_PAGE + 241)
-#define V4_IMGPATH_LEN      100
-#define V4_IMGFILE_LEN      20
-
-// v4 utility settings (DMBCFGFILE, v4 configcommon.c)
-#define V4CFG_SIZE          328
-#define V4CFG_REUPATH       0
-#define V4CFG_REUPATH_LEN   60
-#define V4CFG_REUIMAGE      60
-#define V4CFG_NAME_LEN      20
-#define V4CFG_IMGA_PATH     80
-#define V4CFG_IMGA_FILE     140
-#define V4CFG_IMGB_PATH     160
-#define V4CFG_IMGB_FILE     220
-#define V4CFG_REUSIZE       240
-#define V4CFG_TIMEON        241
-#define V4CFG_UTCOFFSET     242     // 4 bytes, big endian
-#define V4CFG_IMGA_ID       246
-#define V4CFG_IMGB_ID       247
-#define V4CFG_HOST          248
-#define V4CFG_HOST_LEN      80
 
 // v4 settings file name as raw ASCII (the slot file name is in dmpaths.c)
 static const char v4cfgfile[] = { 0x44, 0x4d, 0x42, 0x43, 0x46, 0x47, 0x46, 0x49, 0x4c, 0x45, 0x00 };  // DMBCFGFILE
@@ -87,7 +40,7 @@ static char v4cfg[V4CFG_SIZE];
 static struct SlotStruct slot;
 static struct ConfigStruct cfgout;
 static char writebuf[SAVE_BUF_SIZE];
-static char text[MAXPATHLEN];
+static char text[MAXPATHLEN];      // Status and path texts for printing
 
 // ---------------------------------------------------------------------------
 // Title:       Wait for a key
@@ -251,183 +204,6 @@ static void create_file(const char *name)
 }
 
 // ---------------------------------------------------------------------------
-// Title:       Copy a v4 string field
-// Description: Copies a 0-terminated field of fixed length (also when the
-//              v4 field has no terminator) into a v5 field.
-// Syntax:      static void copy_field(char *dst, unsigned dstsize,
-//                                     const char *src, unsigned srclen);
-// Input:       dst, dstsize - destination and its size
-//              src, srclen  - v4 field and its length
-// Output:      dst
-// ---------------------------------------------------------------------------
-static void copy_field(char *dst, unsigned dstsize, const char *src, unsigned srclen)
-{
-    unsigned i = 0;
-
-    while (i < srclen && i < dstsize - 1 && src[i])
-    {
-        dst[i] = src[i];
-        i++;
-    }
-    dst[i] = 0;
-}
-
-// ---------------------------------------------------------------------------
-// Title:       Convert a v4 path to an Ultimate path
-// Description: Removes a leading "cd:" (only when present: some v4 paths
-//              lack it, which v4's "+3" then broke) and converts PETSCII to
-//              ASCII.
-// Syntax:      static void ult_path(char *dst, unsigned dstsize,
-//                                   const char *src, unsigned srclen);
-// Input:       dst, dstsize - destination and its size
-//              src, srclen  - v4 field and its length
-// Output:      dst (ASCII)
-// ---------------------------------------------------------------------------
-static void ult_path(char *dst, unsigned dstsize, const char *src, unsigned srclen)
-{
-    char field[V4_PATH_LEN + 1];
-    const char *start = field;
-
-    copy_field(field, sizeof(field), src, srclen);
-    if ((field[0] & 0x7f) == 'c' && (field[1] & 0x7f) == 'd' && field[2] == ':')
-    {
-        start += 3;
-    }
-    pet2asc(dst, start, dstsize);
-}
-
-// ---------------------------------------------------------------------------
-// Title:       Convert one v4 slot
-// Description: Converts a 512-byte v4 slot into the v5 slot structure.
-// Syntax:      static bool convert_slot(const char *v4);
-// Input:       v4 - start of the v4 slot
-// Output:      true when the slot is in use; result in slot
-// ---------------------------------------------------------------------------
-static bool convert_slot(const char *v4)
-{
-    char command = v4[V4_COMMAND];
-
-    memset(&slot, 0, sizeof(slot));
-    slot.cfgvs = CFGVERSION;
-    if (!v4[V4_MENU])
-    {
-        return false;
-    }
-
-    copy_field(slot.menu, sizeof(slot.menu), v4 + V4_MENU, V4_MENU_LEN);
-    copy_field(slot.path, sizeof(slot.path), v4 + V4_PATH, V4_PATH_LEN);
-    copy_field(slot.file, sizeof(slot.file), v4 + V4_FILE, V4_FILE_LEN);
-    copy_field(slot.cmd, sizeof(slot.cmd), v4 + V4_CMD, V4_CMD_LEN);
-    slot.reusize = v4[V4_REUSIZE];
-    slot.runboot = v4[V4_RUNBOOT];
-    slot.device = v4[V4_DEVICE];
-
-    // Mount flags without an image file name were seen in real v4 files
-    if ((command & COMMAND_IMGA) && !v4[V4_IMGA_FILE])
-    {
-        command &= ~COMMAND_IMGA;
-    }
-    if ((command & COMMAND_IMGB) && !v4[V4_IMGB_FILE])
-    {
-        command &= ~COMMAND_IMGB;
-    }
-    slot.command = command;
-
-    if (command & COMMAND_IMGA)
-    {
-        slot.image_a_id = v4[V4_IMGA_ID];
-        ult_path(slot.image_a_path, sizeof(slot.image_a_path), v4 + V4_IMGA_PATH, V4_IMGPATH_LEN);
-        copy_field(text, sizeof(text), v4 + V4_IMGA_FILE, V4_IMGFILE_LEN);
-        pet2asc(slot.image_a_file, text, sizeof(slot.image_a_file));
-    }
-    if (command & COMMAND_IMGB)
-    {
-        slot.image_b_id = v4[V4_IMGB_ID];
-        ult_path(slot.image_b_path, sizeof(slot.image_b_path), v4 + V4_IMGB_PATH, V4_IMGPATH_LEN);
-        copy_field(text, sizeof(text), v4 + V4_IMGB_FILE, V4_IMGFILE_LEN);
-        pet2asc(slot.image_b_file, text, sizeof(slot.image_b_file));
-    }
-    if (command & COMMAND_REU)
-    {
-        // v4 used image_a_path+3 as the REU directory; when that is empty
-        // the program path is the best guess
-        copy_field(text, sizeof(text), v4 + V4_REUIMAGE, V4_REUIMAGE_LEN);
-        pet2asc(slot.reu_image, text, sizeof(slot.reu_image));
-        if (v4[V4_IMGA_PATH])
-        {
-            ult_path(slot.reu_path, sizeof(slot.reu_path), v4 + V4_IMGA_PATH, V4_IMGPATH_LEN);
-        }
-        else
-        {
-            ult_path(slot.reu_path, sizeof(slot.reu_path), v4 + V4_PATH, V4_PATH_LEN);
-        }
-    }
-    return true;
-}
-
-// ---------------------------------------------------------------------------
-// Title:       Convert a GEOS image setting
-// Description: Converts a v4 GEOS image path and name. An empty path means
-//              the DMBoot directory (v4 then used the current directory).
-// Syntax:      static void convert_geos_image(char *path, char *file,
-//                                             unsigned pathoffset,
-//                                             unsigned fileoffset);
-// Input:       path, file             - v5 fields (MAXPATHLEN, MAXFILENAME)
-//              pathoffset, fileoffset - positions in the v4 settings
-// Output:      path, file (ASCII)
-// ---------------------------------------------------------------------------
-static void convert_geos_image(char *path, char *file, unsigned pathoffset, unsigned fileoffset)
-{
-    copy_field(text, sizeof(text), v4cfg + fileoffset, V4CFG_NAME_LEN);
-    pet2asc(file, text, MAXFILENAME);
-    if (v4cfg[pathoffset])
-    {
-        ult_path(path, MAXPATHLEN, v4cfg + pathoffset, V4CFG_REUPATH_LEN);
-    }
-    else if (file[0])
-    {
-        strncpy(path, configpath, MAXPATHLEN - 1);
-        path[MAXPATHLEN - 1] = 0;
-        printf("GEOS image without path: using the\nDMBoot directory. Check it in F4, F8.\n");
-    }
-}
-
-// ---------------------------------------------------------------------------
-// Title:       Build the v5 configuration
-// Description: Defaults, plus the NTP and GEOS settings of v4 when the v4
-//              settings file was read.
-// Syntax:      static void convert_config(bool havev4);
-// Input:       havev4 - v4cfg holds DMBCFGFILE
-// Output:      cfgout
-// ---------------------------------------------------------------------------
-static void convert_config(bool havev4)
-{
-    config_set_defaults(&cfgout);
-    if (!havev4)
-    {
-        return;
-    }
-
-    cfgout.timeon = v4cfg[V4CFG_TIMEON] ? 1 : 0;
-    cfgout.secondsfromutc = ((long)(unsigned char)v4cfg[V4CFG_UTCOFFSET] << 24) |
-                            ((long)(unsigned char)v4cfg[V4CFG_UTCOFFSET + 1] << 16) |
-                            ((long)(unsigned char)v4cfg[V4CFG_UTCOFFSET + 2] << 8) |
-                            (long)(unsigned char)v4cfg[V4CFG_UTCOFFSET + 3];
-    if (v4cfg[V4CFG_HOST])
-    {
-        copy_field(text, sizeof(text), v4cfg + V4CFG_HOST, V4CFG_HOST_LEN);
-        pet2asc(cfgout.host, text, sizeof(cfgout.host));
-    }
-
-    cfgout.geos.reusize = v4cfg[V4CFG_REUSIZE];
-    convert_geos_image(cfgout.geos.reu_path, cfgout.geos.reu_image, V4CFG_REUPATH, V4CFG_REUIMAGE);
-    cfgout.geos.image_a_id = v4cfg[V4CFG_IMGA_ID];
-    convert_geos_image(cfgout.geos.image_a_path, cfgout.geos.image_a_file, V4CFG_IMGA_PATH, V4CFG_IMGA_FILE);
-    cfgout.geos.image_b_id = v4cfg[V4CFG_IMGB_ID];
-    convert_geos_image(cfgout.geos.image_b_path, cfgout.geos.image_b_file, V4CFG_IMGB_PATH, V4CFG_IMGB_FILE);
-}
-
-// ---------------------------------------------------------------------------
 // Title:       Upgrade tool
 // Description: Finds the DMBoot directory, reads the v4 files, asks before
 //              overwriting existing v5 files, writes dmbslots.cfg and
@@ -479,7 +255,7 @@ int main(void)
     create_file(slotfilename);
     for (char x = 0; x < SLOTS; x++)
     {
-        if (convert_slot(v4slots + V4_LOADADDR_BYTES + (unsigned)x * V4_SLOT_STRIDE))
+        if (v4_convert_slot(v4slots + V4_LOADADDR_BYTES + (unsigned)x * V4_SLOT_STRIDE, &slot))
         {
             used++;
             printf("%2u %s\n", x, slot.menu);
@@ -489,7 +265,10 @@ int main(void)
     uii_close_file();
     printf("%u slots converted.\n\n", used);
 
-    convert_config(havecfg);
+    if (v4_convert_config(v4cfg, havecfg, configpath, &cfgout))
+    {
+        printf("GEOS image without path: using the\nDMBoot directory. Check it in F4, F8.\n");
+    }
     create_file(configfilename);
     write_block((const char *)&cfgout, sizeof(cfgout));
     uii_close_file();

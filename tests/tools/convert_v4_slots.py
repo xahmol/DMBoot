@@ -9,7 +9,8 @@ Test tool and reference for the v4 -> v5 upgrader (plan §10). Rules:
   prefix. v4 used image_a_path+3 as the REU directory; when that is empty
   the REU directory is derived from the program path.
 - COMMAND_IMGA/IMGB are cleared when no image file name is present
-  (seen in real v4 files).
+  (seen in real v4 files); image fields are only filled for set flags.
+- Empty slots carry cfgvs, as DMBoot writes them.
 - Optional test slots from an existing v5 file can be kept at given slots.
 
 Usage: convert_v4_slots.py v4file out.cfg [--keep v5file src:dst ...]
@@ -107,11 +108,11 @@ def convert(v4):
         "reu_path": pet2asc(strip_cd(reu_dir)) if command & COMMAND_REU else b"",
         "reusize": v4["reusize"], "runboot": v4["runboot"],
         "device": v4["device"], "command": command,
-        "image_a_path": pet2asc(strip_cd(v4["image_a_path"])),
-        "image_a_file": pet2asc(v4["image_a_file"]),
+        "image_a_path": pet2asc(strip_cd(v4["image_a_path"])) if command & COMMAND_IMGA else b"",
+        "image_a_file": pet2asc(v4["image_a_file"]) if command & COMMAND_IMGA else b"",
         "image_a_id": v4["image_a_id"] if command & COMMAND_IMGA else 0,
-        "image_b_path": pet2asc(strip_cd(v4["image_b_path"])),
-        "image_b_file": pet2asc(v4["image_b_file"]),
+        "image_b_path": pet2asc(strip_cd(v4["image_b_path"])) if command & COMMAND_IMGB else b"",
+        "image_b_file": pet2asc(v4["image_b_file"]) if command & COMMAND_IMGB else b"",
         "image_b_id": v4["image_b_id"] if command & COMMAND_IMGB else 0,
     })
 
@@ -127,7 +128,9 @@ def main():
     data = open(args.v4file, "rb").read()
     if args.v4file.lower().endswith(".prg"):
         data = data[2:]
-    out = bytearray(SLOTS * SLOTSIZE)
+    # Empty slots carry the format version too, as DMBoot writes them
+    empty = build_v5({"cfgvs": CFGVERSION})
+    out = bytearray(empty * SLOTS)
     for slot in range(SLOTS):
         converted = convert(parse_v4(data, slot))
         if converted:

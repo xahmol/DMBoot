@@ -82,6 +82,7 @@ MAIN_SRCS = src/main.c \
             src/slotedit.c src/slotedit.h \
             src/browse.c src/browse.h \
             src/config.c src/config.h \
+            src/timeconv.c src/timeconv.h \
             src/exec.c src/exec.h \
             src/dmpaths.c src/dmpaths.h \
             src/core.c src/core.h \
@@ -105,7 +106,7 @@ MAIN_SRCS = src/main.c \
             include/peekpoke.h
 
 # Upgrade tool v4 -> v5 (separate program)
-UPD_SRCS = src/dmbupd45.c src/dmpaths.c src/dmpaths.h \
+UPD_SRCS = src/dmbupd45.c src/dmpaths.c src/dmpaths.h src/v4convert.c src/v4convert.h \
            src/petconv.c src/petconv.h src/cfgdefaults.c src/cfgdefaults.h \
            src/basicexit.c src/basicexit.h include/defines.h \
            include/ultimate_common_lib.c include/ultimate_common_lib.h \
@@ -129,7 +130,7 @@ README = README.pdf
 ########################################
 
 .SUFFIXES:
-.PHONY: all build test-build clean deploy check-deploy docs zip
+.PHONY: all build test-build test clean deploy check-deploy docs zip
 
 all: build $(README) zip
 
@@ -150,6 +151,10 @@ test-build: $(MAIN_SRCS) build/$(UPGRADER).prg
 	@$(MKDIR) build 2>$(NULLDEV) ; true
 	$(CC) $(CFLAGSTEST) -n -o=build/$(MAIN).prg src/main.c
 	cp build/$(MAIN).prg build/$(AUTOSTART)
+
+# Host tests of the hardware-independent modules (gcc, python3)
+test:
+	python3 tests/host/run_tests.py
 
 # Regenerate README.pdf from README.md (requires pandoc + texlive-xetex).
 # Warns and skips if pandoc is unavailable; README.pdf is committed.
