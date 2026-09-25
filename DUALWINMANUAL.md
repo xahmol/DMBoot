@@ -185,6 +185,7 @@ Based on the DraCopy/DraBrowse text input by Sascha Bader (https://github.com/do
 - **Clipping everywhere:** no output function writes outside its window, so an over-long string (a file name, user input, data from a device) cannot corrupt other screen areas.
 - **`dwin_printf` buffer:** Oscar64 has no `vsnprintf`, so `dwin_printf` formats into a `DWIN_PRINTF_MAX` (200) byte buffer with `vsprintf`. Only use it for output of known, bounded length. Print strings of unknown length (file names, user input, UCI data) with `dwin_put_string` or `dwin_putat_string` instead of through `%s`.
 - **`printf` precision:** Oscar64's printf has no precision field (`%.10s`). Truncate first with `strncpy` + explicit terminator.
+- **Reversed areas:** filling with PETSCII `$A0` (shifted space) does **not** give reverse spaces: both backends convert it to screen code `$60`, a normal blank. Fill with spaces, write the text, then call `dwin_reverse_rect()` over the area (as `headertext()` in DMBoot does).
 - **Macro names:** do not name variables or struct members `vic` or `vdc`. Both are macros in the Oscar64 headers (`<c64/vic.h>`, `<c128/vdc.h>`).
 - **Popup storage bank:** the storage must be reachable with the given MMU value. The `bnk_*` routines must be in common RAM.
 

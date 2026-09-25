@@ -22,7 +22,7 @@ https://github.com/xahmol/DMBoot
 #define HEADER_ROW_SUB      1
 #define SPINNER_ROW         3
 #define SPINNER_FRAMES      4
-#define CHR_REVSPACE        0xa0
+#define CHR_SPACE           0x20
 
 // Spinner animation (PETSCII graphics)
 static const char spinner[SPINNER_FRAMES] = { 0xbe, 0xbc, 0xac, 0xbb };
@@ -109,14 +109,17 @@ void headertext(const char *subtitle)
     char width = dwin_state.width;
     char versionlen = strlen(VERSION);
 
-    dwin_fill_rect(&screenwin, 0, HEADER_ROW_TITLE, width, 1, CHR_REVSPACE, cfg.colors.header1);
-    dwin_fill_rect(&screenwin, 0, HEADER_ROW_SUB, width, 1, CHR_REVSPACE, cfg.colors.header2);
-    dwin_putat_string_reverse(&screenwin, 0, HEADER_ROW_TITLE, HEADER_TITLE, cfg.colors.header1);
-    dwin_putat_string_reverse(&screenwin, 0, HEADER_ROW_SUB, subtitle, cfg.colors.header2);
+    // Fill with spaces, write the texts, then reverse both full lines
+    // (PETSCII $A0 is not a reverse space after conversion to screen codes)
+    dwin_fill_rect(&screenwin, 0, HEADER_ROW_TITLE, width, 1, CHR_SPACE, cfg.colors.header1);
+    dwin_fill_rect(&screenwin, 0, HEADER_ROW_SUB, width, 1, CHR_SPACE, cfg.colors.header2);
+    dwin_putat_string(&screenwin, 0, HEADER_ROW_TITLE, HEADER_TITLE, cfg.colors.header1);
+    dwin_putat_string(&screenwin, 0, HEADER_ROW_SUB, subtitle, cfg.colors.header2);
     if (versionlen < width)
     {
-        dwin_putat_string_reverse(&screenwin, width - versionlen, HEADER_ROW_SUB, VERSION, cfg.colors.header2);
+        dwin_putat_string(&screenwin, width - versionlen, HEADER_ROW_SUB, VERSION, cfg.colors.header2);
     }
+    dwin_reverse_rect(&screenwin, 0, HEADER_ROW_TITLE, width, 2);
 }
 
 // ---------------------------------------------------------------------------
