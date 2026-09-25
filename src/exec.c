@@ -47,6 +47,7 @@ C64 mode, FAST, BOOT) as in DMBoot v4 (branch legacy-cc65, src/ops.c).
 #define DOS_STATUS_NOTFOUND "82,"   // Ultimate: file not found (keep hunting)
 #define TEXT_MAX            81
 #define DEVICE_FORCED       8
+#define DELAY_SHOW_STATUS   2       // Seconds to show the path status
 #define DM_API_RUN64_MIN    2       // run64 needs API version > 1 (as DMBoot v4)
 #define DM_API_HSID_MIN     1       // set hyperspeed ID needs API version > 0
 
@@ -477,7 +478,22 @@ void runbootfrommenu(char select)
     }
     if (Slot.file[0] && Slot.path[0])
     {
-        cmd(Slot.device, Slot.path);
+        // Change to the program's directory; show the drive's reply and
+        // stop on an error instead of letting RUN fail later
+        char status = cmd(Slot.device, Slot.path);
+        if (cfg.verbose || status)
+        {
+            dwin_put_string(&console, "Path: ", cfg.colors.text);
+            dwin_put_string(&console, Slot.path, cfg.colors.text);
+            dwin_put_string(&console, " -> ", cfg.colors.text);
+            dwin_put_string(&console, DOSstatus, status ? cfg.colors.error : cfg.colors.ok);
+            dwin_put_char(&console, '\n', cfg.colors.text);
+        }
+        if (status)
+        {
+            errorexit("Changing to the program directory failed.");
+        }
+        delay(DELAY_SHOW_STATUS);
     }
     execute(Slot.file, Slot.device, Slot.runboot, Slot.cmd);
 }

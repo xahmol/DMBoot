@@ -19,6 +19,7 @@ void progress(const char *text);
 void asc2pet(char *dst, const char *src, unsigned dstsize);
 char dosCommand(char lfn, char device, char secaddr, const char *command);
 char cmd(char device, const char *command);
+void drive_root_reset(void);
 char menuslotkey(char slotnumber);
 char keytomenuslot(char key);
 bool isslotkey(char key);

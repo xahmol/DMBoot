@@ -303,6 +303,8 @@ bool dmb_startup(void)
         print_ascii_line("Ultimate: ", uii_data);
     }
 
+    drive_root_reset();
+
     if (!overlays_preload())
     {
         tm_message("Overlay load failed");

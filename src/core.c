@@ -305,6 +305,30 @@ char cmd(char device, const char *command)
     return dosCommand(DOS_COMMAND_CHANNEL, device, DOS_COMMAND_CHANNEL, command);
 }
 
+// v4 drive commands as raw PETSCII bytes, so no charmap can alter them.
+// $FF after "cd:" is what DMBoot v4 sent to go to the partition root.
+static const char cmd_cp11[]   = {0x43, 0x50, 0x31, 0x31, 0x00};       // "cp11"
+static const char cmd_cp0[]    = {0x43, 0x50, 0x30, 0x00};             // "cp0"
+static const char cmd_cdroot[] = {0x43, 0x44, 0x3a, 0xff, 0x00};       // "cd:" + $FF
+
+// ---------------------------------------------------------------------------
+// Title:       Reset the boot drive directories
+// Description: Same sequence as DMBoot v4: sets the root directory of the
+//              DMBoot partition (11) and of the main partition (0) of the
+//              boot drive, leaving partition 0 as the working partition.
+//              Slot paths of v4 assume this starting state.
+// Syntax:      void drive_root_reset(void);
+// Input:       None
+// Output:      None
+// ---------------------------------------------------------------------------
+void drive_root_reset(void)
+{
+    cmd(sysinfo.bootdevice, cmd_cp11);
+    cmd(sysinfo.bootdevice, cmd_cdroot);
+    cmd(sysinfo.bootdevice, cmd_cp0);
+    cmd(sysinfo.bootdevice, cmd_cdroot);
+}
+
 // ---------------------------------------------------------------------------
 // Title:       Slot number to key
 // Description: Returns the key (and label) of a slot: 0-9, then a-z.
