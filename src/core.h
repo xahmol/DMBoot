@@ -18,8 +18,6 @@ void delay(char seconds);
 void spinning(void);
 void headertext(const char *subtitle, char showtime);
 void progress(const char *text);
-void asc2pet(char *dst, const char *src, unsigned dstsize);
-void pet2asc(char *dst, const char *src, unsigned size);
 char dosCommand(char lfn, char device, char secaddr, const char *command);
 char cmd(char device, const char *command);
 void drive_root_reset(void);
@@ -43,6 +41,8 @@ char key_wait(void);
 
 #define DOS_STATUS_MAX      41      // DOS status message buffer
 extern char DOSstatus[DOS_STATUS_MAX];
+
+#include "petconv.h"
 
 #pragma compile("core.c")
 

@@ -20,6 +20,7 @@ capped at the slot area, success checks with UII_SUCCESS, C128 REU access.
 #include "dmpaths.h"
 #include "core.h"
 #include "fileio.h"
+#include "cfgdefaults.h"
 
 #pragma code(code)
 #pragma data(data)
@@ -200,26 +201,7 @@ void read_slotsfile(void)
 // ---------------------------------------------------------------------------
 void config_defaults(void)
 {
-    memset(&cfg, 0, sizeof(cfg));
-    cfg.version = CFGVERSION;
-    cfg.timeon = 1;
-    cfg.secondsfromutc = 7200;
-    cfg.verbose = VERBOSE_ON;
-    cfg.colors.background = VCOL_BLACK;
-    cfg.colors.border = VCOL_BLACK;
-    cfg.colors.header1 = VCOL_GREEN;
-    cfg.colors.header2 = VCOL_LT_GREEN;
-    cfg.colors.text = VCOL_YELLOW;
-    cfg.colors.text_input = VCOL_WHITE;
-    cfg.colors.key = VCOL_CYAN;
-    cfg.colors.diritem_normal = VCOL_WHITE;
-    cfg.colors.diritem_select = VCOL_CYAN;
-    cfg.colors.error = VCOL_LT_RED;
-    cfg.colors.ok = VCOL_LT_GREEN;
-    // Default NTP server as raw ASCII bytes ("pool.ntp.org"), charmap independent
-    static const char ntphost[] = { 0x70, 0x6f, 0x6f, 0x6c, 0x2e, 0x6e, 0x74, 0x70, 0x2e, 0x6f, 0x72, 0x67, 0x00 };
-    strncpy(cfg.host, ntphost, sizeof(cfg.host) - 1);
-    cfg.host[sizeof(cfg.host) - 1] = 0;
+    config_set_defaults(&cfg);
 }
 
 // ---------------------------------------------------------------------------
