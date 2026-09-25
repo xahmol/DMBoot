@@ -494,6 +494,16 @@ Each phase ends with a build, a deploy to hardware (`192.168.1.237`), a c64bridg
   - Open:
     - 40-column hardware test (user, weekend).
     - Freezing `OVERLAYSIZE`: the overlays are still Phase 0 dummies, so this moves to Phase 2 when the first real overlays exist.
+- **Phase 2: in progress.**
+  - Verified on the C128 (80 columns):
+    - The 36-slot menu.
+    - Slot start with path + command + RUN on the hyperspeed drive (`cd:/usb1/11/`, `print"cmd ok"`, `RUN"DMBTEST",U11` → `RUN OK`).
+    - The startup root reset `drive_root_reset()` (v4 sequence `cp11`, `cd:`+`$FF`, `cp0`, `cd:`+`$FF`).
+  - Slot paths follow v4:
+    - On SoftIEC/Ultimate drives, an absolute `cd:/usb1/...`.
+    - On other drives, `cd//...` relative to the partition root.
+  - Known cosmetic issue, same as v4: output of a user command starts on the command's own row and overwrites its tail. Probably because the screen editor echoes no CR after a line entered from the keyboard buffer (not investigated). Harmless.
+  - To test: the `runboot` flag combinations (mount, REU, Force 8, run64, FAST, BOOT), go 64, F7 exit.
 
 ## 13. Risks and verification items
 
