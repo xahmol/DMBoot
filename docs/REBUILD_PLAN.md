@@ -505,7 +505,11 @@ Each phase ends with a build, a deploy to hardware (`192.168.1.237`), a c64bridg
     - On SoftIEC/Ultimate drives, an absolute `cd:/usb1/...`.
     - On other drives, `cd//...` relative to the partition root.
   - Known cosmetic issue, same as v4: output of a user command starts on the command's own row and overwrites its tail. Probably because the screen editor echoes no CR after a line entered from the keyboard buffer (not investigated). Harmless.
-  - To test: the `runboot` flag combinations (mount, REU, Force 8, run64, FAST, BOOT), go 64, F7 exit.
+  - Verified with slots converted from the real v4 file (`tests/tools/convert_v4_slots.py`):
+    - Plain run from a disk image folder: 5 Tristam Island, 7 Risen f.oblivion.
+    - REU image load + run: U ZP/M+ (`/usb1/cpm/cpm.reu`).
+    - 8 GEOS128 Ramboot starts v4's `geosramboot`. That program then fails on image B: the v4 `DMBCFGFILE` has image B `GEOSAPP.D81` with an empty path, and the file is missing. v4 config issue. For Phase 5/6: an empty GEOS image path means `/usb*/11/`; warn about missing images.
+  - To test: Force 8, run64, FAST, BOOT, go 64, F7 exit; mount and demo mode need new test slots.
 
 ## 13. Risks and verification items
 
