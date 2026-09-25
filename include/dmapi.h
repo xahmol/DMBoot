@@ -44,6 +44,7 @@ void dm_query(struct DMApiInfo *info);
 bool dm_prepare_run64(const char *name, char device);
 unsigned dm_run64_address(void);
 unsigned dm_version(void);
+const char *dm_drivetype_name(char device);
 
 // Low-memory code functions
 __noinline void dm_api_getversion(void);

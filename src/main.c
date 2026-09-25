@@ -68,11 +68,11 @@ char overlay_active = OVERLAY_NONE;
 // Overlay stores (index = overlay number - 1), see docs/REBUILD_PLAN.md §4.
 // An empty name marks an overlay of a later phase.
 static const struct OverlayStore overlay_store[OVERLAY_COUNT] = {
-    { BNK_1_FULL, OVERLAY_STORE_BANK1_1, "dmbovl1" },   // 1 main menu
-    { BNK_1_FULL, OVERLAY_STORE_BANK1_2, "" },          // 2 slot editing (Phase 3)
-    { BNK_1_FULL, OVERLAY_STORE_BANK1_3, "" },          // 3 file browser (Phase 4)
-    { BNK_1_FULL, OVERLAY_STORE_BANK1_4, "" },          // 4 configuration (Phase 5)
-    { BNK_0_FULL, OVERLAY_STORE_BANK0_1, "dmbovl5" },   // 5 exec
+    { BNK_1_FULL, OVERLAY_STORE_BANK1_1, "dmbovl1", "main menu" },
+    { BNK_1_FULL, OVERLAY_STORE_BANK1_2, "",        "slot editing" },   // Phase 3
+    { BNK_1_FULL, OVERLAY_STORE_BANK1_3, "",        "file browser" },   // Phase 4
+    { BNK_1_FULL, OVERLAY_STORE_BANK1_4, "",        "configuration" },  // Phase 5
+    { BNK_0_FULL, OVERLAY_STORE_BANK0_1, "dmbovl5", "slot start" },
 };
 
 // Windows
@@ -145,7 +145,7 @@ bool overlays_preload(void)
 
         if (cfg.verbose)
         {
-            dwin_printf(&console, cfg.colors.text, "Loading overlay %u\n", index + 1);
+            dwin_printf(&console, cfg.colors.text, "Loading overlay %u: %s\n", index + 1, store->purpose);
         }
         else
         {
@@ -225,24 +225,48 @@ void print_ascii_line(const char *label, const char *ascii)
 }
 
 // ---------------------------------------------------------------------------
-// Title:       Show the Ultimate drives
-// Description: Prints the Ultimate's emulated drives (verbose mode).
+// Title:       Show the drives
+// Description: Prints the Ultimate devices (ID, power, type), whether IDs
+//              need manual power switching, and every active IEC ID with
+//              its drive type from the Device Manager ROM (verbose mode).
+//              Ultimate part as UBoot64-v2 main.c; the Device Manager
+//              drive types as DMBoot v4 (getDeviceType).
 // Syntax:      void print_devices(void);
-// Input:       None (uii_devinfo)
+// Input:       None (uii_devinfo, filled by uii_parse_deviceinfo; dminfo)
 // Output:      None
 // ---------------------------------------------------------------------------
 void print_devices(void)
 {
-    static const char *const names[4] = { "Drive A", "Drive B", "SoftIEC", "Printer" };
+    static const char *const names[UII_DEVINFO_COUNT] = { "Drive A", "Drive B", "SoftIEC", "Printer" };
+    char active[IEC_ID_COUNT];
 
-    for (char x = 0; x < 4; x++)
+    dwin_put_string(&console, "\nUltimate devices:\n", cfg.colors.text);
+    for (char x = 0; x < UII_DEVINFO_COUNT; x++)
     {
         if (uii_devinfo[x].exist)
         {
-            dwin_printf(&console, cfg.colors.text, "%s: ID %u, power %s\n", names[x],
-                        uii_devinfo[x].id, uii_devinfo[x].power ? "on" : "off");
+            dwin_printf(&console, cfg.colors.text, "%s: ID %2u, power %s %s\n", names[x],
+                        uii_devinfo[x].id, uii_devinfo[x].power ? "on " : "off",
+                        uii_device_type(uii_devinfo[x].type));
         }
     }
+
+    dwin_printf(&console, cfg.colors.text, "IDs needing manual power switching: %s\n",
+                iec_scan(active) ? "yes" : "no");
+    dwin_put_string(&console, "Active IEC IDs:", cfg.colors.text);
+    for (char x = 0; x < IEC_ID_COUNT; x++)
+    {
+        if (active[x])
+        {
+            char id = iec_index_to_id(x);
+            dwin_printf(&console, cfg.colors.text, " %u", id);
+            if (dminfo.present)
+            {
+                dwin_printf(&console, cfg.colors.text, "(%s)", dm_drivetype_name(id));
+            }
+        }
+    }
+    dwin_put_char(&console, '\n', cfg.colors.text);
 }
 
 // ---------------------------------------------------------------------------
@@ -329,10 +353,6 @@ bool dmb_startup(void)
     {
         errorexit("Reading the Ultimate drive info failed.");
     }
-    if (cfg.verbose)
-    {
-        print_devices();
-    }
 
     dm_query(&dminfo);
     if (cfg.verbose)
@@ -346,7 +366,17 @@ bool dmb_startup(void)
         {
             dwin_put_string(&console, "Device Manager API not found\n", cfg.colors.error);
         }
+        print_devices();
     }
+
+#ifdef TESTMODE
+    // Debug aid: keep the detection screen visible
+    if (cfg.verbose)
+    {
+        dwin_put_string(&console, "\nPress a key to continue.", cfg.colors.text);
+        key_wait();
+    }
+#endif
 
     tm_sync();
     return true;

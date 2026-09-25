@@ -237,6 +237,48 @@ void dm_query(struct DMApiInfo *info)
 }
 
 // ---------------------------------------------------------------------------
+// Title:       Device Manager drive type name
+// Description: Returns a short name for the drive at a device ID, asked
+//              from the Device Manager ROM. The hyperspeed drive is not
+//              asked but reported as SoftIEC, as DMBoot v4 did.
+// Syntax:      const char *dm_drivetype_name(char device);
+// Input:       device - IEC device ID (API must be present)
+// Output:      Drive type name (PETSCII), "?" for unknown codes
+// ---------------------------------------------------------------------------
+const char *dm_drivetype_name(char device)
+{
+    char type;
+
+    if (device == dminfo.hyperspeed_id)
+    {
+        return "SoftIEC";
+    }
+    type = dm_api_get_drivetype(device);
+    switch (type)
+    {
+    case DM_TYPE_NONE:        return "none";
+    case DM_TYPE_UII_A:       return "Ult A";
+    case DM_TYPE_UII_B:       return "Ult B";
+    case DM_TYPE_SD2IEC:      return "SD2IEC";
+    case DM_TYPE_MICROIEC:    return "uIEC";
+    case DM_TYPE_PRINTER:     return "printer";
+    case DM_TYPE_PLOTTER:     return "plotter";
+    case DM_TYPE_UII_SOFTIEC: return "SoftIEC";
+    case DM_TYPE_PI1541:      return "Pi1541";
+    case DM_TYPE_1540:        return "1540";
+    case DM_TYPE_1541:        return "1541";
+    case DM_TYPE_1570:        return "1570";
+    case DM_TYPE_1571:        return "1571";
+    case DM_TYPE_1581:        return "1581";
+    case DM_TYPE_CMD_RL:      return "CMD RL";
+    case DM_TYPE_CMD_HD:      return "CMD HD";
+    case DM_TYPE_CMD_FD:      return "CMD FD";
+    case DM_TYPE_CMD_RD:      return "CMD RD";
+    default:                  return "?";
+    }
+}
+
+// ---------------------------------------------------------------------------
 // Title:       Prepare a C64 mode start
 // Description: Stores the program name and device for dm_run64.
 // Syntax:      bool dm_prepare_run64(const char *name, char device);

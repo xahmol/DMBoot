@@ -11,8 +11,10 @@ https://github.com/xahmol/DMBoot
 #include <c64/cia.h>
 #include <c64/kernalio.h>
 #include "ultimate_common_lib.h"
+#include "ultimate_dos_lib.h"
 #include "ultimate_time_lib.h"
 #include "banking.h"
+#include "dmapi.h"
 #include "dualwin.h"
 #include "testmode.h"
 #include "core.h"
@@ -34,6 +36,13 @@ https://github.com/xahmol/DMBoot
 #define SLOT_KEYS_DIGITS    10
 #define PETSCII_ZERO        0x30
 #define PETSCII_LETTER_A    0x41    // Unshifted letter keys (a-z)
+// IEC scan results (iec_scan)
+#define IEC_OTHER           0x01    // A non-Ultimate device
+#define IEC_ULT_EXISTS      0x01
+#define IEC_ULT_POWERED     0x02
+#define IEC_ULT_SWITCHABLE  0x04
+#define UII_TYPE_SOFTIEC    0x0f    // uii_devinfo type: 0x00-0x02 are drives A/B
+
 #define PETSCII_SHIFT       0x80    // Added to a letter for its shifted (uppercase) code
 
 // Spinner animation (PETSCII graphics)
@@ -439,6 +448,138 @@ void drive_root_reset(void)
     cmd(sysinfo.bootdevice, cmd_cdroot);
     cmd(sysinfo.bootdevice, cmd_cp0);
     cmd(sysinfo.bootdevice, cmd_cdroot);
+}
+
+// ---------------------------------------------------------------------------
+// Title:       IEC scan index to device ID
+// Description: Converts an index of the IEC scan array to a device ID.
+// Syntax:      char iec_index_to_id(char index);
+// Input:       index - 0..IEC_ID_COUNT-1
+// Output:      Device ID (8-29, or 4 for the last index)
+// ---------------------------------------------------------------------------
+char iec_index_to_id(char index)
+{
+    return (index == IEC_ID_COUNT - 1) ? IEC_ID_PRINTER : IEC_ID_FIRST + index;
+}
+
+// ---------------------------------------------------------------------------
+// Title:       Is a device present
+// Description: Tests whether a device answers on an IEC device ID
+//              (LISTEN + secondary address, then the KERNAL status).
+// Syntax:      char iec_present(char id);
+// Input:       id - IEC device ID
+// Output:      1 = device present, 0 = no device
+// ---------------------------------------------------------------------------
+char iec_present(char id)
+{
+    __asm
+    {
+        lda id
+        ldy #0
+        sty $90
+        jsr $ffb1           // LISTEN
+        lda #$ff
+        jsr $ff93           // SECOND
+        lda $90
+        bpl iec_pres_active
+        jsr $ffae           // UNLSN
+        lda #0
+        sta accu
+        rts
+iec_pres_active:
+        jsr $ffae           // UNLSN
+        lda #1
+        sta accu
+        rts
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Title:       Ultimate device on an ID
+// Description: Looks up an ID in the Ultimate device info.
+// Syntax:      static char iec_ultimate_on_id(char id);
+// Input:       id - IEC device ID
+// Output:      0 = no Ultimate device, else bits: 0 exists, 1 powered,
+//              2 power switchable through the UCI (drive A/B)
+// ---------------------------------------------------------------------------
+static char iec_ultimate_on_id(char id)
+{
+    for (char x = 0; x < UII_DEVINFO_COUNT; x++)
+    {
+        if (uii_devinfo[x].exist && uii_devinfo[x].id == id)
+        {
+            return IEC_ULT_EXISTS |
+                   (uii_devinfo[x].power ? IEC_ULT_POWERED : 0) |
+                   ((uii_devinfo[x].type < UII_TYPE_SOFTIEC) ? IEC_ULT_SWITCHABLE : 0);
+        }
+    }
+    return 0;
+}
+
+// ---------------------------------------------------------------------------
+// Title:       Does a device answer
+// Description: Presence test for one ID. With the Device Manager API the
+//              ROM is asked (drive type not "none"; the hyperspeed drive
+//              always answers), else the bus is probed with iec_present.
+// Syntax:      static bool iec_device_answers(char id);
+// Input:       id - IEC device ID
+// Output:      true if a device is present
+// ---------------------------------------------------------------------------
+static bool iec_device_answers(char id)
+{
+    if (dminfo.present)
+    {
+        return id == dminfo.hyperspeed_id || dm_api_get_drivetype(id) != DM_TYPE_NONE;
+    }
+    return iec_present(id);
+}
+
+// ---------------------------------------------------------------------------
+// Title:       Scan the IEC bus
+// Description: Fills an array with the active devices on IDs 8-29 and 4,
+//              and tells whether any device needs manual power switching
+//              (for demo mode): a powered Ultimate device the UCI cannot
+//              switch, or any other device except on ID 8.
+//              Uses uii_devinfo and dminfo: call uii_parse_deviceinfo and
+//              dm_query first.
+//              As UBoot64-v2 CheckActiveIECdevices; fixed there: the
+//              result was overwritten per ID instead of accumulated.
+// Syntax:      bool iec_scan(char *active);
+// Input:       active - array of IEC_ID_COUNT bytes
+// Output:      true if manual power switching is needed; active[] per
+//              index: 0 = none, 1 = other device, else the Ultimate bits
+// ---------------------------------------------------------------------------
+bool iec_scan(char *active)
+{
+    bool manual = false;
+
+    for (char x = 0; x < IEC_ID_COUNT; x++)
+    {
+        char id = iec_index_to_id(x);
+        char ult = iec_ultimate_on_id(id);
+
+        active[x] = 0;
+        if (ult & IEC_ULT_POWERED)
+        {
+            active[x] = ult;
+            if (!(ult & IEC_ULT_SWITCHABLE))
+            {
+                manual = true;
+            }
+        }
+        // Not an Ultimate device, or one reported as off (the Device
+        // Manager hyperspeed drive answers although the Ultimate reports
+        // its SoftIEC drive as off): ask the bus
+        else if (iec_device_answers(id))
+        {
+            active[x] = IEC_OTHER;
+            if (id != IEC_ID_FIRST)
+            {
+                manual = true;
+            }
+        }
+    }
+    return manual;
 }
 
 // ---------------------------------------------------------------------------

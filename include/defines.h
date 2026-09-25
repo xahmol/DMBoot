@@ -112,6 +112,12 @@ BUT WITHOUT ANY WARRANTY. USE THEM AT YOUR OWN RISK!
 #define MAXHOSTLENGTH       81
 #define STORAGE_PATH_MAX    16      // e.g. "/usb*/11/"
 
+// IEC bus scan: IDs 8-30 plus the printer ID 4
+#define IEC_ID_FIRST        8
+#define IEC_ID_COUNT        23      // indexes 0-21 = IDs 8-29, index 22 = ID 4
+#define IEC_ID_PRINTER      4
+#define UII_DEVINFO_COUNT   4       // uii_devinfo[]: drive A, drive B, SoftIEC, printer
+
 // Slot command flags (SlotStruct.command)
 #define COMMAND_CMD         0x01    // Run the user command
 #define COMMAND_REU         0x02    // Load an REU image
@@ -223,6 +229,7 @@ struct OverlayStore
     char mmucr;             // MMU $FF00 value to reach the store (BNK_1_FULL / BNK_0_FULL)
     unsigned address;       // Start address of the store in that bank
     char name[OVERLAY_NAME_MAX]; // Overlay file name (without partition prefix)
+    const char *purpose;    // What the overlay contains (start-up messages)
 };
 
 // Machine / environment state detected at startup
