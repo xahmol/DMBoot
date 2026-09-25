@@ -10,6 +10,7 @@ https://github.com/xahmol/DMBoot
 #include <petscii.h>
 #include <c64/kernalio.h>
 #include <c128/mmu.h>
+#include <c128/vdc.h>
 #include "banking.h"
 
 // Low-memory code overlay: loaded once at $1300, stays resident in the
@@ -209,6 +210,103 @@ void bnk_memset(char cr, volatile char *p, char val, unsigned size)
     while (size > 0)
     {
         *p++ = val;
+        size--;
+    }
+    mmu.cr = old;
+}
+
+// Bytes per character in the ROM charset and in the VDC charset memory
+#define CHARSET_ROM_BYTES   8
+#define CHARSET_VDC_BYTES   16
+
+// ---------------------------------------------------------------------------
+// Title:       Banked copy to VDC memory
+// Description: Copies a block from any bank to VDC RAM, switching the MMU
+//              to the source configuration for every byte read.
+// Syntax:      void bnk_cpytovdc(unsigned vdcdest, char scr,
+//                                volatile char *sp, unsigned size);
+// Input:       vdcdest - destination address in VDC RAM
+//              scr     - MMU $FF00 value for the source
+//              sp      - source address
+//              size    - number of bytes to copy
+// Output:      None
+// ---------------------------------------------------------------------------
+void bnk_cpytovdc(unsigned vdcdest, char scr, volatile char *sp, unsigned size)
+{
+    char old = mmu.cr;
+    mmu.cr = BNK_DEFAULT;
+    vdc_mem_addr(vdcdest);
+
+    while (size > 0)
+    {
+        mmu.cr = scr;
+        char c = *sp++;
+        mmu.cr = BNK_DEFAULT;
+        vdc_write(c);
+        size--;
+    }
+    mmu.cr = old;
+}
+
+// ---------------------------------------------------------------------------
+// Title:       Banked copy from VDC memory
+// Description: Copies a block from VDC RAM to any bank, switching the MMU
+//              to the destination configuration for every byte written.
+// Syntax:      void bnk_cpyfromvdc(char dcr, volatile char *dp,
+//                                  unsigned vdcsrc, unsigned size);
+// Input:       dcr    - MMU $FF00 value for the destination
+//              dp     - destination address
+//              vdcsrc - source address in VDC RAM
+//              size   - number of bytes to copy
+// Output:      None
+// ---------------------------------------------------------------------------
+void bnk_cpyfromvdc(char dcr, volatile char *dp, unsigned vdcsrc, unsigned size)
+{
+    char old = mmu.cr;
+    while (size > 0)
+    {
+        mmu.cr = BNK_DEFAULT;
+        char c = vdc_mem_read_at(vdcsrc++);
+        mmu.cr = dcr;
+        *dp++ = c;
+        mmu.cr = BNK_DEFAULT;
+        size--;
+    }
+    mmu.cr = old;
+}
+
+// ---------------------------------------------------------------------------
+// Title:       Banked charset copy to VDC
+// Description: Copies character definitions of 8 bytes each (ROM or RAM
+//              charset format) into VDC charset memory, which uses 16 bytes
+//              per character; the 8 extra bytes are filled with zero.
+// Syntax:      void bnk_redef_charset(unsigned vdcdest, char scr,
+//                                     volatile char *sp, unsigned size);
+// Input:       vdcdest - VDC charset address to start at
+//              scr     - MMU $FF00 value for the source (e.g. BNK_CHARROM)
+//              sp      - source address of the 8-byte definitions
+//              size    - number of characters to copy
+// Output:      None
+// ---------------------------------------------------------------------------
+void bnk_redef_charset(unsigned vdcdest, char scr, volatile char *sp, unsigned size)
+{
+    char old = mmu.cr;
+    mmu.cr = BNK_DEFAULT;
+    vdc_mem_addr(vdcdest);
+
+    while (size > 0)
+    {
+        for (char i = 0; i < CHARSET_ROM_BYTES; i++)
+        {
+            mmu.cr = scr;
+            char c = *sp++;
+            mmu.cr = BNK_DEFAULT;
+            vdc_write(c);
+        }
+        for (char i = CHARSET_ROM_BYTES; i < CHARSET_VDC_BYTES; i++)
+        {
+            vdc_write(0);
+        }
         size--;
     }
     mmu.cr = old;

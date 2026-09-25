@@ -8,6 +8,8 @@ https://github.com/xahmol/DMBoot
 #include <stdio.h>
 #include <petscii.h>
 #include "defines.h"
+#include <c64/vic.h>
+#include "dualwin.h"
 #include "overlay1.h"
 
 #pragma overlay(dmbovl1, 2)
@@ -22,7 +24,7 @@ https://github.com/xahmol/DMBoot
 
 // ---------------------------------------------------------------------------
 // Title:       Overlay 1 self test
-// Description: Prints a message from inside overlay 1 and returns its
+// Description: Prints a message in the console window from inside overlay 1 and returns its
 //              signature, proving the overlay was copied into the load slot
 //              and its code runs.
 // Syntax:      char overlay1_selftest(void);
@@ -31,7 +33,7 @@ https://github.com/xahmol/DMBoot
 // ---------------------------------------------------------------------------
 char overlay1_selftest(void)
 {
-    printf("Overlay 1 running (stored in bank 1 RAM)\n");
+    dwin_printf(&console, VCOL_LT_GREEN, "Overlay 1 running (stored in bank 1 RAM)\n");
     return OVERLAY1_SIGNATURE;
 }
 

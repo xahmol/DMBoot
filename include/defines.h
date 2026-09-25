@@ -42,6 +42,7 @@ BUT WITHOUT ANY WARRANTY. USE THEM AT YOUR OWN RISK!
 #define BNK_0_IO        0x3e    // Bank 0, all RAM, I/O visible
 #define BNK_1_IO        0x7e    // Bank 1, all RAM, I/O visible
 #define BNK_DM_FUNCROM  0x2a    // External function ROM (Device Manager ROM) visible
+#define BNK_CHARROM     0x01    // Bank 0 with the character ROM at $D000 (no I/O)
 
 // MMU RAM configuration register ($D505 area, xmmu.rcr) values
 #define RCR_COMMON_8K_BOTTOM    0x06    // 8 KB common RAM at $0000-$1FFF
@@ -75,6 +76,10 @@ BUT WITHOUT ANY WARRANTY. USE THEM AT YOUR OWN RISK!
 #define OVERLAY_STORE_BANK1_3   0x9000
 #define OVERLAY_STORE_BANK1_4   0xb800
 #define OVERLAY_STORE_BANK0_1   0xc000
+
+// DualWin popup background storage (bank 1)
+#define WINDOW_STORE_BASE       0x2000
+#define WINDOW_STORE_SIZE       0x2000
 
 // Number of overlays (Phase 0 skeleton: 2 dummy overlays)
 #define OVERLAY_COUNT       2
@@ -139,5 +144,7 @@ struct DMApiInfo
 extern struct SystemInfo sysinfo;
 extern struct DMApiInfo dminfo;
 extern char overlay_active;
+struct DWin;
+extern struct DWin console;      // Scrolling message window (src/main.c)
 
 #endif // DEFINES_H

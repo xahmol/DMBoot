@@ -161,7 +161,7 @@ Rules:
 | 1 | `dmbovl1` | bank 1 `$4000` | Main menu: slot rendering (2×18 / 2 pages), `mainmenu`, `autobootcountdown`, `pickmenuslot` |
 | 2 | `dmbovl2` | bank 1 `$6800` | Slot editing: rename, reorder, delete, user command, default slot |
 | 3 | `dmbovl3` | bank 1 `$9000` | File browser (IEC mode only, dirtrace, REU listing, sort, paging) |
-| 4 | `dmbovl4` | bank 1 `$B800` | Configuration (NTP, verbose, timeout, colour palettes, GEOS settings), NTP time sync, information/credits, splash |
+| 4 | `dmbovl4` | bank 1 `$B800` | Configuration (NTP, verbose, timeout, colour palette, GEOS settings), NTP time sync, information/credits, splash |
 | 5 | `dmbovl5` | bank 0 `$C000` | Exec: `runbootfrommenu`, mount/REU load with USB reroute, `execute()` keyboard-buffer build, `go 64`, GEOS boot preparation |
 
 ### 4.2 Pragmas (per overlay source file)
@@ -243,7 +243,7 @@ library is created in Phase 1, before any UI screens are ported.
   - VDC: `vdc_core` + `vdc_win` (VDCSE suite, banking variant).
   - VIC: a small CharWin-style implementation on `$0400`/`$D800`, taken from UBoot64 `cw` usage.
   - Selected through a mode variable with simple `if` dispatch, not function pointers (Oscar64 optimisation rule).
-- **Two colour palettes** in `ConfigStruct` (VIC and VDC colour numbers mean different colours). The colour editor edits the palette for the active mode.
+- **One logical colour palette** in `ConfigStruct` (C64/VIC colour numbers). *Changed in Phase 1:* DualWin maps logical colours to VDC colours through an overridable table (`dwin_vdc_colors[]`), so one palette serves both screens (see `DUALWINMANUAL.md`).
 - **Layouts:**
   - Main menu: 80 columns uses 2 columns × 18 slots. 40 columns uses 1 column × 18 slots with 2 pages (cursor left/right or `,`/`.` to switch; slot keys `0`–`z` work regardless of the visible page).
   - Browser: 80 columns uses the v4 two-column listing. 40 columns uses one column.
@@ -361,7 +361,7 @@ The findings go into `CLAUDE.md`.
 
 **`ConfigStruct`:**
 - `version`, `timeon`, `host[81]`, `secondsfromutc` (long), `verbose`, `timeoutidx`
-- `colors_vic`, `colors_vdc`
+- `colors` (one logical palette, C64/VIC colour numbers)
 - GEOS RAM boot: `geos_reu_path[256]`, `geos_reu_image[51]`, `geos_reusize`, `geos_image_a/b_path/file/id`
 - `iec_root_partition` (reserved, 0)
 - `reserved[16]` (zero)
@@ -406,7 +406,7 @@ Standalone `c128e` PRG (uses `bank_minimal` + UCI library), placed in `/usb*/11/
    - Menu name 20 → 30.
    - Zero the padding.
    - `partition = 0`, `isdefault = 0`.
-4. Build the ConfigStruct: NTP/GEOS fields from the old file, default palettes, `verbose = 1`.
+4. Build the ConfigStruct: NTP/GEOS fields from the old file, default palette, `verbose = 1`.
 5. Write `dmbslots.cfg` / `dmbconf.cfg` in 500 B UCI chunks. Leave the old files untouched as a backup.
 6. v5 behaviour when the new files are missing but `dmbootconf` exists: show "run dmbupd45 first" instead of silently creating empty defaults.
 
@@ -433,7 +433,7 @@ UBoot64 v1 was itself a port of DMBoot, so this table covers everything UBoot64 
 | 2.0.0 | Oscar64 rebuild | ✅ This plan |
 | 2.0.0 | Directory listing in REU (large directories) | ✅ §3.5, overlay 3 |
 | 2.0.0 | Long filenames (50) and paths (255) | ✅ SlotStruct §8. **Note for IEC-only browsing:** long *paths* (deep directory trees, up to 255 characters in total) are the real gain. *Filenames* shown through the IEC directory listing are limited to 16 characters by the CBM directory format. The 51-character fields cost nothing in the REU and are kept for the 3.15 layout. |
-| 2.0.0 | Configurable colour scheme | ✅ Adapted: separate VIC and VDC palettes, editor edits the active mode's palette |
+| 2.0.0 | Configurable colour scheme | ✅ One logical palette (C64/VIC colour numbers), shown on the VDC through DualWin's colour mapping |
 | 2.0.0 | Verbose or silent (spinner) startup | ✅ Covers overlay preloading, REU detect, config/slot load, NTP |
 | 2.0.0 | Splash screen in Information | ✅ Adapted: **simple text logo built in code** for v5.0.0, laid out for both 40×25 and 80×25, shown with F2 (and optionally at startup in silent mode), in overlay 4. The splash is kept behind one function so PETSCII art (40×25 VIC + 80×25 VDC) can replace it later without other changes. |
 | 2.0.0 | Configuration upgrade tool | ✅ `dmbupd45.prg` §10 |
@@ -482,7 +482,7 @@ Each phase ends with a build, a deploy to hardware (`192.168.1.237`), a c64bridg
 | **2. Menu + exec** | Overlays 1 and 5: 36-slot menu (2×18 / 2 pages), slot run with mount/reroute/REU-last, Force 8, run64, FAST, BOOT, commands, go 64, F7 exit with MMU restore. | Every `runboot` flag combination boots correctly. After a slot's REU image load, nothing returns to the menu. |
 | **3. Edit** | Overlay 2 + autoboot countdown | Rename, reorder, delete, command, default slot and timeout work. |
 | **4. File browser** | Overlay 3: IEC mode only, dirtrace, REU listing, sort, paging, selection → `pickmenuslot`, hyperspeed start device | Large directories (300+ entries) work. All add-to-slot paths produce slots that boot. |
-| **5. Config + GEOS + info** | Overlay 4 + GEOS F6 from LMC trampoline | NTP sync, palettes per mode, GEOS boots from REU image. |
+| **5. Config + GEOS + info** | Overlay 4 + GEOS F6 from LMC trampoline | NTP sync, colour palette in both modes, GEOS boots from REU image. |
 | **6. Upgrade tool** | `dmbupd45.prg` | Real v4 config files convert with no loss (compare field by field). |
 | **7. Docs + release** | README (v5 changelog, install, upgrade from v4, REU usage note, 3.15 status), ARCHITECTURE.md, CLAUDE.md, README.pdf, ZIP | `make all` produces the release ZIP. Docs match the code. |
 

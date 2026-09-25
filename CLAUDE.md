@@ -10,7 +10,7 @@ DMBoot 128 v5: boot menu / file browser for the Commodore 128, being rebuilt fro
 
 Sibling/reference projects (all by the same author): UBoot64-v2 (`/home/xahmol/git/UBoot64-v2`, C64 cartridge version of the same boot menu: **prefer its routines over v4 legacy code**), VDC Screen Editor 2 (`/home/xahmol/VDCScreenEditor2`, overlay/banking/VDC library pattern), vdcmaniac (`/home/xahmol/git/vdcmaniac`).
 
-This is an Oscar64 project: use `oscar64manual.md` as the compiler reference (see the global instructions for keeping it updated). Other references in the repo root: `UCILIBMANUAL.md` (Ultimate Command Interface library), `vdclib_manual.md` (VDC library suite).
+This is an Oscar64 project: use `oscar64manual.md` as the compiler reference (see the global instructions for keeping it updated). The 40/80 column screen layer is the project's own **DualWin** library (`include/dualwin.c/h`, manual `DUALWINMANUAL.md`): all UI output goes through `dwin_*`, never `printf` after start-up. Other references in the repo root: `UCILIBMANUAL.md` (Ultimate Command Interface library), `vdclib_manual.md` (VDC library suite).
 
 ## Build, deploy, test
 
@@ -42,6 +42,7 @@ make docs / zip / clean
 - **LMC:** the `bnk_*` banked access routines and the Device Manager ROM API (`dmapi.c`). The API runs with `$FF00 = $2A`, where only RAM below `$8000` is visible, so those routines must not touch memory at `$8000` or above.
 - **REU:** required (at least 128 KB). All DMA goes through `reu128_load`/`reu128_store`, which drop to 1 MHz. Size detection uses the probe barrier.
 - **UCI library** in `include/ultimate_*`, taken from UBoot64-v2.
+- **VDC library suite** copy in `include/vdc_core.*`/`vdc_win.*` (from VDC Screen Editor 2). It has local bug fixes (`vdc_hchar` length 1, `vdcwin_put_rect_raw`); see DUALWINMANUAL.md §9.
 
 ## Code conventions (mandatory)
 

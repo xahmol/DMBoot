@@ -82,7 +82,11 @@ MAIN_SRCS = src/main.c \
             include/banking.c include/banking.h \
             include/dmapi.c include/dmapi.h \
             include/reu128.c include/reu128.h \
-            include/testmode.c include/testmode.h
+            include/testmode.c include/testmode.h \
+            include/dualwin.c include/dualwin.h \
+            include/vdc_core.c include/vdc_core.h \
+            include/vdc_win.c include/vdc_win.h include/vdcwin_types.h \
+            include/peekpoke.h
 
 # Files to deploy / ship
 BUILD_PRGS = build/$(AUTOSTART) build/$(LMC).prg $(addprefix build/,$(addsuffix .prg,$(OVERLAYS)))

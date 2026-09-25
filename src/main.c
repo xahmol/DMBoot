@@ -32,7 +32,9 @@ bank 0 under ROM, REU DMA at 2 MHz, Device Manager API, test mailbox).
 #include <conio.h>
 #include <petscii.h>
 #include <c64/reu.h>
+#include <c64/vic.h>
 #include "defines.h"
+#include "dualwin.h"
 #include "banking.h"
 #include "dmapi.h"
 #include "reu128.h"
@@ -49,6 +51,8 @@ bank 0 under ROM, REU DMA at 2 MHz, Device Manager API, test mailbox).
 #define KEY_REUTEST_SAFE    0x52    // 'R'
 #define KEY_REUTEST_UNSAFE  0x55    // 'U'
 #define KEY_EXIT            0x58    // 'X'
+#define KEY_POPUP           0x50    // 'P'
+#define KEY_INPUT           0x49    // 'I'
 
 // Screen control characters (KERNAL CHROUT)
 #define CHR_LOWERCASE       0x0e    // Switch to the lower/upper case charset
@@ -58,6 +62,23 @@ bank 0 under ROM, REU DMA at 2 MHz, Device Manager API, test mailbox).
 #define REUTEST_ITERATIONS  32
 #define REUTEST_REU_BASE    0x10000UL   // Directory heap area, unused in Phase 0
 #define REUTEST_SEED        0x5a
+
+// Screen layout of the Phase 0 test screen
+#define TITLE_ROW           0
+#define STATUS_ROW          2
+#define STATUS_HEIGHT       6
+#define CONSOLE_ROW         9
+#define POPUP_WIDTH         30
+#define POPUP_HEIGHT        7
+#define INPUT_BUFFER_SIZE   31      // 30 characters plus terminator
+#define INPUT_FIELD_WIDTH   20
+
+// Logical colours of the test screen (C64/VIC colour numbers)
+#define COLOR_TITLE         VCOL_YELLOW
+#define COLOR_TEXT          VCOL_LT_BLUE
+#define COLOR_KEY           VCOL_WHITE
+#define COLOR_OK            VCOL_LT_GREEN
+#define COLOR_ERROR         VCOL_LT_RED
 
 // Global state
 struct SystemInfo sysinfo;
@@ -73,6 +94,14 @@ static const struct OverlayStore overlay_store[OVERLAY_COUNT] = {
 
 // Test buffer for the REU round trip (bank 0, resident BSS)
 static char reutest_buffer[REUTEST_BLOCK_SIZE];
+
+// Windows of the test screen
+static struct DWin screen;
+static struct DWin status;
+struct DWin console;
+
+// Text edited by the input test
+static char input_text[INPUT_BUFFER_SIZE] = "Edit me";
 
 // ---------------------------------------------------------------------------
 // Title:       Poll keyboard
@@ -302,34 +331,122 @@ void reutest(char key, bool safe)
 
     cpu_set_fast(previous_fast);
 
-    printf("REU test (%s): %u passed, %u failed\n", safe ? "1 MHz DMA" : "DMA at 2 MHz", passes, failures);
+    dwin_printf(&console, failures ? COLOR_ERROR : COLOR_OK, "REU test (%s): %u passed, %u failed\n",
+                safe ? "1 MHz DMA" : "DMA at 2 MHz", passes, failures);
     tm_set_test(key, failures ? TM_RESULT_FAIL : TM_RESULT_PASS, passes, failures);
 }
 
 // ---------------------------------------------------------------------------
+// Title:       Set up the test screen
+// Description: Initialises DualWin and draws the fixed parts of the Phase 0
+//              test screen: title, status window and console window.
+// Syntax:      void screen_setup(void);
+// Input:       None
+// Output:      None
+// ---------------------------------------------------------------------------
+void screen_setup(void)
+{
+    dwin_setup(BNK_1_FULL, (char *)WINDOW_STORE_BASE, WINDOW_STORE_SIZE);
+    dwin_screen_colors(VCOL_BLACK, VCOL_BLACK);
+
+    dwin_init(&screen, 0, 0, 0, 0);
+    dwin_clear(&screen);
+    dwin_putat_string_reverse(&screen, 0, TITLE_ROW, " DMBoot 128 - Phase 0 skeleton ", COLOR_TITLE);
+    dwin_putat_string(&screen, 0, TITLE_ROW + 1, VERSION, COLOR_TEXT);
+
+    dwin_init(&status, 0, STATUS_ROW, 0, STATUS_HEIGHT);
+    dwin_init(&console, 0, CONSOLE_ROW, 0, 0);
+}
+
+// ---------------------------------------------------------------------------
 // Title:       Print status
-// Description: Prints the detected system state and the test menu.
+// Description: Redraws the status window with the detected system state
+//              and the test menu keys.
 // Syntax:      void print_status(void);
 // Input:       None
 // Output:      None
 // ---------------------------------------------------------------------------
 void print_status(void)
 {
-    printf("\nDMBoot 128 %s - Phase 0 skeleton\n", VERSION);
-    printf("Boot device %u, %u columns, %s\n", sysinfo.bootdevice,
-           sysinfo.mode80 ? 80 : 40, sysinfo.fast ? "2 MHz" : "1 MHz");
-    printf("REU %u KB, overlay disk loads %u, active overlay %u\n",
-           sysinfo.reupages * 64, sysinfo.diskloads, overlay_active);
+    dwin_clear(&status);
+    dwin_printf(&status, COLOR_TEXT, "Boot device %u, %u columns, %s\n", sysinfo.bootdevice,
+                dwin_is80() ? 80 : 40, sysinfo.fast ? "2 MHz" : "1 MHz");
+    dwin_printf(&status, COLOR_TEXT, "REU %u KB, overlay disk loads %u, active overlay %u\n",
+                sysinfo.reupages * 64, sysinfo.diskloads, overlay_active);
     if (dminfo.present)
     {
-        printf("DM API v%u.%u, hyperspeed ID %u\n",
-               dminfo.version_major, dminfo.version_minor, dminfo.hyperspeed_id);
+        dwin_printf(&status, COLOR_TEXT, "DM API v%u.%u, hyperspeed ID %u\n",
+                    dminfo.version_major, dminfo.version_minor, dminfo.hyperspeed_id);
     }
     else
     {
-        printf("DM API not found\n");
+        dwin_printf(&status, COLOR_ERROR, "DM API not found\n");
     }
-    printf("1/2: Overlay  R: REU test  U: REU test with 2 MHz DMA  X: Exit\n");
+    dwin_put_string(&status, "1/2: Overlay  R/U: REU test (1 MHz / 2 MHz DMA)\n", COLOR_KEY);
+    dwin_put_string(&status, "P: Popup  I: Input  X: Exit", COLOR_KEY);
+}
+
+// ---------------------------------------------------------------------------
+// Title:       Popup test
+// Description: Opens a popup over the screen, waits for a key and closes
+//              it again, which must restore the screen underneath.
+// Syntax:      void popup_test(void);
+// Input:       None
+// Output:      None
+// ---------------------------------------------------------------------------
+void popup_test(void)
+{
+    struct DWin popup;
+    char x = (dwin_state.width - POPUP_WIDTH) / 2;
+
+    if (!dwin_popup_open(&popup, x, STATUS_ROW + 1, POPUP_WIDTH, POPUP_HEIGHT, COLOR_TITLE, COLOR_TEXT))
+    {
+        dwin_put_string(&console, "Popup could not be opened\n", COLOR_ERROR);
+        return;
+    }
+
+    dwin_putat_string(&popup, 1, 1, "DualWin popup test", COLOR_TITLE);
+    dwin_putat_string(&popup, 1, 3, "Press a key to close", COLOR_TEXT);
+    key_wait();
+    dwin_popup_close();
+    dwin_put_string(&console, "Popup closed\n", COLOR_OK);
+}
+
+// ---------------------------------------------------------------------------
+// Title:       Input test
+// Description: Lets the user edit a text in a popup with dwin_input and
+//              shows the result in the console.
+// Syntax:      void input_test(void);
+// Input:       None
+// Output:      None
+// ---------------------------------------------------------------------------
+void input_test(void)
+{
+    struct DWin popup;
+    char x = (dwin_state.width - POPUP_WIDTH) / 2;
+
+    if (!dwin_popup_open(&popup, x, STATUS_ROW + 1, POPUP_WIDTH, POPUP_HEIGHT, COLOR_TITLE, COLOR_TEXT))
+    {
+        dwin_put_string(&console, "Popup could not be opened\n", COLOR_ERROR);
+        return;
+    }
+
+    dwin_putat_string(&popup, 1, 1, "Edit the text:", COLOR_TEXT);
+    tm_set_idle(1);
+    int result = dwin_input(&popup, 1, 3, input_text, sizeof(input_text), INPUT_FIELD_WIDTH, COLOR_KEY);
+    tm_set_idle(0);
+    dwin_popup_close();
+
+    if (result == DWIN_INPUT_CANCEL)
+    {
+        dwin_put_string(&console, "Input cancelled\n", COLOR_ERROR);
+    }
+    else
+    {
+        dwin_put_string(&console, "Input: ", COLOR_OK);
+        dwin_put_string(&console, input_text, COLOR_KEY);
+        dwin_put_char(&console, '\n', COLOR_OK);
+    }
 }
 
 // ---------------------------------------------------------------------------
@@ -391,6 +508,7 @@ int main(void)
         return 1;
     }
 
+    screen_setup();
     tm_set_screen(TM_SCREEN_MAINMENU);
     tm_message("Ready");
     print_status();
@@ -416,6 +534,14 @@ int main(void)
 
         case KEY_REUTEST_UNSAFE:
             reutest(key, false);
+            break;
+
+        case KEY_POPUP:
+            popup_test();
+            break;
+
+        case KEY_INPUT:
+            input_test();
             break;
 
         default:

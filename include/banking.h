@@ -16,6 +16,12 @@ they keep running while any bank is switched in.
 
 #include "defines.h"
 
+// Scroll directions, expected by the VDC library suite (vdc_win.c)
+#define SCROLL_LEFT     0x01
+#define SCROLL_RIGHT    0x02
+#define SCROLL_DOWN     0x04
+#define SCROLL_UP       0x08
+
 // Resident functions (main program region)
 char getcurrentdevice(void);
 bool load_overlay(const char *fname);
@@ -27,6 +33,9 @@ __noinline char bnk_readb(char cr, volatile char *p);
 __noinline void bnk_writeb(char cr, volatile char *p, char b);
 __noinline void bnk_memcpy(char dcr, volatile char *dp, char scr, volatile char *sp, unsigned size);
 __noinline void bnk_memset(char cr, volatile char *p, char val, unsigned size);
+__noinline void bnk_cpytovdc(unsigned vdcdest, char scr, volatile char *sp, unsigned size);
+__noinline void bnk_cpyfromvdc(char dcr, volatile char *dp, unsigned vdcsrc, unsigned size);
+__noinline void bnk_redef_charset(unsigned vdcdest, char scr, volatile char *sp, unsigned size);
 
 #pragma compile("banking.c")
 
