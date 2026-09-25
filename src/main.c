@@ -385,10 +385,13 @@ void not_yet_available(const char *what)
 // ---------------------------------------------------------------------------
 int main(void)
 {
+    dmb_zp_save();
+    dmb_fkeys_raw();
+
     if (!dmb_startup())
     {
         bnk_exit();
-        return 1;
+        dmb_exit();
     }
 
     while (true)

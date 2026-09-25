@@ -12,6 +12,8 @@ https://github.com/xahmol/DMBoot
 
 void errorexit(const char *message);
 void dmb_exit(void);
+void dmb_zp_save(void);
+void dmb_fkeys_raw(void);
 void delay(char seconds);
 void spinning(void);
 void headertext(const char *subtitle, char showtime);
