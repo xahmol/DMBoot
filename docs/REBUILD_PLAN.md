@@ -530,6 +530,12 @@ Each phase ends with a build, a deploy to hardware (`192.168.1.237`), a c64bridg
   - Dirtrace off: RETURN/F5/`6` start directly (request in `browsereq`, started by overlay 5 `exec_browse`). Dirtrace on: the choice goes to a slot (`browse_pick`, as UBoot64 `pickmenuslot`).
   - Mounts, run-from-image and REU images need the dirtrace on the SoftIEC/hyperspeed drive, because slots store them as Ultimate paths (`/` + trace, PETSCII to ASCII).
   - UBoot64 bug not carried over: block counts were stored in a `char` (sizes shown modulo 256).
+- **Phase 5: implemented except the GEOS RAM boot (F6), not yet hardware-tested.** Overlay 4 `config.c` (4.7 KB):
+  - NTP time sync at start-up (after the drive detection, before the optional key wait), as UBoot64 `get_ntp_time`; the converted time is kept in a static buffer (UBoot64 returned a pointer to a local array).
+  - Configuration (main menu F4): NTP on/off, start-up feedback (silent / show messages / show messages + wait), UTC offset (validated, ±14 h), auto-boot timeout, NTP server (stored in ASCII, edited in PETSCII), colour editor with live preview and undo from a copy taken on entry.
+  - Information (main menu F2): text logo (one function, replaceable by PETSCII art), version, Ultimate/REU/DM API info, credits.
+  - `pet2asc` moved to the resident `core.c` (browser and configuration use it).
+  - Still open in Phase 5: GEOS RAM boot (F6) with the LMC trampoline and its settings.
 
 ## 13. Risks and verification items
 

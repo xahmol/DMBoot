@@ -46,6 +46,7 @@ bank 0 under ROM, REU DMA at 2 MHz, Device Manager API, test mailbox).
 #include "slotmenu.h"
 #include "slotedit.h"
 #include "browse.h"
+#include "config.h"
 #include "exec.h"
 
 // Resident program region: everything below the overlay load slot
@@ -74,7 +75,7 @@ static const struct OverlayStore overlay_store[OVERLAY_COUNT] = {
     { BNK_1_FULL, OVERLAY_STORE_BANK1_1, "dmbovl1", "main menu" },
     { BNK_1_FULL, OVERLAY_STORE_BANK1_2, "dmbovl2", "slot editing" },
     { BNK_1_FULL, OVERLAY_STORE_BANK1_3, "dmbovl3", "file browser" },
-    { BNK_1_FULL, OVERLAY_STORE_BANK1_4, "",        "configuration" },  // Phase 5
+    { BNK_1_FULL, OVERLAY_STORE_BANK1_4, "dmbovl4", "configuration" },
     { BNK_0_FULL, OVERLAY_STORE_BANK0_1, "dmbovl5", "slot start" },
 };
 
@@ -384,6 +385,14 @@ bool dmb_startup(void)
         print_devices();
     }
 
+
+    // Time from an NTP server (overlay 4), after all detection output
+    if (cfg.timeon)
+    {
+        loadoverlay(OVERLAY_CONFIG);
+        ntp_update();
+    }
+
     // Keep the start-up messages on screen until a key is pressed
     if (cfg.verbose == VERBOSE_WAIT)
     {
@@ -460,14 +469,16 @@ int main(void)
             }
             break;
         case KEY_F2:
-            not_yet_available("Information");
+            loadoverlay(OVERLAY_CONFIG);
+            information();
             break;
         case KEY_F3:
             loadoverlay(OVERLAY_EDIT);
             slotedit();
             break;
         case KEY_F4:
-            not_yet_available("Configuration");
+            loadoverlay(OVERLAY_CONFIG);
+            config_edit();
             break;
         case KEY_F5:
             loadoverlay(OVERLAY_EXEC);

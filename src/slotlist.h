@@ -26,6 +26,8 @@ other, so this lives in the resident program.
 
 // Key codes
 #define KEY_STOP            0x03
+#define KEY_DEL             0x14
+#define KEY_HOME            0x13
 #define KEY_CURSOR_DOWN     0x11
 #define KEY_CURSOR_UP       0x91
 #define KEY_CURSOR_LEFT     0x9d

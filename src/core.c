@@ -356,6 +356,40 @@ void asc2pet(char *dst, const char *src, unsigned dstsize)
 char DOSstatus[DOS_STATUS_MAX];
 
 // ---------------------------------------------------------------------------
+// Title:       PETSCII to ASCII
+// Description: Converts a PETSCII name or path (lower case charset) to
+//              ASCII for the Ultimate file system (UCI).
+// Syntax:      void pet2asc(char *dst, const char *src, unsigned size);
+// Input:       dst  - destination
+//              src  - PETSCII string
+//              size - size of dst
+// Output:      dst
+// ---------------------------------------------------------------------------
+void pet2asc(char *dst, const char *src, unsigned size)
+{
+    unsigned i = 0;
+
+    if (!size)
+    {
+        return;
+    }
+    while (i < size - 1 && src[i])
+    {
+        char c = src[i];
+        if (c >= 0x41 && c <= 0x5a)
+        {
+            c += 0x20;
+        }
+        else if (c >= 0xc1 && c <= 0xda)
+        {
+            c -= 0x80;
+        }
+        dst[i++] = c;
+    }
+    dst[i] = 0;
+}
+
+// ---------------------------------------------------------------------------
 // Title:       Send a DOS command
 // Description: Opens a channel with a command (or file name), reads the
 //              drive status from the command channel and closes again.

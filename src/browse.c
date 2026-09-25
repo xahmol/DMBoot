@@ -93,8 +93,6 @@ Code and resources from others used:
 #define PICK_REU            6       // Add an REU image
 
 // Keys
-#define KEY_DEL             0x14
-#define KEY_HOME            0x13
 #define KEY_UPARROW         0x5e
 #define REU_SIZES           8
 
@@ -807,37 +805,6 @@ static char browse_imagekind(const char *name)
         return IMAGE_REU;
     }
     return IMAGE_NONE;
-}
-
-// ---------------------------------------------------------------------------
-// Title:       PETSCII to ASCII
-// Description: Converts a PETSCII name or path (lower case charset) to
-//              ASCII for the Ultimate file system (UCI).
-// Syntax:      static void pet2asc(char *dst, const char *src,
-//                                  unsigned size);
-// Input:       dst  - destination
-//              src  - PETSCII string
-//              size - size of dst
-// Output:      dst
-// ---------------------------------------------------------------------------
-static void pet2asc(char *dst, const char *src, unsigned size)
-{
-    unsigned i = 0;
-
-    while (i < size - 1 && src[i])
-    {
-        char c = src[i];
-        if (c >= 0x41 && c <= 0x5a)
-        {
-            c += 0x20;
-        }
-        else if (c >= 0xc1 && c <= 0xda)
-        {
-            c -= 0x80;
-        }
-        dst[i++] = c;
-    }
-    dst[i] = 0;
 }
 
 // ---------------------------------------------------------------------------

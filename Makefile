@@ -43,7 +43,7 @@ CC = /home/xahmol/oscar64/bin/oscar64
 MAIN = dmboot
 AUTOSTART = autostart.128.prg
 LMC = dmblmc
-OVERLAYS = dmbovl1 dmbovl2 dmbovl3 dmbovl5
+OVERLAYS = dmbovl1 dmbovl2 dmbovl3 dmbovl4 dmbovl5
 
 # Build versioning
 VERSION_MAJOR = 5
@@ -80,6 +80,7 @@ MAIN_SRCS = src/main.c \
             src/slotlist.c src/slotlist.h \
             src/slotedit.c src/slotedit.h \
             src/browse.c src/browse.h \
+            src/config.c src/config.h \
             src/exec.c src/exec.h \
             src/dmpaths.c src/dmpaths.h \
             src/core.c src/core.h \
@@ -87,6 +88,7 @@ MAIN_SRCS = src/main.c \
             include/ultimate_common_lib.c include/ultimate_common_lib.h \
             include/ultimate_dos_lib.c include/ultimate_dos_lib.h \
             include/ultimate_time_lib.c include/ultimate_time_lib.h \
+            include/ultimate_network_lib.c include/ultimate_network_lib.h \
             include/defines.h \
             include/banking.c include/banking.h \
             include/dmapi.c include/dmapi.h \
