@@ -512,10 +512,11 @@ void runbootfrommenu(char select)
     {
         execute(Slot.file, Slot.image_a_id, Slot.runboot, Slot.cmd);
     }
-    if (Slot.file[0] && Slot.path[0])
+    if (Slot.path[0])
     {
-        // Change to the program's directory; show the drive's reply and
-        // stop on an error instead of letting RUN fail later
+        // Change to the program's directory (as v4: also for BOOT slots,
+        // which have no file name); show the drive's reply and stop on an
+        // error instead of letting RUN or BOOT fail later
         char status = cmd(Slot.device, Slot.path);
         if (cfg.verbose || status)
         {
