@@ -18,11 +18,14 @@ Usage: convert_v4_slots.py v4file out.cfg [--keep v5file src:dst ...]
 import argparse
 
 V4_STRIDE = 512
-V4_FIELDS = [("path", 100), ("menu", 21), ("file", 20), ("cmd", 80),
-             ("reu_image", 20), ("reusize", 1), ("runboot", 1), ("device", 1),
-             ("command", 1), ("cfgvs", 1), ("image_a_path", 100),
-             ("image_a_file", 20), ("image_a_id", 1), ("image_b_path", 100),
-             ("image_b_file", 20), ("image_b_id", 1)]
+V4_PAGE = 256
+# v4 stores a slot as two 256-byte pages (getslotfromem in v4 bootmenu.c):
+# page 1 holds path..cfgvs, page 2 the image fields.
+V4_PAGE1 = [("path", 100), ("menu", 21), ("file", 20), ("cmd", 80),
+            ("reu_image", 20), ("reusize", 1), ("runboot", 1), ("device", 1),
+            ("command", 1), ("cfgvs", 1)]
+V4_PAGE2 = [("image_a_path", 100), ("image_a_file", 20), ("image_a_id", 1),
+            ("image_b_path", 100), ("image_b_file", 20), ("image_b_id", 1)]
 
 SLOTS = 36
 SLOTSIZE = 1360
@@ -64,11 +67,12 @@ def strip_cd(raw):
 
 def parse_v4(data, slot):
     raw = data[slot * V4_STRIDE:(slot + 1) * V4_STRIDE]
-    fields, offset = {}, 0
-    for name, size in V4_FIELDS:
-        value = raw[offset:offset + size]
-        fields[name] = value[0] if size == 1 else cstr(value)
-        offset += size
+    fields = {}
+    for layout, offset in ((V4_PAGE1, 0), (V4_PAGE2, V4_PAGE)):
+        for name, size in layout:
+            value = raw[offset:offset + size]
+            fields[name] = value[0] if size == 1 else cstr(value)
+            offset += size
     return fields
 
 

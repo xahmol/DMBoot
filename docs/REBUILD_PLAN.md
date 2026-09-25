@@ -397,7 +397,8 @@ Standalone `c128e` PRG (uses `bank_minimal` + UCI library), placed in `/usb*/11/
 3. Convert each slot:
    - Keep the `runboot` flags.
    - `reu_path` ← old `image_a_path` when `COMMAND_REU` is set; when that is empty (seen in the real v4 file), derive it from `path`.
-   - The 3-byte prefix is `cd:` (verified on the real v4 file). Strip it from mount/REU paths and convert them to ASCII. `path` keeps it (IEC command).
+   - Layout: each 512-byte slot is two 256-byte pages (v4 `getslotfromem`). Page 1 holds `path`…`cfgvs` (246 bytes used); page 2 holds the image fields from offset 256.
+   - The 3-byte prefix is `cd:` (verified on real v4 files), but not always present: OHG 64 has `/usb1/...` without it, which v4's `+3` broke. Strip `cd:` only when present, and convert mount/REU paths to ASCII. `path` keeps it (IEC command).
    - Clear `COMMAND_IMGA`/`IMGB` when no image file name is stored (seen in the real v4 file).
    - Reference implementation: `tests/tools/convert_v4_slots.py`.
    - Menu name 20 → 30.
