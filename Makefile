@@ -81,6 +81,7 @@ MAIN_SRCS = src/main.c \
             src/slotlist.c src/slotlist.h \
             src/slotedit.c src/slotedit.h \
             src/browse.c src/browse.h \
+            src/dirparse.c src/dirparse.h \
             src/config.c src/config.h \
             src/timeconv.c src/timeconv.h \
             src/exec.c src/exec.h \

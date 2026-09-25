@@ -33,6 +33,7 @@ Code and resources from others used:
 #include "core.h"
 #include "fileio.h"
 #include "slotlist.h"
+#include "dirparse.h"
 #include "browse.h"
 
 #pragma overlay(dmbovl3, 4)
@@ -44,21 +45,6 @@ Code and resources from others used:
 #pragma code(codeovl3)
 #pragma data(dataovl3)
 #pragma bss(bssovl3)
-
-// CBM file types (as DraBrowse / cc65 cbm.h)
-#define CBM_T_REG           0x10    // Bit set for regular files
-#define CBM_T_SEQ           0x10
-#define CBM_T_PRG           0x11
-#define CBM_T_USR           0x12
-#define CBM_T_REL           0x13
-#define CBM_T_VRP           0x14
-#define CBM_T_DEL           0x00
-#define CBM_T_CBM           0x01    // 1581 sub-partition
-#define CBM_T_DIR           0x02    // CMD / SoftIEC sub-directory
-#define CBM_T_LNK           0x03
-#define CBM_T_OTHER         0x04
-#define CBM_T_HEADER        0x05    // Disk header
-#define CBM_T_FREE          0x64    // "blocks free" line
 
 // Screen layout
 #define DIR_LFN             2       // Logical file number of the directory
@@ -73,16 +59,9 @@ Code and resources from others used:
 #define PANEL_X_40          25
 #define PANEL_X_80          53
 #define PANEL_ROW0          3
-#define DIR_LINE_MAX        64      // One IEC directory line
-#define DISK_ID_LEN         5
 #define DIR_HEADER_MAX      (16 + 1 + DISK_ID_LEN + 1)
 #define BLOCKS_SHOWN_MAX    9999
 #define DEVICE_NONE         0
-
-// Image file kinds (browse_imagekind)
-#define IMAGE_NONE          0
-#define IMAGE_DISK          1
-#define IMAGE_REU           2
 
 // What a slot is made from (browse_pick)
 #define PICK_PROGRAM        1       // Run a file from the traced directory
@@ -94,22 +73,6 @@ Code and resources from others used:
 
 // Keys
 #define KEY_UPARROW         0x5e
-
-// Directory entry metadata as stored in the REU, followed by the name
-struct DirMeta
-{
-    unsigned long next;             // REU address of the next entry, 0 = none (first field)
-    unsigned long prev;             // REU address of the previous entry, 0 = none
-    unsigned size;                  // Size in blocks
-    char type;                      // CBM_T_*
-    char length;                    // Stored name length including the terminator
-};
-
-struct DirElement
-{
-    struct DirMeta meta;
-    char name[MAXFILENAME];
-};
 
 // The directory being shown
 struct Directory
@@ -281,35 +244,18 @@ static void dir_close(void)
 }
 
 // ---------------------------------------------------------------------------
-// Title:       Line ends with a file type
-// Description: Tests whether the directory line ends with three characters.
-// Syntax:      static bool line_type(char len, char a, char b, char c);
-// Input:       len     - stripped line length
-//              a, b, c - characters (PETSCII)
-// Output:      true on a match
-// ---------------------------------------------------------------------------
-static bool line_type(char len, char a, char b, char c)
-{
-    return len >= 3 && line[len - 3] == a && line[len - 2] == b && line[len - 1] == c;
-}
-
-// ---------------------------------------------------------------------------
 // Title:       Read one directory entry
-// Description: Parses the next BASIC line of the directory into an entry:
-//              size, name, type. The disk header line fills diskid and the
-//              name; the "blocks free" line gets type CBM_T_FREE.
-//              As DraBrowse / UBoot64-v2 dir_readentry_iec; the block
-//              count is kept as 16 bits (UBoot64 stored it in a char).
+// Description: Reads the next BASIC line of the directory: block count
+//              (16 bits; UBoot64 stored it in a char) and text, parsed by
+//              dir_parse_line (name, type, disk header, blocks free).
 // Syntax:      static char dir_readentry(struct DirElement *element);
 // Input:       element - buffer
-// Output:      0 = entry read, 1 = end of directory, 2 = unusable line
+// Output:      DIRPARSE_OK, 1 = end of directory, DIRPARSE_SKIP
 // ---------------------------------------------------------------------------
 static char dir_readentry(struct DirElement *element)
 {
     char b;
     char i = 0;
-    char len;
-    char n;
 
     // Link bytes: zero means end of directory
     if (!krnio_chrin() || krnio_status() & KRNIO_EOF)
@@ -335,68 +281,7 @@ static char dir_readentry(struct DirElement *element)
         }
     }
 
-    if (line[0] == 'b')
-    {
-        element->meta.type = CBM_T_FREE;
-        return 0;
-    }
-    if (i < 5)
-    {
-        return 2;
-    }
-
-    // Strip trailing blanks
-    len = i;
-    while (len > 0)
-    {
-        b = line[len - 1];
-        if (b != 0 && b != ' ' && b != 0xa0)
-        {
-            break;
-        }
-        len--;
-    }
-
-    // Name between the quotes
-    for (i = 0; i < len && line[i] != '"'; i++)
-    {
-    }
-    n = 0;
-    for (i++; i < len && line[i] != '"' && n < sizeof(element->name) - 1; i++)
-    {
-        element->name[n++] = line[i];
-    }
-    element->name[n] = 0;
-    element->meta.length = n + 1;
-
-    if (line_type(len, 'p', 'r', 'g'))      element->meta.type = CBM_T_PRG;
-    else if (line_type(len, 's', 'e', 'q')) element->meta.type = CBM_T_SEQ;
-    else if (line_type(len, 'u', 's', 'r')) element->meta.type = CBM_T_USR;
-    else if (line_type(len, 'd', 'e', 'l')) element->meta.type = CBM_T_DEL;
-    else if (line_type(len, 'r', 'e', 'l')) element->meta.type = CBM_T_REL;
-    else if (line_type(len, 'c', 'b', 'm')) element->meta.type = CBM_T_CBM;
-    else if (line_type(len, 'd', 'i', 'r')) element->meta.type = CBM_T_DIR;
-    else if (line_type(len, 'v', 'r', 'p')) element->meta.type = CBM_T_VRP;
-    else if (line_type(len, 'l', 'n', 'k')) element->meta.type = CBM_T_LNK;
-    else
-    {
-        // Disk header: name, then the disk ID
-        element->meta.type = CBM_T_HEADER;
-        if (i < len && line[i] == '"')
-        {
-            i++;
-        }
-        if (i < len && line[i] == ' ')
-        {
-            i++;
-        }
-        for (b = 0; b < DISK_ID_LEN; b++)
-        {
-            diskid[b] = (i < len) ? line[i++] : ' ';
-        }
-        diskid[DISK_ID_LEN] = 0;
-    }
-    return 0;
+    return dir_parse_line(line, i, element, diskid);
 }
 
 // ---------------------------------------------------------------------------
@@ -603,9 +488,7 @@ static void dir_print_entry(char pos, bool selected)
 // ---------------------------------------------------------------------------
 static const char *browse_pathconcat(void)
 {
-    strncpy(pathbuf, bs.softiec ? "cd:/" : "cd//", sizeof(pathbuf) - 1);
-    pathbuf[sizeof(pathbuf) - 1] = 0;
-    strncat(pathbuf, bs.tracepath, sizeof(pathbuf) - 1 - strlen(pathbuf));
+    trace_command(pathbuf, sizeof(pathbuf), bs.tracepath, bs.softiec);
     return pathbuf;
 }
 
@@ -764,46 +647,6 @@ static void dir_goto(int target)
 // ===========================================================================
 
 // ---------------------------------------------------------------------------
-// Title:       Image kind of a file name
-// Description: Recognises disk images (.d64 .g64 .d71 .g71 .d81 .g81 .dnp)
-//              and REU images (.reu) by their extension.
-// Syntax:      static char browse_imagekind(const char *name);
-// Input:       name - file name (PETSCII)
-// Output:      IMAGE_NONE, IMAGE_DISK or IMAGE_REU
-// ---------------------------------------------------------------------------
-static char browse_imagekind(const char *name)
-{
-    char l = strlen(name);
-    char a, b, c;
-
-    if (l < 5 || name[l - 4] != '.')
-    {
-        return IMAGE_NONE;
-    }
-    // Compare case-insensitively: clear the PETSCII shift bit
-    a = name[l - 3] & 0x7f;
-    b = name[l - 2] & 0x7f;
-    c = name[l - 1] & 0x7f;
-    if ((a == 'd' || a == 'g') && (b == '6' && c == '4'))
-    {
-        return IMAGE_DISK;
-    }
-    if ((a == 'd' || a == 'g') && (b == '7' || b == '8') && c == '1')
-    {
-        return IMAGE_DISK;
-    }
-    if (a == 'd' && b == 'n' && c == 'p')
-    {
-        return IMAGE_DISK;
-    }
-    if (a == 'r' && b == 'e' && c == 'u')
-    {
-        return IMAGE_REU;
-    }
-    return IMAGE_NONE;
-}
-
-// ---------------------------------------------------------------------------
 // Title:       Ultimate path of the trace
 // Description: The traced directory as an Ultimate file system path:
 //              "/" + trace (PETSCII to ASCII).
@@ -814,32 +657,20 @@ static char browse_imagekind(const char *name)
 // ---------------------------------------------------------------------------
 static void browse_ultpath(char *dst, unsigned size)
 {
-    dst[0] = '/';
-    pet2asc(dst + 1, bs.tracepath, size - 1);
+    trace_ultpath(dst, size, bs.tracepath);
 }
 
 // ---------------------------------------------------------------------------
-// Title:       Remove the last traced directory
-// Description: Drops the last "name/" from the dirtrace and leaves an
-//              image when going above it.
-// Syntax:      static void trace_up(void);
+// Title:       Go up in the dirtrace
+// Description: Drops the last traced directory and leaves the traced image
+//              when going above it.
+// Syntax:      static void browse_trace_up(void);
 // Input:       None
 // Output:      bs.tracepath, bs.inimage
 // ---------------------------------------------------------------------------
-static void trace_up(void)
+static void browse_trace_up(void)
 {
-    int len = strlen(bs.tracepath);
-
-    if (len)
-    {
-        len--;                              // Skip the trailing '/'
-        while (len > 0 && bs.tracepath[len - 1] != '/')
-        {
-            len--;
-        }
-        bs.tracepath[len] = 0;
-    }
-    if (bs.inimage && len <= bs.imagedepth)
+    if (trace_up(bs.tracepath) <= bs.imagedepth)
     {
         bs.inimage = false;
     }
@@ -871,7 +702,7 @@ static bool browse_cd(const char *name)
         strcpy(line, "cd:");
         strcat(line, bs.softiec ? ".." : cmd_up_bytes);
     }
-    else if (bs.softiec || browse_imagekind(name) == IMAGE_DISK)
+    else if (bs.softiec || dir_imagekind(name) == IMAGE_DISK)
     {
         strcpy(line, "cd:");
         strncat(line, name, MAXFILENAME - 1);
@@ -881,6 +712,12 @@ static bool browse_cd(const char *name)
         strcpy(line, "cd/");
         strncat(line, name, MAXFILENAME - 1);
         strcat(line, "/");
+    }
+
+    // Keep trace and drive in step: refuse a directory the trace cannot hold
+    if (bs.trace && name && !up && !trace_fits(bs.tracepath, sizeof(bs.tracepath), name))
+    {
+        return false;
     }
 
     status = cmd(bs.device, line);
@@ -902,19 +739,18 @@ static bool browse_cd(const char *name)
         }
         else if (up)
         {
-            trace_up();
+            browse_trace_up();
         }
-        else if (strlen(bs.tracepath) + strlen(name) + 1 < sizeof(bs.tracepath))
+        else
         {
-            if (bs.softiec && browse_imagekind(name) == IMAGE_DISK && !bs.inimage)
+            if (bs.softiec && dir_imagekind(name) == IMAGE_DISK && !bs.inimage)
             {
                 bs.inimage = true;
                 bs.imagedepth = strlen(bs.tracepath);
                 browse_ultpath(bs.imagepath, sizeof(bs.imagepath));
                 pet2asc(bs.imagefile, name, sizeof(bs.imagefile));
             }
-            strcat(bs.tracepath, name);
-            strcat(bs.tracepath, "/");
+            trace_add(bs.tracepath, sizeof(bs.tracepath), name);
         }
     }
     dir_read();
@@ -1303,7 +1139,7 @@ void browse(void)
         {
             dir_load(dir.present, &entry);
         }
-        imagekind = dir.present ? browse_imagekind(entry.name) : IMAGE_NONE;
+        imagekind = dir.present ? dir_imagekind(entry.name) : IMAGE_NONE;
 
         switch (key)
         {
