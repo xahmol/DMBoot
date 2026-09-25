@@ -45,6 +45,7 @@ bank 0 under ROM, REU DMA at 2 MHz, Device Manager API, test mailbox).
 #include "fileio.h"
 #include "slotmenu.h"
 #include "slotedit.h"
+#include "browse.h"
 #include "exec.h"
 
 // Resident program region: everything below the overlay load slot
@@ -64,6 +65,7 @@ struct SystemInfo sysinfo;
 struct SlotStruct Slot;
 struct ConfigStruct cfg;
 struct DMApiInfo dminfo;
+struct BrowseRequest browsereq;
 char overlay_active = OVERLAY_NONE;
 
 // Overlay stores (index = overlay number - 1), see docs/REBUILD_PLAN.md §4.
@@ -71,7 +73,7 @@ char overlay_active = OVERLAY_NONE;
 static const struct OverlayStore overlay_store[OVERLAY_COUNT] = {
     { BNK_1_FULL, OVERLAY_STORE_BANK1_1, "dmbovl1", "main menu" },
     { BNK_1_FULL, OVERLAY_STORE_BANK1_2, "dmbovl2", "slot editing" },
-    { BNK_1_FULL, OVERLAY_STORE_BANK1_3, "",        "file browser" },   // Phase 4
+    { BNK_1_FULL, OVERLAY_STORE_BANK1_3, "dmbovl3", "file browser" },
     { BNK_1_FULL, OVERLAY_STORE_BANK1_4, "",        "configuration" },  // Phase 5
     { BNK_0_FULL, OVERLAY_STORE_BANK0_1, "dmbovl5", "slot start" },
 };
@@ -449,7 +451,13 @@ int main(void)
         switch (key)
         {
         case KEY_F1:
-            not_yet_available("Filebrowser");
+            loadoverlay(OVERLAY_BROWSE);
+            browse();
+            if (browsereq.action == BROWSE_RUN)
+            {
+                loadoverlay(OVERLAY_EXEC);
+                exec_browse();
+            }
             break;
         case KEY_F2:
             not_yet_available("Information");

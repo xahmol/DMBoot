@@ -103,6 +103,7 @@ BUT WITHOUT ANY WARRANTY. USE THEM AT YOUR OWN RISK!
 #define SLOTSIZE            1360    // sizeof(struct SlotStruct), checked below
 #define SLOT_REU_START      0x00000UL   // REU address of slot 0
 #define SLOT_REU_BACKUP     0x10000UL   // Slot backup while re-ordering (directory area: browser not active then)
+#define DIR_REU_START       0x10000UL   // File browser directory list, up to the top of the REU
 #define SAVE_BUF_SIZE       500     // Bytes per UCI write (data queue is 512)
 
 // String buffer sizes, including the terminator
@@ -254,6 +255,19 @@ struct SystemInfo
     unsigned diskloads;     // Number of overlay files loaded from disk
 };
 
+// Request from the file browser (overlay 3) to start a program directly.
+// The browser cannot call the slot start overlay (5), so it leaves the
+// request here and main() hands it over.
+#define BROWSE_QUIT         0       // Back to the main menu
+#define BROWSE_RUN          1       // Start browsereq.file on browsereq.device
+struct BrowseRequest
+{
+    char action;                    // BROWSE_*
+    char device;                    // IEC device ID
+    char runboot;                   // EXEC_* flags
+    char file[MAXFILENAME];         // Program name (PETSCII), empty for BOOT
+};
+
 // Device Manager ROM extended API information
 struct DMApiInfo
 {
@@ -268,6 +282,7 @@ extern struct SystemInfo sysinfo;
 extern struct SlotStruct Slot;          // Working copy of one slot
 extern struct ConfigStruct cfg;         // Global configuration
 extern struct DMApiInfo dminfo;
+extern struct BrowseRequest browsereq;
 extern char overlay_active;
 struct DWin;
 extern struct DWin screenwin;    // Full-screen window (src/main.c)

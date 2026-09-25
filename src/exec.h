@@ -13,6 +13,7 @@ https://github.com/xahmol/DMBoot
 __noinline void runbootfrommenu(char select);
 __noinline void exec_go64(void);
 __noinline void exec_exit_to_basic(void);
+__noinline void exec_browse(void);
 
 #pragma compile("exec.c")
 

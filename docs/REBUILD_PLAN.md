@@ -522,6 +522,14 @@ Each phase ends with a build, a deploy to hardware (`192.168.1.237`), a c64bridg
   - Slot list drawing and slot picking moved to the resident `slotlist.c`, shared by the main menu (overlay 1) and the editor (overlay 2, `slotedit.c`, 4.3 KB).
   - Editor (F3 in the main menu): F1 rename, F2 command (an empty slot becomes a command-only slot), F3 re-order with cursor keys (wrap-around, cancel restores from an REU backup at `$10000`), F4 auto-boot timeout (off/1/3/5/10 s), F5 delete, F6 default slot, F7 back (saves slots and/or config when changed).
   - UBoot64 bug not carried over: `editmenuoptions` overwrote its "changes made" flag per action, so an earlier edit could stay unsaved.
+- **Phase 4: implemented, not yet hardware-tested.** Overlay 3 `browse.c` (9.0 KB of 10 KB including buffers):
+  - IEC only. Starts on the Device Manager hyperspeed drive (else the first active device); `+`/`-` step through the active devices from `iec_scan`.
+  - Directory as a linked list in the REU from `$10000` to the top of the REU. Storage is isolated in `dir_load`/`dir_store_meta`, so the list could move (for example to bank 1) by changing only those.
+  - One index-based navigation routine for cursor, page (`P`/`U`), top/end (`T`/HOME, `E`) and the 80-column column switch. 80 columns: two columns of 19 entries.
+  - Keys as v4 + UBoot64 (IEC mode): F1 refresh, `S` sort, RETURN run/enter, DEL/`↑` up/root, `D` dirtrace, F5 boot, `6` C64 mode, `8` Force 8, `F` FAST, `1` `,1` load, `O` demo, `A`/`B` add mount, `M` run from the traced image, REU image via RETURN, F7/`Q` quit.
+  - Dirtrace off: RETURN/F5/`6` start directly (request in `browsereq`, started by overlay 5 `exec_browse`). Dirtrace on: the choice goes to a slot (`browse_pick`, as UBoot64 `pickmenuslot`).
+  - Mounts, run-from-image and REU images need the dirtrace on the SoftIEC/hyperspeed drive, because slots store them as Ultimate paths (`/` + trace, PETSCII to ASCII).
+  - UBoot64 bug not carried over: block counts were stored in a `char` (sizes shown modulo 256).
 
 ## 13. Risks and verification items
 

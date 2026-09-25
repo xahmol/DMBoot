@@ -568,6 +568,22 @@ void runbootfrommenu(char select)
 }
 
 // ---------------------------------------------------------------------------
+// Title:       Start a program chosen in the file browser
+// Description: Starts browsereq.file from the current directory of
+//              browsereq.device with the browser's run flags.
+// Syntax:      void exec_browse(void);
+// Input:       browsereq (set by the file browser)
+// Output:      Does not return
+// ---------------------------------------------------------------------------
+void exec_browse(void)
+{
+    dwin_clear(&screenwin);
+    headertext("Starting program", 0);
+    dwin_init(&console, 0, 3, 0, 0);
+    execute(browsereq.file, browsereq.device, browsereq.runboot, "");
+}
+
+// ---------------------------------------------------------------------------
 // Title:       Go to C64 mode
 // Description: Exits to BASIC with "go 64" and confirms the question.
 // Syntax:      void exec_go64(void);
