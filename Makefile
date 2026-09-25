@@ -92,6 +92,7 @@ MAIN_SRCS = src/main.c \
             include/defines.h \
             include/banking.c include/banking.h \
             include/dmapi.c include/dmapi.h \
+            include/geosboot.c include/geosboot.h \
             include/reu128.c include/reu128.h \
             include/testmode.c include/testmode.h \
             include/dualwin.c include/dualwin.h \

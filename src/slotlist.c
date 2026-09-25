@@ -22,6 +22,11 @@ src/slotmenu.c of my UBoot64-v2 project
 #define EMPTY_TEXT          "<empty>"
 #define NAME_TEXT_MAX       (MAXMENUNAME + sizeof(DEFAULT_MARK))
 
+// REU size names per size index (Ultimate "Load REU" sizes)
+const char *const reusizenames[REU_SIZES] = {
+    "128 KB", "256 KB", "512 KB", "1 MB", "2 MB", "4 MB", "8 MB", "16 MB"
+};
+
 // Auto-boot timeout in seconds per cfg.timeoutidx (0 = off)
 const char timeoutseconds[TIMEOUT_OPTIONS] = { 0, 1, 3, 5, 10 };
 

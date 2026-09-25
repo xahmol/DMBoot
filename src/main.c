@@ -405,29 +405,6 @@ bool dmb_startup(void)
 }
 
 // ---------------------------------------------------------------------------
-// Title:       Not yet available
-// Description: Shows a popup for menu options of later rebuild phases.
-// Syntax:      void not_yet_available(const char *what);
-// Input:       what - name of the option
-// Output:      None
-// ---------------------------------------------------------------------------
-void not_yet_available(const char *what)
-{
-    struct DWin popup;
-    char x = (dwin_state.width - POPUP_WIDTH) / 2;
-
-    if (!dwin_popup_open(&popup, x, POPUP_ROW, POPUP_WIDTH, POPUP_HEIGHT, cfg.colors.key, cfg.colors.text))
-    {
-        return;
-    }
-    dwin_putat_string(&popup, 1, 0, what, cfg.colors.key);
-    dwin_putat_string(&popup, 1, 1, "Not available yet in this build.", cfg.colors.text);
-    dwin_putat_string(&popup, 1, 2, "Press a key.", cfg.colors.text);
-    key_wait();
-    dwin_popup_close();
-}
-
-// ---------------------------------------------------------------------------
 // Title:       Main
 // Description: Program entry: start-up, then the main menu loop.
 // Syntax:      int main(void);
@@ -485,7 +462,8 @@ int main(void)
             exec_go64();
             break;
         case KEY_F6:
-            not_yet_available("GEOS RAM boot");
+            loadoverlay(OVERLAY_EXEC);
+            exec_geos();
             break;
         case KEY_F7:
             loadoverlay(OVERLAY_EXEC);

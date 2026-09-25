@@ -70,9 +70,14 @@ Code and resources from others used:
 #define COLOR_SWATCH_X      24
 #define COLOR_OPTIONS       11      // Fields of struct ColorPalette
 #define COLOR_MAX           15
+#define GEOS_ROW0           3
+#define DEVICE_ID_INPUT     3       // "30" + terminator
+#define DEVICE_ID_MAX       30
+#define INPUT_SIZE_MAX      255     // dwin_input takes a char size
 
 static char uiitime[UII_TIME_BYTES];
 static char textbuf[MAXHOSTLENGTH];
+static char pathbuf[MAXPATHLEN];
 
 static const char *const colornames[COLOR_OPTIONS] = {
     "Background", "Border", "Header line 1", "Header line 2", "Normal text", "Text input",
@@ -321,6 +326,7 @@ static void cfg_draw(void)
     }
     cfg_line(row++, " F5 ", "NTP server", textbuf);
     cfg_line(row++, " F6 ", "Colours", NULL);
+    cfg_line(row++, " F8 ", "GEOS RAM boot", NULL);
     row++;
     cfg_line(row, " F7 ", "Back (saves changes)", NULL);
 }
@@ -446,6 +452,167 @@ static bool cfg_colors(void)
 }
 
 // ---------------------------------------------------------------------------
+// Title:       Edit an Ultimate path or file name
+// Description: Edits an ASCII field (Ultimate file system) in PETSCII on the
+//              input rows. STOP keeps the old value.
+// Syntax:      static bool cfg_ascii_field(const char *prompt, char *field,
+//                                          unsigned size);
+// Input:       prompt - text above the input
+//              field  - ASCII string to edit
+//              size   - size of field
+// Output:      true when changed
+// ---------------------------------------------------------------------------
+static bool cfg_ascii_field(const char *prompt, char *field, unsigned size)
+{
+    char inputsize = (size > INPUT_SIZE_MAX) ? INPUT_SIZE_MAX : size;
+
+    asc2pet(pathbuf, field, inputsize);
+    slotlist_clear_bottom();
+    dwin_putat_string(&screenwin, 0, SLOTLIST_LEGEND_ROW, prompt, cfg.colors.text);
+    if (dwin_input(&screenwin, 0, SLOTLIST_LEGEND_ROW + 1, pathbuf, inputsize, screenwin.wx - 1,
+                   cfg.colors.text_input) == DWIN_INPUT_CANCEL)
+    {
+        return false;
+    }
+    pet2asc(field, pathbuf, size);
+    return true;
+}
+
+// ---------------------------------------------------------------------------
+// Title:       Edit a drive image setting
+// Description: Asks for the device ID (0 = none), path and file name of a
+//              GEOS disk image.
+// Syntax:      static bool cfg_geos_image(char *id, char *path, char *file);
+// Input:       id, path, file - fields of cfg.geos
+// Output:      true when changed
+// ---------------------------------------------------------------------------
+static bool cfg_geos_image(char *id, char *path, char *file)
+{
+    char input[DEVICE_ID_INPUT];
+    const char *end;
+    long value;
+
+    sprintf(input, "%u", *id);
+    slotlist_clear_bottom();
+    dwin_putat_string(&screenwin, 0, SLOTLIST_LEGEND_ROW, "Device ID (0 = no image):", cfg.colors.text);
+    if (dwin_input(&screenwin, 0, SLOTLIST_LEGEND_ROW + 1, input, sizeof(input), sizeof(input) - 1,
+                   cfg.colors.text_input) <= 0)
+    {
+        return false;
+    }
+    value = strtol(input, &end, 10);
+    if (*end || value < 0 || value > DEVICE_ID_MAX)
+    {
+        return false;
+    }
+    *id = value;
+    if (*id)
+    {
+        cfg_ascii_field("Image path (e.g. /usb1/11/):", path, MAXPATHLEN);
+        cfg_ascii_field("Image file name:", file, MAXFILENAME);
+    }
+    return true;
+}
+
+// ---------------------------------------------------------------------------
+// Title:       Show one GEOS setting
+// Description: Prints a key with its label and, on the next row, the path
+//              and file name (clipped to the screen width).
+// Syntax:      static char cfg_geos_line(char row, const char *key,
+//                                        const char *label, char id,
+//                                        const char *path,
+//                                        const char *file);
+// Input:       row   - screen row
+//              key   - key label
+//              label - setting name
+//              id    - device ID (0 = not shown)
+//              path  - ASCII path
+//              file  - ASCII file name
+// Output:      Next free row
+// ---------------------------------------------------------------------------
+static char cfg_geos_line(char row, const char *key, const char *label, char id, const char *path,
+                          const char *file)
+{
+    fkey_hint(0, row, key, label);
+    if (!file[0])
+    {
+        dwin_putat_string(&screenwin, CFG_VALUE_X, row, "(none)", cfg.colors.text_input);
+        return row + 2;
+    }
+    if (id)
+    {
+        sprintf(textbuf, "ID %u", id);
+        dwin_putat_string(&screenwin, CFG_VALUE_X, row, textbuf, cfg.colors.text_input);
+    }
+    asc2pet(pathbuf, path, sizeof(pathbuf));
+    asc2pet(textbuf, file, sizeof(textbuf));
+    strncat(pathbuf, textbuf, sizeof(pathbuf) - 1 - strlen(pathbuf));
+    if (strlen(pathbuf) > screenwin.wx - 2)
+    {
+        pathbuf[screenwin.wx - 2] = 0;
+    }
+    dwin_putat_string(&screenwin, 1, row + 1, pathbuf, cfg.colors.text_input);
+    return row + 2;
+}
+
+// ---------------------------------------------------------------------------
+// Title:       GEOS RAM boot settings
+// Description: REU image and size, and the disk images for drives A and B
+//              that the GEOS RAM boot (main menu F6) uses.
+// Syntax:      static bool cfg_geos(void);
+// Input:       None
+// Output:      true when something changed
+// ---------------------------------------------------------------------------
+static bool cfg_geos(void)
+{
+    struct GeosConfig *geos = &cfg.geos;
+    bool changed = false;
+
+    while (true)
+    {
+        char row = GEOS_ROW0;
+
+        if (geos->reusize >= REU_SIZES)
+        {
+            geos->reusize = REU_SIZES - 1;
+        }
+        dwin_clear(&screenwin);
+        headertext("GEOS RAM boot settings", 1);
+        row = cfg_geos_line(row, " F1 ", "REU image", 0, geos->reu_path, geos->reu_image);
+        cfg_line(row, " F2 ", "REU size", reusizenames[geos->reusize]);
+        row += 2;
+        row = cfg_geos_line(row, " F3 ", "Drive A image", geos->image_a_id, geos->image_a_path,
+                            geos->image_a_file);
+        row = cfg_geos_line(row, " F5 ", "Drive B image", geos->image_b_id, geos->image_b_path,
+                            geos->image_b_file);
+        cfg_line(row + 1, " F7 ", "Back", NULL);
+
+        switch (key_wait())
+        {
+        case KEY_F1:
+            changed |= cfg_ascii_field("REU image path (e.g. /usb1/11/):", geos->reu_path, MAXPATHLEN);
+            changed |= cfg_ascii_field("REU image file name:", geos->reu_image, MAXFILENAME);
+            break;
+        case KEY_F2:
+            geos->reusize = (geos->reusize + 1) % REU_SIZES;
+            changed = true;
+            break;
+        case KEY_F3:
+            changed |= cfg_geos_image(&geos->image_a_id, geos->image_a_path, geos->image_a_file);
+            break;
+        case KEY_F5:
+            changed |= cfg_geos_image(&geos->image_b_id, geos->image_b_path, geos->image_b_file);
+            break;
+        case KEY_F7:
+        case KEY_STOP:
+            return changed;
+        default:
+            break;
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------
 // Title:       Configuration
 // Description: Menu for the settings; F7 returns and writes the config
 //              file when something changed.
@@ -482,6 +649,9 @@ void config_edit(void)
             break;
         case KEY_F6:
             changed |= cfg_colors();
+            break;
+        case KEY_F8:
+            changed |= cfg_geos();
             break;
         case KEY_F7:
         case KEY_STOP:

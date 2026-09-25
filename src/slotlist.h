@@ -36,6 +36,10 @@ other, so this lives in the resident program.
 // slotlist_draw_slot flags
 #define SLOTLIST_SELECTED   0x01    // Highlight (and draw "<empty>" for an empty slot)
 
+// REU sizes (Slot.reusize, cfg.geos.reusize)
+#define REU_SIZES           8
+extern const char *const reusizenames[REU_SIZES];
+
 // Auto-boot timeout (cfg.timeoutidx)
 #define TIMEOUT_OPTIONS     5
 extern const char timeoutseconds[TIMEOUT_OPTIONS];

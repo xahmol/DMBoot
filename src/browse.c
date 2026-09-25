@@ -94,7 +94,6 @@ Code and resources from others used:
 
 // Keys
 #define KEY_UPARROW         0x5e
-#define REU_SIZES           8
 
 // Directory entry metadata as stored in the REU, followed by the name
 struct DirMeta
@@ -157,9 +156,6 @@ static char pathbuf[MAXPATHLEN];
 
 static const char *const reg_types[] = { "seq", "prg", "usr", "rel", "vrp" };
 static const char *const oth_types[] = { "del", "cbm", "dir", "lnk", "???", "hdr" };
-static const char *const reusizes[REU_SIZES] = {
-    "128 KB", "256 KB", "512 KB", "1 MB", "2 MB", "4 MB", "8 MB", "16 MB"
-};
 static const char cmd_up_bytes[] = { 0x5f, 0 };  // CBM DOS "go up" (left arrow)
 
 // ===========================================================================
@@ -1024,7 +1020,7 @@ static void pick_reusize(void)
     while (true)
     {
         dwin_fill_rect(&screenwin, 0, SLOTLIST_LEGEND_ROW + 1, SLOTLIST_COLUMN, 1, ' ', cfg.colors.text);
-        dwin_putat_string(&screenwin, 0, SLOTLIST_LEGEND_ROW + 1, reusizes[Slot.reusize], cfg.colors.text_input);
+        dwin_putat_string(&screenwin, 0, SLOTLIST_LEGEND_ROW + 1, reusizenames[Slot.reusize], cfg.colors.text_input);
         char key = key_wait();
         if (key == '+')
         {

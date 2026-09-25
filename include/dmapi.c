@@ -58,12 +58,18 @@ char dm_devid;
 //              exited: sets file bank, device and name, switches the Device
 //              Manager ROM in and jumps to its "run in 64 mode" routine,
 //              which does not return.
+//              A C function with only an __asm body (no prologue, so SYS
+//              lands on the first instruction), kept with
+//              #pragma reference: Oscar64 drops code that is only used by
+//              its address, and the SYS address became 0.
 // Syntax:      SYS <address of dm_run64> (see dm_run64_address)
 // Input:       dm_prgnam, dm_prglen, dm_devid (set by dm_prepare_run64)
 // Output:      Does not return
 // ---------------------------------------------------------------------------
-__asm dm_run64
+__noinline void dm_run64(void)
 {
+    __asm
+    {
         lda #0
         ldx #0
         jsr KERNAL_SETBNK
@@ -78,7 +84,9 @@ __asm dm_run64
         lda #BNK_DM_FUNCROM
         sta $ff00
         jmp DM_EXT_RUN64
+    }
 }
+#pragma reference(dm_run64)
 
 // ---------------------------------------------------------------------------
 // Title:       Get Device Manager API version
@@ -305,9 +313,17 @@ bool dm_prepare_run64(const char *name, char device)
 // Input:       None
 // Output:      Address of dm_run64
 // ---------------------------------------------------------------------------
-unsigned dm_run64_address(void)
+// The address is taken in assembler: in C ("(unsigned)dm_run64", also via
+// a volatile pointer) Oscar64 folded it to 0 at the call site
+__noinline unsigned dm_run64_address(void)
 {
-    return (unsigned)dm_run64;
+    return __asm
+    {
+        lda #<dm_run64
+        sta accu
+        lda #>dm_run64
+        sta accu + 1
+    };
 }
 
 // ---------------------------------------------------------------------------

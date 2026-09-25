@@ -18,6 +18,7 @@ C64 mode, FAST, BOOT) as in DMBoot v4 (branch legacy-cc65, src/ops.c).
 #include "defines.h"
 #include "banking.h"
 #include "dmapi.h"
+#include "geosboot.h"
 #include "dualwin.h"
 #include "ultimate_common_lib.h"
 #include "ultimate_dos_lib.h"
@@ -548,7 +549,11 @@ void runbootfrommenu(char select)
     {
         // Change to the program's directory (as v4: also for BOOT slots,
         // which have no file name); show the drive's reply and stop on an
-        // error instead of letting RUN or BOOT fail later
+        // error instead of letting RUN or BOOT fail later.
+        // "cd:/..." is relative on the SoftIEC drive, so first return to
+        // the root, as v4 did before every overlay load (the file browser
+        // may have left the drive in a subdirectory)
+        drive_root_reset();
         char status = cmd(Slot.device, Slot.path);
         if (cfg.verbose || status)
         {
@@ -581,6 +586,54 @@ void exec_browse(void)
     headertext("Starting program", 0);
     dwin_init(&console, 0, 3, 0, 0);
     execute(browsereq.file, browsereq.device, browsereq.runboot, "");
+}
+
+// ---------------------------------------------------------------------------
+// Title:       GEOS RAM boot
+// Description: Mounts the configured GEOS disk images on drives A and B,
+//              loads the GEOS REU image last (nothing may return to the
+//              menu after that: the slots in the REU are overwritten) and
+//              starts GEOS from it through the low-memory code.
+//              As DMBoot v4 geosboot_main, with drive power-on and USB
+//              port rerouting of the slot start.
+// Syntax:      void exec_geos(void);
+// Input:       cfg.geos
+// Output:      Does not return
+// ---------------------------------------------------------------------------
+void exec_geos(void)
+{
+    struct GeosConfig *geos = &cfg.geos;
+
+    dwin_clear(&screenwin);
+    headertext("GEOS RAM boot", 0);
+    dwin_init(&console, 0, 3, 0, 0);
+
+    if (!geos->reu_image[0])
+    {
+        errorexit("No GEOS REU image configured (F4, F8).");
+    }
+    if (geos->image_a_id && geos->image_a_file[0])
+    {
+        exec_drive_power_on(EXEC_DRIVE_A);
+        exec_print("Mount A: ", geos->image_a_file);
+        mountimage(geos->image_a_id, geos->image_a_path, geos->image_a_file);
+    }
+    if (geos->image_b_id && geos->image_b_file[0])
+    {
+        exec_drive_power_on(EXEC_DRIVE_B);
+        exec_print("Mount B: ", geos->image_b_file);
+        mountimage(geos->image_b_id, geos->image_b_path, geos->image_b_file);
+    }
+    exec_print("REU: ", geos->reu_image);
+    load_reu_with_reroute(geos->reu_path, geos->reu_image, geos->reusize);
+    ErrorCheckMounting();
+
+    dwin_put_string(&console, "Starting GEOS.\n", cfg.colors.text);
+    if (geos_boot() == GEOS_ERROR_NOREU)
+    {
+        errorexit("No REU found.");
+    }
+    errorexit("The REU image holds no GEOS boot loader.");
 }
 
 // ---------------------------------------------------------------------------
