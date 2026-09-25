@@ -73,8 +73,43 @@ void errorexit(const char *message)
     dwin_put_string(&console, message, cfg.colors.error);
     dwin_put_string(&console, "\nPress a key to exit to BASIC.\n", cfg.colors.text);
     dwin_getch();
+    dwin_exit();
     bnk_exit();
-    exit(1);
+    dmb_exit();
+}
+
+// ---------------------------------------------------------------------------
+// Title:       Exit to BASIC (C128)
+// Description: Ends the program and returns to BASIC from anywhere, like
+//              exit(), but resets the zero page for BASIC 7 exactly as the
+//              normal end of main() does on the C128 (Oscar64 crt.c,
+//              spexit). Oscar64's exit() only resets the C64 locations $54
+//              and $13; on the C128 it leaves $18 (temporary string stack
+//              pointer) and $1A stale, so BASIC printed garbage after a
+//              PRINT of a string (seen on hardware).
+// Syntax:      void dmb_exit(void);
+// Input:       None
+// Output:      Does not return (returns to BASIC)
+// ---------------------------------------------------------------------------
+void dmb_exit(void)
+{
+    __asm
+    {
+        lda #0
+        sta accu + 0
+        sta accu + 1
+        ldx spentry
+        txs
+        lda #$4c
+        sta $54
+        lda #0
+        sta $13
+        sta $1a
+        lda #$1b
+        sta $18
+        lda #$19
+        sta $16
+    }
 }
 
 // ---------------------------------------------------------------------------

@@ -247,6 +247,12 @@ void dwin_setup(char storecr, char *storebase, unsigned storesize)
     if (dwin_state.mode == DWIN_MODE_VDC)
     {
         dwin_state.width = DWIN_VDC_WIDTH;
+
+        // Save the KERNAL's VDC set-up, restored by dwin_exit
+        for (char reg = 0; reg < DWIN_VDC_REGS; reg++)
+        {
+            dwin_state.vdcregs[reg] = vdc_reg_read(reg);
+        }
         vdc_detect_mem_size();
         vdc_set_mode(dwin_state.pal ? VDC_TEXT_80x25_PAL : VDC_TEXT_80x25_NTSC);
     }
@@ -275,6 +281,44 @@ void dwin_screen_colors(char border, char background)
     {
         vic.color_border = border;
         vic.color_back = background;
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Title:       Hand the screen back to the KERNAL
+// Description: Re-initialises the KERNAL screen editor and both video chips
+//              (KERNAL CINT), then restores the VDC registers saved by
+//              dwin_setup (CINT does not rewrite all of them). Call before
+//              exiting to
+//              BASIC: DualWin reprograms the VDC and writes screen memory
+//              directly, which the KERNAL editor does not know about (seen
+//              on hardware: shifted rows and garbage in BASIC after exit).
+// Syntax:      void dwin_exit(void);
+// Input:       None
+// Output:      None (the popup stack is emptied)
+// ---------------------------------------------------------------------------
+void dwin_exit(void)
+{
+    dwin_state.popups = 0;
+    __asm
+    {
+        jsr $ff81
+    }
+
+    // CINT does not rewrite every VDC register: restore the set-up the
+    // KERNAL had before dwin_setup (seen on hardware: picture shifted by one
+    // row). Skipped: 18/19 (update address), 30 (word count), 31 (data),
+    // 32/33 (block copy source): these are transfer registers.
+    if (dwin_state.mode == DWIN_MODE_VDC)
+    {
+        for (char reg = 0; reg < DWIN_VDC_REGS; reg++)
+        {
+            if (reg == 18 || reg == 19 || (reg >= 30 && reg <= 33))
+            {
+                continue;
+            }
+            vdc_reg_write(reg, dwin_state.vdcregs[reg]);
+        }
     }
 }
 

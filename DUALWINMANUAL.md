@@ -94,6 +94,7 @@ An application therefore needs only one palette, whatever the screen.
 | `void dwin_setup(char storecr, char *storebase, unsigned storesize)` | Detects the screen and PAL/NTSC, switches to the lower case charset, initialises the VDC state, and registers popup storage (MMU `$FF00` value, start, size). |
 | `void dwin_screen_colors(char border, char background)` | VIC: border and background. VDC: background (the VDC has no separate border). |
 | `bool dwin_is80(void)` | true in 80 column mode. |
+| `void dwin_exit(void)` | Hand the screen back to the KERNAL before exiting to BASIC: calls KERNAL `CINT` (`$FF81`), which re-initialises the screen editor, VIC and VDC (registers, charsets, cleared screens). Without it BASIC showed shifted rows and garbage after exit (seen on hardware). |
 
 ### Windows
 

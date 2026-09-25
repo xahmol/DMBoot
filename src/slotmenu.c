@@ -116,7 +116,7 @@ static void menu_draw(char page)
         }
         menu_fkey(0, LEGEND_ROW, " F1 ", "Filebrowser");
         menu_fkey(20, LEGEND_ROW, " F2 ", "Information");
-        menu_fkey(40, LEGEND_ROW, " F3 ", "Edit/order/delete");
+        menu_fkey(40, LEGEND_ROW, " F3 ", "Edit/order/del");
         menu_fkey(60, LEGEND_ROW, " F4 ", "Configuration");
         menu_fkey(0, LEGEND_ROW + 1, " F5 ", "Go 64");
         menu_fkey(20, LEGEND_ROW + 1, " F6 ", "GEOS RAM boot");

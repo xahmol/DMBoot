@@ -40,8 +40,9 @@ C64 mode, FAST, BOOT) as in DMBoot v4 (branch legacy-cc65, src/ops.c).
 #define EXEC_LINE_MAX       100     // Longest command line (cmd 80 + extras)
 #define EXEC_FIRST_ROW      2       // Row of the first command line
 #define EXEC_LINE_SPACING   3       // Rows reserved per line (output + READY.)
-#define CHR_CLEARSCREEN     0x93
 #define CHR_RETURN          0x0d
+#define CHR_HOME            0x13
+#define CHR_DOWN            0x11    // Cursor down
 #define CHR_YES             0x59    // 'y' key, confirms "go 64"
 #define DOS_STATUS_NOTFOUND "82,"   // Ultimate: file not found (keep hunting)
 #define TEXT_MAX            81
@@ -73,24 +74,6 @@ static void exec_add_line(const char *text)
 }
 
 // ---------------------------------------------------------------------------
-// Title:       Set the KERNAL cursor
-// Description: Moves the KERNAL screen editor cursor (PLOT).
-// Syntax:      void exec_plot(char row, char column);
-// Input:       row, column - screen position
-// Output:      None
-// ---------------------------------------------------------------------------
-static void exec_plot(char row, char column)
-{
-    __asm
-    {
-        ldx row
-        ldy column
-        clc
-        jsr $fff0
-    }
-}
-
-// ---------------------------------------------------------------------------
 // Title:       KERNAL character out
 // Description: Prints one character through the KERNAL screen editor.
 // Syntax:      void exec_chrout(char ch);
@@ -108,7 +91,9 @@ static void exec_chrout(char ch)
 
 // ---------------------------------------------------------------------------
 // Title:       Exit to BASIC and run the command lines
-// Description: Clears the screen, prints the command lines from row 2 down
+// Description: Hands the screen back to the KERNAL (clears it), prints the
+//              command lines from row 2 down (as DMBoot v4 does;
+//              positioned with HOME and cursor-down control characters)
 //              (3 rows apart, room for their output and READY.), puts one
 //              RETURN per line (plus extra keys) in the keyboard buffer,
 //              restores 1 MHz and the MMU set-up and exits. BASIC prints
@@ -124,18 +109,33 @@ static void exec_to_basic(const char *extrakeys)
     char keys = 0;
 
     *(volatile char *)VIC_CLOCK_REG &= ~VIC_CLOCK_FAST;
-    exec_chrout(CHR_CLEARSCREEN);
 
+    // Give the KERNAL its own clean screen set-up back (also clears it)
+    dwin_exit();
+
+    // Position with KERNAL control characters (as the screen editor
+    // expects): HOME, then down to row 2; lines 3 rows apart (v4 layout)
+    exec_chrout(CHR_HOME);
+    for (char r = 0; r < EXEC_FIRST_ROW; r++)
+    {
+        exec_chrout(CHR_DOWN);
+    }
     for (char line = 0; line < execcount; line++)
     {
-        exec_plot(row, 0);
         for (char i = 0; execlines[line][i]; i++)
         {
             exec_chrout(execlines[line][i]);
         }
-        row += strlen(execlines[line]) / dwin_state.width + EXEC_LINE_SPACING;
+        // Next line start: column 0, EXEC_LINE_SPACING rows further down
+        char rows = strlen(execlines[line]) / dwin_state.width + EXEC_LINE_SPACING;
+        exec_chrout(CHR_HOME);
+        row += rows;
+        for (char r = 0; r < row; r++)
+        {
+            exec_chrout(CHR_DOWN);
+        }
     }
-    exec_plot(0, 0);
+    exec_chrout(CHR_HOME);
 
     while (keys < execcount && keys < KEYBUF_SIZE)
     {
@@ -148,7 +148,7 @@ static void exec_to_basic(const char *extrakeys)
     *(volatile char *)ZP_KEYBUF_COUNT = keys;
 
     bnk_exit();
-    exit(0);
+    dmb_exit();
 }
 
 // ---------------------------------------------------------------------------
