@@ -96,6 +96,110 @@ BUT WITHOUT ANY WARRANTY. USE THEM AT YOUR OWN RISK!
 #define REU_PAGE_BYTES      0x10000UL
 
 // ---------------------------------------------------------------------------
+// Slots and configuration (docs/REBUILD_PLAN.md §8)
+// ---------------------------------------------------------------------------
+#define CFGVERSION          0x05    // Version of the slot and config file format
+#define SLOTS               36      // Number of boot menu slots (keys 0-9, a-z)
+#define SLOTSIZE            1360    // sizeof(struct SlotStruct), checked below
+#define SLOT_REU_START      0x00000UL   // REU address of slot 0
+#define SAVE_BUF_SIZE       500     // Bytes per UCI write (data queue is 512)
+
+// String buffer sizes, including the terminator
+#define MAXPATHLEN          256
+#define MAXFILENAME         51
+#define MAXMENUNAME         31
+#define MAXCOMMAND          81
+#define MAXHOSTLENGTH       81
+#define STORAGE_PATH_MAX    16      // e.g. "/usb*/11/"
+
+// Slot command flags (SlotStruct.command)
+#define COMMAND_CMD         0x01    // Run the user command
+#define COMMAND_REU         0x02    // Load an REU image
+#define COMMAND_IMGA        0x04    // Mount an image on drive A
+#define COMMAND_IMGB        0x08    // Mount an image on drive B
+
+// Slot execute flags (SlotStruct.runboot); v4 values kept, extended
+#define EXEC_MOUNT          0x01    // Run from the image mounted on drive A
+#define EXEC_FRC8           0x02    // Force device ID 8
+#define EXEC_RUN64          0x04    // Run in C64 mode (Device Manager API)
+#define EXEC_FAST           0x08    // Switch to FAST (2 MHz) before running
+#define EXEC_BOOT           0x10    // BOOT instead of RUN
+#define EXEC_COMMA1         0x20    // LOAD with ,1 (absolute address)
+#define EXEC_DEMO           0x40    // Demo mode: power down drives not on ID 8
+
+// One boot menu slot. Field order and sizes follow UBoot64-v2's SlotStruct
+// (DMBoot-specific options live in the runboot bits). Stored in the REU.
+struct SlotStruct
+{
+    char cfgvs;                     // CFGVERSION
+    char path[MAXPATHLEN];          // IEC directory path of the program
+    char menu[MAXMENUNAME];         // Name shown in the menu
+    char file[MAXFILENAME];         // Program file name (empty: mount/command only)
+    char cmd[MAXCOMMAND];           // User command
+    char reu_image[MAXFILENAME];    // REU image file name
+    char reu_path[MAXPATHLEN];      // REU image path (Ultimate file system)
+    char reusize;                   // REU size index 0-7 (128 KB - 16 MB)
+    char runboot;                   // EXEC_* flags
+    char device;                    // IEC device ID to run from
+    char command;                   // COMMAND_* flags
+    char image_a_path[MAXPATHLEN];  // Drive A image path
+    char image_a_file[MAXFILENAME]; // Drive A image file
+    char image_a_id;                // Drive A device ID
+    char image_b_path[MAXPATHLEN];  // Drive B image path
+    char image_b_file[MAXFILENAME]; // Drive B image file
+    char image_b_id;                // Drive B device ID
+    char isdefault;                 // 1 = auto-boot default slot
+    char partition;                 // Firmware 3.15 SoftIEC partition, 0 = none
+    char padding[11];               // Zero, pads the struct to SLOTSIZE
+};
+typedef char slot_size_check[(sizeof(struct SlotStruct) == SLOTSIZE) ? 1 : -1];
+
+// Colour scheme (logical C64/VIC colour numbers, see DUALWINMANUAL.md)
+struct ColorPalette
+{
+    char background;
+    char border;
+    char header1;
+    char header2;
+    char text;
+    char text_input;
+    char key;
+    char diritem_normal;
+    char diritem_select;
+    char error;
+    char ok;
+};
+
+// GEOS RAM boot settings (F6)
+struct GeosConfig
+{
+    char reu_path[MAXPATHLEN];      // Path of the GEOS REU image
+    char reu_image[MAXFILENAME];    // GEOS REU image file name
+    char reusize;                   // REU size index 0-7
+    char image_a_id;                // Drive A device ID (0 = no image)
+    char image_a_path[MAXPATHLEN];
+    char image_a_file[MAXFILENAME];
+    char image_b_id;                // Drive B device ID (0 = no image)
+    char image_b_path[MAXPATHLEN];
+    char image_b_file[MAXFILENAME];
+};
+
+// Global configuration, file dmbconf.cfg
+struct ConfigStruct
+{
+    char version;                   // CFGVERSION
+    char timeon;                    // 1 = set the time via NTP at start-up
+    char host[MAXHOSTLENGTH];       // NTP server
+    long secondsfromutc;            // Time zone offset
+    char verbose;                   // 1 = verbose start-up, 0 = spinner
+    struct ColorPalette colors;
+    char timeoutidx;                // Auto-boot timeout index, 0 = off
+    char iec_root_partition;        // Firmware 3.15 preparation, 0 = off
+    struct GeosConfig geos;
+    char reserved[16];              // Zero, room for later settings
+};
+
+// ---------------------------------------------------------------------------
 // Key codes (raw PETSCII as returned by KERNAL GETIN)
 // ---------------------------------------------------------------------------
 #define KEY_NONE            0x00
@@ -142,6 +246,8 @@ struct DMApiInfo
 
 // Global variables (defined in src/main.c)
 extern struct SystemInfo sysinfo;
+extern struct SlotStruct Slot;          // Working copy of one slot
+extern struct ConfigStruct cfg;         // Global configuration
 extern struct DMApiInfo dminfo;
 extern char overlay_active;
 struct DWin;
