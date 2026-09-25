@@ -6,6 +6,7 @@ https://github.com/xahmol/DMBoot
 */
 
 #include <stdio.h>
+#include <petscii.h>
 #include "defines.h"
 #include "overlay2.h"
 
@@ -30,7 +31,7 @@ https://github.com/xahmol/DMBoot
 // ---------------------------------------------------------------------------
 char overlay2_selftest(void)
 {
-    printf("overlay 2 running (stored in bank 0 RAM under the KERNAL ROM)\n");
+    printf("Overlay 2 running (stored in bank 0 RAM under the KERNAL ROM)\n");
     return OVERLAY2_SIGNATURE;
 }
 

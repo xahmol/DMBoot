@@ -1078,6 +1078,35 @@ void     bnk1_writem(void *dst, const void *src, unsigned len);
 
 ---
 
+### C128 gotchas (found in DMBoot v5 Phase 0, 2026-09-25)
+
+- **`kbhit()` is wrong on the C128.** `conio.c`'s `kbhit()` reads `$C6`, the
+  C64 keyboard buffer count. On the C128 the count is at `$D0` (buffer at
+  `$034A`). Poll with KERNAL `GETIN` instead:
+  `char key_poll(void) { return __asm { jsr $ffe4 \n sta accu }; }`
+  (`getchx()` also uses GETIN but applies the `giocharmap` conversion).
+- **Do not name a function `startup`.** `crt.c` already defines `startup`;
+  a user function with that name gives "error 3023: Duplicate definition
+  'startup'" (and the compiler may segfault right after).
+- **`petscii.h` + `printf` is fine.** With the global charmap from
+  `petscii.h`, format specifiers become PETSCII too (`%u` -> `%U`); Oscar64's
+  `printf` accepts both (`case p'u'`, `p's'`, `p'd'`, ...). Still print
+  `CHR$(14)` (`putrch(14)`) once to switch to the lower/upper case charset.
+- **`c128e` overlays (VDCSE pattern):** `#pragma overlay(name, N)` with a
+  region per overlay writes `build/name.prg` next to the main output, load
+  address = region start. The LMC (`#pragma overlay(xxxlmc, 1)`, region
+  `$1300-$1B00`) only contains functions that are actually referenced.
+- **Empty "release" macros must still evaluate their arguments.** A
+  debug hook like `#define tm_set_x(v)` (empty) silently removes a call
+  passed as its argument (`tm_set_x(overlay_fn())` compiles to nothing).
+  Use `#define tm_set_x(v) ((void)(v))`.
+- **Hardware testing via Ultimate REST memory access (c64bridge):** the
+  Ultimate reads/writes C128 memory with DMA. The C128 crashes (BRK into the
+  monitor, PC inside the Device Manager ROM) when this happens while it runs
+  at 2 MHz. Only access memory over REST while the C128 is at 1 MHz; the
+  same rule as REU DMA (wrap `reu_load`/`reu_store` in a 1 MHz switch via
+  `$D030` bit 0).
+
 ## PLUS4 Libraries (`include/plus4/`)
 
 ### `ted.h` — TED chip

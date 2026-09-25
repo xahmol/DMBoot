@@ -6,6 +6,7 @@ https://github.com/xahmol/DMBoot
 */
 
 #include <stdio.h>
+#include <petscii.h>
 #include "defines.h"
 #include "overlay1.h"
 
@@ -30,7 +31,7 @@ https://github.com/xahmol/DMBoot
 // ---------------------------------------------------------------------------
 char overlay1_selftest(void)
 {
-    printf("overlay 1 running (stored in bank 1 RAM)\n");
+    printf("Overlay 1 running (stored in bank 1 RAM)\n");
     return OVERLAY1_SIGNATURE;
 }
 

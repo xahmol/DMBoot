@@ -7,6 +7,7 @@ https://github.com/xahmol/DMBoot
 
 #include <stdio.h>
 #include <string.h>
+#include <petscii.h>
 #include <c64/kernalio.h>
 #include <c128/mmu.h>
 #include "banking.h"
@@ -67,7 +68,7 @@ bool load_overlay(const char *fname)
     // Reject names that would not fit, instead of silently truncating them
     if (strlen(fname) >= OVERLAY_NAME_MAX)
     {
-        printf("overlay name too long: %s\n", fname);
+        printf("Overlay name too long: %s\n", fname);
         return false;
     }
 
@@ -79,7 +80,7 @@ bool load_overlay(const char *fname)
     krnio_setnam(loadname);
     if (!krnio_load(1, sysinfo.bootdevice, 1))
     {
-        printf("loading %s failed, status %u\n", loadname, krnio_pstatus[1]);
+        printf("Loading %s failed, status %u\n", loadname, krnio_pstatus[1]);
         return false;
     }
 

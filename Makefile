@@ -144,4 +144,4 @@ check-deploy:
 # Deploy the last build (release or test) to the Device Manager boot
 # directory. NOTE: overwrites autostart.128.prg there.
 deploy: check-deploy
-	wput -u $(BUILD_PRGS) $(ULTFTP1)
+	wput -u --basename=build/ $(BUILD_PRGS) $(ULTFTP1)

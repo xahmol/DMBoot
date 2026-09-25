@@ -4,52 +4,53 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-DMBoot 128: a boot menu / file browser for the Commodore 128, written in C for **CC65** (`cl65`, target `c128`). It runs as `autostart.128.prg` from the `/usb*/11/` directory of an **Ultimate II+** cartridge and is started by Bart van Leeuwen's **C128 Device Manager ROM**. Both are hard runtime requirements: the program exits if no Ultimate Command Interface is detected, and it calls the DM ROM's extended API (`src/dmapiasm.s`, jump table at `$807B`–`$808F`).
+DMBoot 128 v5: boot menu / file browser for the Commodore 128, being rebuilt from scratch in **Oscar64** (C, target `c128e`) on branch `Oscar64Rebuild`. It runs as `autostart.128.prg` from `/usb*/11/` on an **Ultimate II+** and is autostarted by Bart van Leeuwen's **C128 Device Manager ROM**. It is a normal PRG plus overlay files, not a cartridge. The previous cc65 version (called v4, builds named `v391-*`) is preserved on branch `legacy-cc65`.
 
-The file browser is derived from DraBrowse (Sascha Bader / doj, `github.com/doj/dracopy`); `ultimate_*_lib.c` come from xlar54's ultimateii-dos-lib. Keep the attribution headers intact.
+**Read `docs/REBUILD_PLAN.md` first.** It holds the full architecture, the memory model, all design decisions, the phase plan, and the hardware test rules. Phase status: Phase 0 (skeleton) is done and hardware-verified.
 
-## Build and deploy
+Sibling/reference projects (all by the same author): UBoot64-v2 (`/home/xahmol/git/UBoot64-v2`, C64 cartridge version of the same boot menu: **prefer its routines over v4 legacy code**), VDC Screen Editor 2 (`/home/xahmol/VDCScreenEditor2`, overlay/banking/VDC library pattern), vdcmaniac (`/home/xahmol/git/vdcmaniac`).
+
+This is an Oscar64 project: use `oscar64manual.md` as the compiler reference (see the global instructions for keeping it updated). Other references in the repo root: `UCILIBMANUAL.md` (Ultimate Command Interface library), `vdclib_manual.md` (VDC library suite).
+
+## Build, deploy, test
 
 ```
-make            # builds autostart.128.prg, overlay .prg files, dmb-confupd-3-4.prg, and a timestamped release ZIP
-make clean
-make deploy     # wput the deploy files over FTP to the Ultimate II+ (ULTHOST in the Makefile, currently 192.168.1.19/usb1/11/)
+make build        # release build -> build/autostart.128.prg, dmblmc.prg, dmbovl*.prg
+make test-build   # same file names, with -dTESTMODE (test mailbox at $0B00, stays at 1 MHz)
+make deploy       # FTP to ftp://$(ULTIP1)/Usb1/11/ (ULTIP1 in gitignored .env; test machine 192.168.1.237)
+make docs / zip / clean
 ```
 
-- Requires `cl65` on PATH, plus `zip` and `wput`.
-- `make` (default `all`) always creates a new `DMBoot-v391-<date>.zip` in the repo root, and `README.pdf` is packed into it. Historical release ZIPs are committed on purpose because the README links to them. Don't delete them, and don't commit a new ZIP unless a release is intended.
-- The version string lives in `ZIP` in the Makefile and in `VERSION_MAJOR/MINOR` in `include/version.h`.
-- `c128-ram.o` (the CC65 bank-1 extended-memory driver, from `c128-ram.s`) is prebuilt and linked directly. It is not rebuilt by the Makefile.
-- `$(TIME)`/`$(CFG)` targets in the Makefile are leftovers from older multi-program builds and expand to nothing.
-- There are no tests. You can only verify changes on real hardware (C128 + U2+ + DM ROM) or in an emulator setup that provides both. The `.vscode/launch.json` VICE config is stale (Windows paths).
+- Oscar64 at `/home/xahmol/oscar64/bin/oscar64`. `MAIN_SRCS` in the Makefile must list every `.c`/`.h` reached through `#pragma compile`, or make won't rebuild.
+- `make deploy` **overwrites `autostart.128.prg`** in the Device Manager boot directory. The v4 original is backed up on the stick as `autostart.128.v4.prg` and locally in `tests/data/`.
+- There is no emulator path (VICE has no UCI). Testing is on the real C128 through c64bridge (`u2` backend). **Rules** (plan §7.1):
+  - Only read or write C128 memory over REST while the C128 runs at **1 MHz**. DMA at 2 MHz crashes it.
+  - Only access memory while mailbox `idle == 1`. After a test key that runs at 2 MHz, wait instead of polling.
+  - Inject keys via `$034A` (buffer) + `$D0` (count), not c64bridge's C64 key helpers.
+  - Ask the user before any reset, memory write or drive command.
 
-## Architecture: overlays
+## Architecture (see plan §3-§5 for detail)
 
-Memory is the main constraint. The README notes that the program is close to full memory. `dmboot-cc65.cfg` is a custom linker config that splits the program into a resident main program plus overlay files, all emitted by the single link of `autostart.128.prg`:
+- **Memory:**
+  - Resident program `$1C80`–`$97FF` (region `dmboot`).
+  - Overlay load slot `$9800`–`$BFFF` (`OVERLAYSIZE $2800`).
+  - Low-memory code (LMC) at `$1300`–`$1AFF` in 8 KB common RAM (`xmmu.rcr = 0x06`, restored by `bnk_exit()`).
+- **Overlays (VDCSE pattern):**
+  - Each overlay source starts with `#pragma overlay(dmbovlN, N+1)` + section/region pragmas.
+  - All overlay files are loaded once at startup, then copied to stores in bank 1 (`$4000`+) or in bank 0 under ROM (`$C000`). `loadoverlay(n)` copies the image into the slot, with no disk access.
+  - Overlays must never call each other. Functions called from resident code are `__noinline`.
+- **LMC:** the `bnk_*` banked access routines and the Device Manager ROM API (`dmapi.c`). The API runs with `$FF00 = $2A`, where only RAM below `$8000` is visible, so those routines must not touch memory at `$8000` or above.
+- **REU:** required (at least 128 KB). All DMA goes through `reu128_load`/`reu128_store`, which drop to 1 MHz. Size detection uses the probe barrier.
+- **UCI library** in `include/ultimate_*`, taken from UBoot64-v2.
 
-| Segment    | Output file     | Load address       | Contents |
-|------------|-----------------|--------------------|----------|
-| MAIN       | autostart.128.prg | `$1C01`          | `main.c`, screen/base/ops, VDC, Ultimate libs, DM API asm |
-| OVERLAY1   | dmb-fb.prg      | `$C000-OVERLAYSIZE` | file browser (`dir.c`, `db.c`, part of `ops.c`) |
-| OVERLAY2   | dmb-menu.prg    | shared overlay area | boot menu (`bootmenu.c`) |
-| OVERLAY3   | dmb-util.prg    | shared overlay area | NTP time + config UI (`u-time.c`, `dmbconfig.c`, `configcommon.c`) |
-| OVERLAY6   | dmb-exec.prg    | shared overlay area | mounting images / loading REU / launching (`exec.c`) |
-| OVERLAY4   | dmb-lowc.prg    | `$1300` (0x900)    | `geosramboot.c` low-memory code |
-| OVERLAY5   | dmb-geos.prg    | `$0B00` (0x100)    | `geosramroutine.s` |
+## Code conventions (mandatory)
 
-- You put code into an overlay with `#pragma code-name ("OVERLAYn")` / `rodata-name` at the top of the source file (or push/pop for part of a file, as in `ops.c`).
-- OVERLAY1/2/3/6 share one region of `__OVERLAYSIZE__` bytes (`$1C80`) ending at `$C000`. Only one is resident at a time. `main()` in `src/main.c` calls `loadoverlay("11:dmb-xxx")` before entering each feature and reloads `dmb-menu` afterwards. Code in one of these overlays must never call into another one. Shared helpers belong in MAIN.
-- If an overlay grows past `$1C80`, raise `__OVERLAYSIZE__`, but that shrinks MAIN (`$A3F3 - OVERLAYSIZE - STACKSIZE`). Check the `.map` output after changes.
-- Adding a new overlay means adding a MEMORY/SEGMENT pair in the cfg (OVL7–9 are spare placeholders), adding the file to `DEPLOYS` in the Makefile, and loading it from `main.c`.
-
-## Data storage
-
-- **Menu slots**: 36 slots (keys 0-9, a-z) of `struct SlotStruct` (`include/defines.h`). They live in C128 **bank 1** and are accessed through the CC65 `em_*` API (`c128_ram` driver) with `getslotfromem`/`putslottoem` in `bootmenu.c`. `std_read`/`std_write` in `main.c` load and save them as a raw binary blob: KERNAL `SETBNK` to bank 1, `$0400`–`$0400+72*256`, file `dmbootconf`, partition 11 of the boot device.
-- `Slot.cfgvs` / `CFGVERSION` versions the slot format. If you change `SlotStruct`, bump `CFGVERSION` and write a new `dmb-confupd-X-Y.c` migration tool (see `dmb-confupd-3-4.c`, set as `SOURCESUPD` in the Makefile).
-- **Util config** (NTP / GEOS RAM boot settings): file `dmbcfgfile`, read and written by `configcommon.c`.
-- **Directory entries** in the file browser are stored in free VDC RAM rather than main memory (`vdc.c` / `vdc_assembly.s`). The browser detects 16 KB vs 64 KB VDC at startup (`VDC_DetectVDCMemSize`), and this sets the maximum number of entries.
-- Hard-coded paths assume the program lives in `/usb*/11/` and that partition 11 is the boot partition (`cp11`). Overlay file names are prefixed `11:`.
-
-## Unused files
-
-The Makefile does not build `src/*_old.c`, `include/ops_old.h`, `src/test.c`, or `dmb-confupd-1-2.c`/`2-3.c`. Many `.prg`, `.map`, `.seq`, and `.reu` files in the repo root are committed build artifacts or test data. No `.gitignore` exists, so be careful about accidentally committing `.o`/`.d` files from a build.
+- Every function has a comment block above it: **Title, Description, Syntax, Input, Output**.
+- **Overflow-safe strings:** `strncpy(dst, src, sizeof(dst) - 1); dst[sizeof(dst) - 1] = 0;` Sizes come from `sizeof` or named constants. Validate every external input (UCI, files, IEC, keyboard) for length and range.
+- Structs for grouped state and layouts. Named constants, no magic numbers.
+- `petscii.h` in every file that prints; string literals are PETSCII. Use proper capitalisation in UI text. Wire-protocol strings (UCI/DOS) may need an identity charmap override (UBoot64 ARCHITECTURE.md §12.10).
+- Debug/test hooks that compile to nothing in release must still evaluate their arguments (`((void)(x))`).
+- **Credits:**
+  - Third parties only (Oscar64, ultimateii-dos-lib, DraBrowse/doj, Device Manager ROM/GEOS routine by Bart van Leeuwen).
+  - Never credit the author's own work. Refer to his GitHub projects as his where relevant.
+- Apply the Oscar64 quirk workarounds from UBoot64-v2 `ARCHITECTURE.md` §12.

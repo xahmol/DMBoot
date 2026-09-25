@@ -322,6 +322,7 @@ in `~/.c64bridge.json` as the `u2` backend profile. Select it with
 
 **Safety rules (learned 2026-09-25, see `tests/crash/`):**
 - Every REST memory read or write **stops the C128 CPU briefly** (DMA; firmware `C64::peek`). A `c64bridge reset` followed by reads every 2 s during boot crashed the machine within about 5 s. The DM ROM crash handler reported `BREAK AT $DC03 IN IO SPACE` with `$FF00=$2A` (the DM function-ROM configuration), loaded its `SNAPSHOT128` tool at `$1C01`, and wrote `/Temp/crashdump*.prg`. A reset from the crash menu then booted DMBoot v4 normally.
+- **Root cause (found in Phase 0): REST memory access is DMA, and the C128 crashes on DMA while it runs at 2 MHz** (same reason REU DMA needs 1 MHz). Both crashes happened with the CPU in FAST mode (80 columns). TESTMODE builds therefore stay at 1 MHz; a test that switches to 2 MHz restores 1 MHz before going idle, and the harness waits (does not poll) for its maximum duration.
 - **Never read or write memory over REST while the machine is booting, loading, or using the drives** (DM autostart, overlay preload, directory reads, mounts, REU loads). Wait for the TESTMODE mailbox to report idle (menu loop heartbeat) first. Until then, watch progress with drive status (`/v1/drives`) and FTP, which do not touch the C128 bus.
 - Before any state-changing c64bridge operation (reset, reboot, memory write, drive command), confirm with the user, who is at the machine.
 - Confirmed: REST DMA reads see **bank 0 RAM**, not I/O (`$D500` reads `$FF`). v4's bank 1 slot data was not visible.

@@ -29,6 +29,8 @@ bank 0 under ROM, REU DMA at 2 MHz, Device Manager API, test mailbox).
 
 #include <stdio.h>
 #include <string.h>
+#include <conio.h>
+#include <petscii.h>
 #include <c64/reu.h>
 #include "defines.h"
 #include "banking.h"
@@ -47,6 +49,9 @@ bank 0 under ROM, REU DMA at 2 MHz, Device Manager API, test mailbox).
 #define KEY_REUTEST_SAFE    0x52    // 'R'
 #define KEY_REUTEST_UNSAFE  0x55    // 'U'
 #define KEY_EXIT            0x58    // 'X'
+
+// Screen control characters (KERNAL CHROUT)
+#define CHR_LOWERCASE       0x0e    // Switch to the lower/upper case charset
 
 // REU round-trip test parameters
 #define REUTEST_BLOCK_SIZE  1024
@@ -111,27 +116,46 @@ char key_wait(void)
 }
 
 // ---------------------------------------------------------------------------
+// Title:       Set CPU speed
+// Description: Switches the C128 between 1 MHz and 2 MHz and records the
+//              state in sysinfo.
+// Syntax:      void cpu_set_fast(bool fast);
+// Input:       fast - true for 2 MHz, false for 1 MHz
+// Output:      sysinfo.fast
+// ---------------------------------------------------------------------------
+void cpu_set_fast(bool fast)
+{
+    volatile char *clock = (volatile char *)VIC_CLOCK_REG;
+
+    if (fast)
+    {
+        *clock |= VIC_CLOCK_FAST;
+    }
+    else
+    {
+        *clock &= ~VIC_CLOCK_FAST;
+    }
+    sysinfo.fast = fast ? 1 : 0;
+}
+
+// ---------------------------------------------------------------------------
 // Title:       Detect screen mode and speed
-// Description: Detects 40 or 80 column mode and switches to 2 MHz in 80
-//              column mode (the VIC screen is not used there).
+// Description: Detects 40 or 80 column mode. In 80 column mode the release
+//              build runs at 2 MHz (the VIC screen is not used there). A
+//              TESTMODE build stays at 1 MHz, because the Ultimate's REST
+//              memory access uses DMA, which crashes the C128 at 2 MHz.
 // Syntax:      void detect_mode(void);
 // Input:       None
 // Output:      sysinfo.mode80, sysinfo.fast
 // ---------------------------------------------------------------------------
 void detect_mode(void)
 {
-    volatile char *clock = (volatile char *)VIC_CLOCK_REG;
-
     sysinfo.mode80 = (*(volatile char *)ZP_MODE_80COL & MODE_80COL_FLAG) ? 1 : 0;
-    if (sysinfo.mode80)
-    {
-        *clock |= VIC_CLOCK_FAST;
-        sysinfo.fast = 1;
-    }
-    else
-    {
-        sysinfo.fast = 0;
-    }
+#ifdef TESTMODE
+    cpu_set_fast(false);
+#else
+    cpu_set_fast(sysinfo.mode80 != 0);
+#endif
 }
 
 // ---------------------------------------------------------------------------
@@ -149,7 +173,7 @@ bool overlays_preload(void)
     {
         const struct OverlayStore *store = &overlay_store[index];
 
-        printf("loading overlay %u (%s)\n", index + 1, store->name);
+        printf("Loading overlay %u (%s)\n", index + 1, store->name);
         if (!load_overlay(store->name))
         {
             return false;
@@ -223,9 +247,12 @@ bool reutest_check(char iteration)
 // ---------------------------------------------------------------------------
 // Title:       REU round-trip test
 // Description: Stores a pattern block to the REU, clears the buffer, loads
-//              it back and verifies it, for a number of iterations. The safe
-//              variant uses the 1 MHz wrappers; the unsafe variant calls the
-//              Oscar64 routines directly at the current CPU speed.
+//              it back and verifies it, for a number of iterations. The test
+//              runs with the CPU at 2 MHz. The safe variant uses the 1 MHz
+//              wrappers; the unsafe variant calls the Oscar64 routines
+//              directly at 2 MHz. Afterwards the speed is restored (1 MHz in
+//              a TESTMODE build), so a harness may read the mailbox again
+//              once the test is done (it must wait, not poll, meanwhile).
 // Syntax:      void reutest(char key, bool safe);
 // Input:       key  - menu key that started the test (reported in mailbox)
 //              safe - true: 1 MHz DMA wrappers, false: DMA at current speed
@@ -235,7 +262,9 @@ void reutest(char key, bool safe)
 {
     unsigned passes = 0;
     unsigned failures = 0;
+    bool previous_fast = sysinfo.fast != 0;
 
+    cpu_set_fast(true);
     for (char iteration = 0; iteration < REUTEST_ITERATIONS; iteration++)
     {
         unsigned long raddr = REUTEST_REU_BASE + (unsigned long)iteration * REUTEST_BLOCK_SIZE;
@@ -271,7 +300,9 @@ void reutest(char key, bool safe)
         }
     }
 
-    printf("reu test (%s): %u passed, %u failed\n", safe ? "1 mhz dma" : "dma at cpu speed", passes, failures);
+    cpu_set_fast(previous_fast);
+
+    printf("REU test (%s): %u passed, %u failed\n", safe ? "1 MHz DMA" : "DMA at 2 MHz", passes, failures);
     tm_set_test(key, failures ? TM_RESULT_FAIL : TM_RESULT_PASS, passes, failures);
 }
 
@@ -284,21 +315,21 @@ void reutest(char key, bool safe)
 // ---------------------------------------------------------------------------
 void print_status(void)
 {
-    printf("\ndmboot 128 %s - phase 0 skeleton\n", VERSION);
-    printf("boot device %u, %u columns, %s\n", sysinfo.bootdevice,
-           sysinfo.mode80 ? 80 : 40, sysinfo.fast ? "2 mhz" : "1 mhz");
-    printf("reu %u kb, overlay disk loads %u, active overlay %u\n",
+    printf("\nDMBoot 128 %s - Phase 0 skeleton\n", VERSION);
+    printf("Boot device %u, %u columns, %s\n", sysinfo.bootdevice,
+           sysinfo.mode80 ? 80 : 40, sysinfo.fast ? "2 MHz" : "1 MHz");
+    printf("REU %u KB, overlay disk loads %u, active overlay %u\n",
            sysinfo.reupages * 64, sysinfo.diskloads, overlay_active);
     if (dminfo.present)
     {
-        printf("dm api v%u.%u, hyperspeed id %u\n",
+        printf("DM API v%u.%u, hyperspeed ID %u\n",
                dminfo.version_major, dminfo.version_minor, dminfo.hyperspeed_id);
     }
     else
     {
-        printf("dm api not found\n");
+        printf("DM API not found\n");
     }
-    printf("1/2 overlay, r reu test, u reu test at cpu speed, x exit\n");
+    printf("1/2: Overlay  R: REU test  U: REU test with 2 MHz DMA  X: Exit\n");
 }
 
 // ---------------------------------------------------------------------------
@@ -314,26 +345,27 @@ bool dmb_startup(void)
     tm_init();
     tm_set_screen(TM_SCREEN_STARTUP);
 
+    putrch(CHR_LOWERCASE);
     detect_mode();
-    printf("dmboot 128 %s starting\n", VERSION);
+    printf("DMBoot 128 %s starting\n", VERSION);
 
     if (!bnk_init())
     {
-        tm_message("lmc load failed");
+        tm_message("LMC load failed");
         return false;
     }
 
     if (!overlays_preload())
     {
-        tm_message("overlay load failed");
+        tm_message("Overlay load failed");
         return false;
     }
 
     sysinfo.reupages = reu128_count_pages();
     if (sysinfo.reupages < REU_MIN_PAGES)
     {
-        printf("an reu of at least 128 kb is required\n");
-        tm_message("no reu");
+        printf("An REU of at least 128 KB is required\n");
+        tm_message("No REU");
         return false;
     }
 
@@ -360,7 +392,7 @@ int main(void)
     }
 
     tm_set_screen(TM_SCREEN_MAINMENU);
-    tm_message("ready");
+    tm_message("Ready");
     print_status();
 
     do

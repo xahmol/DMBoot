@@ -9,8 +9,12 @@ block ("mailbox") at $0B00 that a test harness reads over the Ultimate REST
 API (c64bridge memory read). Keys are injected through the KERNAL keyboard
 buffer ($034A, count $D0). See docs/REBUILD_PLAN.md §7.1.
 
-SAFETY: REST memory access stops the CPU. The harness may only read or
-write while mailbox.idle == 1 (DMBoot waiting for a key in a menu loop).
+SAFETY: REST memory access stops the CPU with DMA, which crashes the C128
+when it runs at 2 MHz (confirmed on hardware 2026-09-25). A TESTMODE build
+therefore stays at 1 MHz, except inside tests that explicitly switch to
+2 MHz; after injecting such a test key the harness must WAIT (not poll) for
+the test's maximum duration before reading again. Otherwise the harness may
+only read or write while mailbox.idle == 1 (DMBoot waiting for a key).
 
 In release builds all tm_* calls compile to nothing.
 */
