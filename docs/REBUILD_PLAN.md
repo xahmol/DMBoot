@@ -253,12 +253,7 @@ library is created in Phase 1, before any UI screens are ported.
 
 ## 7. Ultimate library and build chain
 
-**UCI library:** the base is `UBoot64-v2/include/ultimate_*` plus `UCILIBMANUAL.md`
-(newest: 3.15 fixes, `UII_SUCCESS`, `volatile` registers, `uii_enable()`,
-`uii_add_partition()`). Before copying, diff it against
-`UltimateDemo2026/include/ultimate_*` (its `ultimate_dos_lib.c` is bigger)
-and merge anything that is missing there. Record which copy is canonical in `CLAUDE.md`.
-`#ifdef UBOOT64_BANKED`-style bank pragmas are removed. DMBoot uses overlay placement instead.
+**UCI library:** `UBoot64-v2/include/ultimate_*` plus `UCILIBMANUAL.md` is the **authoritative base** (decided 2026-09-25: most up to date, bug-fixed, includes the firmware 3.15 additions); where it conflicts with the `UltimateDemo2026` copy, UBoot64's names and semantics win. On request it was then **completed** (2026-09-25) against released firmware 3.15a: every command usable on an Ultimate II+ is wrapped (new: REU load/save at an address, REU preload, file size, finish capture, decode track, EasyFlash erase, load config, the whole SoftIEC target in `ultimate_softiec_lib`, storage media helpers), with bounds-checked name handling. The **HTTP target** (new in 3.15) is **deferred**: DMBoot only uses the network for NTP. TCP listener commands are left out (not in released firmware). `UCILIBMANUAL.md` §17 has the complete coverage table. These additions still need to go back into UBoot64-v2.
 
 **Makefile** (per `~/.claude/makefile_conventions.md` and UBoot64/VDCSE):
 - `SYS = c128e`, `CC = /home/xahmol/oscar64/bin/oscar64`, `VERSION_MAJOR/MINOR/PATCH = 5/0/0`, timestamped `VERSION`.
