@@ -260,17 +260,22 @@ void print_devices(void)
         {
             char id = iec_index_to_id(x);
             dwin_printf(&console, cfg.colors.text, " %u(", id);
-            // The Device Manager does not recognise the Ultimate drives as
-            // such (it reports their drive type), so label them from uii_devinfo
-            for (char u = 0; u < UII_DEVINFO_DRIVES; u++)
+            if (active[x] == IEC_HYPERSPEED)
             {
-                if (uii_devinfo[u].exist && uii_devinfo[u].id == id)
+                dwin_put_string(&console, "hyperspeed)", cfg.colors.text);
+                continue;
+            }
+            // Ultimate devices: label from uii_devinfo, because the Device
+            // Manager reports only their drive type
+            for (char u = 0; u < UII_DEVINFO_COUNT; u++)
+            {
+                if (uii_devinfo[u].exist && uii_devinfo[u].power && uii_devinfo[u].id == id)
                 {
-                    dwin_printf(&console, cfg.colors.text, "Ult %c ", 'A' + u);
+                    dwin_printf(&console, cfg.colors.text, "%s ", names[u]);
                 }
             }
             dwin_printf(&console, cfg.colors.text, "%s)",
-                        dminfo.present ? dm_drivetype_name(id) : "");
+                        (dminfo.present && id != dminfo.hyperspeed_id) ? dm_drivetype_name(id) : "");
         }
     }
     dwin_put_char(&console, '\n', cfg.colors.text);

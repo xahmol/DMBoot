@@ -36,12 +36,6 @@ https://github.com/xahmol/DMBoot
 #define SLOT_KEYS_DIGITS    10
 #define PETSCII_ZERO        0x30
 #define PETSCII_LETTER_A    0x41    // Unshifted letter keys (a-z)
-// IEC scan results (iec_scan)
-#define IEC_OTHER           0x01    // A non-Ultimate device
-#define IEC_ULT_EXISTS      0x01
-#define IEC_ULT_POWERED     0x02
-#define IEC_ULT_SWITCHABLE  0x04
-#define UII_TYPE_SOFTIEC    0x0f    // uii_devinfo type: 0x00-0x02 are drives A/B
 
 #define PETSCII_SHIFT       0x80    // Added to a letter for its shifted (uppercase) code
 
@@ -519,8 +513,8 @@ static char iec_ultimate_on_id(char id)
 // ---------------------------------------------------------------------------
 // Title:       Does a device answer
 // Description: Presence test for one ID. With the Device Manager API the
-//              ROM is asked (drive type not "none"; the hyperspeed drive
-//              always answers), else the bus is probed with iec_present.
+//              ROM is asked (drive type not "none"), else the bus is
+//              probed with iec_present.
 // Syntax:      static bool iec_device_answers(char id);
 // Input:       id - IEC device ID
 // Output:      true if a device is present
@@ -529,7 +523,7 @@ static bool iec_device_answers(char id)
 {
     if (dminfo.present)
     {
-        return id == dminfo.hyperspeed_id || dm_api_get_drivetype(id) != DM_TYPE_NONE;
+        return dm_api_get_drivetype(id) != DM_TYPE_NONE;
     }
     return iec_present(id);
 }
@@ -539,7 +533,9 @@ static bool iec_device_answers(char id)
 // Description: Fills an array with the active devices on IDs 8-29 and 4,
 //              and tells whether any device needs manual power switching
 //              (for demo mode): a powered Ultimate device the UCI cannot
-//              switch, or any other device except on ID 8.
+//              switch (SoftIEC, printer), or any other device except on
+//              ID 8. The Device Manager hyperspeed drive is listed but
+//              needs no switching.
 //              Uses uii_devinfo and dminfo: call uii_parse_deviceinfo and
 //              dm_query first.
 //              As UBoot64-v2 CheckActiveIECdevices; fixed there: the
@@ -547,7 +543,8 @@ static bool iec_device_answers(char id)
 // Syntax:      bool iec_scan(char *active);
 // Input:       active - array of IEC_ID_COUNT bytes
 // Output:      true if manual power switching is needed; active[] per
-//              index: 0 = none, 1 = other device, else the Ultimate bits
+//              index: 0 = none, IEC_OTHER, IEC_HYPERSPEED, else the
+//              Ultimate bits (IEC_ULT_*)
 // ---------------------------------------------------------------------------
 bool iec_scan(char *active)
 {
@@ -561,15 +558,21 @@ bool iec_scan(char *active)
         active[x] = 0;
         if (ult & IEC_ULT_POWERED)
         {
+            // Ultimate device; the SoftIEC and printer cannot be switched
+            // through the UCI, so they need manual switching
             active[x] = ult;
             if (!(ult & IEC_ULT_SWITCHABLE))
             {
                 manual = true;
             }
         }
-        // Not an Ultimate device, or one reported as off (the Device
-        // Manager hyperspeed drive answers although the Ultimate reports
-        // its SoftIEC drive as off): ask the bus
+        else if (dminfo.present && id == dminfo.hyperspeed_id)
+        {
+            // Device Manager hyperspeed drive: served by the ROM through
+            // the UCI, not a device on the bus, so no manual switching
+            active[x] = IEC_HYPERSPEED;
+        }
+        // Not an Ultimate device, or one reported as off: ask the bus
         else if (iec_device_answers(id))
         {
             active[x] = IEC_OTHER;
