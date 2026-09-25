@@ -214,9 +214,9 @@ if (dwin_popup_open(&popup, x, 3, 30, 7, VCOL_YELLOW, VCOL_LT_BLUE))
 
 ## 9. Notes on the VDC library copy
 
-DMBoot carries its own copy of the VDC library suite, taken from VDC Screen Editor 2. Two bugs found while building DualWin are fixed in this copy:
+DMBoot carries its own copy of the VDC library suite, taken from VDC Screen Editor 2 and kept identical to it. Two bugs found while building DualWin were fixed in both (VDC Screen Editor 2 `vdclib_manual.md`, gotcha 12):
 
 1. **`vdc_hchar()` with length 1 filled 257 positions.** `vdc_block_fill()` writes one byte plus a block of `length - 1` bytes, and a VDC block count of 0 means 256. Now length 1 plots a single character and length 0 plots nothing. Found on hardware: one-character-wide popup borders filled large parts of the screen.
 2. **`vdcwin_put_rect_raw()` filled one attribute byte too many per row.** It passed `w` instead of the zero-based `w - 1` to `vdc_block_fill()`.
 
-Both bugs also exist in the original library.
+VDC Screen Editor 2 itself never hit either bug: its `vdc_hchar()` calls always use widths far above 1 (vertical borders are drawn with `vdc_printc()`), and it never calls `vdcwin_put_rect`.

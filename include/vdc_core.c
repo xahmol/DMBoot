@@ -526,10 +526,9 @@ void vdc_prints(char x, char y, const char *string)
 
 void vdc_hchar(char x, char y, char val, char attr, char length)
 // Function to plot horizontal line using block copy
-// Fix (DMBoot v5, 2026-09-25): vdc_block_fill writes one byte plus a block of
-// length - 1 bytes, and a VDC block count of 0 means 256. A line of length 1
-// therefore filled 257 positions. Length 1 now plots one character, and
-// length 0 plots nothing.
+// vdc_block_fill writes one byte plus a zero-based block of length - 1 bytes,
+// and a VDC block count of 0 means 256: length 1 would fill 257 positions and
+// length 0 would underflow. Handle both separately.
 {
     if (!length)
     {

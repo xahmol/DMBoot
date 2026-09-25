@@ -543,8 +543,7 @@ void vdcwin_put_rect_raw(struct VDCWin *win, char x, char y, char w, char h, cha
 	for (char i = 0; i < h; i++)
 	{
 		bnk_cpytovdc(sp, cr, chars, w);
-		// Fix (DMBoot v5, 2026-09-25): block fill length is zero based
-		// (one byte plus length - 1 more); w filled one attribute too many.
+		// Block fill length is zero based (one byte plus length - 1 more)
 		if (w > 1)
 		{
 			vdc_block_fill(cp, vdc_state.text_attr, w - 1);

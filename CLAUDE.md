@@ -42,7 +42,7 @@ make docs / zip / clean
 - **LMC:** the `bnk_*` banked access routines and the Device Manager ROM API (`dmapi.c`). The API runs with `$FF00 = $2A`, where only RAM below `$8000` is visible, so those routines must not touch memory at `$8000` or above.
 - **REU:** required (at least 128 KB). All DMA goes through `reu128_load`/`reu128_store`, which drop to 1 MHz. Size detection uses the probe barrier.
 - **UCI library** in `include/ultimate_*`, taken from UBoot64-v2.
-- **VDC library suite** copy in `include/vdc_core.*`/`vdc_win.*` (from VDC Screen Editor 2). It has local bug fixes (`vdc_hchar` length 1, `vdcwin_put_rect_raw`); see DUALWINMANUAL.md §9.
+- **VDC library suite** copy in `include/vdc_core.*`/`vdc_win.*` (from VDC Screen Editor 2). Keep it byte-identical to the canonical VDCSE files; fix bugs in both (see DUALWINMANUAL.md §9).
 
 ## Code conventions (mandatory)
 
