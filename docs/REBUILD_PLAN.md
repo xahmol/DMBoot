@@ -400,6 +400,7 @@ Standalone `c128e` PRG (uses `bank_minimal` + UCI library), placed in `/usb*/11/
    - Layout: each 512-byte slot is two 256-byte pages (v4 `getslotfromem`). Page 1 holds `path`…`cfgvs` (246 bytes used); page 2 holds the image fields from offset 256.
    - The 3-byte prefix is `cd:` (verified on real v4 files), but not always present: OHG 64 has `/usb1/...` without it, which v4's `+3` broke. Strip `cd:` only when present, and convert mount/REU paths to ASCII. `path` keeps it (IEC command).
    - Clear `COMMAND_IMGA`/`IMGB` when no image file name is stored (seen in the real v4 file).
+   - BOOT slots whose path goes into a disk image on the SoftIEC drive cannot boot (no block read inside an image; `BOOT` returns to READY, seen on hardware). Convert them to "mount the image on drive A (ID 8) + BOOT from the mounted drive" and drop Force 8. The Phase 4 browser must create BOOT slots the same way.
    - Reference implementation: `tests/tools/convert_v4_slots.py`.
    - Menu name 20 → 30.
    - Zero the padding.
