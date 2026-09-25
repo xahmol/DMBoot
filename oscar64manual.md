@@ -1106,6 +1106,27 @@ void     bnk1_writem(void *dst, const void *src, unsigned len);
   at 2 MHz. Only access memory over REST while the C128 is at 1 MHz; the
   same rule as REU DMA (wrap `reu_load`/`reu_store` in a 1 MHz switch via
   `$D030` bit 0).
+- **Returning to BASIC 7 leaves BASIC's zero page corrupted.** Oscar64's
+  default zero page (`MachineTypes.cpp`) is `$02-$26` (registers),
+  `$43-$62` (`T*` temporaries) and `$F7-$FF` (auto zero page). On the C128
+  this overlaps BASIC 7 work storage that `RUN` does not reinitialise, for
+  example the function dispatch `JMP` near `$54-$56` (Oscar64 keeps T1/T2 at
+  `$53-$55`). `crt.c` `spexit` only resets `$13/$16/$18/$1A/$54`, and
+  `exit()` only `$54/$13`. Symptom: after exiting, a BASIC program that uses
+  variables or string functions (`A=1`, `CHR$(14)`) crashes with BREAK,
+  PC `$1005B`. Fix: copy those three ranges to a buffer as the first
+  statement of `main()` (only `ip $19-$1A` and `sp $23-$24` were changed
+  before it), and restore them in an assembler exit routine
+  (`ldx spentry; txs`, copy back, then `$13=0, $1A=0, $18=$1B, $16=$19`,
+  `rts`). cc65's C128 runtime does the same with its own zero page.
+- **C128 function keys return their strings, not key codes.** The screen
+  editor expands F1-F8/HELP (F7 = `LIST` + RETURN) before `GETIN` sees
+  them. Set the key store vector `$033C` to `$C6B7` (past the expansion;
+  as cc65 `libsrc/c128/cgetc.s`) and restore the saved value on exit.
+- **An `__asm name { ... }` function cannot also have a C prototype.**
+  Declaring `void name(void);` in a header gives "error 3023: Duplicate
+  definition". To call assembler from C, write a normal function whose body
+  is an `__asm { ... }` block (no `rts`).
 
 ## PLUS4 Libraries (`include/plus4/`)
 
