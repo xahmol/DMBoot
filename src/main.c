@@ -381,14 +381,12 @@ bool dmb_startup(void)
         print_devices();
     }
 
-#ifdef TESTMODE
-    // Debug aid: keep the detection screen visible
-    if (cfg.verbose)
+    // Keep the start-up messages on screen until a key is pressed
+    if (cfg.verbose == VERBOSE_WAIT)
     {
         dwin_put_string(&console, "\nPress a key to continue.", cfg.colors.text);
         key_wait();
     }
-#endif
 
     tm_sync();
     return true;

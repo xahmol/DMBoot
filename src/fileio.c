@@ -204,7 +204,7 @@ void config_defaults(void)
     cfg.version = CFGVERSION;
     cfg.timeon = 1;
     cfg.secondsfromutc = 7200;
-    cfg.verbose = 1;
+    cfg.verbose = VERBOSE_ON;
     cfg.colors.background = VCOL_BLACK;
     cfg.colors.border = VCOL_BLACK;
     cfg.colors.header1 = VCOL_GREEN;
@@ -298,5 +298,10 @@ void readconfigfile(void)
     {
         config_defaults();
         errorexit("Old config file format. Run dmbupd45 first.");
+    }
+    // Validate settings that select from a list
+    if (cfg.verbose >= VERBOSE_OPTIONS)
+    {
+        cfg.verbose = VERBOSE_ON;
     }
 }

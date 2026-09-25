@@ -192,13 +192,23 @@ struct GeosConfig
 };
 
 // Global configuration, file dmbconf.cfg
+// Start-up feedback (ConfigStruct.verbose). The names fit a menu line in
+// both 40 and 80 columns (Phase 5 configuration screen).
+#define VERBOSE_SILENT      0       // Spinner only
+#define VERBOSE_ON          1       // Messages
+#define VERBOSE_WAIT        2       // Messages, then wait for a key
+#define VERBOSE_OPTIONS     3
+#define VERBOSE_NAME_SILENT "Silent"
+#define VERBOSE_NAME_ON     "Show messages"
+#define VERBOSE_NAME_WAIT   "Show messages + wait"
+
 struct ConfigStruct
 {
     char version;                   // CFGVERSION
     char timeon;                    // 1 = set the time via NTP at start-up
     char host[MAXHOSTLENGTH];       // NTP server
     long secondsfromutc;            // Time zone offset
-    char verbose;                   // 1 = verbose start-up, 0 = spinner
+    char verbose;                   // VERBOSE_SILENT / _ON / _WAIT
     struct ColorPalette colors;
     char timeoutidx;                // Auto-boot timeout index, 0 = off
     char iec_root_partition;        // Firmware 3.15 preparation, 0 = off
