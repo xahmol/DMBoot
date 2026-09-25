@@ -84,8 +84,6 @@ struct DWinPopup
     char *store;            // Start of the saved data in the storage bank
 };
 
-#define DWIN_VDC_REGS       37      // VDC registers 0-36 saved at set-up
-
 // Library state
 struct DWinState
 {
@@ -98,7 +96,6 @@ struct DWinState
     unsigned storesize;     // Size of the popup storage area in bytes
     char popups;            // Number of open popups
     struct DWinPopup popup[DWIN_POPUP_MAX];
-    char vdcregs[DWIN_VDC_REGS];    // VDC registers at set-up, restored by dwin_exit
 };
 
 extern struct DWinState dwin_state;

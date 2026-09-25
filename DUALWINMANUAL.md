@@ -59,7 +59,7 @@ dwin_screen_colors(VCOL_BLACK, VCOL_BLACK);
 `dwin_setup()` does the following:
 - detects the active screen (zero page `$D7` bit 7) and PAL/NTSC (`$0A03`);
 - sends `CHR$(14)` so the KERNAL switches the active screen to lower/upper case;
-- in 80 columns, detects the VDC RAM size and sets `vdc_state` for 80x25 (PAL or NTSC).
+- in 80 columns, fills `vdc_state` for the 80x25 screen the KERNAL already set up (PAL or NTSC). It does **not** write any VDC register: reprogramming the VDC shifted the picture after exiting to BASIC, and VDC registers cannot be saved and restored because many are write-only (they read back as `$FF`).
 
 It does **not** switch screens or change the CPU speed (unlike the application-specific `vdc_init()` of the VDC suite).
 
@@ -94,7 +94,7 @@ An application therefore needs only one palette, whatever the screen.
 | `void dwin_setup(char storecr, char *storebase, unsigned storesize)` | Detects the screen and PAL/NTSC, switches to the lower case charset, initialises the VDC state, and registers popup storage (MMU `$FF00` value, start, size). |
 | `void dwin_screen_colors(char border, char background)` | VIC: border and background. VDC: background (the VDC has no separate border). |
 | `bool dwin_is80(void)` | true in 80 column mode. |
-| `void dwin_exit(void)` | Hand the screen back to the KERNAL before exiting to BASIC: calls KERNAL `CINT` (`$FF81`), which re-initialises the screen editor, VIC and VDC (registers, charsets, cleared screens). Without it BASIC showed shifted rows and garbage after exit (seen on hardware). |
+| `void dwin_exit(void)` | Hand the screen back to the KERNAL before exiting to BASIC: calls KERNAL `CINT` (`$FF81`), which re-initialises the screen editor and both screens (colours, charsets, cleared screens). |
 
 ### Windows
 
