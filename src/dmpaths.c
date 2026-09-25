@@ -30,6 +30,7 @@ char storagepaths[STORAGE_CANDIDATES][STORAGE_PATH_MAX] = {
 
 char configfilename[] = "dmbconf.cfg";
 char slotfilename[] = "dmbslots.cfg";
+char v4slotfilename[] = "dmbootconf.prg";   // DMBoot v4 slots (upgrade tool dmbupd45)
 
 // Back to the petscii.h charmap for everything that follows
 #pragma charmap(97, 65, 26)

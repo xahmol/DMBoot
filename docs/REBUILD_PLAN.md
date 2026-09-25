@@ -535,7 +535,14 @@ Each phase ends with a build, a deploy to hardware (`192.168.1.237`), a c64bridg
   - Configuration (main menu F4): NTP on/off, start-up feedback (silent / show messages / show messages + wait), UTC offset (validated, ±14 h), auto-boot timeout, NTP server (stored in ASCII, edited in PETSCII), colour editor with live preview and undo from a copy taken on entry.
   - Information (main menu F2): text logo (one function, replaceable by PETSCII art), version, Ultimate/REU/DM API info, credits.
   - `pet2asc` moved to the resident `core.c` (browser and configuration use it).
-  - Still open in Phase 5: GEOS RAM boot (F6) with the LMC trampoline and its settings.
+  - GEOS RAM boot (F6): Bart van Leeuwen's routine in the LMC (`geosboot.c`), started by `exec_geos` in overlay 5 after mounting A/B and loading the GEOS REU image last; settings in the configuration (F8), ASCII stored. The v4 "no REU" error path left the ROMs switched in; fixed.
+- Found while reviewing: C64 mode typed `SYS 0` since Phase 2 (Oscar64 dropped the address-only `__asm dm_run64` and folded its address to 0). Fixed; see the Oscar64 manual. Needs a hardware test of C/D/F5.
+- Slot start sends v4's drive root reset before the slot path (`cd:/...` is relative on the SoftIEC drive; the browser may leave the drive in a subdirectory). v4 did this before every overlay load.
+- **Phase 6: implemented, not yet hardware-tested.** `dmbupd45.prg` (7.4 KB, built with `make build`/`test-build`, deployed with the rest):
+  - Reads `dmbootconf.prg` (36 × 512 B, two 256-byte pages per slot) and `DMBCFGFILE` (328 B) from the DMBoot directory, asks before overwriting existing v5 files, writes `dmbslots.cfg` and `dmbconf.cfg`; the v4 files stay as backup.
+  - Same rules as `tests/tools/convert_v4_slots.py`; GEOS images without a path get the DMBoot directory (with a note).
+  - DMBoot v5 without v5 files but with `dmbootconf.prg`: asks whether to start with empty slots or to run the upgrader first (plan §10 point 6).
+  - Shared modules for this: `petconv.c`, `cfgdefaults.c`, `basicexit.c` (clean return to BASIC 7 for both programs).
 
 ## 13. Risks and verification items
 

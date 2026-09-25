@@ -29,6 +29,7 @@ extern char storagepaths[STORAGE_CANDIDATES][STORAGE_PATH_MAX];
 extern char configpath[STORAGE_PATH_MAX];
 extern char configfilename[];
 extern char slotfilename[];
+extern char v4slotfilename[];
 
 char resolve_storage_path(void);
 

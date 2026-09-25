@@ -252,6 +252,32 @@ void readconfigfile(void)
     uii_open_file(FILE_READ, configfilename);
     if (!UII_SUCCESS)
     {
+        uii_close_file();
+
+        // DMBoot v4 files but no v5 files: point to the upgrade tool
+        // instead of silently starting with empty slots (plan §10)
+        uii_open_file(FILE_READ, v4slotfilename);
+        if (UII_SUCCESS)
+        {
+            char key;
+
+            uii_close_file();
+            dwin_put_string(&console, "\nDMBoot v4 slots found. Run DMBUPD45 to\nconvert them.\nStart with empty slots? (Y/N)\n",
+                            cfg.colors.error);
+            do
+            {
+                key = key_wait();
+            } while (key != 'y' && key != 'Y' && key != 'n' && key != 'N');
+            if (key == 'n' || key == 'N')
+            {
+                errorexit("Load and run DMBUPD45 from partition 11.");
+            }
+        }
+        else
+        {
+            uii_close_file();
+        }
+
         config_defaults();
         progress("No config file found, writing defaults.");
         writeconfigfile();

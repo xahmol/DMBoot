@@ -1084,6 +1084,9 @@ void     bnk1_writem(void *dst, const void *src, unsigned len);
   C64 keyboard buffer count. On the C128 the count is at `$D0` (buffer at
   `$034A`). Poll with KERNAL `GETIN` instead:
   `char key_poll(void) { return __asm { jsr $ffe4 \n sta accu }; }`
+  (`\n` here means a line break: each instruction must be on its own
+  source line; a literal `\n` in a one-line `__asm` block is a syntax error,
+  "End of line expected")
   (`getchx()` also uses GETIN but applies the `giocharmap` conversion).
 - **Do not name a function `startup`.** `crt.c` already defines `startup`;
   a user function with that name gives "error 3023: Duplicate definition
@@ -1137,7 +1140,8 @@ void     bnk1_writem(void *dst, const void *src, unsigned len);
   `(unsigned)entry` was still folded to 0, even through a `volatile`
   function pointer (which was optimised away too). What works: take the
   address in assembler,
-  `unsigned entry_address(void) { return __asm { lda #<entry \n sta accu \n lda #>entry \n sta accu + 1 }; }`.
+  `unsigned entry_address(void) { return __asm { lda #<entry \n sta accu \n lda #>entry \n sta accu + 1 }; }`
+  (one instruction per source line, see above).
   Always check such addresses in the generated `.asm`. Found in DMBoot's
   C64-mode `SYS` entry (it typed `SYS 0`).
 - **An `__asm name { ... }` function cannot also have a C prototype.**

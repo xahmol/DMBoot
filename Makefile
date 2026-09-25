@@ -44,6 +44,7 @@ MAIN = dmboot
 AUTOSTART = autostart.128.prg
 LMC = dmblmc
 OVERLAYS = dmbovl1 dmbovl2 dmbovl3 dmbovl4 dmbovl5
+UPGRADER = dmbupd45
 
 # Build versioning
 VERSION_MAJOR = 5
@@ -103,8 +104,15 @@ MAIN_SRCS = src/main.c \
             include/vdc_win.c include/vdc_win.h include/vdcwin_types.h \
             include/peekpoke.h
 
+# Upgrade tool v4 -> v5 (separate program)
+UPD_SRCS = src/dmbupd45.c src/dmpaths.c src/dmpaths.h \
+           src/petconv.c src/petconv.h src/cfgdefaults.c src/cfgdefaults.h \
+           src/basicexit.c src/basicexit.h include/defines.h \
+           include/ultimate_common_lib.c include/ultimate_common_lib.h \
+           include/ultimate_dos_lib.c include/ultimate_dos_lib.h
+
 # Files to deploy / ship
-BUILD_PRGS = build/$(AUTOSTART) build/$(LMC).prg $(addprefix build/,$(addsuffix .prg,$(OVERLAYS)))
+BUILD_PRGS = build/$(AUTOSTART) build/$(LMC).prg $(addprefix build/,$(addsuffix .prg,$(OVERLAYS))) build/$(UPGRADER).prg
 
 # Ultimate II+ deployment target. Store only the IP in .env (gitignored);
 # the path is the Device Manager ROM boot directory.
@@ -126,14 +134,19 @@ README = README.pdf
 all: build $(README) zip
 
 # Release build
-build: $(MAIN_SRCS)
+build: $(MAIN_SRCS) build/$(UPGRADER).prg
 	@$(MKDIR) build 2>$(NULLDEV) ; true
 	$(CC) $(CFLAGS) -n -o=build/$(MAIN).prg src/main.c
 	cp build/$(MAIN).prg build/$(AUTOSTART)
 
+# Upgrade tool (no test mode variant)
+build/$(UPGRADER).prg: $(UPD_SRCS)
+	@$(MKDIR) build 2>$(NULLDEV) ; true
+	$(CC) $(CFLAGS) -n -o=build/$(UPGRADER).prg src/dmbupd45.c
+
 # Test build (same output names, so 'make deploy' ships it; run 'make build'
 # to go back to the release binaries)
-test-build: $(MAIN_SRCS)
+test-build: $(MAIN_SRCS) build/$(UPGRADER).prg
 	@$(MKDIR) build 2>$(NULLDEV) ; true
 	$(CC) $(CFLAGSTEST) -n -o=build/$(MAIN).prg src/main.c
 	cp build/$(MAIN).prg build/$(AUTOSTART)
