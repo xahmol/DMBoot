@@ -1,0 +1,20 @@
+{
+    "configurations": [{
+        "name": "Linux",
+        "includePath": [
+            "/home/xahmol/oscar64/include/",
+            "${workspaceFolder}/include",
+            "${workspaceFolder}/src"
+        ],
+        "defines": [
+            "NOFLOAT",
+            "HEAPCHECK",
+            "TESTMODE",
+            "VERSION=\"v5.0.0-dev\"",
+            "__noinline="
+        ],
+        "cStandard": "c23",
+        "intelliSenseMode": "linux-gcc-x64"
+    }],
+    "version": 4
+}

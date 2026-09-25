@@ -229,6 +229,14 @@ In order of preference:
 
 ## 6. Dual 40/80-column UI
 
+**Decided (2026-09-25): a new, reusable library with its own manual.** It
+builds on the two existing CharWin-style window implementations, Oscar64's
+`c64/charwin` (VIC, 40 columns) and the VDC window layer of the VDCSE library
+suite (`vdc_core`/`vdc_win`, 80 columns). It gives one API over both, so
+DMBoot (and later projects) write screens once. Files live in `include/`,
+documented in a manual next to `vdclib_manual.md` in the repo root. The
+library is created in Phase 1, before any UI screens are ported.
+
 - **Detection:** at start, check `$D7` bit 7 (80-column active). Set `SCREENW`, `slotcols`, `DIRW`, `MENUX`, and speed (FAST only in 80 columns).
 - **`ui_*` API** used by all screens: `ui_init`, `ui_clear`, `ui_putat(x,y,str,role)`, `ui_putat_reverse`, `ui_fill_rect`, `ui_getch`, `ui_checkch`, `ui_textinput`, `ui_popup_open/close`, `ui_cursor`. Colours are set by **role** (header1, header2, text, input, key, dir normal/select, error, ok), never by raw colour number.
 - **Backends:**
