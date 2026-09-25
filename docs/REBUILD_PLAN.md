@@ -515,8 +515,8 @@ Each phase ends with a build, a deploy to hardware (`192.168.1.237`), a c64bridg
     - F-keys were expanded by the screen editor (F7 = LIST started slot L). Fixed via the key store vector `$033C` → `$C6B7` (cc65 approach), restored on exit. Verified: F7 quits to BASIC.
     - Also works: 2 U-term128, V Oxford Pascal.
     - BOOT: F Superbase (Force 8 + FAST + BOOT, v4 style: cd into the image, BOOT on the same drive) works after two fixes. The path is now also sent without a file name, and `execute()` now builds the BOOT command without a file name (both as v4).
-    - A Colour Spectrum boots the same way but hangs in Krill's loader: that loader needs real drive emulation (drive code upload) and a single drive on the bus. Slot changed by hand to "mount on drive A (ID 8) + demo mode + BOOT" (runboot `0x51`); retest pending.
-  - To test: R Keynes (FAST: hangs or blank after load; compare with v4), A Colour Spectrum (mount + demo + BOOT), drive power-on from off; C64 mode (C, D, F5) later; demo mode needs a new test slot.
+    - A Colour Spectrum boots the same way but hangs in Krill's loader: that loader needs real drive emulation (drive code upload) and a single drive on the bus. Slot changed by hand to "mount on drive A (ID 8) + demo mode + BOOT" (runboot `0x51`): works. Demo mode + mount + BOOT verified.
+  - To test: R Keynes (FAST: hangs or blank after load; compare with v4), drive power-on from off; C64 mode (C, D, F5) later.
 
 ## 13. Risks and verification items
 
