@@ -134,6 +134,7 @@ struct BrowseState
 {
     char device;                    // IEC device being browsed
     bool softiec;                   // Device is the DM hyperspeed / Ultimate SoftIEC drive
+    const char *devtype;            // Drive type name of the device (read once per device)
     bool trace;                     // Dirtrace on: selections go to a slot
     bool sorted;
     bool force8;
@@ -646,8 +647,9 @@ static void dir_draw(void)
 
     dwin_fill_rect(&screenwin, 0, DIR_HEADER_ROW, listw, DIR_FOOTER_ROW - DIR_HEADER_ROW + 1, ' ', cfg.colors.text);
 
-    // dir.header is at most 23 characters: fits line
+    // dir.header is at most 23 characters: fits line; clip to the list
     sprintf(line, "[%u] %s", bs.device, dir.header);
+    line[listw - 1] = 0;
     dwin_putat_string(&screenwin, 0, DIR_HEADER_ROW, line, cfg.colors.text);
     if (bs.trace)
     {
@@ -660,8 +662,9 @@ static void dir_draw(void)
     {
         dwin_putat_string(&screenwin, 0, DIR_TRACE_ROW, "No dirtrace active.", cfg.colors.text);
     }
-    // Drive type names are at most 10 characters: fits line
-    sprintf(line, "(%s) %u blocks free", browse_devtype(), dir.free);
+    // Drive type names are at most 10 characters: fits line; clip to the list
+    sprintf(line, "(%s) %u blocks free", bs.devtype, dir.free);
+    line[listw - 1] = 0;
     dwin_putat_string(&screenwin, 0, DIR_FOOTER_ROW, line, cfg.colors.text);
 
     if (!element)
@@ -969,6 +972,7 @@ static void browse_device(char device)
     bs.device = device;
     bs.softiec = dminfo.present && (device == dminfo.hyperspeed_id ||
                                     dm_api_get_drivetype(device) == DM_TYPE_UII_SOFTIEC);
+    bs.devtype = browse_devtype();
     bs.trace = false;
     bs.inimage = false;
     bs.tracepath[0] = 0;
@@ -1470,11 +1474,22 @@ void browse(void)
             break;
 
         case KEY_F5:
-            if (browse_start(PICK_BOOT, "", browse_runflags() | EXEC_BOOT))
+        {
+            // Default slot name: the disk name (header up to the comma)
+            char diskname[17];
+            char n = 0;
+            while (n < sizeof(diskname) - 1 && dir.header[n] && dir.header[n] != ',')
+            {
+                diskname[n] = dir.header[n];
+                n++;
+            }
+            diskname[n] = 0;
+            if (browse_start(PICK_BOOT, diskname, browse_runflags() | EXEC_BOOT))
             {
                 return;
             }
             break;
+        }
         case '6':
             if (dir.present && entry.meta.type == CBM_T_PRG &&
                 browse_start(PICK_PROGRAM, entry.name, EXEC_RUN64 | (bs.demo ? EXEC_DEMO : 0)))
