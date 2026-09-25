@@ -29,9 +29,7 @@ bank 0 under ROM, REU DMA at 2 MHz, Device Manager API, test mailbox).
 
 #include <stdio.h>
 #include <string.h>
-#include <conio.h>
 #include <petscii.h>
-#include <c64/reu.h>
 #include <c64/vic.h>
 #include <c64/cia.h>
 #include "defines.h"
@@ -45,50 +43,20 @@ bank 0 under ROM, REU DMA at 2 MHz, Device Manager API, test mailbox).
 #include "dmpaths.h"
 #include "core.h"
 #include "fileio.h"
-#include "overlay1.h"
-#include "overlay2.h"
+#include "slotmenu.h"
+#include "exec.h"
 
 // Resident program region: everything below the overlay load slot
 #pragma region(dmboot, RESIDENT_START, OVERLAYLOAD, , , { code, data, bss, heap, stack })
 
-// Menu keys (raw PETSCII from KERNAL GETIN)
-#define KEY_OVERLAY1        0x31    // '1'
-#define KEY_OVERLAY2        0x32    // '2'
-#define KEY_REUTEST_SAFE    0x52    // 'R'
-#define KEY_REUTEST_UNSAFE  0x55    // 'U'
-#define KEY_EXIT            0x58    // 'X'
-#define KEY_POPUP           0x50    // 'P'
-#define KEY_INPUT           0x49    // 'I'
-#define KEY_WRITEFILES      0x57    // 'W'
-
-// Screen control characters (KERNAL CHROUT)
-#define CHR_LOWERCASE       0x0e    // Switch to the lower/upper case charset
-
-// REU round-trip test parameters
-#define REUTEST_BLOCK_SIZE  1024
-#define REUTEST_ITERATIONS  32
-#define REUTEST_REU_BASE    0x10000UL   // Directory heap area, unused in Phase 0
-#define REUTEST_SEED        0x5a
-
 // Screen layout (rows 0-1: header)
 #define STARTUP_ROW         3       // Start-up messages
-#define STATUS_ROW          3
-#define STATUS_HEIGHT       6
-#define CONSOLE_ROW         10
+#define POPUP_WIDTH         36
+#define POPUP_HEIGHT        5
+#define POPUP_ROW           10
 #define STORAGE_RETRY_SECS  5       // USB may still be enumerating at cold boot
 #define UCI_TIMEOUT_SECS    10
 #define TEXT_LINE_MAX       81
-#define POPUP_WIDTH         30
-#define POPUP_HEIGHT        7
-#define INPUT_BUFFER_SIZE   31      // 30 characters plus terminator
-#define INPUT_FIELD_WIDTH   20
-
-// Logical colours of the test screen (C64/VIC colour numbers)
-#define COLOR_TITLE         VCOL_YELLOW
-#define COLOR_TEXT          VCOL_LT_BLUE
-#define COLOR_KEY           VCOL_WHITE
-#define COLOR_OK            VCOL_LT_GREEN
-#define COLOR_ERROR         VCOL_LT_RED
 
 // Global state
 struct SystemInfo sysinfo;
@@ -97,64 +65,19 @@ struct ConfigStruct cfg;
 struct DMApiInfo dminfo;
 char overlay_active = OVERLAY_NONE;
 
-// Overlay stores (index = overlay number - 1). Phase 0 tests one store in
-// bank 1 and one in bank 0 RAM under the KERNAL ROM.
+// Overlay stores (index = overlay number - 1), see docs/REBUILD_PLAN.md §4.
+// An empty name marks an overlay of a later phase.
 static const struct OverlayStore overlay_store[OVERLAY_COUNT] = {
-    { BNK_1_FULL, OVERLAY_STORE_BANK1_1, "dmbovl1" },
-    { BNK_0_FULL, OVERLAY_STORE_BANK0_1, "dmbovl2" },
+    { BNK_1_FULL, OVERLAY_STORE_BANK1_1, "dmbovl1" },   // 1 main menu
+    { BNK_1_FULL, OVERLAY_STORE_BANK1_2, "" },          // 2 slot editing (Phase 3)
+    { BNK_1_FULL, OVERLAY_STORE_BANK1_3, "" },          // 3 file browser (Phase 4)
+    { BNK_1_FULL, OVERLAY_STORE_BANK1_4, "" },          // 4 configuration (Phase 5)
+    { BNK_0_FULL, OVERLAY_STORE_BANK0_1, "dmbovl5" },   // 5 exec
 };
 
-// Test buffer for the REU round trip (bank 0, resident BSS)
-static char reutest_buffer[REUTEST_BLOCK_SIZE];
-
-// Windows of the test screen
+// Windows
 struct DWin screenwin;
-static struct DWin status;
 struct DWin console;
-
-// Text edited by the input test
-static char input_text[INPUT_BUFFER_SIZE] = "Edit me";
-
-// ---------------------------------------------------------------------------
-// Title:       Poll keyboard
-// Description: Reads one key from the KERNAL keyboard buffer without
-//              waiting and without character conversion.
-// Syntax:      char key_poll(void);
-// Input:       None
-// Output:      Raw PETSCII key code, KEY_NONE when no key is waiting
-// ---------------------------------------------------------------------------
-char key_poll(void)
-{
-    return __asm {
-        jsr $ffe4
-        sta accu
-    };
-}
-
-// ---------------------------------------------------------------------------
-// Title:       Wait for key
-// Description: Waits for a key while flagging the program as idle in the
-//              test mailbox (the only moment a test harness may access
-//              memory), then records the key.
-// Syntax:      char key_wait(void);
-// Input:       None
-// Output:      Raw PETSCII key code
-// ---------------------------------------------------------------------------
-char key_wait(void)
-{
-    char key;
-
-    tm_set_idle(1);
-    do
-    {
-        tm_heartbeat();
-        key = key_poll();
-    } while (key == KEY_NONE);
-    tm_set_idle(0);
-
-    tm_set_key(key);
-    return key;
-}
 
 // ---------------------------------------------------------------------------
 // Title:       Set CPU speed
@@ -214,6 +137,12 @@ bool overlays_preload(void)
     {
         const struct OverlayStore *store = &overlay_store[index];
 
+        // Overlays of later phases are not there yet
+        if (!store->name[0])
+        {
+            continue;
+        }
+
         if (cfg.verbose)
         {
             dwin_printf(&console, cfg.colors.text, "Loading overlay %u\n", index + 1);
@@ -245,7 +174,8 @@ bool overlays_preload(void)
 // ---------------------------------------------------------------------------
 void loadoverlay(char number)
 {
-    if (number < 1 || number > OVERLAY_COUNT || number == overlay_active)
+    if (number < 1 || number > OVERLAY_COUNT || number == overlay_active ||
+        !overlay_store[number - 1].name[0])
     {
         return;
     }
@@ -254,105 +184,6 @@ void loadoverlay(char number)
     bnk_memcpy(BNK_0_FULL, (volatile char *)OVERLAYLOAD,
                store->mmucr, (volatile char *)store->address, OVERLAYSIZE);
     overlay_active = number;
-}
-
-// ---------------------------------------------------------------------------
-// Title:       Fill REU test pattern
-// Description: Fills the test buffer with a pattern that differs per
-//              iteration.
-// Syntax:      void reutest_fill(char iteration);
-// Input:       iteration - iteration number, used as pattern seed
-// Output:      None
-// ---------------------------------------------------------------------------
-void reutest_fill(char iteration)
-{
-    for (unsigned i = 0; i < REUTEST_BLOCK_SIZE; i++)
-    {
-        reutest_buffer[i] = (char)i ^ iteration ^ REUTEST_SEED;
-    }
-}
-
-// ---------------------------------------------------------------------------
-// Title:       Check REU test pattern
-// Description: Verifies the test buffer against the pattern of an
-//              iteration.
-// Syntax:      bool reutest_check(char iteration);
-// Input:       iteration - iteration number used when filling
-// Output:      true when every byte matches
-// ---------------------------------------------------------------------------
-bool reutest_check(char iteration)
-{
-    for (unsigned i = 0; i < REUTEST_BLOCK_SIZE; i++)
-    {
-        if (reutest_buffer[i] != (char)((char)i ^ iteration ^ REUTEST_SEED))
-        {
-            return false;
-        }
-    }
-    return true;
-}
-
-// ---------------------------------------------------------------------------
-// Title:       REU round-trip test
-// Description: Stores a pattern block to the REU, clears the buffer, loads
-//              it back and verifies it, for a number of iterations. The test
-//              runs with the CPU at 2 MHz. The safe variant uses the 1 MHz
-//              wrappers; the unsafe variant calls the Oscar64 routines
-//              directly at 2 MHz. Afterwards the speed is restored (1 MHz in
-//              a TESTMODE build), so a harness may read the mailbox again
-//              once the test is done (it must wait, not poll, meanwhile).
-// Syntax:      void reutest(char key, bool safe);
-// Input:       key  - menu key that started the test (reported in mailbox)
-//              safe - true: 1 MHz DMA wrappers, false: DMA at current speed
-// Output:      None (result printed and stored in the test mailbox)
-// ---------------------------------------------------------------------------
-void reutest(char key, bool safe)
-{
-    unsigned passes = 0;
-    unsigned failures = 0;
-    bool previous_fast = sysinfo.fast != 0;
-
-    cpu_set_fast(true);
-    for (char iteration = 0; iteration < REUTEST_ITERATIONS; iteration++)
-    {
-        unsigned long raddr = REUTEST_REU_BASE + (unsigned long)iteration * REUTEST_BLOCK_SIZE;
-
-        reutest_fill(iteration);
-        if (safe)
-        {
-            reu128_store(raddr, reutest_buffer, REUTEST_BLOCK_SIZE);
-        }
-        else
-        {
-            reu_store(raddr, reutest_buffer, REUTEST_BLOCK_SIZE);
-        }
-
-        memset(reutest_buffer, 0, REUTEST_BLOCK_SIZE);
-
-        if (safe)
-        {
-            reu128_load(raddr, reutest_buffer, REUTEST_BLOCK_SIZE);
-        }
-        else
-        {
-            reu_load(raddr, reutest_buffer, REUTEST_BLOCK_SIZE);
-        }
-
-        if (reutest_check(iteration))
-        {
-            passes++;
-        }
-        else
-        {
-            failures++;
-        }
-    }
-
-    cpu_set_fast(previous_fast);
-
-    dwin_printf(&console, failures ? COLOR_ERROR : COLOR_OK, "REU test (%s): %u passed, %u failed\n",
-                safe ? "1 MHz DMA" : "DMA at 2 MHz", passes, failures);
-    tm_set_test(key, failures ? TM_RESULT_FAIL : TM_RESULT_PASS, passes, failures);
 }
 
 // ---------------------------------------------------------------------------
@@ -370,8 +201,7 @@ void screen_setup(const char *subtitle, char consolerow)
     dwin_screen_colors(cfg.colors.border, cfg.colors.background);
     dwin_init(&screenwin, 0, 0, 0, 0);
     dwin_clear(&screenwin);
-    headertext(subtitle);
-    dwin_init(&status, 0, STATUS_ROW, 0, STATUS_HEIGHT);
+    headertext(subtitle, 0);
     dwin_init(&console, 0, consolerow, 0, 0);
 }
 
@@ -412,97 +242,6 @@ void print_devices(void)
             dwin_printf(&console, cfg.colors.text, "%s: ID %u, power %s\n", names[x],
                         uii_devinfo[x].id, uii_devinfo[x].power ? "on" : "off");
         }
-    }
-}
-
-// ---------------------------------------------------------------------------
-// Title:       Print status
-// Description: Redraws the status window with the detected system state
-//              and the test menu keys.
-// Syntax:      void print_status(void);
-// Input:       None
-// Output:      None
-// ---------------------------------------------------------------------------
-void print_status(void)
-{
-    dwin_clear(&status);
-    dwin_printf(&status, COLOR_TEXT, "Boot device %u, %u columns, %s\n", sysinfo.bootdevice,
-                dwin_is80() ? 80 : 40, sysinfo.fast ? "2 MHz" : "1 MHz");
-    dwin_printf(&status, COLOR_TEXT, "REU %u KB, overlay disk loads %u, active overlay %u\n",
-                sysinfo.reupages * 64, sysinfo.diskloads, overlay_active);
-    if (dminfo.present)
-    {
-        dwin_printf(&status, COLOR_TEXT, "DM API v%u.%u, hyperspeed ID %u\n",
-                    dminfo.version_major, dminfo.version_minor, dminfo.hyperspeed_id);
-    }
-    else
-    {
-        dwin_printf(&status, COLOR_ERROR, "DM API not found\n");
-    }
-    dwin_put_string(&status, "1/2: Overlay  R/U: REU test (1 MHz / 2 MHz DMA)\n", COLOR_KEY);
-    dwin_put_string(&status, "P: Popup  I: Input  W: Write files  X: Exit", COLOR_KEY);
-}
-
-// ---------------------------------------------------------------------------
-// Title:       Popup test
-// Description: Opens a popup over the screen, waits for a key and closes
-//              it again, which must restore the screen underneath.
-// Syntax:      void popup_test(void);
-// Input:       None
-// Output:      None
-// ---------------------------------------------------------------------------
-void popup_test(void)
-{
-    struct DWin popup;
-    char x = (dwin_state.width - POPUP_WIDTH) / 2;
-
-    if (!dwin_popup_open(&popup, x, STATUS_ROW + 1, POPUP_WIDTH, POPUP_HEIGHT, COLOR_TITLE, COLOR_TEXT))
-    {
-        dwin_put_string(&console, "Popup could not be opened\n", COLOR_ERROR);
-        return;
-    }
-
-    dwin_putat_string(&popup, 1, 1, "DualWin popup test", COLOR_TITLE);
-    dwin_putat_string(&popup, 1, 3, "Press a key to close", COLOR_TEXT);
-    key_wait();
-    dwin_popup_close();
-    dwin_put_string(&console, "Popup closed\n", COLOR_OK);
-}
-
-// ---------------------------------------------------------------------------
-// Title:       Input test
-// Description: Lets the user edit a text in a popup with dwin_input and
-//              shows the result in the console.
-// Syntax:      void input_test(void);
-// Input:       None
-// Output:      None
-// ---------------------------------------------------------------------------
-void input_test(void)
-{
-    struct DWin popup;
-    char x = (dwin_state.width - POPUP_WIDTH) / 2;
-
-    if (!dwin_popup_open(&popup, x, STATUS_ROW + 1, POPUP_WIDTH, POPUP_HEIGHT, COLOR_TITLE, COLOR_TEXT))
-    {
-        dwin_put_string(&console, "Popup could not be opened\n", COLOR_ERROR);
-        return;
-    }
-
-    dwin_putat_string(&popup, 1, 1, "Edit the text:", COLOR_TEXT);
-    tm_set_idle(1);
-    int result = dwin_input(&popup, 1, 3, input_text, sizeof(input_text), INPUT_FIELD_WIDTH, COLOR_KEY);
-    tm_set_idle(0);
-    dwin_popup_close();
-
-    if (result == DWIN_INPUT_CANCEL)
-    {
-        dwin_put_string(&console, "Input cancelled\n", COLOR_ERROR);
-    }
-    else
-    {
-        dwin_put_string(&console, "Input: ", COLOR_OK);
-        dwin_put_string(&console, input_text, COLOR_KEY);
-        dwin_put_char(&console, '\n', COLOR_OK);
     }
 }
 
@@ -612,75 +351,82 @@ bool dmb_startup(void)
 }
 
 // ---------------------------------------------------------------------------
+// Title:       Not yet available
+// Description: Shows a popup for menu options of later rebuild phases.
+// Syntax:      void not_yet_available(const char *what);
+// Input:       what - name of the option
+// Output:      None
+// ---------------------------------------------------------------------------
+void not_yet_available(const char *what)
+{
+    struct DWin popup;
+    char x = (dwin_state.width - POPUP_WIDTH) / 2;
+
+    if (!dwin_popup_open(&popup, x, POPUP_ROW, POPUP_WIDTH, POPUP_HEIGHT, cfg.colors.key, cfg.colors.text))
+    {
+        return;
+    }
+    dwin_putat_string(&popup, 1, 0, what, cfg.colors.key);
+    dwin_putat_string(&popup, 1, 1, "Not available yet in this build.", cfg.colors.text);
+    dwin_putat_string(&popup, 1, 2, "Press a key.", cfg.colors.text);
+    key_wait();
+    dwin_popup_close();
+}
+
+// ---------------------------------------------------------------------------
 // Title:       Main
-// Description: Program entry: start-up, then the Phase 0 test menu loop.
+// Description: Program entry: start-up, then the main menu loop.
 // Syntax:      int main(void);
 // Input:       None
-// Output:      0 on normal exit, 1 on a fatal start-up error
+// Output:      1 on a fatal start-up error (the menu options exit to BASIC
+//              themselves)
 // ---------------------------------------------------------------------------
 int main(void)
 {
-    char key;
-
     if (!dmb_startup())
     {
         bnk_exit();
         return 1;
     }
 
-    screen_setup("Phase 1 test menu", CONSOLE_ROW);
-    tm_set_screen(TM_SCREEN_MAINMENU);
-    tm_message("Ready");
-    print_status();
-
-    do
+    while (true)
     {
-        key = key_wait();
+        loadoverlay(OVERLAY_MENU);
+        char key = mainmenu();
+
+        if (isslotkey(key))
+        {
+            loadoverlay(OVERLAY_EXEC);
+            runbootfrommenu(keytomenuslot(key));
+        }
+
         switch (key)
         {
-        case KEY_OVERLAY1:
-            loadoverlay(1);
-            tm_set_overlay_signature(overlay1_selftest());
+        case KEY_F1:
+            not_yet_available("Filebrowser");
             break;
-
-        case KEY_OVERLAY2:
-            loadoverlay(2);
-            tm_set_overlay_signature(overlay2_selftest());
+        case KEY_F2:
+            not_yet_available("Information");
             break;
-
-        case KEY_REUTEST_SAFE:
-            reutest(key, true);
+        case KEY_F3:
+            not_yet_available("Edit/order/delete");
             break;
-
-        case KEY_REUTEST_UNSAFE:
-            reutest(key, false);
+        case KEY_F4:
+            not_yet_available("Configuration");
             break;
-
-        case KEY_POPUP:
-            popup_test();
+        case KEY_F5:
+            loadoverlay(OVERLAY_EXEC);
+            exec_go64();
             break;
-
-        case KEY_INPUT:
-            input_test();
+        case KEY_F6:
+            not_yet_available("GEOS RAM boot");
             break;
-
-        case KEY_WRITEFILES:
-            writeconfigfile();
-            write_slotsfile();
-            dwin_put_string(&console, "Config and slots written.\n", COLOR_OK);
+        case KEY_F7:
+            loadoverlay(OVERLAY_EXEC);
+            exec_exit_to_basic();
             break;
-
         default:
             break;
         }
-        tm_sync();
-        if (key != KEY_EXIT)
-        {
-            print_status();
-        }
-    } while (key != KEY_EXIT);
-
-    tm_set_screen(TM_SCREEN_EXIT);
-    bnk_exit();
-    return 0;
+    }
 }

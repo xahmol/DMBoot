@@ -13,9 +13,19 @@ https://github.com/xahmol/DMBoot
 void errorexit(const char *message);
 void delay(char seconds);
 void spinning(void);
-void headertext(const char *subtitle);
+void headertext(const char *subtitle, char showtime);
 void progress(const char *text);
 void asc2pet(char *dst, const char *src, unsigned dstsize);
+char dosCommand(char lfn, char device, char secaddr, const char *command);
+char cmd(char device, const char *command);
+char menuslotkey(char slotnumber);
+char keytomenuslot(char key);
+bool isslotkey(char key);
+char key_poll(void);
+char key_wait(void);
+
+#define DOS_STATUS_MAX      41      // DOS status message buffer
+extern char DOSstatus[DOS_STATUS_MAX];
 
 #pragma compile("core.c")
 

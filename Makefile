@@ -43,7 +43,7 @@ CC = /home/xahmol/oscar64/bin/oscar64
 MAIN = dmboot
 AUTOSTART = autostart.128.prg
 LMC = dmblmc
-OVERLAYS = dmbovl1 dmbovl2
+OVERLAYS = dmbovl1 dmbovl5
 
 # Build versioning
 VERSION_MAJOR = 5
@@ -76,13 +76,14 @@ CFLAGSTEST = $(CFLAGS) -dTESTMODE
 # Oscar64 follows #pragma compile chains internally, but make doesn't know
 # about them, so every transitively compiled .c/.h is listed here.
 MAIN_SRCS = src/main.c \
-            src/overlay1.c src/overlay1.h \
-            src/overlay2.c src/overlay2.h \
+            src/slotmenu.c src/slotmenu.h \
+            src/exec.c src/exec.h \
             src/dmpaths.c src/dmpaths.h \
             src/core.c src/core.h \
             src/fileio.c src/fileio.h \
             include/ultimate_common_lib.c include/ultimate_common_lib.h \
             include/ultimate_dos_lib.c include/ultimate_dos_lib.h \
+            include/ultimate_time_lib.c include/ultimate_time_lib.h \
             include/defines.h \
             include/banking.c include/banking.h \
             include/dmapi.c include/dmapi.h \

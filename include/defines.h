@@ -81,8 +81,8 @@ BUT WITHOUT ANY WARRANTY. USE THEM AT YOUR OWN RISK!
 #define WINDOW_STORE_BASE       0x2000
 #define WINDOW_STORE_SIZE       0x2000
 
-// Number of overlays (Phase 0 skeleton: 2 dummy overlays)
-#define OVERLAY_COUNT       2
+// Number of overlays (see the overlay table in src/main.c)
+#define OVERLAY_COUNT       5
 #define OVERLAY_NONE        0       // Value of overlay_active when none is loaded
 #define OVERLAY_NAME_MAX    17      // CBM filename (16) plus terminator
 

@@ -10,6 +10,7 @@ Adapted: Oscar64 inline assembly, placed in the low-memory code overlay
 (earlier ca65 version: DMBoot v4, branch legacy-cc65).
 */
 
+#include <string.h>
 #include "dmapi.h"
 #include "banking.h"
 
@@ -22,7 +23,11 @@ Adapted: Oscar64 inline assembly, placed in the low-memory code overlay
 #define DM_ID_BYTE1         0x4e    // 'N'
 #define DM_ID_BYTE2         0x45    // 'E'
 #define DM_ID_BYTE3         0x44    // 'D'
+#define DM_EXT_RUN64        0x808f
 #define DM_HYPERSPEED_ID8   0x08
+#define KERNAL_SETBNK       0xff68
+#define KERNAL_SETLFS       0xffba
+#define KERNAL_SETNAM       0xffbd
 
 // ===========================================================================
 // Low-memory code (LMC) part
@@ -39,6 +44,40 @@ char dm_version_low;
 char dm_version_high;
 char dm_hsid;
 char dm_devtype;
+
+// Program to start in C64 mode (read by dm_run64 after DMBoot has exited,
+// so it must stay in the LMC area)
+char dm_prgnam[DM_PRGNAME_MAX];
+char dm_prglen;
+char dm_devid;
+
+// ---------------------------------------------------------------------------
+// Title:       Run a program in C64 mode (SYS entry)
+// Description: Entry point called from BASIC with SYS after DMBoot has
+//              exited: sets file bank, device and name, switches the Device
+//              Manager ROM in and jumps to its "run in 64 mode" routine,
+//              which does not return.
+// Syntax:      SYS <address of dm_run64> (see dm_run64_address)
+// Input:       dm_prgnam, dm_prglen, dm_devid (set by dm_prepare_run64)
+// Output:      Does not return
+// ---------------------------------------------------------------------------
+__asm dm_run64
+{
+        lda #0
+        ldx #0
+        jsr KERNAL_SETBNK
+        lda #0
+        ldx dm_devid
+        ldy #0
+        jsr KERNAL_SETLFS
+        lda dm_prglen
+        ldx #<dm_prgnam
+        ldy #>dm_prgnam
+        jsr KERNAL_SETNAM
+        lda #BNK_DM_FUNCROM
+        sta $ff00
+        jmp DM_EXT_RUN64
+}
 
 // ---------------------------------------------------------------------------
 // Title:       Get Device Manager API version
@@ -195,4 +234,56 @@ void dm_query(struct DMApiInfo *info)
 
     dm_api_get_hsid();
     info->hyperspeed_id = dm_hsid;
+}
+
+// ---------------------------------------------------------------------------
+// Title:       Prepare a C64 mode start
+// Description: Stores the program name and device for dm_run64.
+// Syntax:      bool dm_prepare_run64(const char *name, char device);
+// Input:       name   - program file name (PETSCII)
+//              device - device number
+// Output:      false when the name is too long (nothing stored)
+// ---------------------------------------------------------------------------
+bool dm_prepare_run64(const char *name, char device)
+{
+    unsigned len = strlen(name);
+
+    if (len >= DM_PRGNAME_MAX)
+    {
+        return false;
+    }
+    memcpy(dm_prgnam, name, len);
+    dm_prgnam[len] = 0;
+    dm_prglen = (char)len;
+    dm_devid = device;
+    return true;
+}
+
+// ---------------------------------------------------------------------------
+// Title:       Address of the C64 mode entry
+// Description: Returns the address to SYS to after exiting.
+// Syntax:      unsigned dm_run64_address(void);
+// Input:       None
+// Output:      Address of dm_run64
+// ---------------------------------------------------------------------------
+unsigned dm_run64_address(void)
+{
+    return (unsigned)dm_run64;
+}
+
+// ---------------------------------------------------------------------------
+// Title:       Device Manager API version
+// Description: Returns the API version as one number (high byte * 256 +
+//              low byte), as DMBoot v4 compared it.
+// Syntax:      unsigned dm_version(void);
+// Input:       None (dminfo)
+// Output:      Version number, 0 when the API is absent
+// ---------------------------------------------------------------------------
+unsigned dm_version(void)
+{
+    if (!dminfo.present)
+    {
+        return 0;
+    }
+    return ((unsigned)dminfo.version_major << 8) | dminfo.version_minor;
 }

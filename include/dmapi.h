@@ -39,8 +39,11 @@ configuration ($FF00 = $2A) only keeps RAM visible below $8000.
 // Maximum program name length for dm_run64 (CBM filename)
 #define DM_PRGNAME_MAX      17
 
-// Resident wrapper
+// Resident wrappers
 void dm_query(struct DMApiInfo *info);
+bool dm_prepare_run64(const char *name, char device);
+unsigned dm_run64_address(void);
+unsigned dm_version(void);
 
 // Low-memory code functions
 __noinline void dm_api_getversion(void);

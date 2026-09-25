@@ -21,7 +21,7 @@ https://github.com/xahmol/DMBoot
 
 // Where the Device Manager ROM keeps DMBoot, in priority order: the USB
 // wildcard first (v4 behaviour), then the numbered ports for several sticks.
-static char storagepaths[STORAGE_CANDIDATES][STORAGE_PATH_MAX] = {
+char storagepaths[STORAGE_CANDIDATES][STORAGE_PATH_MAX] = {
     "/usb*/11/",
     "/usb0/11/",
     "/usb1/11/",

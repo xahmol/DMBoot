@@ -1,0 +1,517 @@
+/*
+DMBoot 128 v5 - Exec overlay: run a slot, go 64, exit
+
+Written in 2020-2026 by Xander Mol
+https://github.com/xahmol/DMBoot
+
+Slot start (mounts with USB port rerouting, REU image) ported from
+src/slotmenu.c of my UBoot64-v2 project (https://github.com/xahmol/UBoot64-v2);
+program start (commands on screen + RETURNs in the keyboard buffer, Force 8,
+C64 mode, FAST, BOOT) as in DMBoot v4 (branch legacy-cc65, src/ops.c).
+*/
+
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <petscii.h>
+#include <c64/vic.h>
+#include "defines.h"
+#include "banking.h"
+#include "dmapi.h"
+#include "dualwin.h"
+#include "ultimate_common_lib.h"
+#include "ultimate_dos_lib.h"
+#include "dmpaths.h"
+#include "core.h"
+#include "fileio.h"
+#include "exec.h"
+
+#pragma overlay(dmbovl5, 6)
+#pragma section(codeovl5, 0)
+#pragma section(dataovl5, 0)
+#pragma section(bssovl5, 0)
+#pragma region(ovl5, OVERLAYLOAD, OVERLAY_SLOT_END, , 6, { codeovl5, dataovl5, bssovl5 })
+
+#pragma code(codeovl5)
+#pragma data(dataovl5)
+#pragma bss(bssovl5)
+
+#define EXEC_LINES_MAX      4       // Command lines put on screen
+#define EXEC_LINE_MAX       100     // Longest command line (cmd 80 + extras)
+#define EXEC_FIRST_ROW      2       // Row of the first command line
+#define EXEC_LINE_SPACING   3       // Rows reserved per line (output + READY.)
+#define CHR_CLEARSCREEN     0x93
+#define CHR_RETURN          0x0d
+#define CHR_YES             0x59    // 'y' key, confirms "go 64"
+#define DOS_STATUS_NOTFOUND "82,"   // Ultimate: file not found (keep hunting)
+#define TEXT_MAX            81
+#define DEVICE_FORCED       8
+#define DM_API_RUN64_MIN    2       // run64 needs API version > 1 (as DMBoot v4)
+#define DM_API_HSID_MIN     1       // set hyperspeed ID needs API version > 0
+
+// Command lines to execute after the exit to BASIC
+static char execlines[EXEC_LINES_MAX][EXEC_LINE_MAX];
+static char execcount;
+
+// ---------------------------------------------------------------------------
+// Title:       Add a command line
+// Description: Adds a line to the list executed after the exit; ignored
+//              when the list is full. The text is truncated to fit.
+// Syntax:      void exec_add_line(const char *text);
+// Input:       text - PETSCII command line
+// Output:      None
+// ---------------------------------------------------------------------------
+static void exec_add_line(const char *text)
+{
+    if (execcount >= EXEC_LINES_MAX)
+    {
+        return;
+    }
+    strncpy(execlines[execcount], text, EXEC_LINE_MAX - 1);
+    execlines[execcount][EXEC_LINE_MAX - 1] = 0;
+    execcount++;
+}
+
+// ---------------------------------------------------------------------------
+// Title:       Set the KERNAL cursor
+// Description: Moves the KERNAL screen editor cursor (PLOT).
+// Syntax:      void exec_plot(char row, char column);
+// Input:       row, column - screen position
+// Output:      None
+// ---------------------------------------------------------------------------
+static void exec_plot(char row, char column)
+{
+    __asm
+    {
+        ldx row
+        ldy column
+        clc
+        jsr $fff0
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Title:       KERNAL character out
+// Description: Prints one character through the KERNAL screen editor.
+// Syntax:      void exec_chrout(char ch);
+// Input:       ch - PETSCII character
+// Output:      None
+// ---------------------------------------------------------------------------
+static void exec_chrout(char ch)
+{
+    __asm
+    {
+        lda ch
+        jsr $ffd2
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Title:       Exit to BASIC and run the command lines
+// Description: Clears the screen, prints the command lines from row 2 down
+//              (3 rows apart, room for their output and READY.), puts one
+//              RETURN per line (plus extra keys) in the keyboard buffer,
+//              restores 1 MHz and the MMU set-up and exits. BASIC prints
+//              READY. and then executes the lines one by one.
+// Syntax:      void exec_to_basic(const char *extrakeys);
+// Input:       extrakeys - keys to add after the RETURNs (may be "")
+// Output:      Does not return
+// ---------------------------------------------------------------------------
+static void exec_to_basic(const char *extrakeys)
+{
+    volatile char *keybuffer = (volatile char *)KEYBUF_ADDRESS;
+    char row = EXEC_FIRST_ROW;
+    char keys = 0;
+
+    *(volatile char *)VIC_CLOCK_REG &= ~VIC_CLOCK_FAST;
+    exec_chrout(CHR_CLEARSCREEN);
+
+    for (char line = 0; line < execcount; line++)
+    {
+        exec_plot(row, 0);
+        for (char i = 0; execlines[line][i]; i++)
+        {
+            exec_chrout(execlines[line][i]);
+        }
+        row += strlen(execlines[line]) / dwin_state.width + EXEC_LINE_SPACING;
+    }
+    exec_plot(0, 0);
+
+    while (keys < execcount && keys < KEYBUF_SIZE)
+    {
+        keybuffer[keys++] = CHR_RETURN;
+    }
+    while (*extrakeys && keys < KEYBUF_SIZE)
+    {
+        keybuffer[keys++] = *extrakeys++;
+    }
+    *(volatile char *)ZP_KEYBUF_COUNT = keys;
+
+    bnk_exit();
+    exit(0);
+}
+
+// ---------------------------------------------------------------------------
+// Title:       Print an ASCII value
+// Description: Prints a label and a value in ASCII (from the Ultimate) as
+//              one console line.
+// Syntax:      void exec_print(const char *label, const char *ascii);
+// Input:       label - PETSCII label
+//              ascii - ASCII text
+// Output:      None
+// ---------------------------------------------------------------------------
+static void exec_print(const char *label, const char *ascii)
+{
+    char text[TEXT_MAX];
+
+    asc2pet(text, ascii, sizeof(text));
+    dwin_put_string(&console, label, cfg.colors.text);
+    dwin_put_string(&console, text, cfg.colors.text);
+    dwin_put_char(&console, '\n', cfg.colors.text);
+}
+
+// ---------------------------------------------------------------------------
+// Title:       Check a mount result
+// Description: Stops with the Ultimate status when a mount or REU load
+//              failed.
+// Syntax:      void ErrorCheckMounting(void);
+// Input:       None (uii_status)
+// Output:      Returns only on success
+// ---------------------------------------------------------------------------
+static void ErrorCheckMounting(void)
+{
+    if (!UII_SUCCESS)
+    {
+        exec_print("Error: ", uii_status);
+        errorexit("Mounting failed.");
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Title:       Is this a USB port path
+// Description: Tells whether a path starts with "/usbX/" (a numbered port
+//              or the /usb*/ wildcard), which can be rerouted to another
+//              USB port.
+// Syntax:      bool exec_is_usb_path(const char *path);
+// Input:       path - ASCII path
+// Output:      true for "/usbX/..." paths
+// ---------------------------------------------------------------------------
+static bool exec_is_usb_path(const char *path)
+{
+    return memcmp(path, storagepaths[STORAGE_USB_FIRST], STORAGE_PORT_PREFIX - 2) == 0 &&
+           path[STORAGE_PORT_PREFIX - 1] == storagepaths[STORAGE_USB_FIRST][STORAGE_PORT_PREFIX - 1];
+}
+
+// ---------------------------------------------------------------------------
+// Title:       Wait for the USB stick
+// Description: Asks the user to insert the USB stick; F7 gives up.
+// Syntax:      void exec_ask_stick(void);
+// Input:       None
+// Output:      Returns for a retry; F7 exits to BASIC
+// ---------------------------------------------------------------------------
+static void exec_ask_stick(void)
+{
+    dwin_put_string(&console, "\nInsert USB stick. Key=retry, F7=BASIC\n", cfg.colors.error);
+    if (key_wait() == KEY_F7)
+    {
+        errorexit("USB stick not found.");
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Title:       Mount an image, rerouting USB ports
+// Description: Mounts a disk image on a device. When the image is not found
+//              ("82,") and the path is on a USB port, the same path is tried
+//              on the other USB ports (the stick may have moved). Other
+//              errors stop immediately. The path in the Slot copy may be
+//              changed for this start only; the saved slot is untouched.
+// Syntax:      void mountimage(char device, char *path, char *image);
+// Input:       device - device ID to mount on
+//              path   - ASCII directory of the image (may be changed)
+//              image  - ASCII image file name
+// Output:      Returns when mounted
+// ---------------------------------------------------------------------------
+static void mountimage(char device, char *path, char *image)
+{
+    while (true)
+    {
+        uii_change_dir(path);
+        if (UII_SUCCESS)
+        {
+            uii_mount_disk(device, image);
+            if (UII_SUCCESS)
+            {
+                return;
+            }
+            if (strncmp(uii_status, DOS_STATUS_NOTFOUND, sizeof(DOS_STATUS_NOTFOUND) - 1) != 0)
+            {
+                ErrorCheckMounting();
+            }
+        }
+
+        if (exec_is_usb_path(path))
+        {
+            for (char x = STORAGE_USB_FIRST; x < STORAGE_CANDIDATES; x++)
+            {
+                if (memcmp(path, storagepaths[x], STORAGE_PORT_PREFIX) == 0)
+                {
+                    continue;
+                }
+                memcpy(path, storagepaths[x], STORAGE_PORT_PREFIX);
+                uii_change_dir(path);
+                if (!UII_SUCCESS)
+                {
+                    continue;
+                }
+                uii_mount_disk(device, image);
+                if (UII_SUCCESS)
+                {
+                    exec_print("Rerouted to ", path);
+                    return;
+                }
+            }
+        }
+        exec_ask_stick();
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Title:       Load an REU image, rerouting USB ports
+// Description: Loads an REU image into the REU, retrying the path on the
+//              other USB ports when it cannot be opened. Must be the last
+//              step before the start: it overwrites the slots in the REU.
+// Syntax:      void load_reu_with_reroute(char *path, char *image,
+//                                         char reusize);
+// Input:       path    - ASCII directory (may be changed)
+//              image   - ASCII REU file name
+//              reusize - REU size index 0-7
+// Output:      Returns when loaded
+// ---------------------------------------------------------------------------
+static void load_reu_with_reroute(char *path, char *image, char reusize)
+{
+    bool found = false;
+
+    while (!found)
+    {
+        uii_change_dir(path);
+        if (UII_SUCCESS)
+        {
+            uii_open_file(0x01, image);
+            found = UII_SUCCESS;
+        }
+        if (!found && exec_is_usb_path(path))
+        {
+            for (char x = STORAGE_USB_FIRST; x < STORAGE_CANDIDATES && !found; x++)
+            {
+                if (memcmp(path, storagepaths[x], STORAGE_PORT_PREFIX) == 0)
+                {
+                    continue;
+                }
+                memcpy(path, storagepaths[x], STORAGE_PORT_PREFIX);
+                uii_change_dir(path);
+                if (UII_SUCCESS)
+                {
+                    uii_open_file(0x01, image);
+                    found = UII_SUCCESS;
+                }
+            }
+        }
+        if (!found)
+        {
+            exec_ask_stick();
+        }
+    }
+    uii_load_reu(reusize);
+    uii_close_file();
+}
+
+// ---------------------------------------------------------------------------
+// Title:       Demo mode
+// Description: Powers down the Ultimate drives that are not on ID 8, so
+//              demos that need a single drive find only ID 8.
+//              (Check of other active IEC devices: Phase 4, with the IEC
+//              device scan of the file browser.)
+// Syntax:      void DoDemoMode(void);
+// Input:       None (uii_devinfo)
+// Output:      None
+// ---------------------------------------------------------------------------
+static void DoDemoMode(void)
+{
+    if (uii_devinfo[0].exist && uii_devinfo[0].power && uii_devinfo[0].id != DEVICE_FORCED)
+    {
+        uii_disable_drive_a();
+        dwin_put_string(&console, "Drive A powered off.\n", cfg.colors.text);
+    }
+    if (uii_devinfo[1].exist && uii_devinfo[1].power && uii_devinfo[1].id != DEVICE_FORCED)
+    {
+        uii_disable_drive_b();
+        dwin_put_string(&console, "Drive B powered off.\n", cfg.colors.text);
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Title:       Start a program
+// Description: Builds the BASIC command lines for the start options of a
+//              slot and exits to BASIC to execute them: user command, then
+//              RUN (or BOOT, LOAD ,1 + RUN, or C64 mode via the Device
+//              Manager ROM). An empty program name only runs the command.
+// Syntax:      void execute(const char *prg, char device, char boot,
+//                           const char *command);
+// Input:       prg     - program file name (PETSCII), may be empty
+//              device  - device to run from
+//              boot    - EXEC_* flags
+//              command - user command (PETSCII), may be empty
+// Output:      Does not return
+// ---------------------------------------------------------------------------
+static void execute(const char *prg, char device, char boot, const char *command)
+{
+    char line[EXEC_LINE_MAX];
+    const char *fast = (boot & EXEC_FAST) ? "fast:" : "";
+
+    execcount = 0;
+    if (boot & EXEC_DEMO)
+    {
+        DoDemoMode();
+    }
+    if (command[0])
+    {
+        exec_add_line(command);
+    }
+
+    if (prg[0])
+    {
+        if (boot & EXEC_RUN64)
+        {
+            if (dminfo.present && dm_version() >= DM_API_RUN64_MIN && dm_prepare_run64(prg, device))
+            {
+                sprintf(line, "sys %u", dm_run64_address());
+                exec_add_line(line);
+            }
+            else
+            {
+                errorexit("C64 mode needs Device Manager API v2.");
+            }
+        }
+        else
+        {
+            if (boot & EXEC_FRC8)
+            {
+                if (dminfo.present && dm_version() >= DM_API_HSID_MIN)
+                {
+                    dm_api_set_hsid8();
+                }
+                else
+                {
+                    exec_add_line("poke 673,8");
+                }
+                device = DEVICE_FORCED;
+            }
+
+            if (boot & EXEC_BOOT)
+            {
+                sprintf(line, "%sboot u%u", fast, device);
+                exec_add_line(line);
+            }
+            else if (boot & EXEC_COMMA1)
+            {
+                sprintf(line, "load\"%s\",%u,1", prg, device);
+                exec_add_line(line);
+                sprintf(line, "%srun", fast);
+                exec_add_line(line);
+            }
+            else
+            {
+                sprintf(line, "%srun\"%s\",u%u", fast, prg, device);
+                exec_add_line(line);
+            }
+        }
+    }
+    exec_to_basic("");
+}
+
+// ---------------------------------------------------------------------------
+// Title:       Run a slot
+// Description: Starts a menu slot: mounts its images (rerouting USB ports),
+//              loads its REU image last, then starts the program.
+// Syntax:      void runbootfrommenu(char select);
+// Input:       select - slot number
+// Output:      Does not return
+// ---------------------------------------------------------------------------
+void runbootfrommenu(char select)
+{
+    get_slot_from_reu(select);
+
+    dwin_clear(&screenwin);
+    headertext("Starting slot", 0);
+    dwin_init(&console, 0, 3, 0, 0);
+    dwin_put_string(&console, Slot.menu, cfg.colors.text);
+    dwin_put_char(&console, '\n', cfg.colors.text);
+
+    if (Slot.command & COMMAND_IMGA)
+    {
+        exec_print("Mount A: ", Slot.image_a_file);
+        uii_enable_drive_a();
+        mountimage(Slot.image_a_id, Slot.image_a_path, Slot.image_a_file);
+        delay(1);
+    }
+    if (Slot.command & COMMAND_IMGB)
+    {
+        exec_print("Mount B: ", Slot.image_b_file);
+        uii_enable_drive_b();
+        mountimage(Slot.image_b_id, Slot.image_b_path, Slot.image_b_file);
+        delay(1);
+    }
+    // The REU image goes last: it overwrites the slots in the REU
+    if (Slot.command & COMMAND_REU)
+    {
+        exec_print("REU: ", Slot.reu_image);
+        load_reu_with_reroute(Slot.reu_path, Slot.reu_image, Slot.reusize);
+        ErrorCheckMounting();
+    }
+
+    // Firmware 3.15 hook (plan §9): select Slot.partition here when set.
+
+    if (Slot.runboot & EXEC_MOUNT)
+    {
+        execute(Slot.file, Slot.image_a_id, Slot.runboot, Slot.cmd);
+    }
+    if (Slot.file[0] && Slot.path[0])
+    {
+        cmd(Slot.device, Slot.path);
+    }
+    execute(Slot.file, Slot.device, Slot.runboot, Slot.cmd);
+}
+
+// ---------------------------------------------------------------------------
+// Title:       Go to C64 mode
+// Description: Exits to BASIC with "go 64" and confirms the question.
+// Syntax:      void exec_go64(void);
+// Input:       None
+// Output:      Does not return
+// ---------------------------------------------------------------------------
+void exec_go64(void)
+{
+    static const char confirm[3] = { CHR_YES, CHR_RETURN, 0 };
+
+    execcount = 0;
+    exec_add_line("go 64");
+    exec_to_basic(confirm);
+}
+
+// ---------------------------------------------------------------------------
+// Title:       Exit to BASIC
+// Description: Exits to BASIC and clears the screen and memory.
+// Syntax:      void exec_exit_to_basic(void);
+// Input:       None
+// Output:      Does not return
+// ---------------------------------------------------------------------------
+void exec_exit_to_basic(void)
+{
+    execcount = 0;
+    exec_add_line("scnclr:new");
+    exec_to_basic("");
+}
+
+#pragma code(code)
+#pragma data(data)
+#pragma bss(bss)

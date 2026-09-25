@@ -22,6 +22,10 @@ changes (docs/REBUILD_PLAN.md §9).
 
 #define STORAGE_CANDIDATES  4
 
+#define STORAGE_USB_FIRST   1   // storagepaths[1..3] = numbered USB ports
+#define STORAGE_PORT_PREFIX 6   // Length of "/usbN/"
+
+extern char storagepaths[STORAGE_CANDIDATES][STORAGE_PATH_MAX];
 extern char configpath[STORAGE_PATH_MAX];
 extern char configfilename[];
 extern char slotfilename[];

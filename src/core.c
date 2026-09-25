@@ -9,8 +9,12 @@ https://github.com/xahmol/DMBoot
 #include <string.h>
 #include <petscii.h>
 #include <c64/cia.h>
+#include <c64/kernalio.h>
+#include "ultimate_common_lib.h"
+#include "ultimate_time_lib.h"
 #include "banking.h"
 #include "dualwin.h"
+#include "testmode.h"
 #include "core.h"
 
 #pragma code(code)
@@ -23,6 +27,13 @@ https://github.com/xahmol/DMBoot
 #define SPINNER_ROW         3
 #define SPINNER_FRAMES      4
 #define CHR_SPACE           0x20
+#define TIME_TEXT_MAX       24      // "yyyy/mm/dd hh:mm:ss" plus margin
+#define TIME_ONLY_OFFSET    11      // Start of "hh:mm:ss" in that text
+#define DWIN_VDC_WIDTH_COLS 80
+#define DOS_COMMAND_CHANNEL 15
+#define SLOT_KEYS_DIGITS    10
+#define PETSCII_ZERO        0x30
+#define PETSCII_LETTER_A    0x41    // Unshifted letter keys (a-z)
 
 // Spinner animation (PETSCII graphics)
 static const char spinner[SPINNER_FRAMES] = { 0xbe, 0xbc, 0xac, 0xbb };
@@ -98,16 +109,38 @@ void spinning(void)
 
 // ---------------------------------------------------------------------------
 // Title:       Draw the header
-// Description: Draws the two header lines: the program title and a subtitle
-//              with the version at the right.
-// Syntax:      void headertext(const char *subtitle);
+// Description: Draws the two header lines: the program title and a subtitle.
+//              At the right of the second line the version, or the time of
+//              the Ultimate's real-time clock.
+// Syntax:      void headertext(const char *subtitle, char showtime);
 // Input:       subtitle - text for the second header line
+//              showtime - 1: show the time, 0: show the version
 // Output:      None
 // ---------------------------------------------------------------------------
-void headertext(const char *subtitle)
+void headertext(const char *subtitle, char showtime)
 {
     char width = dwin_state.width;
-    char versionlen = strlen(VERSION);
+    char righttext[TIME_TEXT_MAX];
+    const char *right = VERSION;
+
+    if (showtime)
+    {
+        uii_get_time();
+        if (UII_SUCCESS)
+        {
+            asc2pet(righttext, uii_data, sizeof(righttext));
+            // In 40 columns show only the time part ("hh:mm:ss")
+            if (width < DWIN_VDC_WIDTH_COLS && strlen(righttext) > TIME_ONLY_OFFSET)
+            {
+                right = righttext + TIME_ONLY_OFFSET;
+            }
+            else
+            {
+                right = righttext;
+            }
+        }
+    }
+    char versionlen = strlen(right);
 
     // Fill with spaces, write the texts, then reverse both full lines
     // (PETSCII $A0 is not a reverse space after conversion to screen codes)
@@ -117,7 +150,7 @@ void headertext(const char *subtitle)
     dwin_putat_string(&screenwin, 0, HEADER_ROW_SUB, subtitle, cfg.colors.header2);
     if (versionlen < width)
     {
-        dwin_putat_string(&screenwin, width - versionlen, HEADER_ROW_SUB, VERSION, cfg.colors.header2);
+        dwin_putat_string(&screenwin, width - versionlen, HEADER_ROW_SUB, right, cfg.colors.header2);
     }
     dwin_reverse_rect(&screenwin, 0, HEADER_ROW_TITLE, width, 2);
 }
@@ -168,4 +201,157 @@ void asc2pet(char *dst, const char *src, unsigned dstsize)
         i++;
     }
     dst[i] = 0;
+}
+
+char DOSstatus[DOS_STATUS_MAX];
+
+// ---------------------------------------------------------------------------
+// Title:       Send a DOS command
+// Description: Opens a channel with a command (or file name), reads the
+//              drive status from the command channel and closes again.
+// Syntax:      char dosCommand(char lfn, char device, char secaddr,
+//                              const char *command);
+// Input:       lfn     - logical file number
+//              device  - IEC device number
+//              secaddr - secondary address
+//              command - DOS command / file name (PETSCII)
+// Output:      DOS status number (0 = OK), or a KERNAL error; DOSstatus
+//              holds the status text
+// ---------------------------------------------------------------------------
+char dosCommand(char lfn, char device, char secaddr, const char *command)
+{
+    int res;
+
+    krnio_setnam(command);
+    if (!krnio_open(lfn, device, secaddr))
+    {
+        krnio_close(lfn);
+        return krnio_status();
+    }
+
+    if (lfn != DOS_COMMAND_CHANNEL)
+    {
+        krnio_setnam("");
+        if (!krnio_open(DOS_COMMAND_CHANNEL, device, DOS_COMMAND_CHANNEL))
+        {
+            krnio_close(lfn);
+            krnio_close(DOS_COMMAND_CHANNEL);
+            return krnio_pstatus[DOS_COMMAND_CHANNEL];
+        }
+    }
+
+    DOSstatus[0] = 0;
+    res = krnio_read(DOS_COMMAND_CHANNEL, DOSstatus, sizeof(DOSstatus) - 1);
+    DOSstatus[(res > 0) ? res : 0] = 0;
+
+    if (lfn != DOS_COMMAND_CHANNEL)
+    {
+        krnio_close(DOS_COMMAND_CHANNEL);
+    }
+    krnio_close(lfn);
+
+    if (res < 2)
+    {
+        return krnio_status();
+    }
+    return (DOSstatus[0] - PETSCII_ZERO) * 10 + DOSstatus[1] - PETSCII_ZERO;
+}
+
+// ---------------------------------------------------------------------------
+// Title:       Send a command to the command channel
+// Description: Sends a DOS command (e.g. "cd//path") to a device.
+// Syntax:      char cmd(char device, const char *command);
+// Input:       device  - IEC device number
+//              command - DOS command (PETSCII)
+// Output:      DOS status number (0 = OK)
+// ---------------------------------------------------------------------------
+char cmd(char device, const char *command)
+{
+    return dosCommand(DOS_COMMAND_CHANNEL, device, DOS_COMMAND_CHANNEL, command);
+}
+
+// ---------------------------------------------------------------------------
+// Title:       Slot number to key
+// Description: Returns the key (and label) of a slot: 0-9, then a-z.
+// Syntax:      char menuslotkey(char slotnumber);
+// Input:       slotnumber - 0..SLOTS-1
+// Output:      PETSCII key code
+// ---------------------------------------------------------------------------
+char menuslotkey(char slotnumber)
+{
+    if (slotnumber < SLOT_KEYS_DIGITS)
+    {
+        return PETSCII_ZERO + slotnumber;
+    }
+    return PETSCII_LETTER_A + slotnumber - SLOT_KEYS_DIGITS;
+}
+
+// ---------------------------------------------------------------------------
+// Title:       Is this a slot key
+// Description: Tells whether a key selects a slot (0-9, a-z).
+// Syntax:      bool isslotkey(char key);
+// Input:       key - raw PETSCII key code
+// Output:      true for slot keys
+// ---------------------------------------------------------------------------
+bool isslotkey(char key)
+{
+    return (key >= PETSCII_ZERO && key < PETSCII_ZERO + SLOT_KEYS_DIGITS) ||
+           (key >= PETSCII_LETTER_A && key < PETSCII_LETTER_A + SLOTS - SLOT_KEYS_DIGITS);
+}
+
+// ---------------------------------------------------------------------------
+// Title:       Key to slot number
+// Description: Converts a slot key to its slot number.
+// Syntax:      char keytomenuslot(char key);
+// Input:       key - slot key (check with isslotkey first)
+// Output:      Slot number 0..SLOTS-1
+// ---------------------------------------------------------------------------
+char keytomenuslot(char key)
+{
+    if (key >= PETSCII_LETTER_A)
+    {
+        return key - PETSCII_LETTER_A + SLOT_KEYS_DIGITS;
+    }
+    return key - PETSCII_ZERO;
+}
+
+// ---------------------------------------------------------------------------
+// Title:       Poll keyboard
+// Description: Reads one key from the KERNAL keyboard buffer without
+//              waiting and without character conversion.
+// Syntax:      char key_poll(void);
+// Input:       None
+// Output:      Raw PETSCII key code, KEY_NONE when no key is waiting
+// ---------------------------------------------------------------------------
+char key_poll(void)
+{
+    return __asm {
+        jsr $ffe4
+        sta accu
+    };
+}
+
+// ---------------------------------------------------------------------------
+// Title:       Wait for key
+// Description: Waits for a key while flagging the program as idle in the
+//              test mailbox (the only moment a test harness may access
+//              memory), then records the key.
+// Syntax:      char key_wait(void);
+// Input:       None
+// Output:      Raw PETSCII key code
+// ---------------------------------------------------------------------------
+char key_wait(void)
+{
+    char key;
+
+    tm_set_idle(1);
+    do
+    {
+        tm_heartbeat();
+        key = key_poll();
+    } while (key == KEY_NONE);
+    tm_set_idle(0);
+
+    tm_set_key(key);
+    return key;
 }
