@@ -511,7 +511,10 @@ Each phase ends with a build, a deploy to hardware (`192.168.1.237`), a c64bridg
     - REU image load + run: U ZP/M+ (`/usb1/cpm/cpm.reu`).
     - 8 GEOS128 Ramboot starts v4's `geosramboot`. That program then fails on image B: the v4 `DMBCFGFILE` has image B `GEOSAPP.D81` with an empty path, and the file is missing. v4 config issue. For Phase 5/6: an empty GEOS image path means `/usb*/11/`; warn about missing images.
     - Second, less stale stick (`tests/data/stick2`), slot 0 MegaPatch 3.3 128 US: REU load (16 MB) + image A on 8 + image B on 9 + run from the mounted image works. Needed a fix: power on Ultimate drives only when off, then wait 2 s (UBoot64 approach); an immediate mount gave `90,drive not present`. MegaPatch itself then fails because the test C128 has only 16 KB VDC RAM (MP3 needs 64 KB), not a DMBoot issue.
-  - To test: Force 8, run64, FAST, BOOT, go 64, F7 exit, drive power-on from off; demo mode needs a new test slot.
+    - BASIC loaders with variables/strings crashed after a slot start (BREAK, PC `$1005B`): Oscar64 zero page overlaps BASIC 7 work storage. Fixed by saving `$02-$26`, `$43-$62`, `$F7-$FF` at the start of `main()` and restoring them in `dmb_exit`. Verified: X GeckOS 2 (Force 8 + FAST, BASIC loader) works.
+    - F-keys were expanded by the screen editor (F7 = LIST started slot L). Fixed via the key store vector `$033C` → `$C6B7` (cc65 approach), restored on exit.
+    - Also works: 2 U-term128, V Oxford Pascal.
+  - To test: R Keynes (FAST: hangs or blank after load; compare with v4), F Superbase (Force 8 + FAST + BOOT), F7 exit, drive power-on from off; C64 mode (C, D, F5) later; demo mode needs a new test slot.
 
 ## 13. Risks and verification items
 
