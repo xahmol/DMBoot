@@ -364,16 +364,20 @@ static void load_reu_with_reroute(char *path, char *image, char reusize)
 
 // ---------------------------------------------------------------------------
 // Title:       Demo mode
-// Description: Powers down the Ultimate drives that are not on ID 8, so
-//              demos that need a single drive find only ID 8.
-//              (Check of other active IEC devices: Phase 4, with the IEC
-//              device scan of the file browser.)
-// Syntax:      void DoDemoMode(void);
-// Input:       None (uii_devinfo)
+// Description: Powers down the Ultimate drives that are not on ID 8, then
+//              asks to switch off every other device that needs manual
+//              switching (see iec_scan) until none is left, or until the
+//              user chooses to ignore them (some loaders, such as Krill's,
+//              silence other drives themselves).
+//              As UBoot64-v2 DoDemoMode; added: the ignore option.
+// Syntax:      static void DoDemoMode(void);
+// Input:       None (uii_devinfo, dminfo)
 // Output:      None
 // ---------------------------------------------------------------------------
 static void DoDemoMode(void)
 {
+    char active[IEC_ID_COUNT];
+
     if (uii_devinfo[0].exist && uii_devinfo[0].power && uii_devinfo[0].id != DEVICE_FORCED)
     {
         uii_disable_drive_a();
@@ -383,6 +387,36 @@ static void DoDemoMode(void)
     {
         uii_disable_drive_b();
         dwin_put_string(&console, "Drive B powered off.\n", cfg.colors.text);
+    }
+
+    while (true)
+    {
+        if (!uii_parse_deviceinfo())
+        {
+            ErrorCheckMounting();
+        }
+        if (!iec_scan(active))
+        {
+            dwin_put_string(&console, "Only ID 8 is active.\n", cfg.colors.ok);
+            return;
+        }
+
+        dwin_put_string(&console, "Switch off ID", cfg.colors.text);
+        for (char x = 0; x < IEC_ID_COUNT; x++)
+        {
+            if (iec_needs_switching(active[x], iec_index_to_id(x)))
+            {
+                dwin_printf(&console, cfg.colors.text, " %u", iec_index_to_id(x));
+            }
+        }
+        dwin_put_string(&console, " and press a key,\nor I to ignore (loader switches them off).\n",
+                        cfg.colors.text);
+        char key = dwin_getch();
+        if (key == 'i' || key == 'I')
+        {
+            dwin_put_string(&console, "Ignored.\n", cfg.colors.text);
+            return;
+        }
     }
 }
 

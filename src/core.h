@@ -32,6 +32,7 @@ void drive_root_reset(void);
 char iec_index_to_id(char index);
 char iec_present(char id);
 bool iec_scan(char *active);
+bool iec_needs_switching(char state, char id);
 char menuslotkey(char slotnumber);
 char menuslotlabel(char slotnumber);
 char keytomenuslot(char key);

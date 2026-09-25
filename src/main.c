@@ -259,10 +259,10 @@ void print_devices(void)
         if (active[x])
         {
             char id = iec_index_to_id(x);
-            dwin_printf(&console, cfg.colors.text, " %u(", id);
+            dwin_printf(&console, cfg.colors.text, " %u (", id);
             if (active[x] == IEC_HYPERSPEED)
             {
-                dwin_put_string(&console, "hyperspeed)", cfg.colors.text);
+                dwin_put_string(&console, "Hyperspeed)", cfg.colors.text);
                 continue;
             }
             // Ultimate devices: label from uii_devinfo, because the Device

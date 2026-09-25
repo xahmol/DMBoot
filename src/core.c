@@ -529,6 +529,25 @@ static bool iec_device_answers(char id)
 }
 
 // ---------------------------------------------------------------------------
+// Title:       Does a device need manual switching
+// Description: Tells whether a device found by iec_scan must be switched
+//              off by hand for demo mode: any other device except on ID 8,
+//              or a powered Ultimate device the UCI cannot switch.
+// Syntax:      bool iec_needs_switching(char state, char id);
+// Input:       state - active[] entry from iec_scan
+//              id    - its device ID
+// Output:      true if it needs manual switching
+// ---------------------------------------------------------------------------
+bool iec_needs_switching(char state, char id)
+{
+    if (state == IEC_OTHER)
+    {
+        return id != IEC_ID_FIRST;
+    }
+    return (state & IEC_ULT_POWERED) && !(state & IEC_ULT_SWITCHABLE) && state != IEC_HYPERSPEED;
+}
+
+// ---------------------------------------------------------------------------
 // Title:       Scan the IEC bus
 // Description: Fills an array with the active devices on IDs 8-29 and 4,
 //              and tells whether any device needs manual power switching
@@ -555,31 +574,25 @@ bool iec_scan(char *active)
         char id = iec_index_to_id(x);
         char ult = iec_ultimate_on_id(id);
 
-        active[x] = 0;
         if (ult & IEC_ULT_POWERED)
         {
-            // Ultimate device; the SoftIEC and printer cannot be switched
-            // through the UCI, so they need manual switching
+            // Ultimate device (drive A/B, SoftIEC, printer)
             active[x] = ult;
-            if (!(ult & IEC_ULT_SWITCHABLE))
-            {
-                manual = true;
-            }
         }
         else if (dminfo.present && id == dminfo.hyperspeed_id)
         {
             // Device Manager hyperspeed drive: served by the ROM through
-            // the UCI, not a device on the bus, so no manual switching
+            // the UCI, not a device on the bus
             active[x] = IEC_HYPERSPEED;
         }
-        // Not an Ultimate device, or one reported as off: ask the bus
-        else if (iec_device_answers(id))
+        else
         {
-            active[x] = IEC_OTHER;
-            if (id != IEC_ID_FIRST)
-            {
-                manual = true;
-            }
+            // Not an Ultimate device, or one reported as off: ask the bus
+            active[x] = iec_device_answers(id) ? IEC_OTHER : 0;
+        }
+        if (iec_needs_switching(active[x], id))
+        {
+            manual = true;
         }
     }
     return manual;
