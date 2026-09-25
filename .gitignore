@@ -1,0 +1,17 @@
+# Local deployment config
+.env
+
+# Build outputs
+build/
+
+# Compiler/tool leftovers
+*.o
+*.d
+*.map
+*.lbl
+*.int
+
+# Release ZIPs in project root
+DMBoot-v*.zip
+dmboot_v*.zip
+tests/crash/
