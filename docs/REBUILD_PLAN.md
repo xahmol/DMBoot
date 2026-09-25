@@ -483,6 +483,18 @@ Each phase ends with a build, a deploy to hardware (`192.168.1.237`), a c64bridg
 
 ---
 
+### Phase status (2026-09-25)
+
+- **Phase 0: done**, verified on hardware.
+- **Phase 1: done except items that need later phases or the user:**
+  - Done:
+    - DualWin (verified in 80 columns).
+    - Complete UCI library.
+    - `dmpaths`, `fileio`, core helpers and the startup flow, verified on the C128. First boot created `dmbconf.cfg` (1041 B) and `dmbslots.cfg` (48,960 B) with correct contents; `W` rewrote them; the next boot read them without rewriting.
+  - Open:
+    - 40-column hardware test (user, weekend).
+    - Freezing `OVERLAYSIZE`: the overlays are still Phase 0 dummies, so this moves to Phase 2 when the first real overlays exist.
+
 ## 13. Risks and verification items
 
 1. **Memory budget.** 31 KB resident has to hold both UI backends, the VDC library, the UCI library and globals. Measure in Phase 1 before building features. Fallbacks are in §4.5.
