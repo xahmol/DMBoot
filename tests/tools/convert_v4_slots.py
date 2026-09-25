@@ -10,10 +10,6 @@ Test tool and reference for the v4 -> v5 upgrader (plan §10). Rules:
   the REU directory is derived from the program path.
 - COMMAND_IMGA/IMGB are cleared when no image file name is present
   (seen in real v4 files).
-- BOOT slots whose path ends in a disk image (cd: into a .d64 etc. on the
-  SoftIEC drive) cannot boot: the SoftIEC drive has no block read inside
-  an image. They become "mount the image on drive A (ID 8), BOOT from the
-  mounted drive"; Force 8 is dropped (it would put the SoftIEC drive on 8).
 - Optional test slots from an existing v5 file can be kept at given slots.
 
 Usage: convert_v4_slots.py v4file out.cfg [--keep v5file src:dst ...]
@@ -42,11 +38,6 @@ V5_FIELDS = [("cfgvs", 1), ("path", 256), ("menu", 31), ("file", 51),
              ("isdefault", 1), ("partition", 1), ("padding", 11)]
 
 COMMAND_REU = 0x02
-EXEC_MOUNT = 0x01
-EXEC_FRC8 = 0x02
-EXEC_BOOT = 0x10
-DRIVE_A_ID = 8
-IMAGE_EXTENSIONS = (b".D64", b".D71", b".D81", b".G64", b".G71", b".DNP")
 COMMAND_IMGA = 0x04
 COMMAND_IMGB = 0x08
 
@@ -108,29 +99,17 @@ def convert(v4):
     if command & COMMAND_IMGB and not v4["image_b_file"]:
         command &= ~COMMAND_IMGB
     reu_dir = v4["image_a_path"] or v4["path"]
-    path, runboot = v4["path"], v4["runboot"]
-    image_a_path, image_a_file = v4["image_a_path"], v4["image_a_file"]
-    image_a_id = v4["image_a_id"] if command & COMMAND_IMGA else 0
-    boot_dir, _, boot_image = strip_cd(path).rstrip(b"/").rpartition(b"/")
-    if (runboot & EXEC_BOOT and not runboot & EXEC_MOUNT
-            and not command & COMMAND_IMGA
-            and boot_image.upper().endswith(IMAGE_EXTENSIONS)):
-        image_a_path, image_a_file = boot_dir + b"/", boot_image
-        image_a_id = DRIVE_A_ID
-        command |= COMMAND_IMGA
-        runboot = (runboot | EXEC_MOUNT) & ~EXEC_FRC8
-        path = b""
     return build_v5({
         "cfgvs": CFGVERSION,
-        "path": path, "menu": v4["menu"], "file": v4["file"],
+        "path": v4["path"], "menu": v4["menu"], "file": v4["file"],
         "cmd": v4["cmd"],
         "reu_image": pet2asc(v4["reu_image"]),
         "reu_path": pet2asc(strip_cd(reu_dir)) if command & COMMAND_REU else b"",
-        "reusize": v4["reusize"], "runboot": runboot,
+        "reusize": v4["reusize"], "runboot": v4["runboot"],
         "device": v4["device"], "command": command,
-        "image_a_path": pet2asc(strip_cd(image_a_path)),
-        "image_a_file": pet2asc(image_a_file),
-        "image_a_id": image_a_id,
+        "image_a_path": pet2asc(strip_cd(v4["image_a_path"])),
+        "image_a_file": pet2asc(v4["image_a_file"]),
+        "image_a_id": v4["image_a_id"] if command & COMMAND_IMGA else 0,
         "image_b_path": pet2asc(strip_cd(v4["image_b_path"])),
         "image_b_file": pet2asc(v4["image_b_file"]),
         "image_b_id": v4["image_b_id"] if command & COMMAND_IMGB else 0,

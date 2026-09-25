@@ -415,52 +415,50 @@ static void execute(const char *prg, char device, char boot, const char *command
         exec_add_line(command);
     }
 
-    if (prg[0])
+    // BOOT needs no file name (as v4); RUN, LOAD and C64 mode do
+    if (boot & EXEC_RUN64)
     {
-        if (boot & EXEC_RUN64)
+        if (prg[0] && dminfo.present && dm_version() >= DM_API_RUN64_MIN && dm_prepare_run64(prg, device))
         {
-            if (dminfo.present && dm_version() >= DM_API_RUN64_MIN && dm_prepare_run64(prg, device))
-            {
-                sprintf(line, "sys %u", dm_run64_address());
-                exec_add_line(line);
-            }
-            else
-            {
-                errorexit("C64 mode needs Device Manager API v2.");
-            }
+            sprintf(line, "sys %u", dm_run64_address());
+            exec_add_line(line);
         }
         else
         {
-            if (boot & EXEC_FRC8)
+            errorexit("C64 mode needs a file name and Device Manager API v2.");
+        }
+    }
+    else
+    {
+        if (boot & EXEC_FRC8)
+        {
+            if (dminfo.present && dm_version() >= DM_API_HSID_MIN)
             {
-                if (dminfo.present && dm_version() >= DM_API_HSID_MIN)
-                {
-                    dm_api_set_hsid8();
-                }
-                else
-                {
-                    exec_add_line("poke 673,8");
-                }
-                device = DEVICE_FORCED;
-            }
-
-            if (boot & EXEC_BOOT)
-            {
-                sprintf(line, "%sboot u%u", fast, device);
-                exec_add_line(line);
-            }
-            else if (boot & EXEC_COMMA1)
-            {
-                sprintf(line, "load\"%s\",%u,1", prg, device);
-                exec_add_line(line);
-                sprintf(line, "%srun", fast);
-                exec_add_line(line);
+                dm_api_set_hsid8();
             }
             else
             {
-                sprintf(line, "%srun\"%s\",u%u", fast, prg, device);
-                exec_add_line(line);
+                exec_add_line("poke 673,8");
             }
+            device = DEVICE_FORCED;
+        }
+
+        if (boot & EXEC_BOOT)
+        {
+            sprintf(line, "%sboot u%u", fast, device);
+            exec_add_line(line);
+        }
+        else if (prg[0] && (boot & EXEC_COMMA1))
+        {
+            sprintf(line, "load\"%s\",%u,1", prg, device);
+            exec_add_line(line);
+            sprintf(line, "%srun", fast);
+            exec_add_line(line);
+        }
+        else if (prg[0])
+        {
+            sprintf(line, "%srun\"%s\",u%u", fast, prg, device);
+            exec_add_line(line);
         }
     }
     exec_to_basic("");
