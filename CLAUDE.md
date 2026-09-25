@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 DMBoot 128 v5: boot menu / file browser for the Commodore 128, being rebuilt from scratch in **Oscar64** (C, target `c128e`) on branch `Oscar64Rebuild`. It runs as `autostart.128.prg` from `/usb*/11/` on an **Ultimate II+** and is autostarted by Bart van Leeuwen's **C128 Device Manager ROM**. It is a normal PRG plus overlay files, not a cartridge. The previous cc65 version (called v4, builds named `v391-*`) is preserved on branch `legacy-cc65`.
 
-**Read `docs/REBUILD_PLAN.md` first.** It holds the full architecture, the memory model, all design decisions, the phase plan, and the hardware test rules. Phase status: Phase 0 (skeleton) is done and hardware-verified.
+**Read `docs/REBUILD_PLAN.md` first.** It holds the full architecture, the memory model, all design decisions, the phase plan, and the hardware test rules. Phase status (2026-09-25): Phases 0-2 hardware-verified (80 columns); Phases 3-6 (slot editor, file browser, configuration/NTP/GEOS, upgrader dmbupd45) implemented but not yet hardware-tested; Phase 7 (docs, release) open. See the plan's phase status section.
 
 Sibling/reference projects (all by the same author): UBoot64-v2 (`/home/xahmol/git/UBoot64-v2`, C64 cartridge version of the same boot menu: **prefer its routines over v4 legacy code**), VDC Screen Editor 2 (`/home/xahmol/VDCScreenEditor2`, overlay/banking/VDC library pattern), vdcmaniac (`/home/xahmol/git/vdcmaniac`).
 
