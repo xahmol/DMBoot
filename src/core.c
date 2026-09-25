@@ -34,6 +34,7 @@ https://github.com/xahmol/DMBoot
 #define SLOT_KEYS_DIGITS    10
 #define PETSCII_ZERO        0x30
 #define PETSCII_LETTER_A    0x41    // Unshifted letter keys (a-z)
+#define PETSCII_SHIFT       0x80    // Added to a letter for its shifted (uppercase) code
 
 // Spinner animation (PETSCII graphics)
 static const char spinner[SPINNER_FRAMES] = { 0xbe, 0xbc, 0xac, 0xbb };
@@ -346,14 +347,48 @@ char menuslotkey(char slotnumber)
 }
 
 // ---------------------------------------------------------------------------
+// Title:       Slot label
+// Description: Returns the character shown in front of a slot in the menu:
+//              0-9, then A-Z in uppercase.
+// Syntax:      char menuslotlabel(char slotnumber);
+// Input:       slotnumber - 0..SLOTS-1
+// Output:      PETSCII character
+// ---------------------------------------------------------------------------
+char menuslotlabel(char slotnumber)
+{
+    char key = menuslotkey(slotnumber);
+
+    return (slotnumber < SLOT_KEYS_DIGITS) ? key : key + PETSCII_SHIFT;
+}
+
+// ---------------------------------------------------------------------------
+// Title:       Unshift a slot letter key
+// Description: Maps shifted letters (A-Z) to their unshifted key codes, so
+//              a slot is selected with or without shift.
+// Syntax:      static char slotkey_unshift(char key);
+// Input:       key - raw PETSCII key code
+// Output:      Unshifted key code; other keys unchanged
+// ---------------------------------------------------------------------------
+static char slotkey_unshift(char key)
+{
+    if (key >= PETSCII_LETTER_A + PETSCII_SHIFT &&
+        key < PETSCII_LETTER_A + PETSCII_SHIFT + SLOTS - SLOT_KEYS_DIGITS)
+    {
+        return key - PETSCII_SHIFT;
+    }
+    return key;
+}
+
+// ---------------------------------------------------------------------------
 // Title:       Is this a slot key
-// Description: Tells whether a key selects a slot (0-9, a-z).
+// Description: Tells whether a key selects a slot (0-9, a-z, shifted A-Z).
 // Syntax:      bool isslotkey(char key);
 // Input:       key - raw PETSCII key code
 // Output:      true for slot keys
 // ---------------------------------------------------------------------------
 bool isslotkey(char key)
 {
+    key = slotkey_unshift(key);
     return (key >= PETSCII_ZERO && key < PETSCII_ZERO + SLOT_KEYS_DIGITS) ||
            (key >= PETSCII_LETTER_A && key < PETSCII_LETTER_A + SLOTS - SLOT_KEYS_DIGITS);
 }
@@ -367,6 +402,7 @@ bool isslotkey(char key)
 // ---------------------------------------------------------------------------
 char keytomenuslot(char key)
 {
+    key = slotkey_unshift(key);
     if (key >= PETSCII_LETTER_A)
     {
         return key - PETSCII_LETTER_A + SLOT_KEYS_DIGITS;

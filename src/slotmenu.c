@@ -83,7 +83,7 @@ static void menu_draw_slot(char slot, char x, char y)
         return;
     }
 
-    label[1] = menuslotkey(slot);
+    label[1] = menuslotlabel(slot);
     dwin_putat_string_reverse(&screenwin, x, y, label, cfg.colors.key);
 
     strncpy(name, Slot.menu, MAXMENUNAME - 1);

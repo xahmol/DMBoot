@@ -21,6 +21,7 @@ char dosCommand(char lfn, char device, char secaddr, const char *command);
 char cmd(char device, const char *command);
 void drive_root_reset(void);
 char menuslotkey(char slotnumber);
+char menuslotlabel(char slotnumber);
 char keytomenuslot(char key);
 bool isslotkey(char key);
 char key_poll(void);
