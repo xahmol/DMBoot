@@ -251,6 +251,7 @@ extern struct ConfigStruct cfg;         // Global configuration
 extern struct DMApiInfo dminfo;
 extern char overlay_active;
 struct DWin;
+extern struct DWin screenwin;    // Full-screen window (src/main.c)
 extern struct DWin console;      // Scrolling message window (src/main.c)
 
 #endif // DEFINES_H

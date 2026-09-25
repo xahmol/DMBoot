@@ -78,6 +78,11 @@ CFLAGSTEST = $(CFLAGS) -dTESTMODE
 MAIN_SRCS = src/main.c \
             src/overlay1.c src/overlay1.h \
             src/overlay2.c src/overlay2.h \
+            src/dmpaths.c src/dmpaths.h \
+            src/core.c src/core.h \
+            src/fileio.c src/fileio.h \
+            include/ultimate_common_lib.c include/ultimate_common_lib.h \
+            include/ultimate_dos_lib.c include/ultimate_dos_lib.h \
             include/defines.h \
             include/banking.c include/banking.h \
             include/dmapi.c include/dmapi.h \

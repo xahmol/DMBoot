@@ -33,12 +33,18 @@ bank 0 under ROM, REU DMA at 2 MHz, Device Manager API, test mailbox).
 #include <petscii.h>
 #include <c64/reu.h>
 #include <c64/vic.h>
+#include <c64/cia.h>
 #include "defines.h"
 #include "dualwin.h"
 #include "banking.h"
 #include "dmapi.h"
 #include "reu128.h"
 #include "testmode.h"
+#include "ultimate_common_lib.h"
+#include "ultimate_dos_lib.h"
+#include "dmpaths.h"
+#include "core.h"
+#include "fileio.h"
 #include "overlay1.h"
 #include "overlay2.h"
 
@@ -53,6 +59,7 @@ bank 0 under ROM, REU DMA at 2 MHz, Device Manager API, test mailbox).
 #define KEY_EXIT            0x58    // 'X'
 #define KEY_POPUP           0x50    // 'P'
 #define KEY_INPUT           0x49    // 'I'
+#define KEY_WRITEFILES      0x57    // 'W'
 
 // Screen control characters (KERNAL CHROUT)
 #define CHR_LOWERCASE       0x0e    // Switch to the lower/upper case charset
@@ -63,11 +70,14 @@ bank 0 under ROM, REU DMA at 2 MHz, Device Manager API, test mailbox).
 #define REUTEST_REU_BASE    0x10000UL   // Directory heap area, unused in Phase 0
 #define REUTEST_SEED        0x5a
 
-// Screen layout of the Phase 0 test screen
-#define TITLE_ROW           0
-#define STATUS_ROW          2
+// Screen layout (rows 0-1: header)
+#define STARTUP_ROW         3       // Start-up messages
+#define STATUS_ROW          3
 #define STATUS_HEIGHT       6
-#define CONSOLE_ROW         9
+#define CONSOLE_ROW         10
+#define STORAGE_RETRY_SECS  5       // USB may still be enumerating at cold boot
+#define UCI_TIMEOUT_SECS    10
+#define TEXT_LINE_MAX       81
 #define POPUP_WIDTH         30
 #define POPUP_HEIGHT        7
 #define INPUT_BUFFER_SIZE   31      // 30 characters plus terminator
@@ -82,6 +92,8 @@ bank 0 under ROM, REU DMA at 2 MHz, Device Manager API, test mailbox).
 
 // Global state
 struct SystemInfo sysinfo;
+struct SlotStruct Slot;
+struct ConfigStruct cfg;
 struct DMApiInfo dminfo;
 char overlay_active = OVERLAY_NONE;
 
@@ -96,7 +108,7 @@ static const struct OverlayStore overlay_store[OVERLAY_COUNT] = {
 static char reutest_buffer[REUTEST_BLOCK_SIZE];
 
 // Windows of the test screen
-static struct DWin screen;
+struct DWin screenwin;
 static struct DWin status;
 struct DWin console;
 
@@ -202,7 +214,14 @@ bool overlays_preload(void)
     {
         const struct OverlayStore *store = &overlay_store[index];
 
-        printf("Loading overlay %u (%s)\n", index + 1, store->name);
+        if (cfg.verbose)
+        {
+            dwin_printf(&console, cfg.colors.text, "Loading overlay %u\n", index + 1);
+        }
+        else
+        {
+            spinning();
+        }
         if (!load_overlay(store->name))
         {
             return false;
@@ -337,25 +356,63 @@ void reutest(char key, bool safe)
 }
 
 // ---------------------------------------------------------------------------
-// Title:       Set up the test screen
-// Description: Initialises DualWin and draws the fixed parts of the Phase 0
-//              test screen: title, status window and console window.
-// Syntax:      void screen_setup(void);
-// Input:       None
+// Title:       Set up the screen
+// Description: Initialises DualWin with the configured colours and draws
+//              the header; the console window takes the rest of the screen
+//              from a given row.
+// Syntax:      void screen_setup(const char *subtitle, char consolerow);
+// Input:       subtitle   - header subtitle
+//              consolerow - first row of the console window
 // Output:      None
 // ---------------------------------------------------------------------------
-void screen_setup(void)
+void screen_setup(const char *subtitle, char consolerow)
 {
-    dwin_setup(BNK_1_FULL, (char *)WINDOW_STORE_BASE, WINDOW_STORE_SIZE);
-    dwin_screen_colors(VCOL_BLACK, VCOL_BLACK);
-
-    dwin_init(&screen, 0, 0, 0, 0);
-    dwin_clear(&screen);
-    dwin_putat_string_reverse(&screen, 0, TITLE_ROW, " DMBoot 128 - Phase 0 skeleton ", COLOR_TITLE);
-    dwin_putat_string(&screen, 0, TITLE_ROW + 1, VERSION, COLOR_TEXT);
-
+    dwin_screen_colors(cfg.colors.border, cfg.colors.background);
+    dwin_init(&screenwin, 0, 0, 0, 0);
+    dwin_clear(&screenwin);
+    headertext(subtitle);
     dwin_init(&status, 0, STATUS_ROW, 0, STATUS_HEIGHT);
-    dwin_init(&console, 0, CONSOLE_ROW, 0, 0);
+    dwin_init(&console, 0, consolerow, 0, 0);
+}
+
+// ---------------------------------------------------------------------------
+// Title:       Print an Ultimate string
+// Description: Prints a label and an ASCII string from the Ultimate
+//              (converted to PETSCII, bounded) as one console line.
+// Syntax:      void print_ascii_line(const char *label, const char *ascii);
+// Input:       label - PETSCII label
+//              ascii - ASCII text from the Ultimate
+// Output:      None
+// ---------------------------------------------------------------------------
+void print_ascii_line(const char *label, const char *ascii)
+{
+    char text[TEXT_LINE_MAX];
+
+    asc2pet(text, ascii, sizeof(text));
+    dwin_put_string(&console, label, cfg.colors.text);
+    dwin_put_string(&console, text, cfg.colors.text);
+    dwin_put_char(&console, '\n', cfg.colors.text);
+}
+
+// ---------------------------------------------------------------------------
+// Title:       Show the Ultimate drives
+// Description: Prints the Ultimate's emulated drives (verbose mode).
+// Syntax:      void print_devices(void);
+// Input:       None (uii_devinfo)
+// Output:      None
+// ---------------------------------------------------------------------------
+void print_devices(void)
+{
+    static const char *const names[4] = { "Drive A", "Drive B", "SoftIEC", "Printer" };
+
+    for (char x = 0; x < 4; x++)
+    {
+        if (uii_devinfo[x].exist)
+        {
+            dwin_printf(&console, cfg.colors.text, "%s: ID %u, power %s\n", names[x],
+                        uii_devinfo[x].id, uii_devinfo[x].power ? "on" : "off");
+        }
+    }
 }
 
 // ---------------------------------------------------------------------------
@@ -383,7 +440,7 @@ void print_status(void)
         dwin_printf(&status, COLOR_ERROR, "DM API not found\n");
     }
     dwin_put_string(&status, "1/2: Overlay  R/U: REU test (1 MHz / 2 MHz DMA)\n", COLOR_KEY);
-    dwin_put_string(&status, "P: Popup  I: Input  X: Exit", COLOR_KEY);
+    dwin_put_string(&status, "P: Popup  I: Input  W: Write files  X: Exit", COLOR_KEY);
 }
 
 // ---------------------------------------------------------------------------
@@ -459,34 +516,97 @@ void input_test(void)
 // ---------------------------------------------------------------------------
 bool dmb_startup(void)
 {
+    char storage;
+
     tm_init();
     tm_set_screen(TM_SCREEN_STARTUP);
-
-    putrch(CHR_LOWERCASE);
     detect_mode();
-    printf("DMBoot 128 %s starting\n", VERSION);
+    config_defaults();
 
+    // The low-memory code is needed by DualWin, so load it first
     if (!bnk_init())
     {
         tm_message("LMC load failed");
         return false;
     }
 
+    dwin_setup(BNK_1_FULL, (char *)WINDOW_STORE_BASE, WINDOW_STORE_SIZE);
+    screen_setup("Starting...", STARTUP_ROW);
+
+    if (!uii_wait_for_uci(UCI_TIMEOUT_SECS))
+    {
+        errorexit("No Ultimate Command Interface enabled.\n"
+                  "Enable it in the Ultimate menu,\nor update to firmware 3.15 or later.");
+    }
+
+    // Find the DMBoot directory; retry while USB storage is enumerating
+    cia1.tods = 0;
+    cia1.todt = 0;
+    do
+    {
+        storage = resolve_storage_path();
+    } while (storage == STORAGE_NONE && cia1.tods < STORAGE_RETRY_SECS);
+    if (storage == STORAGE_NONE)
+    {
+        errorexit("DMBoot directory (11) not found on USB storage.");
+    }
+
+    // Read the config before any verbose output, so its verbose and colour
+    // settings apply from here on
+    readconfigfile();
+    screen_setup("Starting...", STARTUP_ROW);
+
+    progress("Ultimate Command Interface detected.");
+    if (cfg.verbose)
+    {
+        print_ascii_line("Storage: ", configpath);
+        uii_identify();
+        print_ascii_line("Ultimate: ", uii_data);
+    }
+
     if (!overlays_preload())
     {
         tm_message("Overlay load failed");
-        return false;
+        errorexit("Loading the overlay files failed.");
     }
 
     sysinfo.reupages = reu128_count_pages();
     if (sysinfo.reupages < REU_MIN_PAGES)
     {
-        printf("An REU of at least 128 KB is required\n");
         tm_message("No REU");
-        return false;
+        errorexit("An REU of at least 128 KB is required.\nEnable the REU in the Ultimate menu.");
+    }
+    if (cfg.verbose)
+    {
+        dwin_printf(&console, cfg.colors.text, "REU: %u KB\n", sysinfo.reupages * 64);
+    }
+
+    read_slotsfile();
+    progress("Slots read.");
+
+    if (!uii_parse_deviceinfo())
+    {
+        errorexit("Reading the Ultimate drive info failed.");
+    }
+    if (cfg.verbose)
+    {
+        print_devices();
     }
 
     dm_query(&dminfo);
+    if (cfg.verbose)
+    {
+        if (dminfo.present)
+        {
+            dwin_printf(&console, cfg.colors.text, "DM API v%u.%u, hyperspeed ID %u\n",
+                        dminfo.version_major, dminfo.version_minor, dminfo.hyperspeed_id);
+        }
+        else
+        {
+            dwin_put_string(&console, "Device Manager API not found\n", cfg.colors.error);
+        }
+    }
+
     tm_sync();
     return true;
 }
@@ -508,7 +628,7 @@ int main(void)
         return 1;
     }
 
-    screen_setup();
+    screen_setup("Phase 1 test menu", CONSOLE_ROW);
     tm_set_screen(TM_SCREEN_MAINMENU);
     tm_message("Ready");
     print_status();
@@ -542,6 +662,12 @@ int main(void)
 
         case KEY_INPUT:
             input_test();
+            break;
+
+        case KEY_WRITEFILES:
+            writeconfigfile();
+            write_slotsfile();
+            dwin_put_string(&console, "Config and slots written.\n", COLOR_OK);
             break;
 
         default:
