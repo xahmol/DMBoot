@@ -65,7 +65,7 @@ Hutter / Francesco Sblendorio), the DM ROM API and GEOS RAM boot routine
 - **Common RAM: 8 KB at the bottom** (`$0000`–`$1FFF`). Set with `xmmu.rcr = 0x06` in `bnk_init()`, as VDCSE/vdcmaniac do. Low-memory code at `$1300` is then visible regardless of which bank is mapped in.
 - **Restored to the default** (`rcr = 0x04`, 1 KB common) by `bnk_exit()` before any exit to BASIC, `go 64`, `dm_run64` or GEOS boot.
 - **CPU speed:** in 80-column mode DMBoot runs at 2 MHz (`FAST`). In 40-column mode it stays at 1 MHz, because VIC output breaks at 2 MHz.
-- **REU DMA always runs at 1 MHz.** All `reu_load`/`reu_store` calls go through wrappers that clear `$D030` bit 0 around the transfer and restore it afterwards. Bart's GEOS routine documents the problem: at 2 MHz the machine often crashes after DMA completes.
+- **REU DMA always runs at 1 MHz.** (Phase 0 hardware result, U2+ emulated REU: a CPU-triggered REU transfer also passed 32/32 at 2 MHz without the wrapper, unlike asynchronous REST DMA which crashes at 2 MHz. The wrapper stays as a cheap safety margin for other REU hardware and for Bart's documented GEOS-boot crash case.) All `reu_load`/`reu_store` calls go through wrappers that clear `$D030` bit 0 around the transfer and restore it afterwards. Bart's GEOS routine documents the problem: at 2 MHz the machine often crashes after DMA completes.
 - **REU DMA target bank:** on the C128 this is set by MMU RCR bit 6 (`$D506`). The wrappers keep bit 6 = 0 (bank 0). Slot and directory buffers are always in bank 0.
 
 ### 3.2 Bank 0
