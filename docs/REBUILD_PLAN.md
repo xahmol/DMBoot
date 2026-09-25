@@ -510,7 +510,8 @@ Each phase ends with a build, a deploy to hardware (`192.168.1.237`), a c64bridg
     - Plain run from a disk image folder: 5 Tristam Island, 7 Risen f.oblivion.
     - REU image load + run: U ZP/M+ (`/usb1/cpm/cpm.reu`).
     - 8 GEOS128 Ramboot starts v4's `geosramboot`. That program then fails on image B: the v4 `DMBCFGFILE` has image B `GEOSAPP.D81` with an empty path, and the file is missing. v4 config issue. For Phase 5/6: an empty GEOS image path means `/usb*/11/`; warn about missing images.
-  - To test: Force 8, run64, FAST, BOOT, go 64, F7 exit; mount and demo mode need new test slots.
+    - Second, less stale stick (`tests/data/stick2`), slot 0 MegaPatch 3.3 128 US: REU load (16 MB) + image A on 8 + image B on 9 + run from the mounted image works. Needed a fix: power on Ultimate drives only when off, then wait 2 s (UBoot64 approach); an immediate mount gave `90,drive not present`. MegaPatch itself then fails because the test C128 has only 16 KB VDC RAM (MP3 needs 64 KB), not a DMBoot issue.
+  - To test: Force 8, run64, FAST, BOOT, go 64, F7 exit, drive power-on from off; demo mode needs a new test slot.
 
 ## 13. Risks and verification items
 
