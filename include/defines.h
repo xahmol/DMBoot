@@ -117,6 +117,7 @@ BUT WITHOUT ANY WARRANTY. USE THEM AT YOUR OWN RISK!
 #define IEC_ID_COUNT        23      // indexes 0-21 = IDs 8-29, index 22 = ID 4
 #define IEC_ID_PRINTER      4
 #define UII_DEVINFO_COUNT   4       // uii_devinfo[]: drive A, drive B, SoftIEC, printer
+#define UII_DEVINFO_DRIVES  2       // uii_devinfo[0..1]: drives A and B
 
 // Slot command flags (SlotStruct.command)
 #define COMMAND_CMD         0x01    // Run the user command

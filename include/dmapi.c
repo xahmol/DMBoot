@@ -243,7 +243,8 @@ void dm_query(struct DMApiInfo *info)
 // Title:       Device Manager drive type name
 // Description: Returns a short name for the drive at a device ID, asked
 //              from the Device Manager ROM. The hyperspeed drive is not
-//              asked but reported as SoftIEC, as DMBoot v4 did.
+//              asked but reported as "hyperspeed" (DMBoot v4 did not ask
+//              it either).
 // Syntax:      const char *dm_drivetype_name(char device);
 // Input:       device - IEC device ID (API must be present)
 // Output:      Drive type name (PETSCII), "?" for unknown codes
@@ -254,7 +255,7 @@ const char *dm_drivetype_name(char device)
 
     if (device == dminfo.hyperspeed_id)
     {
-        return "SoftIEC";
+        return "hyperspeed";
     }
     type = dm_api_get_drivetype(device);
     switch (type)
