@@ -18,6 +18,7 @@ This is an Oscar64 project: use `oscar64manual.md` as the compiler reference (se
 make build        # release build -> build/autostart.128.prg, dmblmc.prg, dmbovl*.prg
 make test-build   # same file names, with -dTESTMODE (test mailbox at $0B00, stays at 1 MHz)
 make deploy       # FTP to ftp://$(ULTIP1)/Usb1/11/ (ULTIP1 in gitignored .env; test machine 192.168.1.237)
+make test         # host tests (gcc): timeconv, v4convert, dirparse (see tests/host/README.md)
 make docs / zip / clean
 ```
 
