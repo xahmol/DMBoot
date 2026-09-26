@@ -114,7 +114,6 @@ void write_slotsfile(void)
         uii_write_file(save_buffer, length);
         CheckStatus("writing slots");
         address += length;
-        spinning();
     }
     uii_close_file();
 }

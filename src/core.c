@@ -89,6 +89,11 @@ void delay(char seconds)
 // ---------------------------------------------------------------------------
 void spinning(void)
 {
+    // Only in silent mode: with messages on, the spinner's place is taken by text
+    if (cfg.verbose)
+    {
+        return;
+    }
     dwin_putat_char(&screenwin, dwin_state.width / 2, SPINNER_ROW, spinner[spinnerframe], cfg.colors.text);
     spinnerframe = (spinnerframe + 1) % SPINNER_FRAMES;
 }
