@@ -743,8 +743,9 @@ latest main (29 commits after f38a1f2), DMBoot v5's 80 column start-up
 console scrolled wrongly on hardware (earlier lines lost, a line cut off);
 the same source built with f38a1f2 was fine. About 100 functions compiled
 differently; the ones checked by hand (`vdc_hchar`, `dwin_cursor_newline`)
-were equivalent. DMBoot pinned `~/oscar64` to f38a1f2 (detached HEAD) until
-a later version is re-tested. Before adopting a new Oscar64 in a project,
+were equivalent. DMBoot now builds with the official release tag v1.32.273
+(`git checkout v1.32.273` in `~/oscar64`, then `make compiler` in `make/`),
+not with main. Before adopting a new Oscar64 in a project,
 re-test on hardware; keep the previous binary to compare (`make CC=...`).
 
 **Second confirmed instance (heartbeat-demo, 2026-07-29):** same exact bug,

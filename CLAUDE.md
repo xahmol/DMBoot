@@ -23,7 +23,7 @@ make test         # host tests (gcc): timeconv, v4convert, dirparse (see tests/h
 make docs / zip / clean
 ```
 
-- Oscar64 at `/home/xahmol/oscar64/bin/oscar64`. `MAIN_SRCS` in the Makefile must list every `.c`/`.h` reached through `#pragma compile`, or make won't rebuild.
+- Oscar64 at `/home/xahmol/oscar64/bin/oscar64`, built from the **latest official release tag** (currently `v1.32.273`), not from main: main at 546b627 broke the start-up console scrolling on hardware. Re-test on hardware before moving to a newer release. `MAIN_SRCS` in the Makefile must list every `.c`/`.h` reached through `#pragma compile`, or make won't rebuild.
 - `make deploy` **overwrites `autostart.128.prg`** in the Device Manager boot directory. The v4 original is backed up on the stick as `autostart.128.v4.prg` and locally in `tests/data/`.
 - There is no emulator path (VICE has no UCI). Testing is on the real C128 through c64bridge (`u2` backend). **Rules** (plan §7.1):
   - Only read or write C128 memory over REST while the C128 runs at **1 MHz**. DMA at 2 MHz crashes it.
