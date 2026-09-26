@@ -507,6 +507,8 @@ Each phase ends with a build, a deploy to hardware (`192.168.1.237`), a c64bridg
     - On SoftIEC/Ultimate drives, an absolute `cd:/usb1/...`.
     - On other drives, `cd//...` relative to the partition root.
   - Slot start (2026-09-26): all statements on one line joined with `:` and one RETURN; verified in 40 and 80 columns on .23 (`PRINT"CMD OK":RUN"DMBTEST",U11`). Replaces v4's line-per-statement layout, which broke in 40 columns (READY. overwrote the RUN line).
+  - 64 KB VDC RAM (2026-09-26, .23 with a SaRuMan VDC): in 16 KB mode the 80 column screen was corrupted (header partly unreversed, slot lines missing, cleared lines keeping old text). `dwin_setup` now detects the VDC RAM size and sets register 28 bit 4 on a 64 KB VDC, as v4 did (not reset on exit, also as v4). Verified: the 80 column main menu is correct on .23.
+  - Also verified on .23 (2026-09-26): C64 mode slots and F5 go 64; the three start-up modes (silent, messages, messages + wait).
   - Earlier (superseded) cosmetic issue, same as v4: output of a user command starts on the command's own row and overwrites its tail. Probably because the screen editor echoes no CR after a line entered from the keyboard buffer (not investigated). Harmless.
   - Verified with slots converted from the real v4 file (`tests/tools/convert_v4_slots.py`):
     - Plain run from a disk image folder: 5 Tristam Island, 7 Risen f.oblivion.
