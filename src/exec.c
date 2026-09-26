@@ -37,10 +37,10 @@ C64 mode, FAST, BOOT) as in DMBoot v4 (branch legacy-cc65, src/ops.c).
 #pragma data(dataovl5)
 #pragma bss(bssovl5)
 
-#define EXEC_LINES_MAX      4       // Command lines put on screen
-#define EXEC_LINE_MAX       100     // Longest command line (cmd 80 + extras)
-#define EXEC_FIRST_ROW      2       // Row of the first command line
-#define EXEC_LINE_SPACING   3       // Rows reserved per line (output + READY.)
+#define EXEC_LINE_MAX       100     // Longest single statement (cmd 80 + extras)
+#define EXEC_STATEMENT_MAX  160     // All statements: one logical screen line (C128 editor limit)
+#define EXEC_FIRST_ROW      2       // Row of the start line
+#define CHR_COLON           0x3a    // Statement separator
 #define CHR_RETURN          0x0d
 #define CHR_HOME            0x13
 #define CHR_DOWN            0x11    // Cursor down
@@ -56,26 +56,71 @@ C64 mode, FAST, BOOT) as in DMBoot v4 (branch legacy-cc65, src/ops.c).
 #define DM_API_HSID_MIN     1       // set hyperspeed ID needs API version > 0
 
 // Command lines to execute after the exit to BASIC
-static char execlines[EXEC_LINES_MAX][EXEC_LINE_MAX];
-static char execcount;
+static const char key_return[2] = { CHR_RETURN, 0 };
+
+// The start line (statements joined with ':') and the keys typed after its
+// RETURN. One line instead of one line per statement: where BASIC prints
+// its output and READY. differs between the 40- and 80-column editor, so
+// lines further down the screen could be overwritten (seen in 40 columns).
+static char execline[EXEC_STATEMENT_MAX + 1];
+static char execkeys[KEYBUF_SIZE + 1];
 
 // ---------------------------------------------------------------------------
-// Title:       Add a command line
-// Description: Adds a line to the list executed after the exit; ignored
-//              when the list is full. The text is truncated to fit.
-// Syntax:      void exec_add_line(const char *text);
-// Input:       text - PETSCII command line
-// Output:      None
+// Title:       Add a statement to the start line
+// Description: Appends a BASIC statement to the start line, separated by
+//              ':'. Stops with an error when the line would get longer
+//              than one logical screen line.
+// Syntax:      static void exec_add_line(const char *text);
+// Input:       text - statement (PETSCII)
+// Output:      execline
 // ---------------------------------------------------------------------------
 static void exec_add_line(const char *text)
 {
-    if (execcount >= EXEC_LINES_MAX)
+    unsigned len = strlen(execline);
+
+    if (len + strlen(text) + (len ? 1 : 0) > EXEC_STATEMENT_MAX)
     {
-        return;
+        errorexit("The start command is too long for one line.");
     }
-    strncpy(execlines[execcount], text, EXEC_LINE_MAX - 1);
-    execlines[execcount][EXEC_LINE_MAX - 1] = 0;
-    execcount++;
+    if (len)
+    {
+        execline[len++] = CHR_COLON;
+    }
+    strcpy(execline + len, text);
+}
+
+// ---------------------------------------------------------------------------
+// Title:       Add keys typed after the start line
+// Description: Appends keys that are put in the keyboard buffer after the
+//              RETURN of the start line (e.g. "run" + RETURN after a LOAD,
+//              or "y" + RETURN to confirm GO 64). One place is kept for
+//              that RETURN.
+// Syntax:      static void exec_add_keys(const char *keys);
+// Input:       keys - PETSCII key codes
+// Output:      execkeys
+// ---------------------------------------------------------------------------
+static void exec_add_keys(const char *keys)
+{
+    unsigned len = strlen(execkeys);
+
+    while (*keys && len < KEYBUF_SIZE - 1)
+    {
+        execkeys[len++] = *keys++;
+    }
+    execkeys[len] = 0;
+}
+
+// ---------------------------------------------------------------------------
+// Title:       Start with an empty start line
+// Description: Clears the start line and the keys.
+// Syntax:      static void exec_clear(void);
+// Input:       None
+// Output:      execline, execkeys
+// ---------------------------------------------------------------------------
+static void exec_clear(void)
+{
+    execline[0] = 0;
+    execkeys[0] = 0;
 }
 
 // ---------------------------------------------------------------------------
@@ -95,22 +140,21 @@ static void exec_chrout(char ch)
 }
 
 // ---------------------------------------------------------------------------
-// Title:       Exit to BASIC and run the command lines
+// Title:       Exit to BASIC and run the start line
 // Description: Hands the screen back to the KERNAL (clears it), prints the
-//              command lines from row 2 down (as DMBoot v4 does;
-//              positioned with HOME and cursor-down control characters)
-//              (3 rows apart, room for their output and READY.), puts one
-//              RETURN per line (plus extra keys) in the keyboard buffer,
-//              restores 1 MHz and the MMU set-up and exits. BASIC prints
-//              READY. and then executes the lines one by one.
-// Syntax:      void exec_to_basic(const char *extrakeys);
-// Input:       extrakeys - keys to add after the RETURNs (may be "")
+//              start line on row 2 (positioned with HOME and cursor-down
+//              control characters, as DMBoot v4), puts one RETURN plus the
+//              extra keys in the keyboard buffer, restores 1 MHz and the
+//              MMU set-up and exits. BASIC prints READY. and then executes
+//              the line. v4 printed one line per statement, 3 rows apart;
+//              in 40 columns BASIC's output then overwrote the next line.
+// Syntax:      void exec_to_basic(void);
+// Input:       execline, execkeys
 // Output:      Does not return
 // ---------------------------------------------------------------------------
-static void exec_to_basic(const char *extrakeys)
+static void exec_to_basic(void)
 {
     volatile char *keybuffer = (volatile char *)KEYBUF_ADDRESS;
-    char row = EXEC_FIRST_ROW;
     char keys = 0;
 
     *(volatile char *)VIC_CLOCK_REG &= ~VIC_CLOCK_FAST;
@@ -119,36 +163,27 @@ static void exec_to_basic(const char *extrakeys)
     dwin_exit();
 
     // Position with KERNAL control characters (as the screen editor
-    // expects): HOME, then down to row 2; lines 3 rows apart (v4 layout)
+    // expects): HOME, down to the start row, print the start line, HOME.
+    // BASIC's READY. after the exit lands just above it, so the first
+    // RETURN from the keyboard buffer runs it.
     exec_chrout(CHR_HOME);
     for (char r = 0; r < EXEC_FIRST_ROW; r++)
     {
         exec_chrout(CHR_DOWN);
     }
-    for (char line = 0; line < execcount; line++)
+    for (unsigned i = 0; execline[i]; i++)
     {
-        for (char i = 0; execlines[line][i]; i++)
-        {
-            exec_chrout(execlines[line][i]);
-        }
-        // Next line start: column 0, EXEC_LINE_SPACING rows further down
-        char rows = strlen(execlines[line]) / dwin_state.width + EXEC_LINE_SPACING;
-        exec_chrout(CHR_HOME);
-        row += rows;
-        for (char r = 0; r < row; r++)
-        {
-            exec_chrout(CHR_DOWN);
-        }
+        exec_chrout(execline[i]);
     }
     exec_chrout(CHR_HOME);
 
-    while (keys < execcount && keys < KEYBUF_SIZE)
+    if (execline[0])
     {
         keybuffer[keys++] = CHR_RETURN;
     }
-    while (*extrakeys && keys < KEYBUF_SIZE)
+    for (char i = 0; execkeys[i] && keys < KEYBUF_SIZE; i++)
     {
-        keybuffer[keys++] = *extrakeys++;
+        keybuffer[keys++] = execkeys[i];
     }
     *(volatile char *)ZP_KEYBUF_COUNT = keys;
 
@@ -440,7 +475,7 @@ static void execute(const char *prg, char device, char boot, const char *command
     char line[EXEC_LINE_MAX];
     const char *fast = (boot & EXEC_FAST) ? "fast:" : "";
 
-    execcount = 0;
+    exec_clear();
     if (boot & EXEC_DEMO)
     {
         DoDemoMode();
@@ -485,10 +520,12 @@ static void execute(const char *prg, char device, char boot, const char *command
         }
         else if (prg[0] && (boot & EXEC_COMMA1))
         {
+            // LOAD in direct mode ends the line: RUN is typed afterwards
             sprintf(line, "load\"%s\",%u,1", prg, device);
             exec_add_line(line);
             sprintf(line, "%srun", fast);
-            exec_add_line(line);
+            exec_add_keys(line);
+            exec_add_keys(key_return);
         }
         else if (prg[0])
         {
@@ -496,7 +533,7 @@ static void execute(const char *prg, char device, char boot, const char *command
             exec_add_line(line);
         }
     }
-    exec_to_basic("");
+    exec_to_basic();
 }
 
 // ---------------------------------------------------------------------------
@@ -647,9 +684,10 @@ void exec_go64(void)
 {
     static const char confirm[3] = { CHR_YES, CHR_RETURN, 0 };
 
-    execcount = 0;
+    exec_clear();
     exec_add_line("go 64");
-    exec_to_basic(confirm);
+    exec_add_keys(confirm);
+    exec_to_basic();
 }
 
 // ---------------------------------------------------------------------------
@@ -661,9 +699,9 @@ void exec_go64(void)
 // ---------------------------------------------------------------------------
 void exec_exit_to_basic(void)
 {
-    execcount = 0;
+    exec_clear();
     exec_add_line("scnclr:new");
-    exec_to_basic("");
+    exec_to_basic();
 }
 
 #pragma code(code)
