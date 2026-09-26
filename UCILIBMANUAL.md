@@ -2161,5 +2161,6 @@ instead of `malloc`/`free`. A command is always built and sent before the
 next one is built, so one buffer is enough, and the program needs no heap
 for the library. A command longer than the buffer (in practice only
 possible with names or paths beyond the Ultimate's own limits) is not sent:
-`uii_command_buffer` returns `NULL` and sets `uii_status` to
-`99,COMMAND TOO LONG`, which `UII_SUCCESS` reports as a failure.
+`uii_command_buffer` returns `NULL` and sets `uii_status` to `99` (no
+text, so the library needs no initialised data for it), which
+`UII_SUCCESS` reports as a failure.

@@ -31,19 +31,18 @@ char uii_data[DATA_QUEUE_SZ + 1];
 // command, a rename of two 255-character names.
 static char uii_cmdbuf[UII_COMMAND_MAX];
 
-// "99,COMMAND TOO LONG" as raw ASCII (the Ultimate's status format)
-static const char uii_status_toolong[] = { 0x39, 0x39, 0x2c, 0x43, 0x4f, 0x4d, 0x4d, 0x41, 0x4e, 0x44, 0x20,
-                                           0x54, 0x4f, 0x4f, 0x20, 0x4c, 0x4f, 0x4e, 0x47, 0x00 };
-
 char *uii_command_buffer(unsigned length)
 // Get the command buffer for a command of length bytes
 // Input: length - total command length in bytes
 // Output: pointer to the shared buffer, or NULL (with uii_status set to
-//         "99,COMMAND TOO LONG") when the command does not fit
+//         "99", which UII_SUCCESS reports as a failure) when the command
+//         does not fit. No status text: no initialised data needed.
 {
 	if (length > UII_COMMAND_MAX)
 	{
-		strcpy(uii_status, uii_status_toolong);
+		uii_status[0] = 0x39;	// '9' in ASCII, charmap independent
+		uii_status[1] = 0x39;
+		uii_status[2] = 0;
 		return NULL;
 	}
 	return uii_cmdbuf;
