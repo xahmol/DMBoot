@@ -252,7 +252,8 @@ static void dwin_vdc_state_init(char mode)
 // Title:       Set up DualWin
 // Description: Detects the active screen (40 or 80 columns) and PAL/NTSC,
 //              switches to the lower/upper case charset, initialises the
-//              VDC state in 80 column mode and registers the banked RAM
+//              VDC state, switches a 64 KB VDC to 64 KB addressing (needs
+//              the LMC loaded) and registers the banked RAM
 //              area used to save popup backgrounds.
 // Syntax:      void dwin_setup(char storecr, char *storebase,
 //                              unsigned storesize);
@@ -274,16 +275,18 @@ void dwin_setup(char storecr, char *storebase, unsigned storesize)
     // The KERNAL switches the charset of the active screen
     dwin_chrout(DWIN_CHR_LOWERCASE);
 
-    if (dwin_state.mode == DWIN_MODE_VDC)
-    {
-        dwin_state.width = DWIN_VDC_WIDTH;
+    // VDC state in both modes: the memory size switch below clears the
+    // VDC screen through it
+    dwin_vdc_state_init(dwin_state.pal ? VDC_TEXT_80x25_PAL : VDC_TEXT_80x25_NTSC);
 
-        dwin_vdc_state_init(dwin_state.pal ? VDC_TEXT_80x25_PAL : VDC_TEXT_80x25_NTSC);
-    }
-    else
-    {
-        dwin_state.width = DWIN_VIC_WIDTH;
-    }
+    // 64 KB VDC RAM: switch the VDC to 64 KB addressing (register 28 bit
+    // 4). With 64 KB chips in 16 KB mode the screen was corrupted on
+    // hardware (SaRuMan, header and cleared lines). Not switched back on
+    // exit: the KERNAL screen editor works in both modes.
+    vdc_detect_mem_size();
+    vdc_set_extended_memsize();
+
+    dwin_state.width = (dwin_state.mode == DWIN_MODE_VDC) ? DWIN_VDC_WIDTH : DWIN_VIC_WIDTH;
 }
 
 // ---------------------------------------------------------------------------

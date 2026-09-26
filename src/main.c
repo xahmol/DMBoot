@@ -337,7 +337,11 @@ bool dmb_startup(void)
     screen_setup("Starting...", STARTUP_ROW);
 
     progress("Ultimate Command Interface detected.");
-    if (cfg.verbose)
+    if (!cfg.verbose)
+    {
+        dwin_put_string(&console, STARTUP_SILENT_TEXT, cfg.colors.text);
+    }
+    else
     {
         print_ascii_line("Storage: ", configpath);
         uii_identify();

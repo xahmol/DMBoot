@@ -59,7 +59,8 @@ dwin_screen_colors(VCOL_BLACK, VCOL_BLACK);
 `dwin_setup()` does the following:
 - detects the active screen (zero page `$D7` bit 7) and PAL/NTSC (`$0A03`);
 - sends `CHR$(14)` so the KERNAL switches the active screen to lower/upper case;
-- in 80 columns, fills `vdc_state` for the 80x25 screen the KERNAL already set up (PAL or NTSC). It does **not** write any VDC register: reprogramming the VDC shifted the picture after exiting to BASIC, and VDC registers cannot be saved and restored because many are write-only (they read back as `$FF`).
+- fills `vdc_state` for the 80x25 screen the KERNAL already set up (PAL or NTSC), in both modes. Apart from the memory size below it does **not** write any VDC register: reprogramming the VDC shifted the picture after exiting to BASIC, and VDC registers cannot be saved and restored because many are write-only (they read back as `$FF`);
+- detects the VDC RAM size (`vdc_detect_mem_size()`) and switches a 64 KB VDC to 64 KB addressing (`vdc_set_extended_memsize()`: register 28 bit 4, VDC RAM wiped, charsets copied back from the character ROM). With 64 KB chips left in 16 KB mode the 80 column screen was corrupted on hardware (SaRuMan VDC: header partly unreversed, cleared lines keeping old text). The mode is not switched back on exit, as in DMBoot v4. This needs the LMC (`bnk_redef_charset`), so call `bnk_init()` first.
 
 It does **not** switch screens or change the CPU speed (unlike the application-specific `vdc_init()` of the VDC suite).
 

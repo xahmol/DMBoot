@@ -69,7 +69,7 @@ Notes on the conversion:
 * Slots keep their key, name, path, file, command, flags, mounts and REU image.
 * The NTP on/off setting and UTC offset are kept; a v4 NTP server you chose yourself becomes server 1.
 * v4 slots that BOOT from a disk image that uses a fast loader such as Krill's need the image mounted on drive A with demo mode (the hyperspeed drive cannot run drive code). Change these in the slot editor.
-* A GEOS image without a path gets the DMBoot directory. Check it in the configuration (F4, F8).
+* A GEOS image without a path gets the DMBoot directory. Check it in the configuration (F4, F6).
 
 ### Main menu
 
@@ -127,7 +127,7 @@ Shows the version, the Ultimate, the REU size, the screen mode, the Device Manag
 |---|---|
 | **F1** | Rename a slot |
 | **F2** | Command of a slot: a BASIC line run before the program. On an empty slot this creates a command-only slot |
-| **F3** | Re-order: pick a slot, move it with cursor up/down, RETURN keeps the new place, F7 cancels |
+| **F3** | Re-order: pick a slot, move it with cursor up/down (left/right: to the other page), RETURN keeps the new place, F7 cancels |
 | **F4** | Auto-boot timeout: off, 1, 3, 5, 10 seconds |
 | **F5** | Delete a slot (asks first) |
 | **F6** | Set or clear the default slot ([D] behind its name) |
@@ -140,10 +140,9 @@ Shows the version, the Ultimate, the REU size, the screen mode, the Device Manag
 | **F1** | NTP time sync at start-up on/off (default off, see below) |
 | **F2** | Start-up: silent, show messages, or show messages + wait for a key |
 | **F3** | Offset to UTC in seconds (e.g. 3600 for CET, 7200 for CEST; no automatic daylight saving time) |
-| **F4** | Auto-boot timeout |
-| **F5** | The three NTP servers, edited in turn (empty = not used, STOP = keep). Defaults: time.google.com, time.windows.com, pool.ntp.org |
-| **F6** | Colours: cursor up/down chooses, left/right changes, DEL undoes, F7 back |
-| **F8** | GEOS RAM boot: REU image and size, disk images for drives A and B |
+| **F4** | The three NTP servers, edited in turn (empty = not used, STOP = keep). Defaults: time.google.com, time.windows.com, pool.ntp.org |
+| **F5** | Colours: cursor up/down chooses, left/right changes, DEL undoes, F7 back |
+| **F6** | GEOS RAM boot: REU image and size, disk images for drives A and B |
 | **F7** | Back; changes are saved now |
 
 **NTP time sync and the Ultimate firmware:** from firmware 3.14d the Ultimate sets its clock itself (Ultimate menu, Network settings: SNTP Enable, time zone and three time servers). DMBoot's own time sync is therefore off by default; switch it on (F1) only for older firmware. DMBoot asks the servers in turn until one answers. The UTC offset (F3) is only used by DMBoot's own sync.
@@ -154,7 +153,7 @@ Types `GO 64` and confirms it.
 
 ### F6: GEOS RAM boot
 
-Mounts the configured disk images, loads the GEOS REU image and starts GEOS from it. Configure it first in F4, F8. The REU image must hold a GEOS system saved with its RAM boot loader (for example made with GEOS's own RAM boot tools or MegaPatch).
+Mounts the configured disk images, loads the GEOS REU image and starts GEOS from it. Configure it first in F4, F6. The REU image must hold a GEOS system saved with its RAM boot loader (for example made with GEOS's own RAM boot tools or MegaPatch).
 
 Demonstration of booting GEOS via DMBoot v4 (click the picture for the video on YouTube):
 

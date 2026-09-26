@@ -12,6 +12,9 @@ https://github.com/xahmol/DMBoot
 
 void errorexit(const char *message);
 void delay(char seconds);
+// Silent start-up: this text, with the spinner one space after it
+#define STARTUP_SILENT_TEXT "Detecting and reading..."
+
 void spinning(void);
 void headertext(const char *subtitle, char showtime);
 void progress(const char *text);

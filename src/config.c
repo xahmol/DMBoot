@@ -256,11 +256,10 @@ static void cfg_line(char row, const char *key, const char *label, const char *v
 #define CFG_ROW_TIMEON      (CFG_ROW0 + 0)
 #define CFG_ROW_VERBOSE     (CFG_ROW0 + 1)
 #define CFG_ROW_UTC         (CFG_ROW0 + 2)
-#define CFG_ROW_TIMEOUT     (CFG_ROW0 + 3)
-#define CFG_ROW_HOST        (CFG_ROW0 + 4)  // Three rows, one per server
-#define CFG_ROW_COLOURS     (CFG_ROW0 + 7)
-#define CFG_ROW_GEOS        (CFG_ROW0 + 8)
-#define CFG_ROW_BACK        (CFG_ROW0 + 10)
+#define CFG_ROW_HOST        (CFG_ROW0 + 3)  // Three rows, one per server
+#define CFG_ROW_COLOURS     (CFG_ROW0 + 6)
+#define CFG_ROW_GEOS        (CFG_ROW0 + 7)
+#define CFG_ROW_BACK        (CFG_ROW0 + 9)
 #define CFG_SERVER_LABEL_X  5       // "Server 2/3" under "NTP servers"
 
 // ---------------------------------------------------------------------------
@@ -281,8 +280,8 @@ static void cfg_value(char row, const char *value)
 // Title:       Show the changeable values
 // Description: One function per setting, so a change redraws only its
 //              value.
-// Syntax:      static void cfg_show_timeon(void); (and _verbose, _utc,
-//              _timeout; cfg_show_host(char server) for NTP server 0-2)
+// Syntax:      static void cfg_show_timeon(void); (and _verbose, _utc;
+//              cfg_show_host(char server) for NTP server 0-2)
 // Input:       cfg
 // Output:      None
 // ---------------------------------------------------------------------------
@@ -300,19 +299,6 @@ static void cfg_show_utc(void)
 {
     sprintf(textbuf, "%ld s", cfg.secondsfromutc);
     cfg_value(CFG_ROW_UTC, textbuf);
-}
-
-static void cfg_show_timeout(void)
-{
-    if (cfg.timeoutidx && cfg.timeoutidx < TIMEOUT_OPTIONS)
-    {
-        sprintf(textbuf, "%u s", timeoutseconds[cfg.timeoutidx]);
-        cfg_value(CFG_ROW_TIMEOUT, textbuf);
-    }
-    else
-    {
-        cfg_value(CFG_ROW_TIMEOUT, "Off");
-    }
 }
 
 static void cfg_show_host(char server)
@@ -343,17 +329,15 @@ static void cfg_draw(void)
     cfg_line(CFG_ROW_TIMEON, " F1 ", "NTP time sync", NULL);
     cfg_line(CFG_ROW_VERBOSE, " F2 ", "Start-up", NULL);
     cfg_line(CFG_ROW_UTC, " F3 ", "UTC offset", NULL);
-    cfg_line(CFG_ROW_TIMEOUT, " F4 ", "Auto-boot", NULL);
-    cfg_line(CFG_ROW_HOST, " F5 ", "NTP servers", NULL);
+    cfg_line(CFG_ROW_HOST, " F4 ", "NTP servers", NULL);
     dwin_putat_string(&screenwin, CFG_SERVER_LABEL_X, CFG_ROW_HOST + 1, "Server 2", cfg.colors.text);
     dwin_putat_string(&screenwin, CFG_SERVER_LABEL_X, CFG_ROW_HOST + 2, "Server 3", cfg.colors.text);
-    cfg_line(CFG_ROW_COLOURS, " F6 ", "Colours", NULL);
-    cfg_line(CFG_ROW_GEOS, " F8 ", "GEOS RAM boot", NULL);
+    cfg_line(CFG_ROW_COLOURS, " F5 ", "Colours", NULL);
+    cfg_line(CFG_ROW_GEOS, " F6 ", "GEOS RAM boot", NULL);
     cfg_line(CFG_ROW_BACK, " F7 ", "Back (saves changes)", NULL);
     cfg_show_timeon();
     cfg_show_verbose();
     cfg_show_utc();
-    cfg_show_timeout();
     for (char x = 0; x < NTP_SERVERS; x++)
     {
         cfg_show_host(x);
@@ -839,20 +823,15 @@ void config_edit(void)
             cfg_show_utc();
             break;
         case KEY_F4:
-            cfg.timeoutidx = (cfg.timeoutidx + 1 < TIMEOUT_OPTIONS) ? cfg.timeoutidx + 1 : 0;
-            cfg_show_timeout();
-            changed = true;
-            break;
-        case KEY_F5:
             changed |= cfg_hosts();
             slotlist_clear_bottom();
             break;
-        case KEY_F6:
+        case KEY_F5:
             // Another screen: full redraw on return
             changed |= cfg_colors();
             cfg_draw();
             break;
-        case KEY_F8:
+        case KEY_F6:
             changed |= cfg_geos();
             cfg_draw();
             break;

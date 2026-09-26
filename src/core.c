@@ -27,6 +27,7 @@ https://github.com/xahmol/DMBoot
 #define HEADER_ROW_TITLE    0
 #define HEADER_ROW_SUB      1
 #define SPINNER_ROW         3
+#define SPINNER_COLUMN      sizeof(STARTUP_SILENT_TEXT)  // Text length + 1 space
 #define SPINNER_FRAMES      4
 #define CHR_SPACE           0x20
 #define TIME_TEXT_MAX       24      // "yyyy/mm/dd hh:mm:ss" plus margin
@@ -82,7 +83,8 @@ void delay(char seconds)
 
 // ---------------------------------------------------------------------------
 // Title:       Spinner
-// Description: Shows the next frame of the start-up spinner (silent mode).
+// Description: Shows the next frame of the start-up spinner (silent mode),
+//              after the STARTUP_SILENT_TEXT line.
 // Syntax:      void spinning(void);
 // Input:       None
 // Output:      None
@@ -94,7 +96,7 @@ void spinning(void)
     {
         return;
     }
-    dwin_putat_char(&screenwin, dwin_state.width / 2, SPINNER_ROW, spinner[spinnerframe], cfg.colors.text);
+    dwin_putat_char(&screenwin, SPINNER_COLUMN, SPINNER_ROW, spinner[spinnerframe], cfg.colors.text);
     spinnerframe = (spinnerframe + 1) % SPINNER_FRAMES;
 }
 
