@@ -60,7 +60,7 @@ dwin_screen_colors(VCOL_BLACK, VCOL_BLACK);
 - detects the active screen (zero page `$D7` bit 7) and PAL/NTSC (`$0A03`);
 - sends `CHR$(14)` so the KERNAL switches the active screen to lower/upper case;
 - fills `vdc_state` for the 80x25 screen the KERNAL already set up (PAL or NTSC), in both modes. Apart from the memory size below it does **not** write any VDC register: reprogramming the VDC shifted the picture after exiting to BASIC, and VDC registers cannot be saved and restored because many are write-only (they read back as `$FF`);
-- detects the VDC RAM size (`vdc_detect_mem_size()`) and switches a 64 KB VDC to 64 KB addressing (`vdc_set_extended_memsize()`: register 28 bit 4, VDC RAM wiped, charsets copied back from the character ROM). With 64 KB chips left in 16 KB mode the 80 column screen was corrupted on hardware (SaRuMan VDC: header partly unreversed, cleared lines keeping old text). The mode is not switched back on exit, as in DMBoot v4. This needs the LMC (`bnk_redef_charset`), so call `bnk_init()` first.
+- detects the VDC RAM size (`vdc_detect_mem_size()`) and switches a 64 KB VDC to 64 KB addressing (`vdc_set_extended_memsize()`: register 28 bit 4, VDC RAM wiped, charsets copied back from the character ROM). With 64 KB chips left in 16 KB mode the 80 column screen was corrupted on hardware (SaRuMan VDC: header partly unreversed, cleared lines keeping old text). `dwin_exit()` switches back to 16 KB addressing before `CINT` (unlike DMBoot v4, which left it in 64 KB mode: CP/M from an REU image then showed a garbled 80 column screen). A program started without `dwin_exit()` (DMBoot's GEOS RAM boot) keeps 64 KB mode, which MegaPatch needs. This needs the LMC (`bnk_redef_charset`), so call `bnk_init()` first.
 
 It does **not** switch screens or change the CPU speed (unlike the application-specific `vdc_init()` of the VDC suite).
 
@@ -96,7 +96,7 @@ An application therefore needs only one palette, whatever the screen.
 | `void dwin_screen_colors(char border, char background)` | VIC: border and background. VDC: background (the VDC has no separate border). |
 | `bool dwin_is80(void)` | true in 80 column mode. |
 | `void dwin_swap_screen(void)` | Make the other screen (40/80 columns) active: KERNAL `SWAPPER` (`$FF5F`, with Oscar64's zero page `$F7`-`$F9` kept, which SWAPPER exchanges with `$0A57`-`$0A59`), then mode, width and the lower/upper case charset. Drops open popups. The caller re-initialises its windows (sizes depend on the width), sets colours, sets 1 MHz before drawing on the VIC screen, and redraws. |
-| `void dwin_exit(void)` | Hand the screen back to the KERNAL before exiting to BASIC: calls KERNAL `CINT` (`$FF81`), which re-initialises the screen editor and both screens (colours, charsets, cleared screens). `CINT` picks the screen from the 40/80 key; if DualWin was on the other screen (after `dwin_swap_screen`), it swaps back to that one, so BASIC continues on the screen the user was on. |
+| `void dwin_exit(void)` | Hand the screen back to the KERNAL before exiting to BASIC: switches a 64 KB VDC back to 16 KB addressing, then calls KERNAL `CINT` (`$FF81`), which re-initialises the screen editor and both screens (colours, charsets, cleared screens). `CINT` picks the screen from the 40/80 key; if DualWin was on the other screen (after `dwin_swap_screen`), it swaps back to that one, so BASIC continues on the screen the user was on. |
 
 ### Windows
 

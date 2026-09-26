@@ -324,8 +324,8 @@ void dwin_setup(char storecr, char *storebase, unsigned storesize)
 
     // 64 KB VDC RAM: switch the VDC to 64 KB addressing (register 28 bit
     // 4). With 64 KB chips in 16 KB mode the screen was corrupted on
-    // hardware (SaRuMan, header and cleared lines). Not switched back on
-    // exit: the KERNAL screen editor works in both modes.
+    // hardware (SaRuMan, header and cleared lines). dwin_exit switches
+    // back to the power-on 16 KB mode.
     vdc_detect_mem_size();
     vdc_set_extended_memsize();
 
@@ -384,6 +384,9 @@ void dwin_swap_screen(void)
 //              BASIC: DualWin reprograms the VDC and writes screen memory
 //              directly, which the KERNAL editor does not know about (seen
 //              on hardware: shifted rows and garbage in BASIC after exit).
+//              A 64 KB VDC is first switched back to the power-on 16 KB
+//              addressing (programs such as CP/M from an REU image expect
+//              it; left in 64 KB mode, CP/M's 80 column screen was garbled).
 //              CINT picks the screen from the 40/80 key; when DualWin was
 //              using the other one (dwin_swap_screen), that screen is made
 //              active again, so BASIC continues where the user was.
@@ -394,6 +397,7 @@ void dwin_swap_screen(void)
 void dwin_exit(void)
 {
     dwin_state.popups = 0;
+    vdc_set_default_memsize();
     __asm
     {
         jsr $ff81
