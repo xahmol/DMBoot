@@ -25,6 +25,29 @@ Patches and pull requests are welcome
 
 char uii_status[STATUS_QUEUE_SZ + 1];
 char uii_data[DATA_QUEUE_SZ + 1];
+
+// One shared buffer for building commands (no malloc: a command is built
+// and sent before the next one is built). Large enough for the longest
+// command, a rename of two 255-character names.
+static char uii_cmdbuf[UII_COMMAND_MAX];
+
+// "99,COMMAND TOO LONG" as raw ASCII (the Ultimate's status format)
+static const char uii_status_toolong[] = { 0x39, 0x39, 0x2c, 0x43, 0x4f, 0x4d, 0x4d, 0x41, 0x4e, 0x44, 0x20,
+                                           0x54, 0x4f, 0x4f, 0x20, 0x4c, 0x4f, 0x4e, 0x47, 0x00 };
+
+char *uii_command_buffer(unsigned length)
+// Get the command buffer for a command of length bytes
+// Input: length - total command length in bytes
+// Output: pointer to the shared buffer, or NULL (with uii_status set to
+//         "99,COMMAND TOO LONG") when the command does not fit
+{
+	if (length > UII_COMMAND_MAX)
+	{
+		strcpy(uii_status, uii_status_toolong);
+		return NULL;
+	}
+	return uii_cmdbuf;
+}
 char temp_string_onechar[2];
 unsigned uii_data_index;
 unsigned uii_data_len;
@@ -122,7 +145,7 @@ void uii_add_partition(char index, const char *name, const char *path)
 	unsigned x = 0;
 	unsigned namelen = strlen(name);
 	unsigned pathlen = strlen(path);
-	char *fullcmd = (char *)malloc(namelen + pathlen + 4);
+	char *fullcmd = uii_command_buffer(namelen + pathlen + 4);
 	if (!fullcmd) return;
 	fullcmd[0] = 0x00;
 	fullcmd[1] = SOFTIEC_CMD_ADD_PARTITION;
@@ -137,7 +160,6 @@ void uii_add_partition(char index, const char *name, const char *path)
 	uii_settarget(TARGET_SOFTIEC);
 	uii_sendcommand(fullcmd, namelen + pathlen + 4);
 
-	free(fullcmd);
 
 	uii_readdata();
 	uii_readstatus();
@@ -245,7 +267,7 @@ char uii_send_with_name(char target, const char *header, char headerlen, const c
 		return 0;
 	}
 
-	fullcmd = (char *)malloc(headerlen + namelen);
+	fullcmd = uii_command_buffer(headerlen + namelen);
 	if (!fullcmd)
 	{
 		return 0;
@@ -255,7 +277,6 @@ char uii_send_with_name(char target, const char *header, char headerlen, const c
 
 	uii_settarget(target);
 	uii_sendcommand(fullcmd, headerlen + namelen);
-	free(fullcmd);
 
 	uii_readdata();
 	uii_readstatus();
