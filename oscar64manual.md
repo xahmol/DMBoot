@@ -703,6 +703,22 @@ hardware. Applied in UBoot64-v2 as `uboot64_reu_count_pages()` in
 `reu_count_pages()`, since the library function itself can't be patched from
 project source).
 
+**Third instance, wider scope (DMBoot v5, 2026-09-26): not only probes.**
+Any code whose reads of DMA-loaded data can be scheduled across an inlined
+`reu_load` is affected. A project wrapper `reu128_load()` (1 MHz switch +
+`reu_load`) was auto-inlined at `-O2` into a linked-list walk:
+`struct DirMeta meta; reu128_load(addr, (volatile char *)&meta, sizeof meta);
+target = meta.next;` compiled to reading `meta.next`/`meta.prev` **once,
+before the loop and before the DMA** (seen in the `.asm`: `LDA meta.next`
+hoisted above the `$DF01` write). The walk followed stale links and the
+browser hung on cursor down; the inlined `reu_store` of a link address
+likewise risked storing memory the compiler had not written yet. **Fix:
+declare the project's REU load/store wrappers `__noinline`** (in the header
+prototype and the definition). The call is then opaque and the reads follow
+the `JSR` (verified in the `.asm`). Rule: never let `reu_load`/`reu_store`
+be inlined into code that uses the transferred data; wrap them once in
+`__noinline` functions and use only those.
+
 **Second confirmed instance (heartbeat-demo, 2026-07-29):** same exact bug,
 same Oscar64 build. detect_reu() (src/detect.c) called the library's
 reu_count_pages() directly and always got 0 (REU check failed on real

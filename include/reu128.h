@@ -19,8 +19,11 @@ Wraps Oscar64's <c64/reu.h> DMA transfers for use on the C128:
 #include "defines.h"
 
 unsigned reu128_count_pages(void);
-void reu128_store(unsigned long raddr, const volatile char *src, unsigned length);
-void reu128_load(unsigned long raddr, volatile char *dst, unsigned length);
+// Never inlined: inlined, the optimiser does not see the DMA as a memory
+// access and moved reads of the loaded data before the transfer (browser
+// list walk read stale links; cursor down hung)
+__noinline void reu128_store(unsigned long raddr, const volatile char *src, unsigned length);
+__noinline void reu128_load(unsigned long raddr, volatile char *dst, unsigned length);
 
 #pragma compile("reu128.c")
 

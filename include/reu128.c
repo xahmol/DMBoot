@@ -60,7 +60,7 @@ static inline void reu128_restore_speed(char previous)
 // ---------------------------------------------------------------------------
 // Title:       Store to REU
 // Description: Copies a block from C128 bank 0 memory to the REU at 1 MHz.
-// Syntax:      void reu128_store(unsigned long raddr,
+// Syntax:      __noinline void reu128_store(unsigned long raddr,
 //                                const volatile char *src, unsigned length);
 // Input:       raddr  - REU destination address
 //              src    - bank 0 source address
@@ -84,7 +84,7 @@ void reu128_store(unsigned long raddr, const volatile char *src, unsigned length
 //              length - number of bytes (1..65535)
 // Output:      None
 // ---------------------------------------------------------------------------
-void reu128_load(unsigned long raddr, volatile char *dst, unsigned length)
+__noinline void reu128_load(unsigned long raddr, volatile char *dst, unsigned length)
 {
     char speed = reu128_slow();
     reu_load(raddr, dst, length);
