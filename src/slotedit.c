@@ -450,6 +450,70 @@ static char edit_move(char pos, bool down, char *page)
 }
 
 // ---------------------------------------------------------------------------
+// Title:       Move the slot being re-ordered to the other page or column
+// Description: Moves the slot SLOTLIST_ROWS places (to the same row on the
+//              other 40-column page, or in the other 80-column column); the
+//              slots in between shift one place. Redraws the other page, or
+//              only the lines that changed. Does nothing when the target
+//              would be outside the slots.
+// Syntax:      static char edit_jump(char pos, bool right, char *page);
+// Input:       pos   - current position of the moving slot
+//              right - true: SLOTLIST_ROWS forward, false: back
+//              page  - shown page (40 columns)
+// Output:      New position
+// ---------------------------------------------------------------------------
+static char edit_jump(char pos, bool right, char *page)
+{
+    char target;
+
+    if (right)
+    {
+        if (pos + SLOTLIST_ROWS >= SLOTS)
+        {
+            return pos;
+        }
+        target = pos + SLOTLIST_ROWS;
+        for (char x = pos; x < target; x++)
+        {
+            get_slot_from_reu(x + 1);
+            save_slot_to_reu(x);
+        }
+    }
+    else
+    {
+        if (pos < SLOTLIST_ROWS)
+        {
+            return pos;
+        }
+        target = pos - SLOTLIST_ROWS;
+        for (char x = pos; x > target; x--)
+        {
+            get_slot_from_reu(x - 1);
+            save_slot_to_reu(x);
+        }
+    }
+    memcpy(&Slot, &moving, sizeof(Slot));
+    save_slot_to_reu(target);
+
+    if (slotlist_page(target) != *page)
+    {
+        *page = slotlist_page(target);
+        slotlist_draw(*page);
+    }
+    else
+    {
+        char first = right ? pos : target;
+        char last = right ? target : pos;
+        for (char x = first; x <= last; x++)
+        {
+            slotlist_draw_slot(x, *page, 0);
+        }
+    }
+    slotlist_draw_slot(target, *page, SLOTLIST_SELECTED);
+    return target;
+}
+
+// ---------------------------------------------------------------------------
 // Title:       Copy all slots within the REU
 // Description: Copies the 36 slots between the slot area and the backup
 //              area in the REU, one slot at a time through Slot.
@@ -471,7 +535,8 @@ static void edit_copy_slots(unsigned long from, unsigned long to)
 
 // ---------------------------------------------------------------------------
 // Title:       Re-order a slot
-// Description: Asks for a slot, then moves it with cursor up/down.
+// Description: Asks for a slot, then moves it with cursor up/down (one
+//              place) or left/right (to the other page / column).
 //              RETURN keeps the new order; F7 or STOP restores the order
 //              from a backup in the REU.
 // Syntax:      static char edit_reorder(char *page);
@@ -496,8 +561,9 @@ static char edit_reorder(char *page)
     get_slot_from_reu(start);
     memcpy(&moving, &Slot, sizeof(moving));
     slotlist_draw_slot(start, *page, SLOTLIST_SELECTED);
-    edit_prompt("Cursor up/down: move. RETURN: keep.");
-    dwin_putat_string(&screenwin, 0, SLOTLIST_LEGEND_ROW + 1, "F7: cancel.", cfg.colors.text);
+    edit_prompt("Cursor keys: move. RETURN: keep.");
+    dwin_putat_string(&screenwin, 0, SLOTLIST_LEGEND_ROW + 1, "Left/right: other page. F7: cancel.",
+                      cfg.colors.text);
 
     pos = start;
     while (true)
@@ -506,6 +572,10 @@ static char edit_reorder(char *page)
         if (key == KEY_CURSOR_DOWN || key == KEY_CURSOR_UP)
         {
             pos = edit_move(pos, key == KEY_CURSOR_DOWN, page);
+        }
+        else if (key == KEY_CURSOR_RIGHT || key == KEY_CURSOR_LEFT)
+        {
+            pos = edit_jump(pos, key == KEY_CURSOR_RIGHT, page);
         }
         else if (key == KEY_RETURN)
         {
