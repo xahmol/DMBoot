@@ -64,6 +64,9 @@ void uii_set_time(char *data)
 	uii_sendcommand(fullcmd, 8);
 
 	free(fullcmd);
+	// The firmware replies with the new date as data before the status:
+	// read it, or the status read is out of step (an old status came back)
+	uii_readdata();
 	uii_readstatus();
 	uii_accept();
 }

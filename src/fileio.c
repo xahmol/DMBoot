@@ -163,6 +163,8 @@ void read_slotsfile(void)
     // Start from empty slots, so a short file leaves the rest empty
     create_empty_slots();
 
+    // Verbose: a counter line that is updated in place
+    char row = console.cy;
     uii_read_file((unsigned)SLOTS_BYTES);
     while (uii_isdataavailable() || uii_ismoredataavailable())
     {
@@ -180,7 +182,17 @@ void read_slotsfile(void)
             reu128_store(address, (volatile char *)uii_data, bytesread);
             address += bytesread;
         }
+        if (cfg.verbose)
+        {
+            dwin_cursor_move(&console, 0, row);
+            dwin_printf(&console, cfg.colors.text, "Reading slots: %u/%u",
+                        (unsigned)((address - SLOT_REU_START) / SLOTSIZE), SLOTS);
+        }
         spinning();
+    }
+    if (cfg.verbose)
+    {
+        dwin_put_char(&console, '\n', cfg.colors.text);
     }
     uii_close_file();
 

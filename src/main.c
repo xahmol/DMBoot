@@ -364,7 +364,6 @@ bool dmb_startup(void)
     }
 
     read_slotsfile();
-    progress("Slots read.");
 
     if (!uii_parse_deviceinfo())
     {
