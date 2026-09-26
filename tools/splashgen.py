@@ -16,7 +16,7 @@ as the UBoot64 splash) as two Petmate9 screens:
 
 Output: splash.petmate (for editing in Petmate9) and PNG previews.
 
-Usage: python3 tools/splashgen.py <petmate9-assets-dir> <outdir>
+Usage: python3 tools/splashgen.py [--edge=progress|footprints|stitch|lace] <petmate9-assets-dir> <outdir>
 Uses c128-charset-upper.bin and c128-charset-lower.bin from Petmate9's
 assets directory.
 
@@ -51,6 +51,7 @@ COLOURS = {
     '2': (8, 12),    # title letters, rows 2-3 (orange)
     '4': (7, 13),    # title letters, rows 4-5 and "128" (yellow)
     'T': (13, 5),    # credits (light green)
+    'P': (13, 5),    # progress bar (light green)
 }
 
 VIC_PALETTE = [
@@ -168,22 +169,36 @@ LETTER_GAP = 2                      # Sub-pixels between letters
 # cells, letter colour per letter row 1-5)
 BANNERS = [
     ("DMBOOT", 0, 0, 40, 7, "12244"),
-    ("128", 22, 9, 17, 7, "44444"),
+    ("128", 23, 9, 17, 7, "44444"),        # Right-aligned
 ]
 
-# Drips under the title banner: UBoot64 splash row 7 (screen codes, and
-# 'B' = banner colour, 'W' = white bubble)
-DRIPS_CODES = [0x20, 0x7c, 0x6c, 0x20, 0x7c, 0x20, 0x20, 0x7c, 0x7c, 0x20, 0x6c, 0x20, 0x7c,
-               0x7c, 0x20, 0x20, 0x7c, 0x7c, 0x20, 0x20, 0x7c, 0x20, 0x20, 0x7c, 0x7c, 0x20,
-               0x6c, 0x20, 0x7c, 0x20, 0x20, 0x7c, 0x7c, 0x20, 0x6c, 0x7c, 0x20, 0x7e, 0x7c, 0x20]
-DRIPS_COLOURS = "BBWBWBBBBBWBWBBBBBBBBBBBBBWBBBBBBBWBBWBB"
-DRIPS_ROW = 7
+# Edge under the title banner (row 7), selected with --edge:
+# - "footprints": a trail of footprints walking towards the boot (grey)
+# - "stitch": the banner as a sewn label, a stitched hem of short dashes
+#   (top quarter blocks) in the banner colour
+# - "lace": laced like the boot, a white zigzag lace
+# - "progress": booting, a progress bar (light green, grey track)
+EDGE_ROW = 7
+EDGE_STYLES = {
+    # Walking left (toe on the left): sole, gap, heel; left foot low
+    # (lower quarter/half blocks), right foot high (upper ones)
+    "footprints": ([0x20, 0x6c, 0x62, 0x7b, 0x20, 0x62, 0x20,
+                    0x20, 0x7c, 0xe2, 0x7e, 0x20, 0xe2, 0x20] * 3)[:40],
+    "stitch": [0x77, 0x20] * 20,
+    # Laced like the boot: a zigzag lace (white)
+    "lace": [0x4d, 0x4e] * 20,
+    # Booting: a progress bar, 70% done (lower half blocks, a quarter
+    # block at the tip, a thin grey track for the rest)
+    "progress": [0x20] + [0x62] * 26 + [0x7b] + [0x64] * 11 + [0x20],
+}
+EDGE_COLOURS = {"footprints": 'G', "stitch": 'B', "lace": 'W',
+                "progress": " " + "P" * 27 + "G" * 11 + " "}
 
 # Plain text lines: (text, row, first 40-column cell, 40-column cells
 # reserved, colour); in 80 columns centred on the same area
 TEXTS = [
-    ("Device Manager", 18, 22, 17, 'G'),
-    ("Boot Menu", 19, 22, 17, 'G'),
+    ("Device Manager", 18, 23, 17, 'G'),
+    ("Boot Menu", 19, 23, 17, 'G'),
     ("Written 2020-2026 by Xander Mol", 23, 0, 40, 'T'),
     ("idreamtin8bits.com", 24, 0, 40, 'T'),
 ]
@@ -239,8 +254,10 @@ def vic_screen():
     cells = [[(0x20, 'G') for _ in range(40)] for _ in range(25)]
     for b in BANNERS:
         banner(cells, *b)
-    for cx, (code, colour) in enumerate(zip(DRIPS_CODES, DRIPS_COLOURS)):
-        cells[DRIPS_ROW][cx] = (code, colour if colour != ' ' else 'B')
+    colours = EDGE_COLOURS[EDGE]
+    for cx, code in enumerate(EDGE_STYLES[EDGE]):
+        colour = colours[cx] if len(colours) > 1 else colours
+        cells[EDGE_ROW][cx] = (code, colour if colour != ' ' else 'G')
     for r, (glyphs, colours) in enumerate(zip(BOOT_GLYPHS, BOOT_COLOURS)):
         for c, (g, col) in enumerate(zip(glyphs, colours)):
             if g != ' ':
@@ -333,8 +350,16 @@ def preview(rows, width, palette, upper, lower, path):
     img.resize((960, 600), Image.NEAREST).save(path)    # Real aspect ratio
 
 
+EDGE = "progress"
+
+
 def main():
-    assets, out = sys.argv[1], sys.argv[2]
+    global EDGE
+    args = [a for a in sys.argv[1:] if not a.startswith("--edge=")]
+    for a in sys.argv[1:]:
+        if a.startswith("--edge="):
+            EDGE = a.split("=", 1)[1]
+    assets, out = args[0], args[1]
     upper = load_rom(f"{assets}/c128-charset-upper.bin")
     lower = load_rom(f"{assets}/c128-charset-lower.bin")
 
