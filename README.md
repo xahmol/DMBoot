@@ -87,7 +87,7 @@ Notes on the conversion:
 
 With a default slot and an auto-boot timeout, a countdown starts that slot. Any key opens the menu instead.
 
-**Starting a slot** does, in this order: switch on and mount the drive A and B images, load the REU image (last: after that DMBoot cannot return to the menu, because the REU is overwritten), change to the slot's directory, then put the slot's command and the RUN/BOOT/LOAD line on the BASIC screen and exit to BASIC to start them.
+**Starting a slot** does, in this order: switch on and mount the drive A and B images, load the REU image (last: after that DMBoot cannot return to the menu, because the REU is overwritten), change to the slot's directory, then put the slot's command and the RUN/BOOT/LOAD statement on one BASIC line (joined with `:`) and exit to BASIC to run it. The command therefore must not end the line itself (for example with `RUN` or `GOTO`).
 
 ### F1: File browser
 

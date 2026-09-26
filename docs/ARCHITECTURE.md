@@ -116,12 +116,17 @@ step of a slot start, and nothing returns to the menu afterwards.
 2. Load the REU image (last).
 3. Drive root reset, then the slot's path command (`cd:/...` on the
    hyperspeed drive is relative to the current directory).
-4. `execute`: demo mode, Force 8 (Device Manager API), then the BASIC lines:
-   the slot command, then `RUN"file",U<id>`, `BOOT U<id>`,
-   `LOAD"file",<id>,1` + `RUN`, or `SYS <dm_run64>` for C64 mode.
-5. `exec_to_basic`: prints the lines, puts one RETURN per line in the
-   keyboard buffer (`$034A`, count `$D0`), restores the screen (`CINT`), the
-   MMU and BASIC's zero page, and returns to BASIC, which runs them.
+4. `execute`: demo mode, Force 8 (Device Manager API), then the start
+   line: the slot command, then `RUN"file",U<id>`, `BOOT U<id>`,
+   `LOAD"file",<id>,1` or `SYS <dm_run64>` for C64 mode, all joined with
+   `:` into one logical screen line (at most 160 characters). After a
+   `LOAD ...,1`, `RUN` + RETURN are typed from the keyboard buffer.
+5. `exec_to_basic`: prints the start line, puts one RETURN (plus any extra
+   keys) in the keyboard buffer (`$034A`, count `$D0`), restores the screen
+   (`CINT`), the MMU and BASIC's zero page, and returns to BASIC, which runs
+   the line. One line instead of v4's one line per statement: in 40 columns
+   BASIC prints a command's output on a new line (in 80 columns on the same
+   line), so READY. overwrote the next statement line.
 
 ## 5. Conventions
 

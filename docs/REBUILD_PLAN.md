@@ -506,7 +506,8 @@ Each phase ends with a build, a deploy to hardware (`192.168.1.237`), a c64bridg
   - Slot paths follow v4:
     - On SoftIEC/Ultimate drives, an absolute `cd:/usb1/...`.
     - On other drives, `cd//...` relative to the partition root.
-  - Known cosmetic issue, same as v4: output of a user command starts on the command's own row and overwrites its tail. Probably because the screen editor echoes no CR after a line entered from the keyboard buffer (not investigated). Harmless.
+  - Slot start (2026-09-26): all statements on one line joined with `:` and one RETURN; verified in 40 and 80 columns on .23 (`PRINT"CMD OK":RUN"DMBTEST",U11`). Replaces v4's line-per-statement layout, which broke in 40 columns (READY. overwrote the RUN line).
+  - Earlier (superseded) cosmetic issue, same as v4: output of a user command starts on the command's own row and overwrites its tail. Probably because the screen editor echoes no CR after a line entered from the keyboard buffer (not investigated). Harmless.
   - Verified with slots converted from the real v4 file (`tests/tools/convert_v4_slots.py`):
     - Plain run from a disk image folder: 5 Tristam Island, 7 Risen f.oblivion.
     - REU image load + run: U ZP/M+ (`/usb1/cpm/cpm.reu`).
