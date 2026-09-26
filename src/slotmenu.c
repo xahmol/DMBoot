@@ -34,6 +34,8 @@ layout, the countdown returns the slot key instead of starting it
 #define TIMEOUT_TEXT_X      13      // Column of the countdown seconds
 
 #define PAGE_X_40           13
+#define SWAP_X_40           24      // F8 "80 col" after the page item
+#define SWAP_X_80           60      // F8 "Go 40 columns" after F7
 #define PAGE_ROW_40         (SLOTLIST_LEGEND_ROW + 2)
 
 // ---------------------------------------------------------------------------
@@ -71,6 +73,7 @@ static void menu_draw(char page)
         fkey_hint(0, SLOTLIST_LEGEND_ROW + 1, " F5 ", "Go 64");
         fkey_hint(20, SLOTLIST_LEGEND_ROW + 1, " F6 ", "GEOS RAM boot");
         fkey_hint(40, SLOTLIST_LEGEND_ROW + 1, " F7 ", "Quit to BASIC");
+        fkey_hint(SWAP_X_80, SLOTLIST_LEGEND_ROW + 1, " F8 ", "Go 40 columns");
     }
     else
     {
@@ -82,6 +85,7 @@ static void menu_draw(char page)
         fkey_hint(24, SLOTLIST_LEGEND_ROW + 1, " F6 ", "GEOS");
         fkey_hint(0, SLOTLIST_LEGEND_ROW + 2, " F7 ", "Quit");
         menu_legend_page(page);
+        fkey_hint(SWAP_X_40, PAGE_ROW_40, " F8 ", "80 col");
     }
     dwin_putat_string(&screenwin, 0, SLOTLIST_PROMPT_ROW, "Make your choice.", cfg.colors.text);
 }
@@ -202,7 +206,8 @@ static char autobootcountdown(void)
 // Title:       Main menu
 // Description: Runs the auto-boot countdown, then shows the menu until a
 //              valid choice is made. In 40 columns cursor left/right switch
-//              between the two slot pages.
+//              between the two slot pages. F8 switches to the other screen
+//              (40/80 columns) and redraws the menu there.
 // Syntax:      char mainmenu(void);
 // Input:       None
 // Output:      Key of the choice: a function key, or a slot key (also for
@@ -229,6 +234,12 @@ char mainmenu(void)
             page ^= 1;
             slotlist_draw(page);
             menu_legend_page(page);
+        }
+        else if (key == KEY_F8)
+        {
+            screen_swap();
+            page = 0;
+            menu_draw(page);
         }
         else if (menu_validkey(key))
         {

@@ -29,6 +29,7 @@ Code and resources from others used:
 // C128 system locations
 #define DWIN_ZP_MODE        0xd7    // Bit 7 set: 80 column screen active
 #define DWIN_MODE_80_FLAG   0x80
+#define DWIN_SWAPPER        0xff5f  // KERNAL SWAPPER: switch the active screen
 #define DWIN_PALNTSC        0x0a03  // KERNAL PAL/NTSC flag, $FF = PAL
 #define DWIN_PAL_FLAG       0xff
 #define DWIN_VIC_SCREEN     0x0400  // VIC text screen
@@ -249,6 +250,48 @@ static void dwin_vdc_state_init(char mode)
 // ===========================================================================
 
 // ---------------------------------------------------------------------------
+// Title:       Active KERNAL screen
+// Description: Reads which screen the KERNAL screen editor has active.
+// Syntax:      static char dwin_kernal_mode(void);
+// Input:       None
+// Output:      DWIN_MODE_VDC or DWIN_MODE_VIC
+// ---------------------------------------------------------------------------
+static char dwin_kernal_mode(void)
+{
+    return (*(volatile char *)DWIN_ZP_MODE & DWIN_MODE_80_FLAG) ? DWIN_MODE_VDC : DWIN_MODE_VIC;
+}
+
+// ---------------------------------------------------------------------------
+// Title:       KERNAL screen swap
+// Description: Calls the KERNAL SWAPPER, which switches the screen editor
+//              to the other screen. SWAPPER exchanges the editor variables
+//              $E0-$F9 with its store at $0A40; $F7-$F9 are also Oscar64's
+//              automatic zero page, so they are kept around the call.
+// Syntax:      static void dwin_swapper(void);
+// Input:       None
+// Output:      None (zero page $D7 bit 7 toggled)
+// ---------------------------------------------------------------------------
+static void dwin_swapper(void)
+{
+    __asm
+    {
+        lda $f7
+        pha
+        lda $f8
+        pha
+        lda $f9
+        pha
+        jsr DWIN_SWAPPER
+        pla
+        sta $f9
+        pla
+        sta $f8
+        pla
+        sta $f7
+    }
+}
+
+// ---------------------------------------------------------------------------
 // Title:       Set up DualWin
 // Description: Detects the active screen (40 or 80 columns) and PAL/NTSC,
 //              switches to the lower/upper case charset, initialises the
@@ -264,7 +307,7 @@ static void dwin_vdc_state_init(char mode)
 // ---------------------------------------------------------------------------
 void dwin_setup(char storecr, char *storebase, unsigned storesize)
 {
-    dwin_state.mode = (*(volatile char *)DWIN_ZP_MODE & DWIN_MODE_80_FLAG) ? DWIN_MODE_VDC : DWIN_MODE_VIC;
+    dwin_state.mode = dwin_kernal_mode();
     dwin_state.pal = (*(volatile char *)DWIN_PALNTSC == DWIN_PAL_FLAG) ? 1 : 0;
     dwin_state.height = DWIN_SCREEN_HEIGHT;
     dwin_state.storecr = storecr;
@@ -312,6 +355,28 @@ void dwin_screen_colors(char border, char background)
 }
 
 // ---------------------------------------------------------------------------
+// Title:       Switch to the other screen
+// Description: Makes the other screen (40 or 80 columns) the active one:
+//              KERNAL SWAPPER, then the DualWin mode and width, and the
+//              lower/upper case charset on the new screen. The caller
+//              re-initialises its windows (their size depends on the
+//              width), sets the screen colours and redraws; open popups
+//              are dropped. The CPU speed is not changed: set 1 MHz before
+//              drawing on the 40 column screen.
+// Syntax:      void dwin_swap_screen(void);
+// Input:       None
+// Output:      None (dwin_state)
+// ---------------------------------------------------------------------------
+void dwin_swap_screen(void)
+{
+    dwin_swapper();
+    dwin_state.mode = dwin_kernal_mode();
+    dwin_state.width = (dwin_state.mode == DWIN_MODE_VDC) ? DWIN_VDC_WIDTH : DWIN_VIC_WIDTH;
+    dwin_state.popups = 0;
+    dwin_chrout(DWIN_CHR_LOWERCASE);
+}
+
+// ---------------------------------------------------------------------------
 // Title:       Hand the screen back to the KERNAL
 // Description: Re-initialises the KERNAL screen editor and both screens
 //              (KERNAL CINT): colours, character sets, cleared screens. Call
@@ -319,6 +384,9 @@ void dwin_screen_colors(char border, char background)
 //              BASIC: DualWin reprograms the VDC and writes screen memory
 //              directly, which the KERNAL editor does not know about (seen
 //              on hardware: shifted rows and garbage in BASIC after exit).
+//              CINT picks the screen from the 40/80 key; when DualWin was
+//              using the other one (dwin_swap_screen), that screen is made
+//              active again, so BASIC continues where the user was.
 // Syntax:      void dwin_exit(void);
 // Input:       None
 // Output:      None (the popup stack is emptied)
@@ -330,7 +398,10 @@ void dwin_exit(void)
     {
         jsr $ff81
     }
-
+    if (dwin_kernal_mode() != dwin_state.mode)
+    {
+        dwin_swapper();
+    }
 }
 
 // ---------------------------------------------------------------------------

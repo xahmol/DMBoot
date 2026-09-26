@@ -294,4 +294,7 @@ struct DWin;
 extern struct DWin screenwin;    // Full-screen window (src/main.c)
 extern struct DWin console;      // Scrolling message window (src/main.c)
 
+// Functions in src/main.c used by the overlays
+void screen_swap(void);
+
 #endif // DEFINES_H

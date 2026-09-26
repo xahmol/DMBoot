@@ -211,6 +211,29 @@ void screen_setup(const char *subtitle, char consolerow)
 }
 
 // ---------------------------------------------------------------------------
+// Title:       Switch to the other screen
+// Description: Makes the other screen (40 or 80 columns) active for the
+//              rest of the session and for BASIC after exit (dwin_exit keeps
+//              it). Sets the CPU speed for it (release: 2 MHz in 80
+//              columns, 1 MHz in 40), re-initialises the screen and console
+//              windows and sets the colours. The caller redraws.
+// Syntax:      void screen_swap(void);
+// Input:       None
+// Output:      None (sysinfo.mode80, dwin_state)
+// ---------------------------------------------------------------------------
+void screen_swap(void)
+{
+    dwin_swap_screen();
+    sysinfo.mode80 = dwin_is80() ? 1 : 0;
+#ifndef TESTMODE
+    cpu_set_fast(sysinfo.mode80 != 0);
+#endif
+    dwin_screen_colors(cfg.colors.border, cfg.colors.background);
+    dwin_init(&screenwin, 0, 0, 0, 0);
+    dwin_init(&console, 0, STARTUP_ROW, 0, 0);
+}
+
+// ---------------------------------------------------------------------------
 // Title:       Print an Ultimate string
 // Description: Prints a label and an ASCII string from the Ultimate
 //              (converted to PETSCII, bounded) as one console line.

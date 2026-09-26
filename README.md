@@ -83,6 +83,7 @@ Notes on the conversion:
 | **F5** | Go to C64 mode |
 | **F6** | GEOS RAM boot |
 | **F7** | Quit to BASIC |
+| **F8** | Switch to the other screen (40 or 80 columns). It stays active for the slot you start and for BASIC; the next boot follows the 40/80 key again. Your monitor must show the other screen (second input or cable) |
 | **Cursor left/right** | 40 columns: other page of slots |
 
 With a default slot and an auto-boot timeout, a countdown starts that slot. Any key opens the menu instead.
