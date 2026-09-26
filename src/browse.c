@@ -344,7 +344,7 @@ static void dir_link(unsigned long address, unsigned long *last)
 // Title:       Read the directory into the REU
 // Description: Reads the directory of the browsed device into a linked list
 //              in the REU (from DIR_REU_START up to the top of the REU) and
-//              selects the first entry.
+//              selects the first entry. Shows the number of entries read.
 // Syntax:      static bool dir_read(void);
 // Input:       bs.device, bs.sorted
 // Output:      true when the directory could be opened
@@ -358,7 +358,7 @@ static bool dir_read(void)
     dir.limit = (unsigned long)sysinfo.reupages * REU_PAGE_BYTES;
     diskid[0] = 0;
 
-    dwin_putat_string(&screenwin, 0, DIR_PROGRESS_ROW, "Reading directory", cfg.colors.text);
+    char countx = dwin_putat_string(&screenwin, 0, DIR_PROGRESS_ROW, "Reading directory: ", cfg.colors.text);
     if (!dir_open(bs.device))
     {
         dwin_fill_rect(&screenwin, 0, DIR_PROGRESS_ROW, screenwin.wx, 1, ' ', cfg.colors.text);
@@ -400,6 +400,10 @@ static bool dir_read(void)
         reu128_store(dir.address + sizeof(entry.meta), (const volatile char *)entry.name, entry.meta.length);
         dir.address += sizeof(entry.meta) + entry.meta.length;
         dir.count++;
+
+        // Progress: only the count is redrawn
+        sprintf(line, "%u", dir.count);
+        dwin_putat_string(&screenwin, countx, DIR_PROGRESS_ROW, line, cfg.colors.text);
     }
     dir_close();
     dwin_fill_rect(&screenwin, 0, DIR_PROGRESS_ROW, screenwin.wx, 1, ' ', cfg.colors.text);
@@ -1260,15 +1264,13 @@ void browse(void)
             break;
 
         case KEY_CURSOR_LEFT:
-            if (is80)
+            if (is80 && (dir.index - dir.pagefirst) >= DIR_ROWS)
             {
-                if ((dir.index - dir.pagefirst) >= DIR_ROWS)
-                {
-                    dir_goto((int)dir.index - DIR_ROWS);
-                }
+                // Right column: move to the left column
+                dir_goto((int)dir.index - DIR_ROWS);
                 break;
             }
-            // 40 columns: up, as DEL
+            // Left column (or 40 columns): directory up, as DEL
         case KEY_DEL:
             browse_cd("..");
             break;

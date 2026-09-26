@@ -18,7 +18,7 @@ DMBoot is a boot menu and file browser for the Commodore 128 with an Ultimate II
 
 A complete rebuild in the Oscar64 C compiler, along the lines of the C64 sibling project [UBoot64](https://github.com/xahmol/UBoot64-v2).
 
-* Works in both 40 and 80 columns. The screen that is active at start-up is used. In 40 columns the 36 slots are shown on two pages (cursor left/right).
+* Works in both 40 and 80 columns. The screen that is active at start-up is used; F8 in the main menu switches to the other one. In 40 columns the 36 slots are shown on two pages (cursor left/right).
 * Long names and paths: menu names up to 30 characters, file names up to 50, paths up to 255.
 * Directory listings are stored in the REU, so large directories (thousands of entries) fit.
 * Mount paths and REU image paths are stored per slot, separately (v4 had to share one path between the drive A image and the REU file).
@@ -100,9 +100,9 @@ The browser shows the IEC devices, starting with the Device Manager's hyperspeed
 | **S** | Sort on/off (slow on very large directories) |
 | **+ / -** | Next / previous active device |
 | **RETURN** | Start the program, or enter the directory or disk image. On an REU image (dirtrace on): add it to a slot |
-| **DEL** | Parent directory (40 columns: also cursor left) |
+| **DEL** | Parent directory (also cursor left: in 80 columns from the left column) |
 | **↑** | Root directory |
-| **Cursor keys** | Move; in 80 columns left/right switch between the two columns |
+| **Cursor keys** | Move; in 80 columns left/right switch between the two columns (left in the left column: parent directory) |
 | **T / HOME, E** | First / last entry |
 | **P / U** | Page down / up |
 | **D** | Dirtrace on/off |
