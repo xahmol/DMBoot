@@ -144,7 +144,7 @@ static void edit_draw(char page)
         fkey_hint(24, SLOTLIST_LEGEND_ROW + 1, " F5 ", "Delete");
         fkey_hint(0, SLOTLIST_LEGEND_ROW + 2, " F6 ", "Default");
         fkey_hint(13, SLOTLIST_LEGEND_ROW + 2, " F7 ", "Back");
-        fkey_hint(26, SLOTLIST_LEGEND_ROW + 2, " <> ", page ? "Pg 2" : "Pg 1");
+        fkey_hint(24, SLOTLIST_LEGEND_ROW + 2, " <> ", page ? "Pg 2" : "Pg 1");
     }
 }
 
