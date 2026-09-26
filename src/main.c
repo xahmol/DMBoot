@@ -54,6 +54,9 @@ bank 0 under ROM, REU DMA at 2 MHz, Device Manager API, test mailbox).
 
 // Screen layout (rows 0-1: header)
 #define STARTUP_ROW         3       // Start-up messages
+#define SWAP_HINT_ROW       12      // Screen left by F8: middle row
+#define SWAP_HINT_TO40      "Switch to 40 columns."
+#define SWAP_HINT_TO80      "Switch to 80 columns."
 #define POPUP_WIDTH         36
 #define POPUP_HEIGHT        5
 #define POPUP_ROW           10
@@ -216,13 +219,21 @@ void screen_setup(const char *subtitle, char consolerow)
 //              rest of the session and for BASIC after exit (dwin_exit keeps
 //              it). Sets the CPU speed for it (release: 2 MHz in 80
 //              columns, 1 MHz in 40), re-initialises the screen and console
-//              windows and sets the colours. The caller redraws.
+//              windows and sets the colours. The screen left behind is
+//              cleared and says which screen to switch to. The caller
+//              redraws.
 // Syntax:      void screen_swap(void);
 // Input:       None
 // Output:      None (sysinfo.mode80, dwin_state)
 // ---------------------------------------------------------------------------
 void screen_swap(void)
 {
+    const char *hint = dwin_is80() ? SWAP_HINT_TO40 : SWAP_HINT_TO80;
+
+    dwin_clear(&screenwin);
+    dwin_putat_string(&screenwin, (dwin_state.width - (char)strlen(hint)) / 2, SWAP_HINT_ROW,
+                      hint, cfg.colors.text);
+
     dwin_swap_screen();
     sysinfo.mode80 = dwin_is80() ? 1 : 0;
 #ifndef TESTMODE
