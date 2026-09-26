@@ -133,6 +133,12 @@ BOOT_COLOURS = [
     " SSSSS  SSSSSSSSSS ",
 ]
 BOOT_ROW = 8
+BOOT_COL = 3                        # Room for the kick lines behind the heel
+
+# Kick lines behind the heel (booting = kickstarting): (row, first
+# column, length), thin horizontal lines in grey
+KICK_LINES = [(15, 1, 2), (17, 0, 3), (19, 1, 2)]
+KICK_GLYPH = 0x43
 
 # Title letters as in the UBoot64 splash: bitmaps of sub-pixels (2x2 per
 # character), strokes two sub-pixels (one character) wide, 10 high (5
@@ -194,11 +200,14 @@ EDGE_STYLES = {
 EDGE_COLOURS = {"footprints": 'G', "stitch": 'B', "lace": 'W',
                 "progress": " " + "P" * 27 + "G" * 11 + " "}
 
+CURSOR = (22, 23)                   # Cursor block under READY.
+
 # Plain text lines: (text, row, first 40-column cell, 40-column cells
 # reserved, colour); in 80 columns centred on the same area
 TEXTS = [
     ("Device Manager", 18, 23, 17, 'G'),
     ("Boot Menu", 19, 23, 17, 'G'),
+    ("READY.", 21, 23, 0, 'T'),         # Span 0: left-aligned
     ("Written 2020-2026 by Xander Mol", 23, 0, 40, 'T'),
     ("idreamtin8bits.com", 24, 0, 40, 'T'),
 ]
@@ -261,11 +270,15 @@ def vic_screen():
     for r, (glyphs, colours) in enumerate(zip(BOOT_GLYPHS, BOOT_COLOURS)):
         for c, (g, col) in enumerate(zip(glyphs, colours)):
             if g != ' ':
-                cells[BOOT_ROW + r][c] = (GLYPH[g], col)
+                cells[BOOT_ROW + r][BOOT_COL + c] = (GLYPH[g], col)
+    for row, col, length in KICK_LINES:
+        for c in range(col, col + length):
+            cells[row][c] = (KICK_GLYPH, 'G')
     for text, row, col, span, colour in TEXTS:
-        start = col + (span - len(text)) // 2
+        start = col + (span - len(text)) // 2 if span else col
         for i, ch in enumerate(text):
             cells[row][start + i] = (screencode(ch, False), colour)
+    cells[CURSOR[0]][CURSOR[1]] = (0xa0, 'T')
     return cells
 
 
@@ -304,20 +317,23 @@ def vdc_screen(vic, upper):
     for r, glyphs in enumerate(BOOT_GLYPHS):
         for c, g in enumerate(glyphs):
             if g == 'x':
-                cells[BOOT_ROW + r][c * 2] = (0x56, 'W', False)
-                cells[BOOT_ROW + r][c * 2 + 1] = (0x56, 'W', False)
+                cells[BOOT_ROW + r][(BOOT_COL + c) * 2] = (0x56, 'W', False)
+                cells[BOOT_ROW + r][(BOOT_COL + c) * 2 + 1] = (0x56, 'W', False)
             if g == 'd':
-                cells[BOOT_ROW + r][c * 2] = (0xa0, 'Y', False)
-                cells[BOOT_ROW + r][c * 2 + 1] = (screencode('D', True) | REVERSE, 'Y', True)
+                cells[BOOT_ROW + r][(BOOT_COL + c) * 2] = (0xa0, 'Y', False)
+                cells[BOOT_ROW + r][(BOOT_COL + c) * 2 + 1] = (screencode('D', True) | REVERSE, 'Y', True)
             if g == 'm':
-                cells[BOOT_ROW + r][c * 2] = (screencode('M', True) | REVERSE, 'Y', True)
-                cells[BOOT_ROW + r][c * 2 + 1] = (0xa0, 'Y', False)
+                cells[BOOT_ROW + r][(BOOT_COL + c) * 2] = (screencode('M', True) | REVERSE, 'Y', True)
+                cells[BOOT_ROW + r][(BOOT_COL + c) * 2 + 1] = (0xa0, 'Y', False)
     for text, row, col, span, colour in TEXTS:
-        start = col * 2 + (span * 2 - len(text)) // 2
-        for i in range(span * 2):
+        start = col * 2 + (span * 2 - len(text)) // 2 if span else col * 2
+        for i in range((span or len(text)) * 2):          # The whole 40-column area
             cells[row][col * 2 + i] = (0x20, colour, False)
         for i, ch in enumerate(text):
             cells[row][start + i] = (screencode(ch, True), colour, True)
+    # Cursor: one VDC character
+    cells[CURSOR[0]][CURSOR[1] * 2] = (0xa0, 'T', False)
+    cells[CURSOR[0]][CURSOR[1] * 2 + 1] = (0x20, 'T', False)
     return cells
 
 
