@@ -30,6 +30,7 @@ A complete rebuild in the Oscar64 C compiler, along the lines of the C64 sibling
 * Ultimate drives A/B are switched on automatically when a slot needs them.
 * Start-up feedback: silent, show messages, or show messages and wait for a key. Shows the Ultimate drives and all active IEC devices with their drive type (via the Device Manager API).
 * Configurable colours, one scheme for 40 and 80 columns.
+* NTP time sync with three servers, tried in turn; off by default, as firmware 3.14d and later sync the clock themselves.
 * Upgrade tool `dmbupd45` converts the v4 slots and settings.
 * Bug fixes compared with v4, among others: C64 mode, BASIC programs with variables after a slot start (zero page), locked files in the directory listing, BOOT slots without a file name.
 
@@ -66,6 +67,7 @@ If you start v5 with v4 files but without v5 files, DMBoot asks whether to start
 
 Notes on the conversion:
 * Slots keep their key, name, path, file, command, flags, mounts and REU image.
+* The NTP on/off setting and UTC offset are kept; a v4 NTP server you chose yourself becomes server 1.
 * v4 slots that BOOT from a disk image that uses a fast loader such as Krill's need the image mounted on drive A with demo mode (the hyperspeed drive cannot run drive code). Change these in the slot editor.
 * A GEOS image without a path gets the DMBoot directory. Check it in the configuration (F4, F8).
 
@@ -135,14 +137,16 @@ Shows the version, the Ultimate, the REU size, the screen mode, the Device Manag
 
 | Key | Function |
 |---|---|
-| **F1** | NTP time sync at start-up on/off |
+| **F1** | NTP time sync at start-up on/off (default off, see below) |
 | **F2** | Start-up: silent, show messages, or show messages + wait for a key |
 | **F3** | Offset to UTC in seconds (e.g. 3600 for CET, 7200 for CEST; no automatic daylight saving time) |
 | **F4** | Auto-boot timeout |
-| **F5** | NTP server (default pool.ntp.org) |
+| **F5** | The three NTP servers, edited in turn (empty = not used, STOP = keep). Defaults: time.google.com, time.windows.com, pool.ntp.org |
 | **F6** | Colours: cursor up/down chooses, left/right changes, DEL undoes, F7 back |
 | **F8** | GEOS RAM boot: REU image and size, disk images for drives A and B |
 | **F7** | Back; changes are saved now |
+
+**NTP time sync and the Ultimate firmware:** from firmware 3.14d the Ultimate sets its clock itself (Ultimate menu, Network settings: SNTP Enable, time zone and three time servers). DMBoot's own time sync is therefore off by default; switch it on (F1) only for older firmware. DMBoot asks the servers in turn until one answers. The UTC offset (F3) is only used by DMBoot's own sync.
 
 ### F5: C64 mode
 

@@ -193,7 +193,10 @@ struct GeosConfig
     char image_b_file[MAXFILENAME];
 };
 
-// Global configuration, file dmbconf.cfg
+// Global configuration, file dmbconf.cfg. New fields go at the end: an older,
+// shorter file is read with them zero (readconfigfile).
+#define CONFIGSIZE          1203    // sizeof(struct ConfigStruct), checked below
+#define NTP_SERVERS         3
 // Start-up feedback (ConfigStruct.verbose). The names fit a menu line in
 // both 40 and 80 columns (Phase 5 configuration screen).
 #define VERBOSE_SILENT      0       // Spinner only
@@ -207,8 +210,8 @@ struct GeosConfig
 struct ConfigStruct
 {
     char version;                   // CFGVERSION
-    char timeon;                    // 1 = set the time via NTP at start-up
-    char host[MAXHOSTLENGTH];       // NTP server
+    char timeon;                    // 1 = set the time via NTP at start-up (firmware 3.14d+ does it itself)
+    char host[MAXHOSTLENGTH];       // First NTP server
     long secondsfromutc;            // Time zone offset
     char verbose;                   // VERBOSE_SILENT / _ON / _WAIT
     struct ColorPalette colors;
@@ -216,7 +219,10 @@ struct ConfigStruct
     char iec_root_partition;        // Firmware 3.15 preparation, 0 = off
     struct GeosConfig geos;
     char reserved[16];              // Zero, room for later settings
+    char host2[MAXHOSTLENGTH];      // Second NTP server (tried when the first fails)
+    char host3[MAXHOSTLENGTH];      // Third NTP server
 };
+typedef char config_size_check[(sizeof(struct ConfigStruct) == CONFIGSIZE) ? 1 : -1];
 
 // ---------------------------------------------------------------------------
 // Key codes (raw PETSCII as returned by KERNAL GETIN)

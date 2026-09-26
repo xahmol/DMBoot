@@ -237,6 +237,8 @@ static bool geos_image(const char *v4cfg, char *path, char *file, unsigned patho
 // Title:       Convert the v4 settings
 // Description: Fills a v5 configuration with the defaults, plus the NTP and
 //              GEOS RAM boot settings of v4 when its settings file was read.
+//              A v4 NTP server that is not one of the v5 defaults replaces
+//              the first server.
 // Syntax:      bool v4_convert_config(const char *v4cfg, bool havev4,
 //                                     const char *dmbootdir,
 //                                     struct ConfigStruct *config);
@@ -262,9 +264,16 @@ bool v4_convert_config(const char *v4cfg, bool havev4, const char *dmbootdir, st
                              ((unsigned long)(unsigned char)v4cfg[V4CFG_UTCOFFSET + 1] << 16) |
                              ((unsigned long)(unsigned char)v4cfg[V4CFG_UTCOFFSET + 2] << 8) |
                              (unsigned long)(unsigned char)v4cfg[V4CFG_UTCOFFSET + 3];
+    // Keep a server the user chose; v4's default (pool.ntp.org) is already
+    // one of the three v5 servers
     if (v4cfg[V4CFG_HOST])
     {
-        ult_name(config->host, sizeof(config->host), v4cfg + V4CFG_HOST, V4CFG_HOST_LEN);
+        ult_name(text, sizeof(text), v4cfg + V4CFG_HOST, V4CFG_HOST_LEN);
+        if (strcmp(text, config->host) && strcmp(text, config->host2) && strcmp(text, config->host3))
+        {
+            strncpy(config->host, text, sizeof(config->host) - 1);
+            config->host[sizeof(config->host) - 1] = 0;
+        }
     }
 
     config->geos.reusize = v4cfg[V4CFG_REUSIZE];

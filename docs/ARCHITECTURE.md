@@ -13,7 +13,7 @@ this document describes the result. Numbers are from the build of
 | `dmblmc.prg` | Low-memory code (LMC), loaded to `$1300` | `#pragma overlay(dmblmc, 1)` in `include/banking.c` |
 | `dmbovl1.prg` .. `dmbovl5.prg` | Overlays, loaded once at start-up into their stores | `#pragma overlay(dmbovlN, N+1)` in the overlay sources |
 | `dmbupd45.prg` | Upgrade tool v4 -> v5 (standalone) | `src/dmbupd45.c` |
-| `dmbconf.cfg` | Configuration (`struct ConfigStruct`, 1041 bytes) | written by DMBoot / dmbupd45 |
+| `dmbconf.cfg` | Configuration (`struct ConfigStruct`, 1203 bytes; new fields are appended, older shorter files still read) | written by DMBoot / dmbupd45 |
 | `dmbslots.cfg` | 36 slots (`struct SlotStruct`, 1360 bytes each) | written by DMBoot / dmbupd45 |
 
 ## 2. Modules

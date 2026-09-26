@@ -120,38 +120,31 @@ static bool ntp_failed(char socket)
     {
         return false;
     }
-    ntp_report("NTP time update failed: ", uii_status);
+    ntp_report("No answer: ", uii_status);
     uii_socketclose(socket);
     return true;
 }
 
 // ---------------------------------------------------------------------------
-// Title:       Update the time from an NTP server
-// Description: When enabled in the configuration, asks the NTP server for
-//              the time over a UDP socket of the Ultimate and sets the
-//              Ultimate's clock (with the configured UTC offset).
+// Title:       Ask one NTP server for the time
+// Description: Sends an NTP request over a UDP socket of the Ultimate and
+//              waits up to NTP_READ_ATTEMPTS seconds for the answer.
 //              As UBoot64-v2 get_ntp_time.
-// Syntax:      void ntp_update(void);
-// Input:       cfg.timeon, cfg.host (ASCII), cfg.secondsfromutc
-// Output:      None
+// Syntax:      static bool ntp_query(char *host, unsigned long *seconds);
+// Input:       host    - server name (ASCII)
+//              seconds - receives the NTP transmit time (seconds since 1900)
+// Output:      true when an answer came
 // ---------------------------------------------------------------------------
-void ntp_update(void)
+static bool ntp_query(char *host, unsigned long *seconds)
 {
     char request[3 + NTP_PACKET_SIZE];
     char socket;
-    char attempt;
-    unsigned long seconds;
 
-    if (!cfg.timeon)
-    {
-        return;
-    }
-
-    ntp_report("Updating the time from: ", cfg.host);
-    socket = uii_udpconnect(cfg.host, NTP_PORT);
+    ntp_report("Asking time server: ", host);
+    socket = uii_udpconnect(host, NTP_PORT);
     if (ntp_failed(socket))
     {
-        return;
+        return false;
     }
 
     memset(request, 0, sizeof(request));
@@ -164,10 +157,10 @@ void ntp_update(void)
     uii_accept();
     if (ntp_failed(socket))
     {
-        return;
+        return false;
     }
 
-    for (attempt = 0; attempt < NTP_READ_ATTEMPTS; attempt++)
+    for (char attempt = 0; attempt < NTP_READ_ATTEMPTS; attempt++)
     {
         delay(1);
         uii_socketread(socket, NTP_PACKET_SIZE + 2);
@@ -178,25 +171,57 @@ void ntp_update(void)
     }
     if (ntp_failed(socket))
     {
-        return;
+        return false;
     }
 
     // Reply after 2 length bytes; transmit timestamp seconds, big endian
-    seconds = ((unsigned long)(unsigned char)uii_data[2 + NTP_SECONDS_OFFSET] << 24) |
-              ((unsigned long)(unsigned char)uii_data[3 + NTP_SECONDS_OFFSET] << 16) |
-              ((unsigned long)(unsigned char)uii_data[4 + NTP_SECONDS_OFFSET] << 8) |
-              (unsigned long)(unsigned char)uii_data[5 + NTP_SECONDS_OFFSET];
+    *seconds = ((unsigned long)(unsigned char)uii_data[2 + NTP_SECONDS_OFFSET] << 24) |
+               ((unsigned long)(unsigned char)uii_data[3 + NTP_SECONDS_OFFSET] << 16) |
+               ((unsigned long)(unsigned char)uii_data[4 + NTP_SECONDS_OFFSET] << 8) |
+               (unsigned long)(unsigned char)uii_data[5 + NTP_SECONDS_OFFSET];
     uii_socketclose(socket);
+    return true;
+}
 
-    epoch_to_uiitime(seconds - NTP_TIMESTAMP_DELTA, cfg.secondsfromutc, uiitime);
-    uii_set_time(uiitime);
-    if (!UII_SUCCESS)
+// ---------------------------------------------------------------------------
+// Title:       Update the time from an NTP server
+// Description: When enabled in the configuration, asks the NTP servers in
+//              turn (empty ones are skipped) until one answers, and sets the
+//              Ultimate's clock (with the configured UTC offset). Firmware
+//              3.14d and later set the clock themselves; this is for older
+//              firmware and is off by default.
+// Syntax:      void ntp_update(void);
+// Input:       cfg.timeon, cfg.host/host2/host3 (ASCII), cfg.secondsfromutc
+// Output:      None
+// ---------------------------------------------------------------------------
+void ntp_update(void)
+{
+    char *hosts[NTP_SERVERS] = { cfg.host, cfg.host2, cfg.host3 };
+    unsigned long seconds;
+
+    if (!cfg.timeon)
     {
-        ntp_report("Setting the clock failed: ", uii_status);
         return;
     }
-    uii_get_time();
-    ntp_report("Clock set to: ", uii_data);
+
+    for (char x = 0; x < NTP_SERVERS; x++)
+    {
+        if (!hosts[x][0] || !ntp_query(hosts[x], &seconds))
+        {
+            continue;
+        }
+        epoch_to_uiitime(seconds - NTP_TIMESTAMP_DELTA, cfg.secondsfromutc, uiitime);
+        uii_set_time(uiitime);
+        if (!UII_SUCCESS)
+        {
+            ntp_report("Setting the clock failed: ", uii_status);
+            return;
+        }
+        uii_get_time();
+        ntp_report("Clock set to: ", uii_data);
+        return;
+    }
+    ntp_report("No time server answered.", NULL);
 }
 
 // ===========================================================================
@@ -228,10 +253,11 @@ static void cfg_line(char row, const char *key, const char *label, const char *v
 #define CFG_ROW_VERBOSE     (CFG_ROW0 + 1)
 #define CFG_ROW_UTC         (CFG_ROW0 + 2)
 #define CFG_ROW_TIMEOUT     (CFG_ROW0 + 3)
-#define CFG_ROW_HOST        (CFG_ROW0 + 4)
-#define CFG_ROW_COLOURS     (CFG_ROW0 + 5)
-#define CFG_ROW_GEOS        (CFG_ROW0 + 6)
-#define CFG_ROW_BACK        (CFG_ROW0 + 8)
+#define CFG_ROW_HOST        (CFG_ROW0 + 4)  // Three rows, one per server
+#define CFG_ROW_COLOURS     (CFG_ROW0 + 7)
+#define CFG_ROW_GEOS        (CFG_ROW0 + 8)
+#define CFG_ROW_BACK        (CFG_ROW0 + 10)
+#define CFG_SERVER_LABEL_X  5       // "Server 2/3" under "NTP servers"
 
 // ---------------------------------------------------------------------------
 // Title:       Show a setting value
@@ -252,7 +278,7 @@ static void cfg_value(char row, const char *value)
 // Description: One function per setting, so a change redraws only its
 //              value.
 // Syntax:      static void cfg_show_timeon(void); (and _verbose, _utc,
-//              _timeout, _host)
+//              _timeout; cfg_show_host(char server) for NTP server 0-2)
 // Input:       cfg
 // Output:      None
 // ---------------------------------------------------------------------------
@@ -285,16 +311,17 @@ static void cfg_show_timeout(void)
     }
 }
 
-static void cfg_show_host(void)
+static void cfg_show_host(char server)
 {
+    char *hosts[NTP_SERVERS] = { cfg.host, cfg.host2, cfg.host3 };
     char hostwidth = screenwin.wx - CFG_VALUE_X;
 
-    asc2pet(textbuf, cfg.host, sizeof(textbuf));
+    asc2pet(textbuf, hosts[server], sizeof(textbuf));
     if (strlen(textbuf) > hostwidth)
     {
         textbuf[hostwidth] = 0;
     }
-    cfg_value(CFG_ROW_HOST, textbuf);
+    cfg_value(CFG_ROW_HOST + server, textbuf[0] ? textbuf : "-");
 }
 
 // ---------------------------------------------------------------------------
@@ -313,7 +340,9 @@ static void cfg_draw(void)
     cfg_line(CFG_ROW_VERBOSE, " F2 ", "Start-up", NULL);
     cfg_line(CFG_ROW_UTC, " F3 ", "UTC offset", NULL);
     cfg_line(CFG_ROW_TIMEOUT, " F4 ", "Auto-boot", NULL);
-    cfg_line(CFG_ROW_HOST, " F5 ", "NTP server", NULL);
+    cfg_line(CFG_ROW_HOST, " F5 ", "NTP servers", NULL);
+    dwin_putat_string(&screenwin, CFG_SERVER_LABEL_X, CFG_ROW_HOST + 1, "Server 2", cfg.colors.text);
+    dwin_putat_string(&screenwin, CFG_SERVER_LABEL_X, CFG_ROW_HOST + 2, "Server 3", cfg.colors.text);
     cfg_line(CFG_ROW_COLOURS, " F6 ", "Colours", NULL);
     cfg_line(CFG_ROW_GEOS, " F8 ", "GEOS RAM boot", NULL);
     cfg_line(CFG_ROW_BACK, " F7 ", "Back (saves changes)", NULL);
@@ -321,7 +350,10 @@ static void cfg_draw(void)
     cfg_show_verbose();
     cfg_show_utc();
     cfg_show_timeout();
-    cfg_show_host();
+    for (char x = 0; x < NTP_SERVERS; x++)
+    {
+        cfg_show_host(x);
+    }
 }
 
 // ---------------------------------------------------------------------------
@@ -356,26 +388,36 @@ static bool cfg_utcoffset(void)
 }
 
 // ---------------------------------------------------------------------------
-// Title:       Input the NTP server
-// Description: Edits the NTP host name (stored in ASCII, edited in PETSCII).
-// Syntax:      static bool cfg_host(void);
+// Title:       Input the NTP servers
+// Description: Edits the three NTP host names in turn (stored in ASCII,
+//              edited in PETSCII). STOP keeps a server as it was; an empty
+//              name switches that server off. Each changed server's row is
+//              redrawn.
+// Syntax:      static bool cfg_hosts(void);
 // Input:       None
-// Output:      true when changed
+// Output:      true when a server changed
 // ---------------------------------------------------------------------------
-static bool cfg_host(void)
+static bool cfg_hosts(void)
 {
+    char *hosts[NTP_SERVERS] = { cfg.host, cfg.host2, cfg.host3 };
     char width = (screenwin.wx < MAXHOSTLENGTH) ? screenwin.wx - 1 : MAXHOSTLENGTH - 1;
+    bool changed = false;
 
-    asc2pet(textbuf, cfg.host, sizeof(textbuf));
-    slotlist_clear_bottom();
-    dwin_putat_string(&screenwin, 0, SLOTLIST_LEGEND_ROW, "NTP server host name:", cfg.colors.text);
-    if (dwin_input(&screenwin, 0, SLOTLIST_LEGEND_ROW + 1, textbuf, sizeof(textbuf), width,
-                   cfg.colors.text_input) <= 0)
+    for (char x = 0; x < NTP_SERVERS; x++)
     {
-        return false;
+        asc2pet(textbuf, hosts[x], sizeof(textbuf));
+        slotlist_clear_bottom();
+        sprintf(pathbuf, "Server %u, empty = off, STOP = keep:", x + 1);
+        dwin_putat_string(&screenwin, 0, SLOTLIST_LEGEND_ROW, pathbuf, cfg.colors.text);
+        if (dwin_input(&screenwin, 0, SLOTLIST_LEGEND_ROW + 1, textbuf, sizeof(textbuf), width,
+                       cfg.colors.text_input) != DWIN_INPUT_CANCEL)
+        {
+            pet2asc(hosts[x], textbuf, MAXHOSTLENGTH);
+            cfg_show_host(x);
+            changed = true;
+        }
     }
-    pet2asc(cfg.host, textbuf, sizeof(cfg.host));
-    return true;
+    return changed;
 }
 
 // Colour editor: index of each colour in struct ColorPalette
@@ -798,9 +840,8 @@ void config_edit(void)
             changed = true;
             break;
         case KEY_F5:
-            changed |= cfg_host();
+            changed |= cfg_hosts();
             slotlist_clear_bottom();
-            cfg_show_host();
             break;
         case KEY_F6:
             // Another screen: full redraw on return
