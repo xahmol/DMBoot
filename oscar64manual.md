@@ -719,6 +719,25 @@ the `JSR` (verified in the `.asm`). Rule: never let `reu_load`/`reu_store`
 be inlined into code that uses the transferred data; wrap them once in
 `__noinline` functions and use only those.
 
+**Follow-up trap of the `__noinline` fix (DMBoot v5, 2026-09-26, Oscar64
+1.32.273 at both f38a1f2 and 546b627): register-parameter tracking across
+calls in a loop.** With the REU wrappers no longer inlined, the size probe
+loop `reu128_store(page << 16, ...); reu128_store(0, ...); reu128_load(page << 16, ...)`
+compiled to: loop top `STY P2` (address byte 2 = page), then for the call
+with address 0 only `STA P3` (byte 3 = 0) — P2 was left at the page, as if
+the compiler still knew the pre-loop value 0 in P2. The "reset" marker went
+to the probed page and every REU read as 64 KB. Not cured by: a `volatile
+unsigned long origin = 0` local (folded to the constant anyway), a separate
+`__noinline` helper for the address-0 write (the caller then assumed P2
+survived the helper, whose tail-jumped `@proxy` sets it), or `#pragma
+optimize(noconstparams)` around the callee (proxies still generated).
+**Fix used:** in that one probe function call Oscar64's inline
+`reu_store`/`reu_load` directly (no register parameters at all), keep the
+`__noinline` wrappers everywhere else. Watch for the pattern: a loop that
+calls the same function with a multi-byte parameter that changes only in
+some bytes, and a constant that equals the value those bytes had before the
+loop. Check the `.asm` for every `P0`-`P3` store before such calls.
+
 **Second confirmed instance (heartbeat-demo, 2026-07-29):** same exact bug,
 same Oscar64 build. detect_reu() (src/detect.c) called the library's
 reu_count_pages() directly and always got 0 (REU check failed on real

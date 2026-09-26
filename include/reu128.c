@@ -104,38 +104,48 @@ unsigned reu128_count_pages(void)
 {
     volatile char marker;
     volatile char readback;
+    char speed = reu128_slow();
+    unsigned pages = REU_MAX_PAGES;
 
+    // Oscar64's inline reu_store/reu_load here, not the __noinline
+    // wrappers: with calls, Oscar64 1.32.273 -O2 (also the 2026-09-26
+    // version) passed address 0 after a page address by clearing only
+    // byte 3 of the address parameter; byte 2 kept the page, so the wrap
+    // marker went to the probed page and every REU read as 64 KB
     marker = 0;
-    reu128_store(0, &marker, 1);
-    reu128_load(0, &readback, 1);
+    reu_store(0, &marker, 1);
+    reu_load(0, &readback, 1);
     if (reu128_barrier(readback) != 0)
     {
-        return 0;
+        pages = 0;
     }
-
-    marker = REU_PROBE_VALUE;
-    reu128_store(0, &marker, 1);
-    reu128_load(0, &readback, 1);
-    if (reu128_barrier(readback) != REU_PROBE_VALUE)
+    else
     {
-        return 0;
+        marker = REU_PROBE_VALUE;
+        reu_store(0, &marker, 1);
+        reu_load(0, &readback, 1);
+        if (reu128_barrier(readback) != REU_PROBE_VALUE)
+        {
+            pages = 0;
+        }
     }
 
-    for (unsigned page = 1; page < REU_MAX_PAGES; page++)
+    for (unsigned page = 1; pages == REU_MAX_PAGES && page < REU_MAX_PAGES; page++)
     {
         unsigned long address = (unsigned long)page << 16;
 
         marker = REU_PROBE_VALUE;
-        reu128_store(address, &marker, 1);
+        reu_store(address, &marker, 1);
         marker = 0;
-        reu128_store(0, &marker, 1);
+        reu_store(0, &marker, 1);
 
-        reu128_load(address, &readback, 1);
+        reu_load(address, &readback, 1);
         if (reu128_barrier(readback) != REU_PROBE_VALUE)
         {
-            return page;
+            pages = page;
         }
     }
 
-    return REU_MAX_PAGES;
+    reu128_restore_speed(speed);
+    return pages;
 }
