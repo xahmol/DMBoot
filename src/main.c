@@ -188,6 +188,7 @@ void loadoverlay(char number)
     bnk_memcpy(BNK_0_FULL, (volatile char *)OVERLAYLOAD,
                store->mmucr, (volatile char *)store->address, OVERLAYSIZE);
     overlay_active = number;
+    tm_sync();
 }
 
 // ---------------------------------------------------------------------------
