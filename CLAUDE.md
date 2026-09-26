@@ -51,6 +51,7 @@ make docs / zip / clean
 - Every function has a comment block above it: **Title, Description, Syntax, Input, Output**.
 - **Overflow-safe strings:** `strncpy(dst, src, sizeof(dst) - 1); dst[sizeof(dst) - 1] = 0;` Sizes come from `sizeof` or named constants. Validate every external input (UCI, files, IEC, keyboard) for length and range.
 - Structs for grouped state and layouts. Named constants, no magic numbers.
+- **Redraw only what changed.** A screen is drawn in full once (on entry or on return from another screen); after a key press only the changed parts are redrawn (value, affected list lines, legend item, prompt rows). Structure screens as a full draw plus small update functions.
 - `petscii.h` in every file that prints; string literals are PETSCII. Use proper capitalisation in UI text. Wire-protocol strings (UCI/DOS) may need an identity charmap override (UBoot64 ARCHITECTURE.md §12.10).
 - Debug/test hooks that compile to nothing in release must still evaluate their arguments (`((void)(x))`).
 - **Credits:**

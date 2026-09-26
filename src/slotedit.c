@@ -110,27 +110,66 @@ static void edit_timeout_text(char *text, char size)
     }
 }
 
+// Legend positions of the items that change
+#define TIMEOUT_X_80        60
+#define TIMEOUT_ROW_80      SLOTLIST_LEGEND_ROW
+#define TIMEOUT_W_80        20
+#define TIMEOUT_X_40        0
+#define TIMEOUT_ROW_40      (SLOTLIST_LEGEND_ROW + 1)
+#define TIMEOUT_W_40        24      // Up to the F5 item
+#define PAGE_X_40           24
+#define PAGE_ROW_40         (SLOTLIST_LEGEND_ROW + 2)
+
 // ---------------------------------------------------------------------------
-// Title:       Draw the editor screen
-// Description: Header, slot list and function key legend.
-// Syntax:      static void edit_draw(char page);
+// Title:       Draw the timeout legend item
+// Description: Redraws only the F4 item (its text length changes).
+// Syntax:      static void edit_legend_timeout(void);
+// Input:       cfg.timeoutidx
+// Output:      None
+// ---------------------------------------------------------------------------
+static void edit_legend_timeout(void)
+{
+    char timeout[TIMEOUT_TEXT_MAX];
+    bool is80 = dwin_is80();
+    char x = is80 ? TIMEOUT_X_80 : TIMEOUT_X_40;
+    char y = is80 ? TIMEOUT_ROW_80 : TIMEOUT_ROW_40;
+
+    edit_timeout_text(timeout, sizeof(timeout));
+    dwin_fill_rect(&screenwin, x, y, is80 ? TIMEOUT_W_80 : TIMEOUT_W_40, 1, ' ', cfg.colors.text);
+    fkey_hint(x, y, " F4 ", timeout);
+}
+
+// ---------------------------------------------------------------------------
+// Title:       Draw the page legend item
+// Description: Redraws only the page item (40 columns).
+// Syntax:      static void edit_legend_page(char page);
+// Input:       page - shown page
+// Output:      None
+// ---------------------------------------------------------------------------
+static void edit_legend_page(char page)
+{
+    if (!dwin_is80())
+    {
+        fkey_hint(PAGE_X_40, PAGE_ROW_40, " <> ", page ? "Pg 2" : "Pg 1");
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Title:       Draw the legend
+// Description: Clears the rows below the slot list (actions use them for
+//              prompts) and draws the function key legend.
+// Syntax:      static void edit_legend(char page);
 // Input:       page - shown page (40 columns)
 // Output:      None
 // ---------------------------------------------------------------------------
-static void edit_draw(char page)
+static void edit_legend(char page)
 {
-    char timeout[TIMEOUT_TEXT_MAX];
-
-    edit_timeout_text(timeout, sizeof(timeout));
-    dwin_clear(&screenwin);
-    headertext("Edit/re-order/delete", 1);
-    slotlist_draw(page);
+    slotlist_clear_bottom();
     if (dwin_is80())
     {
         fkey_hint(0, SLOTLIST_LEGEND_ROW, " F1 ", "Rename");
         fkey_hint(20, SLOTLIST_LEGEND_ROW, " F2 ", "Command");
         fkey_hint(40, SLOTLIST_LEGEND_ROW, " F3 ", "Re-order");
-        fkey_hint(60, SLOTLIST_LEGEND_ROW, " F4 ", timeout);
         fkey_hint(0, SLOTLIST_LEGEND_ROW + 1, " F5 ", "Delete");
         fkey_hint(20, SLOTLIST_LEGEND_ROW + 1, " F6 ", "Default slot");
         fkey_hint(40, SLOTLIST_LEGEND_ROW + 1, " F7 ", "Back");
@@ -140,12 +179,27 @@ static void edit_draw(char page)
         fkey_hint(0, SLOTLIST_LEGEND_ROW, " F1 ", "Name");
         fkey_hint(13, SLOTLIST_LEGEND_ROW, " F2 ", "Cmd");
         fkey_hint(24, SLOTLIST_LEGEND_ROW, " F3 ", "Order");
-        fkey_hint(0, SLOTLIST_LEGEND_ROW + 1, " F4 ", timeout);
         fkey_hint(24, SLOTLIST_LEGEND_ROW + 1, " F5 ", "Delete");
         fkey_hint(0, SLOTLIST_LEGEND_ROW + 2, " F6 ", "Default");
         fkey_hint(13, SLOTLIST_LEGEND_ROW + 2, " F7 ", "Back");
-        fkey_hint(24, SLOTLIST_LEGEND_ROW + 2, " <> ", page ? "Pg 2" : "Pg 1");
     }
+    edit_legend_timeout();
+    edit_legend_page(page);
+}
+
+// ---------------------------------------------------------------------------
+// Title:       Draw the editor screen
+// Description: Full draw on entry: header, slot list and legend.
+// Syntax:      static void edit_draw(char page);
+// Input:       page - shown page (40 columns)
+// Output:      None
+// ---------------------------------------------------------------------------
+static void edit_draw(char page)
+{
+    dwin_clear(&screenwin);
+    headertext("Edit/re-order/delete", 1);
+    slotlist_draw(page);
+    edit_legend(page);
 }
 
 // ---------------------------------------------------------------------------
@@ -180,6 +234,7 @@ static char edit_rename(char *page)
     strncpy(Slot.menu, name, sizeof(Slot.menu) - 1);
     Slot.menu[sizeof(Slot.menu) - 1] = 0;
     save_slot_to_reu(slot);
+    slotlist_draw_slot(slot, *page, 0);
     return EDIT_SLOTS;
 }
 
@@ -242,6 +297,7 @@ static char edit_command(char *page)
         Slot.command &= ~COMMAND_CMD;
     }
     save_slot_to_reu(slot);
+    slotlist_draw_slot(slot, *page, 0);
     return EDIT_SLOTS;
 }
 
@@ -266,10 +322,13 @@ static char edit_delete(char *page)
     slotlist_draw_slot(slot, *page, SLOTLIST_SELECTED);
     if (!edit_yesno("Delete the selected slot?"))
     {
+        slotlist_draw_slot(slot, *page, 0);
         return EDIT_NONE;
     }
     memset(&Slot, 0, sizeof(Slot));
+    Slot.cfgvs = CFGVERSION;
     save_slot_to_reu(slot);
+    slotlist_draw_slot(slot, *page, 0);
     return EDIT_SLOTS;
 }
 
@@ -307,11 +366,13 @@ static char edit_default(char *page)
         {
             Slot.isdefault = 0;
             save_slot_to_reu(x);
+            slotlist_draw_slot(x, *page, 0);
         }
     }
     get_slot_from_reu(slot);
     Slot.isdefault = wasdefault ? 0 : 1;
     save_slot_to_reu(slot);
+    slotlist_draw_slot(slot, *page, 0);
     return EDIT_SLOTS;
 }
 
@@ -448,6 +509,7 @@ static char edit_reorder(char *page)
         }
         else if (key == KEY_RETURN)
         {
+            slotlist_draw_slot(pos, *page, 0);
             return (pos != start) ? EDIT_SLOTS : EDIT_NONE;
         }
         else if (key == KEY_F7 || key == KEY_STOP)
@@ -455,6 +517,12 @@ static char edit_reorder(char *page)
             if (pos != start)
             {
                 edit_copy_slots(SLOT_REU_BACKUP, SLOT_REU_START);
+                *page = slotlist_page(start);
+                slotlist_draw(*page);
+            }
+            else
+            {
+                slotlist_draw_slot(pos, *page, 0);
             }
             return EDIT_NONE;
         }
@@ -475,37 +543,46 @@ void slotedit(void)
     char changes = EDIT_NONE;
     char page = 0;
 
+    edit_draw(page);
     while (true)
     {
-        char key;
+        char key = key_wait();
 
-        edit_draw(page);
-        key = key_wait();
+        // Actions redraw their own slot lines; the prompts they show use the
+        // legend rows, so only the legend is redrawn afterwards
         switch (key)
         {
         case KEY_F1:
             changes |= edit_rename(&page);
+            edit_legend(page);
             break;
         case KEY_F2:
             changes |= edit_command(&page);
+            edit_legend(page);
             break;
         case KEY_F3:
             changes |= edit_reorder(&page);
+            edit_legend(page);
             break;
         case KEY_F4:
             changes |= edit_timeout();
+            edit_legend_timeout();
             break;
         case KEY_F5:
             changes |= edit_delete(&page);
+            edit_legend(page);
             break;
         case KEY_F6:
             changes |= edit_default(&page);
+            edit_legend(page);
             break;
         case KEY_CURSOR_LEFT:
         case KEY_CURSOR_RIGHT:
             if (!dwin_is80())
             {
                 page ^= 1;
+                slotlist_draw(page);
+                edit_legend_page(page);
             }
             break;
         case KEY_F7:

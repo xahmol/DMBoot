@@ -558,9 +558,46 @@ static void dir_draw(void)
     dir_load(selected, &entry);
 }
 
+// Option toggles in the key panel, below the key list
+#define TOGGLE_TRACE        0
+#define TOGGLE_SORT         1
+#define TOGGLE_FORCE8       2
+#define TOGGLE_FAST         3
+#define TOGGLE_COMMA1       4
+#define TOGGLE_DEMO         5
+#define TOGGLES             6
+#define TOGGLE_ROW0         (PANEL_ROW0 + 13)
+
+// ---------------------------------------------------------------------------
+// Title:       Draw one option toggle
+// Description: Redraws the line of one toggle in the key panel with its
+//              on/off state (only that line changes when it is switched).
+// Syntax:      static void browse_toggle(char toggle);
+// Input:       toggle - TOGGLE_*
+// Output:      None
+// ---------------------------------------------------------------------------
+static void browse_toggle(char toggle)
+{
+    static const char *const labels[TOGGLES] = {
+        "  D Trace  ", "  S Sort   ", "  8 Force8 ", "  F FAST   ", "  1 ,1     ", "  O Demo   "
+    };
+    bool states[TOGGLES];
+    char x = dwin_is80() ? PANEL_X_80 : PANEL_X_40;
+    char len;
+
+    states[TOGGLE_TRACE] = bs.trace;
+    states[TOGGLE_SORT] = bs.sorted;
+    states[TOGGLE_FORCE8] = bs.force8;
+    states[TOGGLE_FAST] = bs.fast;
+    states[TOGGLE_COMMA1] = bs.comma1;
+    states[TOGGLE_DEMO] = bs.demo;
+    len = dwin_putat_string(&screenwin, x, TOGGLE_ROW0 + toggle, labels[toggle], cfg.colors.text);
+    dwin_putat_string(&screenwin, x + len, TOGGLE_ROW0 + toggle, states[toggle] ? "on " : "off", cfg.colors.text);
+}
+
 // ---------------------------------------------------------------------------
 // Title:       Draw the key panel
-// Description: Key reference and the on/off state of the browser options.
+// Description: Full draw of the key reference and the option toggles.
 // Syntax:      static void browse_panel(void);
 // Input:       bs
 // Output:      None
@@ -580,13 +617,10 @@ static void browse_panel(void)
     {
         dwin_putat_string(&screenwin, x, y++, keys[i], cfg.colors.text);
     }
-    y++;
-    dwin_putat_string(&screenwin, x, y++, bs.trace ? "  D Trace  on" : "  D Trace  off", cfg.colors.text);
-    dwin_putat_string(&screenwin, x, y++, bs.sorted ? "  S Sort   on" : "  S Sort   off", cfg.colors.text);
-    dwin_putat_string(&screenwin, x, y++, bs.force8 ? "  8 Force8 on" : "  8 Force8 off", cfg.colors.text);
-    dwin_putat_string(&screenwin, x, y++, bs.fast ? "  F FAST   on" : "  F FAST   off", cfg.colors.text);
-    dwin_putat_string(&screenwin, x, y++, bs.comma1 ? "  1 ,1     on" : "  1 ,1     off", cfg.colors.text);
-    dwin_putat_string(&screenwin, x, y, bs.demo ? "  O Demo   on" : "  O Demo   off", cfg.colors.text);
+    for (char t = 0; t < TOGGLES; t++)
+    {
+        browse_toggle(t);
+    }
 }
 
 // ---------------------------------------------------------------------------
@@ -777,7 +811,7 @@ static void browse_device(char device)
     bs.tracepath[0] = 0;
     dir_read();
     dir_draw();
-    browse_panel();
+    browse_toggle(TOGGLE_TRACE);
 }
 
 // ---------------------------------------------------------------------------
@@ -1127,6 +1161,7 @@ void browse(void)
         key_wait();
         return;
     }
+    browse_panel();
     browse_device(bs.device);
 
     while (true)
@@ -1151,7 +1186,7 @@ void browse(void)
             bs.sorted = !bs.sorted;
             dir_read();
             dir_draw();
-            browse_panel();
+            browse_toggle(TOGGLE_SORT);
             break;
         case '+':
             browse_nextdevice(true);
@@ -1253,23 +1288,23 @@ void browse(void)
             {
                 dir_draw();
             }
-            browse_panel();
+            browse_toggle(TOGGLE_TRACE);
             break;
         case '8':
             bs.force8 = !bs.force8;
-            browse_panel();
+            browse_toggle(TOGGLE_FORCE8);
             break;
         case 'f':
             bs.fast = !bs.fast;
-            browse_panel();
+            browse_toggle(TOGGLE_FAST);
             break;
         case '1':
             bs.comma1 = !bs.comma1;
-            browse_panel();
+            browse_toggle(TOGGLE_COMMA1);
             break;
         case 'o':
             bs.demo = !bs.demo;
-            browse_panel();
+            browse_toggle(TOGGLE_DEMO);
             break;
 
         case KEY_F5:

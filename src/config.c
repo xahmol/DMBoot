@@ -223,45 +223,105 @@ static void cfg_line(char row, const char *key, const char *label, const char *v
     }
 }
 
+// Rows of the settings on the configuration screen
+#define CFG_ROW_TIMEON      (CFG_ROW0 + 0)
+#define CFG_ROW_VERBOSE     (CFG_ROW0 + 1)
+#define CFG_ROW_UTC         (CFG_ROW0 + 2)
+#define CFG_ROW_TIMEOUT     (CFG_ROW0 + 3)
+#define CFG_ROW_HOST        (CFG_ROW0 + 4)
+#define CFG_ROW_COLOURS     (CFG_ROW0 + 5)
+#define CFG_ROW_GEOS        (CFG_ROW0 + 6)
+#define CFG_ROW_BACK        (CFG_ROW0 + 8)
+
+// ---------------------------------------------------------------------------
+// Title:       Show a setting value
+// Description: Clears the value column of a row and prints a value.
+// Syntax:      static void cfg_value(char row, const char *value);
+// Input:       row   - screen row
+//              value - text (PETSCII)
+// Output:      None
+// ---------------------------------------------------------------------------
+static void cfg_value(char row, const char *value)
+{
+    dwin_fill_rect(&screenwin, CFG_VALUE_X, row, screenwin.wx - CFG_VALUE_X, 1, ' ', cfg.colors.text);
+    dwin_putat_string(&screenwin, CFG_VALUE_X, row, value, cfg.colors.text_input);
+}
+
+// ---------------------------------------------------------------------------
+// Title:       Show the changeable values
+// Description: One function per setting, so a change redraws only its
+//              value.
+// Syntax:      static void cfg_show_timeon(void); (and _verbose, _utc,
+//              _timeout, _host)
+// Input:       cfg
+// Output:      None
+// ---------------------------------------------------------------------------
+static void cfg_show_timeon(void)
+{
+    cfg_value(CFG_ROW_TIMEON, cfg.timeon ? "On" : "Off");
+}
+
+static void cfg_show_verbose(void)
+{
+    cfg_value(CFG_ROW_VERBOSE, verbosenames[(cfg.verbose < VERBOSE_OPTIONS) ? cfg.verbose : VERBOSE_ON]);
+}
+
+static void cfg_show_utc(void)
+{
+    sprintf(textbuf, "%ld s", cfg.secondsfromutc);
+    cfg_value(CFG_ROW_UTC, textbuf);
+}
+
+static void cfg_show_timeout(void)
+{
+    if (cfg.timeoutidx && cfg.timeoutidx < TIMEOUT_OPTIONS)
+    {
+        sprintf(textbuf, "%u s", timeoutseconds[cfg.timeoutidx]);
+        cfg_value(CFG_ROW_TIMEOUT, textbuf);
+    }
+    else
+    {
+        cfg_value(CFG_ROW_TIMEOUT, "Off");
+    }
+}
+
+static void cfg_show_host(void)
+{
+    char hostwidth = screenwin.wx - CFG_VALUE_X;
+
+    asc2pet(textbuf, cfg.host, sizeof(textbuf));
+    if (strlen(textbuf) > hostwidth)
+    {
+        textbuf[hostwidth] = 0;
+    }
+    cfg_value(CFG_ROW_HOST, textbuf);
+}
+
 // ---------------------------------------------------------------------------
 // Title:       Draw the configuration screen
-// Description: Shows all settings with their keys.
+// Description: Full draw on entry: header, all settings with their keys.
 // Syntax:      static void cfg_draw(void);
 // Input:       cfg
 // Output:      None
 // ---------------------------------------------------------------------------
 static void cfg_draw(void)
 {
-    char value[16];
-    char row = CFG_ROW0;
-    char hostwidth = screenwin.wx - CFG_VALUE_X;
-
     dwin_clear(&screenwin);
     headertext("Configuration", 1);
 
-    cfg_line(row++, " F1 ", "NTP time sync", cfg.timeon ? "On" : "Off");
-    cfg_line(row++, " F2 ", "Start-up", verbosenames[(cfg.verbose < VERBOSE_OPTIONS) ? cfg.verbose : VERBOSE_ON]);
-    sprintf(value, "%ld s", cfg.secondsfromutc);
-    cfg_line(row++, " F3 ", "UTC offset", value);
-    if (cfg.timeoutidx && cfg.timeoutidx < TIMEOUT_OPTIONS)
-    {
-        sprintf(value, "%u s", timeoutseconds[cfg.timeoutidx]);
-        cfg_line(row++, " F4 ", "Auto-boot", value);
-    }
-    else
-    {
-        cfg_line(row++, " F4 ", "Auto-boot", "Off");
-    }
-    asc2pet(textbuf, cfg.host, sizeof(textbuf));
-    if (strlen(textbuf) > hostwidth)
-    {
-        textbuf[hostwidth] = 0;
-    }
-    cfg_line(row++, " F5 ", "NTP server", textbuf);
-    cfg_line(row++, " F6 ", "Colours", NULL);
-    cfg_line(row++, " F8 ", "GEOS RAM boot", NULL);
-    row++;
-    cfg_line(row, " F7 ", "Back (saves changes)", NULL);
+    cfg_line(CFG_ROW_TIMEON, " F1 ", "NTP time sync", NULL);
+    cfg_line(CFG_ROW_VERBOSE, " F2 ", "Start-up", NULL);
+    cfg_line(CFG_ROW_UTC, " F3 ", "UTC offset", NULL);
+    cfg_line(CFG_ROW_TIMEOUT, " F4 ", "Auto-boot", NULL);
+    cfg_line(CFG_ROW_HOST, " F5 ", "NTP server", NULL);
+    cfg_line(CFG_ROW_COLOURS, " F6 ", "Colours", NULL);
+    cfg_line(CFG_ROW_GEOS, " F8 ", "GEOS RAM boot", NULL);
+    cfg_line(CFG_ROW_BACK, " F7 ", "Back (saves changes)", NULL);
+    cfg_show_timeon();
+    cfg_show_verbose();
+    cfg_show_utc();
+    cfg_show_timeout();
+    cfg_show_host();
 }
 
 // ---------------------------------------------------------------------------
@@ -318,11 +378,132 @@ static bool cfg_host(void)
     return true;
 }
 
+// Colour editor: index of each colour in struct ColorPalette
+#define COL_BACKGROUND      0
+#define COL_BORDER          1
+#define COL_HEADER1         2
+#define COL_HEADER2         3
+#define COL_TEXT            4
+#define COL_KEY             6
+#define COL_DIRNORMAL       7
+#define COL_DIRSELECT       8
+
+// ---------------------------------------------------------------------------
+// Title:       Draw one colour row
+// Description: Name, number and a swatch of one colour.
+// Syntax:      static void color_row(char option, bool selected);
+// Input:       option   - colour index (struct ColorPalette order)
+//              selected - highlight the row
+// Output:      None
+// ---------------------------------------------------------------------------
+static void color_row(char option, bool selected)
+{
+    char *colors = (char *)&cfg.colors;
+    char row = COLOR_ROW0 + option;
+
+    sprintf(textbuf, "%-16s %2u", colornames[option], colors[option]);
+    if (selected)
+    {
+        dwin_putat_string_reverse(&screenwin, 0, row, textbuf, cfg.colors.diritem_select);
+    }
+    else
+    {
+        dwin_putat_string(&screenwin, 0, row, textbuf, cfg.colors.diritem_normal);
+    }
+    dwin_fill_rect(&screenwin, COLOR_SWATCH_X, row, 4, 1, ' ', colors[option]);
+    dwin_reverse_rect(&screenwin, COLOR_SWATCH_X, row, 4, 1);
+}
+
+// ---------------------------------------------------------------------------
+// Title:       Draw the colour rows
+// Description: All colour rows, one of them highlighted.
+// Syntax:      static void color_rows(char option);
+// Input:       option - highlighted colour
+// Output:      None
+// ---------------------------------------------------------------------------
+static void color_rows(char option)
+{
+    for (char x = 0; x < COLOR_OPTIONS; x++)
+    {
+        color_row(x, x == option);
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Title:       Draw the colour editor legend
+// Description: Key hints below the colour rows.
+// Syntax:      static void color_legend(void);
+// Input:       None
+// Output:      None
+// ---------------------------------------------------------------------------
+static void color_legend(void)
+{
+    fkey_hint(0, SLOTLIST_LEGEND_ROW - 1, " UP/DOWN ", "Choose");
+    fkey_hint(0, SLOTLIST_LEGEND_ROW, " LEFT/RIGHT ", "Change colour");
+    fkey_hint(0, SLOTLIST_LEGEND_ROW + 1, " DEL ", "Undo all");
+    fkey_hint(0, SLOTLIST_LEGEND_ROW + 2, " F7 ", "Back");
+}
+
+// ---------------------------------------------------------------------------
+// Title:       Draw the colour editor
+// Description: Full draw: screen colours, header, rows and legend.
+// Syntax:      static void color_draw(char option);
+// Input:       option - highlighted colour
+// Output:      None
+// ---------------------------------------------------------------------------
+static void color_draw(char option)
+{
+    dwin_screen_colors(cfg.colors.border, cfg.colors.background);
+    dwin_clear(&screenwin);
+    headertext("Colours", 1);
+    color_rows(option);
+    color_legend();
+}
+
+// ---------------------------------------------------------------------------
+// Title:       Show a colour change
+// Description: Redraws what uses the changed colour: its row, and the
+//              screen colours, the header, all rows or the legend when the
+//              colour is theirs.
+// Syntax:      static void color_changed(char option);
+// Input:       option - changed colour (also the highlighted one)
+// Output:      None
+// ---------------------------------------------------------------------------
+static void color_changed(char option)
+{
+    switch (option)
+    {
+    case COL_BACKGROUND:
+    case COL_BORDER:
+        dwin_screen_colors(cfg.colors.border, cfg.colors.background);
+        color_row(option, true);
+        break;
+    case COL_HEADER1:
+    case COL_HEADER2:
+        headertext("Colours", 1);
+        color_row(option, true);
+        break;
+    case COL_DIRNORMAL:
+    case COL_DIRSELECT:
+        color_rows(option);
+        break;
+    case COL_TEXT:
+    case COL_KEY:
+        color_legend();
+        color_row(option, true);
+        break;
+    default:
+        color_row(option, true);
+        break;
+    }
+}
+
 // ---------------------------------------------------------------------------
 // Title:       Colour editor
 // Description: Cursor up/down selects a colour, left/right changes it and
-//              shows the result at once. DEL restores the colours from
-//              when the editor was opened.
+//              shows the result at once (only what uses the colour is
+//              redrawn). DEL restores the colours from when the editor was
+//              opened.
 // Syntax:      static bool cfg_colors(void);
 // Input:       None
 // Output:      true when a colour changed
@@ -333,47 +514,32 @@ static bool cfg_colors(void)
     char *colors = (char *)&cfg.colors;
     char option = 0;
 
+    color_draw(option);
     while (true)
     {
-        dwin_screen_colors(cfg.colors.border, cfg.colors.background);
-        dwin_clear(&screenwin);
-        headertext("Colours", 1);
-        for (char x = 0; x < COLOR_OPTIONS; x++)
-        {
-            char row = COLOR_ROW0 + x;
-            sprintf(textbuf, "%-16s %2u", colornames[x], colors[x]);
-            if (x == option)
-            {
-                dwin_putat_string_reverse(&screenwin, 0, row, textbuf, cfg.colors.diritem_select);
-            }
-            else
-            {
-                dwin_putat_string(&screenwin, 0, row, textbuf, cfg.colors.diritem_normal);
-            }
-            dwin_fill_rect(&screenwin, COLOR_SWATCH_X, row, 4, 1, ' ', colors[x]);
-            dwin_reverse_rect(&screenwin, COLOR_SWATCH_X, row, 4, 1);
-        }
-        fkey_hint(0, SLOTLIST_LEGEND_ROW - 1, " UP/DOWN ", "Choose");
-        fkey_hint(0, SLOTLIST_LEGEND_ROW, " LEFT/RIGHT ", "Change colour");
-        fkey_hint(0, SLOTLIST_LEGEND_ROW + 1, " DEL ", "Undo all");
-        fkey_hint(0, SLOTLIST_LEGEND_ROW + 2, " F7 ", "Back");
-
         switch (key_wait())
         {
         case KEY_CURSOR_DOWN:
+            color_row(option, false);
             option = (option + 1) % COLOR_OPTIONS;
+            color_row(option, true);
             break;
         case KEY_CURSOR_UP:
+            color_row(option, false);
             option = (option + COLOR_OPTIONS - 1) % COLOR_OPTIONS;
+            color_row(option, true);
             break;
         case KEY_CURSOR_LEFT:
             colors[option] = (colors[option] - 1) & COLOR_MAX;
+            color_changed(option);
             break;
         case KEY_CURSOR_RIGHT:
             colors[option] = (colors[option] + 1) & COLOR_MAX;
+            color_changed(option);
             break;
         case KEY_DEL:
             cfg.colors = saved;
+            color_draw(option);
             break;
         case KEY_F7:
         case KEY_STOP:
@@ -488,10 +654,57 @@ static char cfg_geos_line(char row, const char *key, const char *label, char id,
     return row + 2;
 }
 
+// Rows of the GEOS settings (each image setting uses two rows)
+#define GEOS_ROW_REU        GEOS_ROW0
+#define GEOS_ROW_SIZE       (GEOS_ROW0 + 2)
+#define GEOS_ROW_A          (GEOS_ROW0 + 4)
+#define GEOS_ROW_B          (GEOS_ROW0 + 6)
+#define GEOS_ROW_BACK       (GEOS_ROW0 + 9)
+
+// ---------------------------------------------------------------------------
+// Title:       Show one GEOS setting
+// Description: One function per setting: clears its rows and redraws them,
+//              so a change redraws only that setting.
+// Syntax:      static void geos_show_reu(void); (and _size, _a, _b)
+// Input:       cfg.geos
+// Output:      None
+// ---------------------------------------------------------------------------
+static void geos_clear(char row, char rows)
+{
+    dwin_fill_rect(&screenwin, 0, row, screenwin.wx, rows, ' ', cfg.colors.text);
+}
+
+static void geos_show_reu(void)
+{
+    geos_clear(GEOS_ROW_REU, 2);
+    cfg_geos_line(GEOS_ROW_REU, " F1 ", "REU image", 0, cfg.geos.reu_path, cfg.geos.reu_image);
+}
+
+static void geos_show_size(void)
+{
+    geos_clear(GEOS_ROW_SIZE, 1);
+    cfg_line(GEOS_ROW_SIZE, " F2 ", "REU size", reusizenames[cfg.geos.reusize]);
+}
+
+static void geos_show_a(void)
+{
+    geos_clear(GEOS_ROW_A, 2);
+    cfg_geos_line(GEOS_ROW_A, " F3 ", "Drive A image", cfg.geos.image_a_id, cfg.geos.image_a_path,
+                  cfg.geos.image_a_file);
+}
+
+static void geos_show_b(void)
+{
+    geos_clear(GEOS_ROW_B, 2);
+    cfg_geos_line(GEOS_ROW_B, " F5 ", "Drive B image", cfg.geos.image_b_id, cfg.geos.image_b_path,
+                  cfg.geos.image_b_file);
+}
+
 // ---------------------------------------------------------------------------
 // Title:       GEOS RAM boot settings
 // Description: REU image and size, and the disk images for drives A and B
-//              that the GEOS RAM boot (main menu F6) uses.
+//              that the GEOS RAM boot (main menu F6) uses. Drawn once;
+//              a change redraws only its setting.
 // Syntax:      static bool cfg_geos(void);
 // Input:       None
 // Output:      true when something changed
@@ -501,40 +714,42 @@ static bool cfg_geos(void)
     struct GeosConfig *geos = &cfg.geos;
     bool changed = false;
 
+    if (geos->reusize >= REU_SIZES)
+    {
+        geos->reusize = REU_SIZES - 1;
+    }
+    dwin_clear(&screenwin);
+    headertext("GEOS RAM boot settings", 1);
+    geos_show_reu();
+    geos_show_size();
+    geos_show_a();
+    geos_show_b();
+    cfg_line(GEOS_ROW_BACK, " F7 ", "Back", NULL);
+
     while (true)
     {
-        char row = GEOS_ROW0;
-
-        if (geos->reusize >= REU_SIZES)
-        {
-            geos->reusize = REU_SIZES - 1;
-        }
-        dwin_clear(&screenwin);
-        headertext("GEOS RAM boot settings", 1);
-        row = cfg_geos_line(row, " F1 ", "REU image", 0, geos->reu_path, geos->reu_image);
-        cfg_line(row, " F2 ", "REU size", reusizenames[geos->reusize]);
-        row += 2;
-        row = cfg_geos_line(row, " F3 ", "Drive A image", geos->image_a_id, geos->image_a_path,
-                            geos->image_a_file);
-        row = cfg_geos_line(row, " F5 ", "Drive B image", geos->image_b_id, geos->image_b_path,
-                            geos->image_b_file);
-        cfg_line(row + 1, " F7 ", "Back", NULL);
-
         switch (key_wait())
         {
         case KEY_F1:
             changed |= cfg_ascii_field("REU image path (e.g. /usb1/11/):", geos->reu_path, MAXPATHLEN);
             changed |= cfg_ascii_field("REU image file name:", geos->reu_image, MAXFILENAME);
+            slotlist_clear_bottom();
+            geos_show_reu();
             break;
         case KEY_F2:
             geos->reusize = (geos->reusize + 1) % REU_SIZES;
+            geos_show_size();
             changed = true;
             break;
         case KEY_F3:
             changed |= cfg_geos_image(&geos->image_a_id, geos->image_a_path, geos->image_a_file);
+            slotlist_clear_bottom();
+            geos_show_a();
             break;
         case KEY_F5:
             changed |= cfg_geos_image(&geos->image_b_id, geos->image_b_path, geos->image_b_file);
+            slotlist_clear_bottom();
+            geos_show_b();
             break;
         case KEY_F7:
         case KEY_STOP:
@@ -557,34 +772,44 @@ void config_edit(void)
 {
     bool changed = false;
 
+    cfg_draw();
     while (true)
     {
-        cfg_draw();
         switch (key_wait())
         {
         case KEY_F1:
             cfg.timeon = !cfg.timeon;
+            cfg_show_timeon();
             changed = true;
             break;
         case KEY_F2:
             cfg.verbose = (cfg.verbose + 1 < VERBOSE_OPTIONS) ? cfg.verbose + 1 : VERBOSE_SILENT;
+            cfg_show_verbose();
             changed = true;
             break;
         case KEY_F3:
             changed |= cfg_utcoffset();
+            slotlist_clear_bottom();
+            cfg_show_utc();
             break;
         case KEY_F4:
             cfg.timeoutidx = (cfg.timeoutidx + 1 < TIMEOUT_OPTIONS) ? cfg.timeoutidx + 1 : 0;
+            cfg_show_timeout();
             changed = true;
             break;
         case KEY_F5:
             changed |= cfg_host();
+            slotlist_clear_bottom();
+            cfg_show_host();
             break;
         case KEY_F6:
+            // Another screen: full redraw on return
             changed |= cfg_colors();
+            cfg_draw();
             break;
         case KEY_F8:
             changed |= cfg_geos();
+            cfg_draw();
             break;
         case KEY_F7:
         case KEY_STOP:

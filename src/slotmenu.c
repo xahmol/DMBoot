@@ -33,6 +33,21 @@ layout, the countdown returns the slot key instead of starting it
 
 #define TIMEOUT_TEXT_X      13      // Column of the countdown seconds
 
+#define PAGE_X_40           13
+#define PAGE_ROW_40         (SLOTLIST_LEGEND_ROW + 2)
+
+// ---------------------------------------------------------------------------
+// Title:       Draw the page legend item
+// Description: Redraws only the page item (40 columns).
+// Syntax:      static void menu_legend_page(char page);
+// Input:       page - shown page
+// Output:      None
+// ---------------------------------------------------------------------------
+static void menu_legend_page(char page)
+{
+    fkey_hint(PAGE_X_40, PAGE_ROW_40, " <> ", page ? "Page 2/2" : "Page 1/2");
+}
+
 // ---------------------------------------------------------------------------
 // Title:       Draw the main menu
 // Description: Draws header, slots and the function key legend. 80 columns:
@@ -66,7 +81,7 @@ static void menu_draw(char page)
         fkey_hint(13, SLOTLIST_LEGEND_ROW + 1, " F5 ", "Go 64");
         fkey_hint(24, SLOTLIST_LEGEND_ROW + 1, " F6 ", "GEOS");
         fkey_hint(0, SLOTLIST_LEGEND_ROW + 2, " F7 ", "Quit");
-        fkey_hint(13, SLOTLIST_LEGEND_ROW + 2, " <> ", page ? "Page 2/2" : "Page 1/2");
+        menu_legend_page(page);
     }
     dwin_putat_string(&screenwin, 0, SLOTLIST_PROMPT_ROW, "Make your choice.", cfg.colors.text);
 }
@@ -212,7 +227,8 @@ char mainmenu(void)
         if (!dwin_is80() && (key == KEY_CURSOR_LEFT || key == KEY_CURSOR_RIGHT))
         {
             page ^= 1;
-            menu_draw(page);
+            slotlist_draw(page);
+            menu_legend_page(page);
         }
         else if (menu_validkey(key))
         {
