@@ -46,10 +46,10 @@ COLOURS = {
     'W': (1, 15),    # laces, "128" (white)
     'G': (15, 14),   # welt, text (light grey)
     'S': (11, 1),    # sole (dark grey)
-    'C': (14, 3),    # "DM" top (light blue)
-    'c': (6, 2),     # "DM" bottom (blue)
-    'O': (7, 13),    # "Boot" top (yellow)
-    'o': (8, 9),     # "Boot" bottom (VIC orange, VDC light red)
+    'B': (3, 6),     # title banner (cyan)
+    '1': (2, 8),     # title letters, row 1 (red)
+    '2': (8, 12),    # title letters, rows 2-3 (orange)
+    '4': (7, 13),    # title letters, rows 4-5 and "128" (yellow)
     'T': (13, 5),    # credits (light green)
 }
 
@@ -100,8 +100,7 @@ BOOT_GLYPHS = [
     "      /\\           ",   # 7  tongue
     "n/######\\          ",   # 8  pull tab, collar
     "u#####x[           ",   # 9  laces
-    " #####x[           ",   # 10
-    " ##dm#x[           ",   # 11 patch
+    " ##dm#x[           ",   # 10 patch
     " #####x#\\          ",   # 12
     " ######x#\\         ",   # 13
     " #######xx#\\       ",   # 14
@@ -119,7 +118,6 @@ BOOT_COLOURS = [
     "      RR           ",
     "DYYYYYYYY          ",
     "DDLLLLWL           ",
-    " DLLLLWL           ",
     " DLYYLWL           ",
     " DLLLLWLL          ",
     " DLLLLLWLL         ",
@@ -133,41 +131,59 @@ BOOT_COLOURS = [
     " SSSSSSSSSSSSSSSSSS",
     " SSSSS  SSSSSSSSSS ",
 ]
-BOOT_ROW = 7
+BOOT_ROW = 8
 
-# Big block letters from quarter blocks: bitmaps of 2x2 sub-pixels per
-# character; strokes are two sub-pixels (one character) wide
+# Title letters as in the UBoot64 splash: bitmaps of sub-pixels (2x2 per
+# character), strokes two sub-pixels (one character) wide, 10 high (5
+# rows), rounded corners. In a banner each letter gets a one sub-pixel
+# outline in the background colour (also inside the counters); the rest
+# of the banner is the banner colour; the letter colour runs per row.
 QUARTERS = {
     (0, 0, 0, 0): 0x20, (0, 0, 0, 1): 0x6c, (0, 0, 1, 0): 0x7b, (0, 0, 1, 1): 0x62,
     (0, 1, 0, 0): 0x7c, (0, 1, 0, 1): 0xe1, (0, 1, 1, 0): 0xff, (0, 1, 1, 1): 0xfe,
     (1, 0, 0, 0): 0x7e, (1, 0, 0, 1): 0x7f, (1, 0, 1, 0): 0x61, (1, 0, 1, 1): 0xfc,
     (1, 1, 0, 0): 0xe2, (1, 1, 0, 1): 0xfb, (1, 1, 1, 0): 0xec, (1, 1, 1, 1): 0xa0,
 }
-LETTER_D = ["######..", "######..", "##..####", "##..####", "##....##", "##....##",
-            "##....##", "##....##", "##....##", "##....##", "##..####", "##..####",
-            "######..", "######.."]
-LETTER_M = ["##......##", "##......##", "####..####", "####..####", "##..##..##",
-            "##..##..##", "##......##", "##......##", "##......##", "##......##",
-            "##......##", "##......##", "##......##", "##......##"]
-LETTER_B = ["######..", "######..", "##....##", "##....##", "##....##", "##....##",
-            "######..", "######..", "##....##", "##....##", "##....##", "##....##",
-            "######..", "######.."]
-LETTER_O = ["..####..", "..####..", "##....##", "##....##", "##....##", "##....##",
-            "##....##", "##....##", "..####..", "..####.."]
-LETTER_T = ["..##..", "..##..", "..##..", "..##..", "######", "######", "..##..",
-            "..##..", "..##..", "..##..", "..##..", "..##..", "..####", "..####"]
-DIGIT_1 = ["..##..", "####..", "..##..", "..##..", "..##..", "..##..", "..##..",
-           "..##..", "######", "######"]
-DIGIT_2 = ["######", "######", "....##", "....##", "######", "######", "##....",
-           "##....", "######", "######"]
-DIGIT_8 = ["######", "######", "##..##", "##..##", "######", "######", "##..##",
-           "##..##", "######", "######"]
+LETTERS = {
+    'D': ["######..", "#######.", "##....##", "##....##", "##....##",
+          "##....##", "##....##", "##....##", "#######.", "######.."],
+    'M': ["##......##", "###....###", "####..####", "##.####.##", "##..##..##",
+          "##......##", "##......##", "##......##", "##......##", "##......##"],
+    'B': ["######..", "#######.", "##....##", "##....##", "#######.",
+          "#######.", "##....##", "##....##", "#######.", "######.."],
+    'O': ["..####..", ".######.", "##....##", "##....##", "##....##",
+          "##....##", "##....##", "##....##", ".######.", "..####.."],
+    'T': ["##########", "##########", "....##....", "....##....", "....##....",
+          "....##....", "....##....", "....##....", "....##....", "....##...."],
+    '1': ["..##..", ".###..", "####..", "..##..", "..##..",
+          "..##..", "..##..", "..##..", "######", "######"],
+    '2': [".######.", "########", "......##", "......##", ".######.",
+          "#######.", "##......", "##......", "########", "########"],
+    '8': [".######.", "########", "##....##", "##....##", ".######.",
+          ".######.", "##....##", "##....##", "########", ".######."],
+}
+LETTER_GAP = 2                      # Sub-pixels between letters
+
+# Banners: (text, first cell column, first cell row, width and height in
+# cells, letter colour per letter row 1-5)
+BANNERS = [
+    ("DMBOOT", 0, 0, 40, 7, "12244"),
+    ("128", 22, 9, 17, 7, "44444"),
+]
+
+# Drips under the title banner: UBoot64 splash row 7 (screen codes, and
+# 'B' = banner colour, 'W' = white bubble)
+DRIPS_CODES = [0x20, 0x7c, 0x6c, 0x20, 0x7c, 0x20, 0x20, 0x7c, 0x7c, 0x20, 0x6c, 0x20, 0x7c,
+               0x7c, 0x20, 0x20, 0x7c, 0x7c, 0x20, 0x20, 0x7c, 0x20, 0x20, 0x7c, 0x7c, 0x20,
+               0x6c, 0x20, 0x7c, 0x20, 0x20, 0x7c, 0x7c, 0x20, 0x6c, 0x7c, 0x20, 0x7e, 0x7c, 0x20]
+DRIPS_COLOURS = "BBWBWBBBBBWBWBBBBBBBBBBBBBWBBBBBBBWBBWBB"
+DRIPS_ROW = 7
 
 # Plain text lines: (text, row, first 40-column cell, 40-column cells
 # reserved, colour); in 80 columns centred on the same area
 TEXTS = [
-    ("Device Manager", 15, 22, 16, 'G'),
-    ("Boot Menu", 16, 22, 16, 'G'),
+    ("Device Manager", 18, 22, 17, 'G'),
+    ("Boot Menu", 19, 22, 17, 'G'),
     ("Written 2020-2026 by Xander Mol", 23, 0, 40, 'T'),
     ("idreamtin8bits.com", 24, 0, 40, 'T'),
 ]
@@ -175,26 +191,37 @@ TEXTS = [
 # ---------------------------------------------------------------------------
 # VIC screen
 # ---------------------------------------------------------------------------
-sub = [[' '] * 80 for _ in range(50)]  # Sub-pixel grid of the block letters
 
 
-def stamp(sx, sy, rows, colour_top, colour_bottom=None, split=None):
-    for dy, row in enumerate(rows):
-        for dx, ch in enumerate(row):
-            if ch == '#':
-                sub[sy + dy][sx + dx] = colour_bottom if (split is not None and dy >= split) else colour_top
-
-
-x, y = 12, 0
-stamp(x, y, LETTER_D, 'C', 'c', 8); x += 10
-stamp(x, y, LETTER_M, 'C', 'c', 8); x += 12
-stamp(x, y, LETTER_B, 'O', 'o', 8); x += 10
-stamp(x, y + 4, LETTER_O, 'O', 'o', 4); x += 10
-stamp(x, y + 4, LETTER_O, 'O', 'o', 4); x += 10
-stamp(x, y, LETTER_T, 'O', 'o', 8)
-stamp(48, 18, DIGIT_1, 'W')
-stamp(56, 18, DIGIT_2, 'W')
-stamp(64, 18, DIGIT_8, 'W')
+def banner(cells, text, col, row, width, height, rowcolours):
+    """Draw a banner with outlined letters into the VIC cells."""
+    w, h = width * 2, height * 2
+    letters = [LETTERS[ch] for ch in text]
+    total = sum(len(l[0]) for l in letters) + LETTER_GAP * (len(letters) - 1)
+    x = ((w - total) // 2) & ~1                     # Strokes on whole characters
+    y = (h - 10) // 2
+    mask = np.zeros((h, w), dtype=bool)
+    for l in letters:
+        for dy, line in enumerate(l):
+            for dx, ch in enumerate(line):
+                if ch == '#':
+                    mask[y + dy, x + dx] = True
+        x += len(l[0]) + LETTER_GAP
+    grown = mask.copy()                              # Outline: one sub-pixel around
+    for dy in (-1, 0, 1):
+        for dx in (-1, 0, 1):
+            grown |= np.roll(np.roll(mask, dy, axis=0), dx, axis=1)
+    for cy in range(height):
+        for cx in range(width):
+            m = mask[cy * 2:cy * 2 + 2, cx * 2:cx * 2 + 2].reshape(4)
+            g = grown[cy * 2:cy * 2 + 2, cx * 2:cx * 2 + 2].reshape(4)
+            if m.any():
+                letter_row = min(max((cy * 2 - y) // 2, 0), 4)
+                cells[row + cy][col + cx] = (QUARTERS[tuple(int(v) for v in m)],
+                                             rowcolours[letter_row])
+            else:
+                fill = tuple(int(not v) for v in g)  # Banner colour outside the outline
+                cells[row + cy][col + cx] = (QUARTERS[fill], 'B')
 
 
 def screencode(ch, lower):
@@ -210,14 +237,10 @@ def screencode(ch, lower):
 def vic_screen():
     """40x25 cells of (screen code, colour key)."""
     cells = [[(0x20, 'G') for _ in range(40)] for _ in range(25)]
-    for cy in range(25):
-        for cx in range(40):
-            px = [sub[cy * 2][cx * 2], sub[cy * 2][cx * 2 + 1],
-                  sub[cy * 2 + 1][cx * 2], sub[cy * 2 + 1][cx * 2 + 1]]
-            lit = [p for p in px if p != ' ']
-            if lit:
-                bits = tuple(0 if p == ' ' else 1 for p in px)
-                cells[cy][cx] = (QUARTERS[bits], max(set(lit), key=lit.count))
+    for b in BANNERS:
+        banner(cells, *b)
+    for cx, (code, colour) in enumerate(zip(DRIPS_CODES, DRIPS_COLOURS)):
+        cells[DRIPS_ROW][cx] = (code, colour if colour != ' ' else 'B')
     for r, (glyphs, colours) in enumerate(zip(BOOT_GLYPHS, BOOT_COLOURS)):
         for c, (g, col) in enumerate(zip(glyphs, colours)):
             if g != ' ':
