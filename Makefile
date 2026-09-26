@@ -123,6 +123,11 @@ ULTIP1  ?= <set_ULTIP1_in_.env>
 ULTUSB  ?= Usb1
 ULTPATH  = /$(ULTUSB)/11/
 ULTFTP1  = ftp://$(ULTIP1)$(ULTPATH)
+# Optional second machine (ULTIP2 in .env), with its own USB directory name
+ULTUSB2 ?= $(ULTUSB)
+ifdef ULTIP2
+ULTFTP2  = ftp://$(ULTIP2)/$(ULTUSB2)/11/
+endif
 
 # Release ZIP
 ZIP = build/dmboot_$(VERSION).zip
@@ -131,7 +136,7 @@ README = README.pdf
 ########################################
 
 .SUFFIXES:
-.PHONY: all build test-build test clean deploy check-deploy docs zip
+.PHONY: all build test-build test clean deploy deploy2 check-deploy check-deploy2 docs zip
 
 all: build $(README) zip
 
@@ -183,3 +188,14 @@ check-deploy:
 # directory. NOTE: overwrites autostart.128.prg there.
 deploy: check-deploy
 	wput -u --basename=build/ $(BUILD_PRGS) $(ULTFTP1)
+
+# Same for the second machine
+check-deploy2:
+ifndef ULTIP2
+	$(error ULTIP2 is not set in .env)
+endif
+	@curl -s --connect-timeout 3 $(ULTFTP2) >/dev/null 2>&1 || \
+		(echo "ERROR: Cannot reach Ultimate at $(ULTIP2) -- check ULTIP2 in .env" && false)
+
+deploy2: check-deploy2
+	wput -u --basename=build/ $(BUILD_PRGS) $(ULTFTP2)
