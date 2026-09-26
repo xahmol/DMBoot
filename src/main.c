@@ -89,7 +89,9 @@ struct DWin console;
 // ---------------------------------------------------------------------------
 // Title:       Set CPU speed
 // Description: Switches the C128 between 1 MHz and 2 MHz and records the
-//              state in sysinfo.
+//              state in sysinfo. At 2 MHz the VIC gets no memory cycles and
+//              shows garbage, so its display is blanked (as BASIC's FAST
+//              does: $D011 AND $6F) and switched on again at 1 MHz.
 // Syntax:      void cpu_set_fast(bool fast);
 // Input:       fast - true for 2 MHz, false for 1 MHz
 // Output:      sysinfo.fast
@@ -97,14 +99,17 @@ struct DWin console;
 void cpu_set_fast(bool fast)
 {
     volatile char *clock = (volatile char *)VIC_CLOCK_REG;
+    volatile char *ctrl1 = (volatile char *)VIC_CTRL1_REG;
 
     if (fast)
     {
+        *ctrl1 &= ~(VIC_CTRL1_DEN | VIC_CTRL1_RST8);
         *clock |= VIC_CLOCK_FAST;
     }
     else
     {
         *clock &= ~VIC_CLOCK_FAST;
+        *ctrl1 = (*ctrl1 & ~VIC_CTRL1_RST8) | VIC_CTRL1_DEN;
     }
     sysinfo.fast = fast ? 1 : 0;
 }
@@ -457,6 +462,7 @@ int main(void)
 
     if (!dmb_startup())
     {
+        cpu_set_fast(false);
         bnk_exit();
         dmb_exit();
     }

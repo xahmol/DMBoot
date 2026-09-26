@@ -157,7 +157,7 @@ static void exec_to_basic(void)
     volatile char *keybuffer = (volatile char *)KEYBUF_ADDRESS;
     char keys = 0;
 
-    *(volatile char *)VIC_CLOCK_REG &= ~VIC_CLOCK_FAST;
+    cpu_set_fast(false);
 
     // Give the KERNAL its own clean screen set-up back (also clears it)
     dwin_exit();

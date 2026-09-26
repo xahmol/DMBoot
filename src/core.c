@@ -59,6 +59,7 @@ void errorexit(const char *message)
     dwin_put_string(&console, message, cfg.colors.error);
     dwin_put_string(&console, "\nPress a key to exit to BASIC.\n", cfg.colors.text);
     dwin_getch();
+    cpu_set_fast(false);
     dwin_exit();
     bnk_exit();
     dmb_exit();

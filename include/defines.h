@@ -58,6 +58,9 @@ BUT WITHOUT ANY WARRANTY. USE THEM AT YOUR OWN RISK!
 #define KEYBUF_SIZE         10      // Keyboard buffer length in bytes
 #define VIC_CLOCK_REG       0xd030  // VIC-IIe clock register, bit 0 = 2 MHz
 #define VIC_CLOCK_FAST      0x01
+#define VIC_CTRL1_REG       0xd011  // VIC control register 1
+#define VIC_CTRL1_DEN       0x10    // Display enable
+#define VIC_CTRL1_RST8      0x80    // Raster compare bit 8: kept 0, as BASIC FAST does
 #define MODE_80COL_FLAG     0x80
 
 // ---------------------------------------------------------------------------
@@ -296,5 +299,6 @@ extern struct DWin console;      // Scrolling message window (src/main.c)
 
 // Functions in src/main.c used by the overlays
 void screen_swap(void);
+void cpu_set_fast(bool fast);
 
 #endif // DEFINES_H
