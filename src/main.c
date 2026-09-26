@@ -245,7 +245,7 @@ void print_devices(void)
     static const char *const names[UII_DEVINFO_COUNT] = { "Drive A", "Drive B", "SoftIEC", "Printer" };
     char active[IEC_ID_COUNT];
 
-    dwin_put_string(&console, "\nUltimate devices:\n", cfg.colors.text);
+    dwin_put_string(&console, "Ultimate devices:\n", cfg.colors.text);
     for (char x = 0; x < UII_DEVINFO_COUNT; x++)
     {
         if (uii_devinfo[x].exist)

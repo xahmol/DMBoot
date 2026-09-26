@@ -215,6 +215,10 @@ void ntp_update(void)
         if (!UII_SUCCESS)
         {
             ntp_report("Setting the clock failed: ", uii_status);
+            ntp_report("Reply: ", uii_data);
+            sprintf(textbuf, "Sent: %u %u %u %u %u %u", uiitime[0], uiitime[1], uiitime[2], uiitime[3],
+                    uiitime[4], uiitime[5]);
+            ntp_report(textbuf, NULL);
             return;
         }
         uii_get_time();
