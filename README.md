@@ -77,7 +77,7 @@ Notes on the conversion:
 |---|---|
 | **0-9, A-Z** | Start the slot (Shift + letter works too) |
 | **F1** | File browser |
-| **F2** | Information |
+| **F2** | Splash screen and information |
 | **F3** | Edit, re-order and delete slots |
 | **F4** | Configuration |
 | **F5** | Go to C64 mode |
@@ -120,7 +120,7 @@ Disk image mounts, **M** and REU images need the dirtrace on the hyperspeed driv
 
 ### F2: Information
 
-Shows the version, the Ultimate, the REU size, the screen mode, the Device Manager API version and the credits.
+Shows first the splash screen, and after pressing any key the information screen: the version, the Ultimate, the REU size, the screen mode, the Device Manager API version and the credits. Press any key to return to the main menu.
 
 ### F3: Edit, re-order and delete
 

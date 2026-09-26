@@ -96,6 +96,7 @@ An application therefore needs only one palette, whatever the screen.
 | `void dwin_screen_colors(char border, char background)` | VIC: border and background. VDC: background (the VDC has no separate border). |
 | `bool dwin_is80(void)` | true in 80 column mode. |
 | `void dwin_swap_screen(void)` | Make the other screen (40/80 columns) active: KERNAL `SWAPPER` (`$FF5F`, with Oscar64's zero page `$F7`-`$F9` kept, which SWAPPER exchanges with `$0A57`-`$0A59`), then mode, width and the lower/upper case charset. Drops open popups. The caller re-initialises its windows (sizes depend on the width), sets colours, sets 1 MHz before drawing on the VIC screen, and redraws. |
+| `void dwin_vic_charset(bool lower)` | 40 column screen only: switch the VIC to the lower/upper case set (`true`) or the upper case/graphics set (`false`) through KERNAL `CHROUT` (14 / 142); the KERNAL interrupt rewrites the charset register from a shadow copy, so a direct VIC write does not last. DualWin text needs the lower case set: switch back after a graphics screen. |
 | `void dwin_exit(void)` | Hand the screen back to the KERNAL before exiting to BASIC: switches a 64 KB VDC back to 16 KB addressing, then calls KERNAL `CINT` (`$FF81`), which re-initialises the screen editor and both screens (colours, charsets, cleared screens). `CINT` picks the screen from the 40/80 key; if DualWin was on the other screen (after `dwin_swap_screen`), it swaps back to that one, so BASIC continues on the screen the user was on. |
 
 ### Windows

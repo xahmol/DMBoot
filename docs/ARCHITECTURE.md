@@ -11,7 +11,7 @@ this document describes the result. Numbers are from the build of
 |---|---|---|
 | `autostart.128.prg` | DMBoot, started by the Device Manager ROM | `src/main.c` (Oscar64 `c128e`) |
 | `dmblmc.prg` | Low-memory code (LMC), loaded to `$1300` | `#pragma overlay(dmblmc, 1)` in `include/banking.c` |
-| `dmbovl1.prg` .. `dmbovl5.prg` | Overlays, loaded once at start-up into their stores | `#pragma overlay(dmbovlN, N+1)` in the overlay sources |
+| `dmbovl1.prg` .. `dmbovl6.prg` | Overlays, loaded once at start-up into their stores | `#pragma overlay(dmbovlN, N+1)` in the overlay sources |
 | `dmbupd45.prg` | Upgrade tool v4 -> v5 (standalone) | `src/dmbupd45.c` |
 | `dmbconf.cfg` | Configuration (`struct ConfigStruct`, 1203 bytes; new fields are appended, older shorter files still read) | written by DMBoot / dmbupd45 |
 | `dmbslots.cfg` | 36 slots (`struct SlotStruct`, 1360 bytes each) | written by DMBoot / dmbupd45 |
@@ -55,6 +55,7 @@ function ROM at `$8000`), and the GEOS RAM boot `geos_boot`
 | 3 | `dmbovl3` | `src/browse.c` | File browser (F1), slot picking | 8.0 KB |
 | 4 | `dmbovl4` | `src/config.c` | NTP update, configuration (F4), information (F2) | 5.8 KB |
 | 5 | `dmbovl5` | `src/exec.c` | Slot start, go 64, exit, GEOS RAM boot (F6) | 4.5 KB |
+| 6 | `dmbovl6` | `src/splash.c` | Splash screen (F2), packed data from `assets/splash.petmate` | 2.6 KB |
 
 Sizes include the overlay's own variables. The slot is 10 KB
 (`OVERLAYSIZE $2800`).
@@ -66,6 +67,11 @@ Rules:
 - Functions called from resident code are `__noinline`.
 - `loadoverlay(n)` copies the image from its store; there is no disk
   access after start-up.
+
+The splash screen is designed in Petmate9 (`assets/splash.petmate`, 40 and
+80 column screens). `tools/petmate2c.py` packs it (PackBits) into
+`src/splashdata.c`; `make` regenerates that file when the Petmate9 file
+changes. `tools/splashgen.py` created the first design.
 
 ## 3. Memory map
 
@@ -96,7 +102,7 @@ and back to 1 KB on exit.
 | `$6800`-`$8FFF` | Store of overlay 2 |
 | `$9000`-`$B7FF` | Store of overlay 3 |
 | `$B800`-`$DFFF` | Store of overlay 4 |
-| `$E000`-`$FEFF` | Free |
+| `$E000`-`$FEFF` | Store of overlay 6 (small store: at most `OVERLAY_SMALL_SIZE` = `$1F00` bytes, enforced by its region) |
 
 ### REU (at least 128 KB, required)
 

@@ -40,6 +40,7 @@ Code and resources from others used:
 
 // Characters
 #define DWIN_CHR_LOWERCASE  0x0e    // CHROUT: switch to lower/upper case charset
+#define DWIN_CHR_UPPERCASE  0x8e    // CHROUT: switch to upper case/graphics charset
 #define DWIN_CHR_SPACE      0x20
 #define DWIN_CHR_INSERT     0x94    // Shift-DEL
 #define DWIN_CHR_NEWLINE_LF 0x0a
@@ -374,6 +375,23 @@ void dwin_swap_screen(void)
     dwin_state.width = (dwin_state.mode == DWIN_MODE_VDC) ? DWIN_VDC_WIDTH : DWIN_VIC_WIDTH;
     dwin_state.popups = 0;
     dwin_chrout(DWIN_CHR_LOWERCASE);
+}
+
+// ---------------------------------------------------------------------------
+// Title:       VIC character set
+// Description: Switches the 40 column screen between the lower/upper case
+//              and the upper case/graphics character set, through the
+//              KERNAL (its interrupt rewrites the VIC charset register from
+//              a shadow copy, so a direct write does not last). Only for the
+//              40 column screen: DualWin text needs the lower case set, so
+//              switch back after a graphics screen.
+// Syntax:      void dwin_vic_charset(bool lower);
+// Input:       lower - true: lower/upper case, false: upper case/graphics
+// Output:      None
+// ---------------------------------------------------------------------------
+void dwin_vic_charset(bool lower)
+{
+    dwin_chrout(lower ? DWIN_CHR_LOWERCASE : DWIN_CHR_UPPERCASE);
 }
 
 // ---------------------------------------------------------------------------

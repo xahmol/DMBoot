@@ -48,6 +48,7 @@ bank 0 under ROM, REU DMA at 2 MHz, Device Manager API, test mailbox).
 #include "browse.h"
 #include "config.h"
 #include "exec.h"
+#include "splash.h"
 
 // Resident program region: everything below the overlay load slot
 #pragma region(dmboot, RESIDENT_START, OVERLAYLOAD, , , { code, data, bss, heap, stack })
@@ -75,11 +76,12 @@ char overlay_active = OVERLAY_NONE;
 // Overlay stores (index = overlay number - 1), see docs/REBUILD_PLAN.md §4.
 // An empty name marks an overlay of a later phase.
 static const struct OverlayStore overlay_store[OVERLAY_COUNT] = {
-    { BNK_1_FULL, OVERLAY_STORE_BANK1_1, "dmbovl1", "main menu" },
-    { BNK_1_FULL, OVERLAY_STORE_BANK1_2, "dmbovl2", "slot editing" },
-    { BNK_1_FULL, OVERLAY_STORE_BANK1_3, "dmbovl3", "file browser" },
-    { BNK_1_FULL, OVERLAY_STORE_BANK1_4, "dmbovl4", "configuration" },
-    { BNK_0_FULL, OVERLAY_STORE_BANK0_1, "dmbovl5", "slot start" },
+    { BNK_1_FULL, OVERLAY_STORE_BANK1_1, OVERLAYSIZE, "dmbovl1", "main menu" },
+    { BNK_1_FULL, OVERLAY_STORE_BANK1_2, OVERLAYSIZE, "dmbovl2", "slot editing" },
+    { BNK_1_FULL, OVERLAY_STORE_BANK1_3, OVERLAYSIZE, "dmbovl3", "file browser" },
+    { BNK_1_FULL, OVERLAY_STORE_BANK1_4, OVERLAYSIZE, "dmbovl4", "configuration" },
+    { BNK_0_FULL, OVERLAY_STORE_BANK0_1, OVERLAYSIZE, "dmbovl5", "slot start" },
+    { BNK_1_FULL, OVERLAY_STORE_BANK1_5, OVERLAY_SMALL_SIZE, "dmbovl6", "splash screen" },
 };
 
 // Windows
@@ -168,7 +170,7 @@ bool overlays_preload(void)
             return false;
         }
         bnk_memcpy(store->mmucr, (volatile char *)store->address,
-                   BNK_0_FULL, (volatile char *)OVERLAYLOAD, OVERLAYSIZE);
+                   BNK_0_FULL, (volatile char *)OVERLAYLOAD, store->size);
     }
 
     // The load slot now holds the last loaded file, not a selected overlay
@@ -194,7 +196,7 @@ void loadoverlay(char number)
 
     const struct OverlayStore *store = &overlay_store[number - 1];
     bnk_memcpy(BNK_0_FULL, (volatile char *)OVERLAYLOAD,
-               store->mmucr, (volatile char *)store->address, OVERLAYSIZE);
+               store->mmucr, (volatile char *)store->address, store->size);
     overlay_active = number;
     tm_sync();
 }
@@ -490,6 +492,9 @@ int main(void)
             }
             break;
         case KEY_F2:
+            // Splash first (as UBoot64), a key shows the information
+            loadoverlay(OVERLAY_SPLASH);
+            splash_show();
             loadoverlay(OVERLAY_CONFIG);
             information();
             break;

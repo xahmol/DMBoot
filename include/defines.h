@@ -79,13 +79,15 @@ BUT WITHOUT ANY WARRANTY. USE THEM AT YOUR OWN RISK!
 #define OVERLAY_STORE_BANK1_3   0x9000
 #define OVERLAY_STORE_BANK1_4   0xb800
 #define OVERLAY_STORE_BANK0_1   0xc000
+#define OVERLAY_STORE_BANK1_5   0xe000  // Up to $FEFF: small overlays only
+#define OVERLAY_SMALL_SIZE      0x1f00  // Region size of an overlay stored there
 
 // DualWin popup background storage (bank 1)
 #define WINDOW_STORE_BASE       0x2000
 #define WINDOW_STORE_SIZE       0x2000
 
 // Number of overlays (see the overlay table in src/main.c)
-#define OVERLAY_COUNT       5
+#define OVERLAY_COUNT       6
 #define OVERLAY_NONE        0       // Value of overlay_active when none is loaded
 #define OVERLAY_NAME_MAX    17      // CBM filename (16) plus terminator
 
@@ -250,6 +252,7 @@ struct OverlayStore
 {
     char mmucr;             // MMU $FF00 value to reach the store (BNK_1_FULL / BNK_0_FULL)
     unsigned address;       // Start address of the store in that bank
+    unsigned size;          // Bytes copied (OVERLAYSIZE, or less for a small store)
     char name[OVERLAY_NAME_MAX]; // Overlay file name (without partition prefix)
     const char *purpose;    // What the overlay contains (start-up messages)
 };

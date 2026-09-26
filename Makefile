@@ -43,7 +43,7 @@ CC = /home/xahmol/oscar64/bin/oscar64
 MAIN = dmboot
 AUTOSTART = autostart.128.prg
 LMC = dmblmc
-OVERLAYS = dmbovl1 dmbovl2 dmbovl3 dmbovl4 dmbovl5
+OVERLAYS = dmbovl1 dmbovl2 dmbovl3 dmbovl4 dmbovl5 dmbovl6
 UPGRADER = dmbupd45
 
 # Build versioning
@@ -85,6 +85,7 @@ MAIN_SRCS = src/main.c \
             src/config.c src/config.h \
             src/timeconv.c src/timeconv.h \
             src/exec.c src/exec.h \
+            src/splash.c src/splash.h src/splashdata.c \
             src/dmpaths.c src/dmpaths.h \
             src/core.c src/core.h \
             src/fileio.c src/fileio.h \
@@ -145,6 +146,11 @@ build: $(MAIN_SRCS) build/$(UPGRADER).prg
 	@$(MKDIR) build 2>$(NULLDEV) ; true
 	$(CC) $(CFLAGS) -n -o=build/$(MAIN).prg src/main.c
 	cp build/$(MAIN).prg build/$(AUTOSTART)
+
+# Splash screen data from the Petmate9 file (edit assets/splash.petmate in
+# Petmate9, https://github.com/wbochar/petmate9)
+src/splashdata.c: assets/splash.petmate tools/petmate2c.py
+	python3 tools/petmate2c.py assets/splash.petmate src/splashdata.c
 
 # Upgrade tool (no test mode variant)
 build/$(UPGRADER).prg: $(UPD_SRCS)

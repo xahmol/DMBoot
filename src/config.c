@@ -854,48 +854,22 @@ void config_edit(void)
 // Information
 // ===========================================================================
 
-// ---------------------------------------------------------------------------
-// Title:       Splash
-// Description: Simple text logo, centred for 40 or 80 columns. Kept behind
-//              one function so PETSCII art can replace it later.
-// Syntax:      static char splash(void);
-// Input:       None
-// Output:      First free row below the logo
-// ---------------------------------------------------------------------------
-static char splash(void)
-{
-    static const char *const logo[] = {
-        "+--------------------------------+",
-        "|         D M B o o t  128       |",
-        "|   Device Manager Boot Menu     |",
-        "+--------------------------------+"
-    };
-    char rows = sizeof(logo) / sizeof(logo[0]);
-    char x = (screenwin.wx - strlen(logo[0])) / 2;
-
-    for (char r = 0; r < rows; r++)
-    {
-        dwin_putat_string(&screenwin, x, 2 + r, logo[r], (r == 1) ? cfg.colors.header1 : cfg.colors.text);
-    }
-    return 2 + rows + 1;
-}
+#define INFO_ROW            3       // First text row below the header
 
 // ---------------------------------------------------------------------------
 // Title:       Information
-// Description: Splash, version, system information and credits; any key
-//              returns.
+// Description: Version, system information and credits (shown after the
+//              splash screen, overlay 6); any key returns.
 // Syntax:      void information(void);
 // Input:       None
 // Output:      None
 // ---------------------------------------------------------------------------
 void information(void)
 {
-    char row;
-
     dwin_clear(&screenwin);
-    row = splash();
+    headertext("Information", 1);
 
-    dwin_cursor_move(&screenwin, 0, row);
+    dwin_cursor_move(&screenwin, 0, INFO_ROW);
     dwin_printf(&screenwin, cfg.colors.text, "Version %s\n", VERSION);
     dwin_put_string(&screenwin, "Written by Xander Mol, 2020-2026.\n\n", cfg.colors.text);
 

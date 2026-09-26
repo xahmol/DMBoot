@@ -106,6 +106,7 @@ void dwin_setup(char storecr, char *storebase, unsigned storesize);
 void dwin_screen_colors(char border, char background);
 bool dwin_is80(void);
 void dwin_swap_screen(void);
+void dwin_vic_charset(bool lower);
 void dwin_exit(void);
 
 // Windows
