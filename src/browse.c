@@ -340,11 +340,50 @@ static void dir_link(unsigned long address, unsigned long *last)
     *last = address;
 }
 
+// Progress bar while reading (as DMBoot v4): each character cell fills in
+// four steps; the last two are the reversed right-quarter block and a
+// reversed space
+#define PROGRESS_X          5       // After "[nn] "
+#define PROGRESS_STEPS      4
+static const char progress_chars[PROGRESS_STEPS] = { 0xa5, 0xa1, 0xa7, ' ' };
+static const bool progress_reverse[PROGRESS_STEPS] = { false, false, true, true };
+
+// ---------------------------------------------------------------------------
+// Title:       Directory read progress
+// Description: Draws the next step of the progress bar on the progress row:
+//              only the one changed cell. When the bar reaches the width of
+//              the listing it is cleared and starts again.
+// Syntax:      static void dir_progress(unsigned step);
+// Input:       step - number of entries read so far (from 0)
+// Output:      None
+// ---------------------------------------------------------------------------
+static void dir_progress(unsigned step)
+{
+    char width = (dwin_is80() ? PANEL_X_80 : PANEL_X_40) - PROGRESS_X - 1;
+    unsigned cells = step / PROGRESS_STEPS;
+    char phase = step % PROGRESS_STEPS;
+    char cell[2] = { progress_chars[phase], 0 };
+    char x = PROGRESS_X + cells % width;
+
+    if (!phase && x == PROGRESS_X && cells)
+    {
+        dwin_fill_rect(&screenwin, PROGRESS_X, DIR_PROGRESS_ROW, width, 1, ' ', cfg.colors.text);
+    }
+    if (progress_reverse[phase])
+    {
+        dwin_putat_string_reverse(&screenwin, x, DIR_PROGRESS_ROW, cell, cfg.colors.text);
+    }
+    else
+    {
+        dwin_putat_string(&screenwin, x, DIR_PROGRESS_ROW, cell, cfg.colors.text);
+    }
+}
+
 // ---------------------------------------------------------------------------
 // Title:       Read the directory into the REU
 // Description: Reads the directory of the browsed device into a linked list
 //              in the REU (from DIR_REU_START up to the top of the REU) and
-//              selects the first entry. Shows the number of entries read.
+//              selects the first entry. Shows a progress bar while reading.
 // Syntax:      static bool dir_read(void);
 // Input:       bs.device, bs.sorted
 // Output:      true when the directory could be opened
@@ -358,7 +397,8 @@ static bool dir_read(void)
     dir.limit = (unsigned long)sysinfo.reupages * REU_PAGE_BYTES;
     diskid[0] = 0;
 
-    char countx = dwin_putat_string(&screenwin, 0, DIR_PROGRESS_ROW, "Reading directory: ", cfg.colors.text);
+    sprintf(line, "[%02u]", bs.device);
+    dwin_putat_string(&screenwin, 0, DIR_PROGRESS_ROW, line, cfg.colors.text);
     if (!dir_open(bs.device))
     {
         dwin_fill_rect(&screenwin, 0, DIR_PROGRESS_ROW, screenwin.wx, 1, ' ', cfg.colors.text);
@@ -399,11 +439,8 @@ static bool dir_read(void)
         dir_store_meta(dir.address, &entry.meta);
         reu128_store(dir.address + sizeof(entry.meta), (const volatile char *)entry.name, entry.meta.length);
         dir.address += sizeof(entry.meta) + entry.meta.length;
+        dir_progress(dir.count);
         dir.count++;
-
-        // Progress: only the count is redrawn
-        sprintf(line, "%u", dir.count);
-        dwin_putat_string(&screenwin, countx, DIR_PROGRESS_ROW, line, cfg.colors.text);
     }
     dir_close();
     dwin_fill_rect(&screenwin, 0, DIR_PROGRESS_ROW, screenwin.wx, 1, ' ', cfg.colors.text);

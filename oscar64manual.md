@@ -738,6 +738,15 @@ calls the same function with a multi-byte parameter that changes only in
 some bytes, and a constant that equals the value those bytes had before the
 loop. Check the `.asm` for every `P0`-`P3` store before such calls.
 
+**Oscar64 546b627 (2026-09-26) regression, not isolated:** built with the
+latest main (29 commits after f38a1f2), DMBoot v5's 80 column start-up
+console scrolled wrongly on hardware (earlier lines lost, a line cut off);
+the same source built with f38a1f2 was fine. About 100 functions compiled
+differently; the ones checked by hand (`vdc_hchar`, `dwin_cursor_newline`)
+were equivalent. DMBoot pinned `~/oscar64` to f38a1f2 (detached HEAD) until
+a later version is re-tested. Before adopting a new Oscar64 in a project,
+re-test on hardware; keep the previous binary to compare (`make CC=...`).
+
 **Second confirmed instance (heartbeat-demo, 2026-07-29):** same exact bug,
 same Oscar64 build. detect_reu() (src/detect.c) called the library's
 reu_count_pages() directly and always got 0 (REU check failed on real
