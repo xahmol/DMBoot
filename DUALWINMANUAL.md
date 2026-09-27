@@ -225,3 +225,23 @@ DMBoot carries its own copy of the VDC library suite, taken from VDC Screen Edit
 2. **`vdcwin_put_rect_raw()` filled one attribute byte too many per row.** It passed `w` instead of the zero-based `w - 1` to `vdc_block_fill()`.
 
 VDC Screen Editor 2 itself never hit either bug: its `vdc_hchar()` calls always use widths far above 1 (vertical borders are drawn with `vdc_printc()`), and it never calls `vdcwin_put_rect`.
+
+## 10. Planned: output on both screens at once
+
+Not implemented (decided 2026-09-27: later, when a project needs it).
+Idea: a window gets its own screen, so a program can write different
+output to the VIC and the VDC screen at the same time.
+
+- A `mode` field in `struct DWin`, set by `dwin_init` (default: the active
+  screen, so existing programs behave exactly as now) or by a variant such
+  as `dwin_init_on(win, mode, ...)`.
+- The output functions dispatch on `win->mode` instead of the global
+  `dwin_state.mode` (10 places in `dualwin.c`); clipping uses the width of
+  the window's own screen.
+- `dwin_screen_colors` per screen; popups either with a second, optional
+  background store or on one screen only.
+- Both screens at once need 1 MHz (the VIC shows garbage at 2 MHz). Output
+  through the KERNAL (`CHROUT`) still goes to the active screen only.
+- Cost for existing users such as DMBoot: about 50-100 bytes and one byte
+  per window; retest 40/80 columns, the screen switch and popups after the
+  change.
