@@ -240,6 +240,7 @@ char cmd(char device, const char *command)
 }
 
 #define CD_COMMAND_MAX      64      // "cd:" + DMBoot directory path
+#define PARTITION_COMMAND_MAX 6     // "cp255" plus terminator
 
 // v4 drive commands as raw PETSCII bytes, so no charmap can alter them.
 // $FF after "cd:" is what DMBoot v4 sent to go to the partition root.
@@ -293,6 +294,46 @@ void drive_select_dmboot(void)
     strcpy(command, cd_prefix);
     asc2pet(command + strlen(cd_prefix), uii_data, sizeof(command) - strlen(cd_prefix));
     cmd(sysinfo.bootdevice, command);
+}
+
+// ---------------------------------------------------------------------------
+// Title:       Select a partition
+// Description: Sends the CMD-style "cp<n>" command (firmware 3.15 SoftIEC,
+//              CMD HD, SD2IEC). Not for the Device Manager's own partition
+//              use (cp11/cp0): that stays in drive_root_reset() and
+//              drive_select_dmboot(), which change with a Device Manager
+//              ROM for firmware 3.15.
+// Syntax:      char iec_select_partition(char device, char partition);
+// Input:       device    - IEC device ID
+//              partition - partition number 1-255
+// Output:      DOS status (0 = OK)
+// ---------------------------------------------------------------------------
+char iec_select_partition(char device, char partition)
+{
+    char command[PARTITION_COMMAND_MAX];
+
+    command[0] = cmd_cp0[0];                        // "c"
+    command[1] = cmd_cp0[1];                        // "p"
+    utoa(partition, command + 2, 10);
+    return cmd(device, command);
+}
+
+// ---------------------------------------------------------------------------
+// Title:       Create DMBoot's root partition
+// Description: Adds (or re-points) SoftIEC partition PARTITION_ROOT to the
+//              file system root "/" (firmware 3.15; not stored in flash,
+//              so it is recreated when needed). Firmware without partition
+//              support rejects the command, which is the capability test.
+// Syntax:      bool partition_root_add(void);
+// Input:       None
+// Output:      true when the Ultimate accepted it
+// ---------------------------------------------------------------------------
+bool partition_root_add(void)
+{
+    static const char rootpath[] = { 0x2f, 0x00 };  // "/"
+
+    uii_add_partition(PARTITION_ROOT, partition_root_name, rootpath);
+    return UII_SUCCESS;
 }
 
 // ---------------------------------------------------------------------------

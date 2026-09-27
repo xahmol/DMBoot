@@ -23,6 +23,7 @@ https://github.com/xahmol/DMBoot
 #define CBM_T_LNK           0x03
 #define CBM_T_OTHER         0x04
 #define CBM_T_HEADER        0x05    // Disk header
+#define CBM_T_PARTITION     0x06    // Entry of a partition list ("$=P"); size = partition number
 #define CBM_T_FREE          0x64    // "blocks free" line
 
 #define DIR_LINE_MAX        64      // One IEC directory line

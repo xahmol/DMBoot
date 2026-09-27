@@ -27,6 +27,8 @@ changes (docs/REBUILD_PLAN.md §9).
 
 extern char storagepaths[STORAGE_CANDIDATES][STORAGE_PATH_MAX];
 extern char configpath[STORAGE_PATH_MAX];
+extern char partition_list_name[];
+extern char partition_root_name[];
 extern char configfilename[];
 extern char slotfilename[];
 extern char v4slotfilename[];

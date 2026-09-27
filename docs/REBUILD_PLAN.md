@@ -372,6 +372,14 @@ Old version remains runnable, and the upgrade tool can read the old files and wr
 
 ## 9. Firmware 3.15 preparation (no partition functionality yet)
 
+> **Update 2026-09-27: partition support implemented** (not hardware-tested: the Device Manager ROM does not run on firmware 3.15 yet). What was built, replacing the bullets below where they differ:
+> - **Device Manager partition use stays isolated** in `core.c`: `drive_root_reset()` (`cp11`, `cd`, `cp0`, `cd`) and `drive_select_dmboot()`. `cp11` is exactly what breaks on 3.15 (it selects the firmware's partition 11) and will change with a new Device Manager ROM; nothing else uses the DM numbering.
+> - **Browser F4:** CMD-style partition list (`"$=P"`, upper case P via an identity-charmap string; header skipped; entry size = partition number, not ×254). A drive without partitions sends its files for `"$=P"` (3.14 SoftIEC reads it as a filter; seen on hardware): an entry with a file type means "no partition list". RETURN = `cp<n>`, DEL at the partition root = list again. Works for CMD HD / SD2IEC too.
+> - **Host paths (`SOFTIEC_CMD_GET_FATNAME`, `$05 $22 <chan> "$"`, firmware 3.15+, added with the partitions):** the SoftIEC drive returns the host path of its current directory in any partition (3.15a lists partition *names*, not paths, and `G-P` also only gives the name, so this is the only way to get the path). Used for mounts, M and REU images, and for slots.
+> - **Robust slots on 3.15+:** a browser slot on the SoftIEC drive stores partition 254 (DMBoot's own, at `/`, created with `uii_add_partition` when needed, not kept in flash) plus `cd:` + host path. Independent of the user's partitions and of the dirtrace. Fallback (older firmware, other drives, 254 used by the user): the browsed partition + dirtrace path. The capability check (`GET_FATNAME` works, 254 free or DMBoot's, create accepted) runs once per device in the browser.
+> - **Config F8:** the browser starts in partition 254 (whole file system from the top).
+> - **Slot start:** root reset, then (partition 254: create again) `cp<n>`, then the path.
+
 - **`dmpaths.c` is the only place that knows about the DM layout**:
   - `dm_config_dir()` returns `/usb*/11/`.
   - `dm_filename(name)` returns `11:name`.

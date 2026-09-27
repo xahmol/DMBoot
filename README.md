@@ -105,6 +105,7 @@ The browser shows the IEC devices, starting with the Device Manager's hyperspeed
 | **Cursor keys** | Move; in 80 columns left/right switch between the two columns (left in the left column: parent directory) |
 | **T / HOME, E** | First / last entry |
 | **P / U** | Page down / up |
+| **F4** | Partition list of the drive (firmware 3.15+ SoftIEC, CMD HD, SD2IEC): RETURN selects a partition, DEL at the partition root shows the list again |
 | **D** | Dirtrace on/off |
 | **F5** | BOOT the current directory or disk image |
 | **6** | Start the program in C64 mode (Device Manager) |
@@ -117,6 +118,8 @@ The browser shows the IEC devices, starting with the Device Manager's hyperspeed
 | **F7 / Q** | Back to the main menu |
 
 Disk image mounts, **M** and REU images need the dirtrace on the hyperspeed drive, because slots store them as paths on the Ultimate file system.
+
+**Firmware 3.15 and later:** the SoftIEC drive tells DMBoot the full path of the directory you are in. A slot made there stores that path and DMBoot's own partition 254 (pointing to the root of the file system, created again when needed), so it works whichever partition you browsed in, and no dirtrace path is needed: you can browse first and switch **D** on afterwards. If partition 254 is already one of your own, DMBoot leaves it alone and uses the partition you browsed in with the dirtrace, as on older firmware and on other drives.
 
 ### F2: Information
 
@@ -144,6 +147,7 @@ Shows first the splash screen, and after pressing any key the information screen
 | **F4** | The three NTP servers, edited in turn (empty = not used, STOP = keep). Defaults: time.google.com, time.windows.com, pool.ntp.org |
 | **F5** | Colours: cursor up/down chooses, left/right changes, DEL undoes, F7 back |
 | **F6** | GEOS RAM boot: REU image and size, disk images for drives A and B |
+| **F8** | Root partition (firmware 3.15+): the browser starts in DMBoot's partition 254 at the root of the file system |
 | **F7** | Back; changes are saved now |
 
 **NTP time sync and the Ultimate firmware:** from firmware 3.14d the Ultimate sets its clock itself (Ultimate menu, Network settings: SNTP Enable, time zone and three time servers). DMBoot's own time sync is therefore off by default; switch it on (F1) only for older firmware. DMBoot asks the servers in turn until one answers. The UTC offset (F3) is only used by DMBoot's own sync.

@@ -23,6 +23,8 @@ char cmd(char device, const char *command);
 void drive_root_reset(void);
 void drive_select_dmboot(void);
 void kernal_chrout(char ch);
+char iec_select_partition(char device, char partition);
+bool partition_root_add(void);
 // IEC scan results (iec_scan)
 #define IEC_OTHER           0x01    // A non-Ultimate device on the bus
 #define IEC_HYPERSPEED      0x80    // Device Manager hyperspeed drive

@@ -259,7 +259,8 @@ static void cfg_line(char row, const char *key, const char *label, const char *v
 #define CFG_ROW_HOST        (CFG_ROW0 + 3)  // Three rows, one per server
 #define CFG_ROW_COLOURS     (CFG_ROW0 + 6)
 #define CFG_ROW_GEOS        (CFG_ROW0 + 7)
-#define CFG_ROW_BACK        (CFG_ROW0 + 9)
+#define CFG_ROW_ROOTPART    (CFG_ROW0 + 8)
+#define CFG_ROW_BACK        (CFG_ROW0 + 10)
 #define CFG_SERVER_LABEL_X  5       // "Server 2/3" under "NTP servers"
 
 // ---------------------------------------------------------------------------
@@ -280,11 +281,17 @@ static void cfg_value(char row, const char *value)
 // Title:       Show the changeable values
 // Description: One function per setting, so a change redraws only its
 //              value.
-// Syntax:      static void cfg_show_timeon(void); (and _verbose, _utc;
+// Syntax:      static void cfg_show_timeon(void); (and _verbose, _utc,
+//              _rootpart;
 //              cfg_show_host(char server) for NTP server 0-2)
 // Input:       cfg
 // Output:      None
 // ---------------------------------------------------------------------------
+static void cfg_show_rootpart(void)
+{
+    cfg_value(CFG_ROW_ROOTPART, cfg.iec_root_partition ? "On" : "Off");
+}
+
 static void cfg_show_timeon(void)
 {
     cfg_value(CFG_ROW_TIMEON, cfg.timeon ? "On" : "Off");
@@ -334,7 +341,9 @@ static void cfg_draw(void)
     dwin_putat_string(&screenwin, CFG_SERVER_LABEL_X, CFG_ROW_HOST + 2, "Server 3", cfg.colors.text);
     cfg_line(CFG_ROW_COLOURS, " F5 ", "Colours", NULL);
     cfg_line(CFG_ROW_GEOS, " F6 ", "GEOS RAM boot", NULL);
+    cfg_line(CFG_ROW_ROOTPART, " F8 ", "Root partition", NULL);
     cfg_line(CFG_ROW_BACK, " F7 ", "Back (saves changes)", NULL);
+    cfg_show_rootpart();
     cfg_show_timeon();
     cfg_show_verbose();
     cfg_show_utc();
@@ -834,6 +843,12 @@ void config_edit(void)
         case KEY_F6:
             changed |= cfg_geos();
             cfg_draw();
+            break;
+        case KEY_F8:
+            // Firmware 3.15+: the browser starts in DMBoot's root partition
+            cfg.iec_root_partition = !cfg.iec_root_partition;
+            cfg_show_rootpart();
+            changed = true;
             break;
         case KEY_F7:
         case KEY_STOP:

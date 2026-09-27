@@ -32,6 +32,13 @@ char configfilename[] = "dmbconf.cfg";
 char slotfilename[] = "dmbslots.cfg";
 char v4slotfilename[] = "dmbootconf.prg";   // DMBoot v4 slots (upgrade tool dmbupd45)
 
+// Firmware 3.15 SoftIEC partitions (plan §9). "$=P" needs an upper case P
+// on the wire (firmware parse_open() checks it exactly); the name of
+// DMBoot's own root partition is compared with the raw bytes of the
+// partition list, so both are identity-charmap literals, defined once.
+char partition_list_name[] = "$=P";
+char partition_root_name[] = "DMBOOT";
+
 // Back to the petscii.h charmap for everything that follows
 #pragma charmap(97, 65, 26)
 #pragma charmap(65, 97, 26)

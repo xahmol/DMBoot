@@ -34,6 +34,7 @@ Code and resources from others used:
 #include "fileio.h"
 #include "slotlist.h"
 #include "dirparse.h"
+#include "dmpaths.h"
 #include "browse.h"
 
 #pragma overlay(dmbovl3, 4)
@@ -62,6 +63,7 @@ Code and resources from others used:
 #define DIR_HEADER_MAX      (16 + 1 + DISK_ID_LEN + 1)
 #define BLOCKS_SHOWN_MAX    9999
 #define DEVICE_NONE         0
+#define HOSTPATH_MARGIN     5       // Room for "cd:" and a closing '/'
 
 // What a slot is made from (browse_pick)
 #define PICK_PROGRAM        1       // Run a file from the traced directory
@@ -102,10 +104,15 @@ struct BrowseState
     bool comma1;
     bool demo;
     bool inimage;                   // Traced into a disk image on the SoftIEC drive
-    char imagedepth;                // Length of tracepath before entering the image
+    char imagedepth;                // partdepth outside the entered image
     char tracepath[MAXPATHLEN];     // Traced directories (PETSCII), each followed by '/'
     char imagepath[MAXPATHLEN];     // Ultimate path (ASCII) of the traced image's directory
     char imagefile[MAXFILENAME];    // Traced image file name (ASCII)
+    char partition;                 // Partition selected with F4 (0 = none)
+    char partdepth;                 // Directories entered below the partition root
+    bool partlist;                  // The partition list is shown
+    bool hostpaths;                 // Drive tells its host paths (firmware 3.15+ SoftIEC)
+    bool rootok;                    // Slots use DMBoot's root partition + host path
 };
 
 static struct DirElement entry;     // Selected (or last loaded) entry
@@ -118,8 +125,11 @@ static char diskid[DISK_ID_LEN + 1];
 static char pathbuf[MAXPATHLEN];
 
 static const char *const reg_types[] = { "seq", "prg", "usr", "rel", "vrp" };
-static const char *const oth_types[] = { "del", "cbm", "dir", "lnk", "???", "hdr" };
+static const char *const oth_types[] = { "del", "cbm", "dir", "lnk", "???", "hdr", "prt" };
 static const char cmd_up_bytes[] = { 0x5f, 0 };  // CBM DOS "go up" (left arrow)
+
+static void browse_message(const char *text);
+static bool browse_root_usable(void);
 
 // ===========================================================================
 // Directory storage (REU). Only these two functions know where entries
@@ -200,14 +210,16 @@ static unsigned long dir_walk(unsigned long address, unsigned steps, bool forwar
 
 // ---------------------------------------------------------------------------
 // Title:       Open a directory
-// Description: Opens the "$" file of a device and skips the load address.
-// Syntax:      static bool dir_open(char device);
+// Description: Opens a directory listing ("$", or "$=P" for the partition
+//              list) of a device and skips the load address.
+// Syntax:      static bool dir_open(char device, const char *name);
 // Input:       device - IEC device ID
+//              name   - listing file name
 // Output:      true when open (input switched to it)
 // ---------------------------------------------------------------------------
-static bool dir_open(char device)
+static bool dir_open(char device, const char *name)
 {
-    krnio_setnam("$");
+    krnio_setnam(name);
     if (!krnio_open(DIR_LFN, device, 0) || krnio_status())
     {
         krnio_close(DIR_LFN);
@@ -381,16 +393,26 @@ static void dir_progress(unsigned step)
 
 // ---------------------------------------------------------------------------
 // Title:       Read the directory into the REU
-// Description: Reads the directory of the browsed device into a linked list
-//              in the REU (from DIR_REU_START up to the top of the REU) and
-//              selects the first entry. Shows a progress bar while reading.
-// Syntax:      static bool dir_read(void);
-// Input:       bs.device, bs.sorted
-// Output:      true when the directory could be opened
+// Description: Reads the directory, or the partition list ("$=P", CMD
+//              style: firmware 3.15 SoftIEC, CMD HD, SD2IEC), of the
+//              browsed device into a linked list in the REU (from
+//              DIR_REU_START up to the top of the REU) and selects the first
+//              entry. Shows a progress bar while reading. A drive without a
+//              partition list sends its files for "$=P" (the 3.14 SoftIEC
+//              reads it as a file filter): an entry with a file type means
+//              "no partition list". Partition entries carry the partition
+//              number as their size (not times 254, as UBoot64-v2 found).
+// Syntax:      static bool dir_list(bool partitions);
+// Input:       partitions - true: partition list, false: directory
+//              bs.device, bs.sorted
+// Output:      true when the listing could be read (and, for partitions,
+//              was a partition list)
 // ---------------------------------------------------------------------------
-static bool dir_read(void)
+static bool dir_list(bool partitions)
 {
     unsigned long last = 0;
+    bool sorted = bs.sorted;
+    bool valid = true;
 
     memset(&dir, 0, sizeof(dir));
     dir.address = DIR_REU_START;
@@ -399,8 +421,13 @@ static bool dir_read(void)
 
     sprintf(line, "[%02u]", bs.device);
     dwin_putat_string(&screenwin, 0, DIR_PROGRESS_ROW, line, cfg.colors.text);
-    if (!dir_open(bs.device))
+    if (partitions)
     {
+        bs.sorted = false;                          // Keep the drive's order
+    }
+    if (!dir_open(bs.device, partitions ? partition_list_name : "$"))
+    {
+        bs.sorted = sorted;
         dwin_fill_rect(&screenwin, 0, DIR_PROGRESS_ROW, screenwin.wx, 1, ' ', cfg.colors.text);
         return false;
     }
@@ -430,6 +457,20 @@ static bool dir_read(void)
             dir.free = entry.meta.size;
             break;
         }
+        if (partitions)
+        {
+            if ((entry.meta.type & CBM_T_REG) || entry.meta.type == CBM_T_DEL ||
+                entry.meta.size > PARTITION_MAX)
+            {
+                valid = false;
+                break;
+            }
+            if (entry.meta.size == PARTITION_NONE)
+            {
+                continue;                           // CMD system partition
+            }
+            entry.meta.type = CBM_T_PARTITION;
+        }
         if (dir.address + sizeof(entry.meta) + entry.meta.length > dir.limit)
         {
             break;
@@ -443,6 +484,7 @@ static bool dir_read(void)
         dir.count++;
     }
     dir_close();
+    bs.sorted = sorted;
     dwin_fill_rect(&screenwin, 0, DIR_PROGRESS_ROW, screenwin.wx, 1, ' ', cfg.colors.text);
 
     dir.present = dir.first;
@@ -451,7 +493,21 @@ static bool dir_read(void)
     {
         dir_load(dir.present, &entry);
     }
-    return true;
+    return valid;
+}
+
+// ---------------------------------------------------------------------------
+// Title:       Read the directory
+// Description: Reads the current directory of the browsed device (see
+//              dir_list); the partition list is no longer shown.
+// Syntax:      static bool dir_read(void);
+// Input:       bs.device, bs.sorted
+// Output:      true when the directory could be opened
+// ---------------------------------------------------------------------------
+static bool dir_read(void)
+{
+    bs.partlist = false;
+    return dir_list(false);
 }
 
 // ===========================================================================
@@ -519,17 +575,48 @@ static void dir_print_entry(char pos, bool selected)
 }
 
 // ---------------------------------------------------------------------------
-// Title:       Build the dirtrace path
-// Description: The DOS command that changes to the traced directory:
-//              "cd:/" + trace on the SoftIEC drive, "cd//" + trace on other
-//              drives (as DMBoot v4 pathconcat).
+// Title:       Host path of the current directory
+// Description: Asks the SoftIEC drive for the host path of its current
+//              directory (SOFTIEC_CMD_GET_FATNAME with "$", firmware 3.15+;
+//              correct in any partition). Older firmware rejects it.
+// Syntax:      static bool browse_hostpath(void);
+// Input:       None
+// Output:      true with the path (ASCII) in uii_data
+// ---------------------------------------------------------------------------
+static bool browse_hostpath(void)
+{
+    static const char dirname[] = { 0x24, 0x00 };  // "$"
+
+    uii_get_fatname(0, dirname);
+    return UII_SUCCESS && uii_data[0] == '/' && strlen(uii_data) < MAXPATHLEN - HOSTPATH_MARGIN;
+}
+
+// ---------------------------------------------------------------------------
+// Title:       Build the slot path
+// Description: The DOS command that changes to the current directory for a
+//              slot. On the SoftIEC drive with firmware 3.15+ (bs.rootok):
+//              "cd:" + the host path, used from DMBoot's root partition at
+//              "/" (the slot records PARTITION_ROOT), so no dirtrace is
+//              needed. Otherwise the dirtrace: "cd:/" + trace on the
+//              SoftIEC drive, "cd//" + trace on other drives (as DMBoot v4
+//              pathconcat).
 // Syntax:      static const char *browse_pathconcat(void);
-// Input:       bs.tracepath, bs.softiec
+// Input:       bs.rootok, bs.tracepath, bs.softiec
 // Output:      Pointer to pathbuf (PETSCII)
 // ---------------------------------------------------------------------------
 static const char *browse_pathconcat(void)
 {
-    trace_command(pathbuf, sizeof(pathbuf), bs.tracepath, bs.softiec);
+    static const char cd_prefix[] = { 0x43, 0x44, 0x3a, 0x00 };    // "cd:"
+
+    if (bs.rootok && browse_hostpath())
+    {
+        strcpy(pathbuf, cd_prefix);
+        asc2pet(pathbuf + strlen(cd_prefix), uii_data, sizeof(pathbuf) - strlen(cd_prefix));
+    }
+    else
+    {
+        trace_command(pathbuf, sizeof(pathbuf), bs.tracepath, bs.softiec);
+    }
     return pathbuf;
 }
 
@@ -566,7 +653,7 @@ static void dir_draw(void)
     dwin_fill_rect(&screenwin, 0, DIR_HEADER_ROW, listw, DIR_FOOTER_ROW - DIR_HEADER_ROW + 1, ' ', cfg.colors.text);
 
     // dir.header is at most 23 characters: fits line; clip to the list
-    sprintf(line, "[%u] %s", bs.device, dir.header);
+    sprintf(line, "[%u] %s", bs.device, bs.partlist ? "Partitions" : dir.header);
     line[listw - 1] = 0;
     dwin_putat_string(&screenwin, 0, DIR_HEADER_ROW, line, cfg.colors.text);
     if (bs.trace)
@@ -607,7 +694,7 @@ static void dir_draw(void)
 #define TOGGLE_COMMA1       4
 #define TOGGLE_DEMO         5
 #define TOGGLES             6
-#define TOGGLE_ROW0         (PANEL_ROW0 + 13)
+#define TOGGLE_ROW0         (PANEL_ROW0 + 14)
 
 // ---------------------------------------------------------------------------
 // Title:       Draw one option toggle
@@ -649,8 +736,8 @@ static void browse_panel(void)
     char y = PANEL_ROW0;
     static const char *const keys[] = {
         " F1 Refresh", " +- Device", "RET Run/select", "DEL Dir up", "  \x5e Root",
-        "T/E Top/end", "P/U Page", " F5 Boot dir", "  6 Run in 64", "A/B Add mount",
-        "  M Run mount", " F7 Quit"
+        "T/E Top/end", "P/U Page", " F4 Partitions", " F5 Boot dir", "  6 Run in 64",
+        "A/B Add mount", "  M Run mount", " F7 Quit"
     };
 
     dwin_fill_rect(&screenwin, x, PANEL_ROW0, screenwin.wx - x, DIR_FOOTER_ROW - PANEL_ROW0, ' ', cfg.colors.text);
@@ -722,33 +809,37 @@ static void dir_goto(int target)
 // ===========================================================================
 
 // ---------------------------------------------------------------------------
-// Title:       Ultimate path of the trace
-// Description: The traced directory as an Ultimate file system path:
-//              "/" + trace (PETSCII to ASCII).
+// Title:       Ultimate path of the current directory
+// Description: The current directory of the SoftIEC drive as an Ultimate
+//              file system path, for mounts and REU images. Firmware 3.15+
+//              answers it (SOFTIEC_CMD_GET_FATNAME with "$"), correct in
+//              any partition, also when the partition list shows names
+//              instead of paths (3.15a). Older firmware has no partitions:
+//              then "/" + the dirtrace (PETSCII to ASCII).
 // Syntax:      static void browse_ultpath(char *dst, unsigned size);
 // Input:       dst  - destination
 //              size - size of dst
-// Output:      dst
+// Output:      dst (ending in '/')
 // ---------------------------------------------------------------------------
 static void browse_ultpath(char *dst, unsigned size)
 {
-    trace_ultpath(dst, size, bs.tracepath);
-}
+    unsigned len;
 
-// ---------------------------------------------------------------------------
-// Title:       Go up in the dirtrace
-// Description: Drops the last traced directory and leaves the traced image
-//              when going above it.
-// Syntax:      static void browse_trace_up(void);
-// Input:       None
-// Output:      bs.tracepath, bs.inimage
-// ---------------------------------------------------------------------------
-static void browse_trace_up(void)
-{
-    if (trace_up(bs.tracepath) <= bs.imagedepth)
+    if (bs.hostpaths && browse_hostpath())
     {
-        bs.inimage = false;
+        len = strlen(uii_data);
+        if (len + 1 < size)
+        {
+            strcpy(dst, uii_data);
+            if (dst[len - 1] != '/')
+            {
+                dst[len] = '/';
+                dst[len + 1] = 0;
+            }
+            return;
+        }
     }
+    trace_ultpath(dst, size, bs.tracepath);
 }
 
 // ---------------------------------------------------------------------------
@@ -790,9 +881,19 @@ static bool browse_cd(const char *name)
     }
 
     // Keep trace and drive in step: refuse a directory the trace cannot hold
-    if (bs.trace && name && !up && !trace_fits(bs.tracepath, sizeof(bs.tracepath), name))
+    if (bs.trace && !bs.rootok && name && !up && !trace_fits(bs.tracepath, sizeof(bs.tracepath), name))
     {
         return false;
+    }
+
+    // Entering a disk image (for M, run from the image): its directory is
+    // the current one now, not after the cd. Tracked with the dirtrace, or
+    // always when the drive tells its host paths.
+    bool enterimage = (bs.trace || bs.hostpaths) && name && !up && bs.softiec && !bs.inimage &&
+                      dir_imagekind(name) == IMAGE_DISK;
+    if (enterimage)
+    {
+        browse_ultpath(bs.imagepath, sizeof(bs.imagepath));
     }
 
     status = cmd(bs.device, line);
@@ -805,26 +906,47 @@ static bool browse_cd(const char *name)
         return false;
     }
 
+    // Directories below the partition (or drive) root: DEL at the root
+    // shows the partition list again; leaving an entered image
+    if (!name)
+    {
+        bs.partdepth = 0;
+        bs.inimage = false;
+    }
+    else if (up)
+    {
+        if (bs.partdepth)
+        {
+            bs.partdepth--;
+        }
+        if (bs.inimage && bs.partdepth <= bs.imagedepth)
+        {
+            bs.inimage = false;
+        }
+    }
+    else
+    {
+        if (enterimage)
+        {
+            bs.inimage = true;
+            bs.imagedepth = bs.partdepth;
+            pet2asc(bs.imagefile, name, sizeof(bs.imagefile));
+        }
+        bs.partdepth++;
+    }
+
     if (bs.trace)
     {
         if (!name)
         {
             bs.tracepath[0] = 0;
-            bs.inimage = false;
         }
         else if (up)
         {
-            browse_trace_up();
+            trace_up(bs.tracepath);
         }
         else
         {
-            if (bs.softiec && dir_imagekind(name) == IMAGE_DISK && !bs.inimage)
-            {
-                bs.inimage = true;
-                bs.imagedepth = strlen(bs.tracepath);
-                browse_ultpath(bs.imagepath, sizeof(bs.imagepath));
-                pet2asc(bs.imagefile, name, sizeof(bs.imagefile));
-            }
             trace_add(bs.tracepath, sizeof(bs.tracepath), name);
         }
     }
@@ -850,9 +972,116 @@ static void browse_device(char device)
     bs.trace = false;
     bs.inimage = false;
     bs.tracepath[0] = 0;
+    bs.partition = PARTITION_NONE;
+    bs.partdepth = 0;
+    bs.hostpaths = bs.softiec && browse_hostpath();
+    bs.rootok = bs.hostpaths && browse_root_usable();
     dir_read();
     dir_draw();
     browse_toggle(TOGGLE_TRACE);
+}
+
+// ---------------------------------------------------------------------------
+// Title:       Show the partition list
+// Description: F4: shows the partitions of the browsed device (CMD style
+//              "$=P": firmware 3.15 SoftIEC, CMD HD, SD2IEC) as a list;
+//              RETURN selects one. A device without partitions shows its
+//              directory again with a message.
+// Syntax:      static void browse_partitions(void);
+// Input:       bs.device
+// Output:      None
+// ---------------------------------------------------------------------------
+static void browse_partitions(void)
+{
+    if (dir_list(true) && dir.count)
+    {
+        bs.partlist = true;
+        dir_draw();
+        return;
+    }
+    dir_read();
+    dir_draw();
+    browse_message("No partitions on this drive. Press a key.");
+}
+
+// ---------------------------------------------------------------------------
+// Title:       Select a partition from the list
+// Description: Selects the partition of the chosen list entry ("cp<n>";
+//              the entry's size is the partition number) and shows its
+//              root. The dirtrace starts again at the partition root; new
+//              slots record the partition.
+// Syntax:      static void browse_partition_select(void);
+// Input:       entry
+// Output:      None
+// ---------------------------------------------------------------------------
+static void browse_partition_select(void)
+{
+    char number = (char)entry.meta.size;
+
+    if (iec_select_partition(bs.device, number))
+    {
+        browse_message("Cannot select this partition. Press a key.");
+        return;
+    }
+    bs.partition = number;
+    bs.partdepth = 0;
+    bs.tracepath[0] = 0;
+    bs.inimage = false;
+    dir_read();
+    dir_draw();
+}
+
+// ---------------------------------------------------------------------------
+// Title:       Can DMBoot use its root partition
+// Description: Checks that partition PARTITION_ROOT is free or already
+//              DMBoot's (the list shows its path "/" on firmware 3.15, its
+//              name on 3.15a), then creates it at "/" (idempotent, not kept
+//              in flash). A partition of the user's own on that number is
+//              left alone. Uses the directory list in the REU: read the
+//              directory again afterwards.
+// Syntax:      static bool browse_root_usable(void);
+// Input:       bs.device
+// Output:      true when partition PARTITION_ROOT points to "/"
+// ---------------------------------------------------------------------------
+static bool browse_root_usable(void)
+{
+    static const char rootpath[] = { 0x2f, 0x00 };     // "/"
+
+    if (dir_list(true))
+    {
+        for (unsigned long address = dir.first; address; address = entry.meta.next)
+        {
+            dir_load(address, &entry);
+            if (entry.meta.size == PARTITION_ROOT && strcmp(entry.name, rootpath) &&
+                strcmp(entry.name, partition_root_name))
+            {
+                return false;
+            }
+        }
+    }
+    return partition_root_add();
+}
+
+// ---------------------------------------------------------------------------
+// Title:       Start in DMBoot's root partition
+// Description: With the option on (configuration F8), the browser starts in
+//              DMBoot's root partition at "/", so the whole file system can
+//              be browsed from the top (as UBoot64-v2's root partition).
+// Syntax:      static void browse_root_partition(void);
+// Input:       cfg.iec_root_partition, bs.rootok
+// Output:      None
+// ---------------------------------------------------------------------------
+static void browse_root_partition(void)
+{
+    if (!cfg.iec_root_partition || !bs.rootok || bs.partition ||
+        iec_select_partition(bs.device, PARTITION_ROOT))
+    {
+        return;
+    }
+    bs.partition = PARTITION_ROOT;
+    bs.partdepth = 0;
+    dir_read();
+    dir_draw();
 }
 
 // ---------------------------------------------------------------------------
@@ -1029,6 +1258,7 @@ static bool browse_pick(char kind, const char *name, char runboot)
     case PICK_PROGRAM:
     case PICK_BOOT:
         Slot.device = bs.device;
+        Slot.partition = bs.rootok ? PARTITION_ROOT : bs.partition;
         strncpy(Slot.path, browse_pathconcat(), sizeof(Slot.path) - 1);
         Slot.path[sizeof(Slot.path) - 1] = 0;
         strncpy(Slot.file, (kind == PICK_BOOT) ? "" : name, sizeof(Slot.file) - 1);
@@ -1204,6 +1434,7 @@ void browse(void)
     }
     browse_panel();
     browse_device(bs.device);
+    browse_root_partition();
 
     while (true)
     {
@@ -1272,7 +1503,11 @@ void browse(void)
             {
                 break;
             }
-            if (entry.meta.type == CBM_T_PRG && imagekind == IMAGE_NONE)
+            if (bs.partlist)
+            {
+                browse_partition_select();
+            }
+            else if (entry.meta.type == CBM_T_PRG && imagekind == IMAGE_NONE)
             {
                 if (browse_start(PICK_PROGRAM, entry.name, browse_runflags()))
                 {
@@ -1309,7 +1544,19 @@ void browse(void)
             }
             // Left column (or 40 columns): directory up, as DEL
         case KEY_DEL:
+            if (bs.partlist)
+            {
+                break;
+            }
+            if (bs.partition && !bs.partdepth && !bs.inimage)
+            {
+                browse_partitions();                // Partition root: back to the list
+                break;
+            }
             browse_cd("..");
+            break;
+        case KEY_F4:
+            browse_partitions();
             break;
         case KEY_UPARROW:
             browse_cd(NULL);
@@ -1318,10 +1565,10 @@ void browse(void)
         case 'd':
             bs.trace = !bs.trace;
             bs.tracepath[0] = 0;
-            bs.inimage = false;
-            if (bs.trace)
+            if (bs.trace && !bs.rootok)
             {
-                browse_cd(NULL);
+                bs.inimage = false;
+                browse_cd(NULL);                    // The dirtrace starts at the root
             }
             else
             {

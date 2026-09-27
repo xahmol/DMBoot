@@ -54,6 +54,11 @@ BUT WITHOUT ANY WARRANTY. USE THEM AT YOUR OWN RISK!
 #define ZP_MODE_80COL       0xd7    // Bit 7 set: 80 column (VDC) screen active
 #define ZP_CURRENT_DEVICE   0xba    // Last used device number
 #define BOOT_DEVICE_DEFAULT 11      // Boot drive when $BA holds no drive ID (v4 default)
+
+// Firmware 3.15 SoftIEC partitions (plan §9)
+#define PARTITION_NONE      0       // Slot.partition: no partition selected
+#define PARTITION_ROOT      254     // DMBoot's own partition at "/" (as UBoot64-v2's)
+#define PARTITION_MAX       255
 #define ZP_KEYBUF_COUNT     0xd0    // Number of keys in the keyboard buffer
 #define KEYBUF_ADDRESS      0x034a  // KERNAL keyboard buffer
 #define KEYBUF_SIZE         10      // Keyboard buffer length in bytes

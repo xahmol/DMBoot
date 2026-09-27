@@ -576,21 +576,46 @@ void runbootfrommenu(char select)
         ErrorCheckMounting();
     }
 
-    // Firmware 3.15 hook (plan §9): select Slot.partition here when set.
-
     if (Slot.runboot & EXEC_MOUNT)
     {
         execute(Slot.file, Slot.image_a_id, Slot.runboot, Slot.cmd);
     }
+
+    // "cd:/..." is relative on the SoftIEC drive, so first return to the
+    // root, as v4 did before every overlay load (the file browser may have
+    // left the drive in a subdirectory)
+    if (Slot.path[0] || Slot.partition)
+    {
+        drive_root_reset();
+    }
+
+    // Partition the slot was made in (firmware 3.15 SoftIEC, CMD HD,
+    // SD2IEC; plan §9). DMBoot's root partition is not kept in flash, so
+    // it is recreated first.
+    if (Slot.partition)
+    {
+        if (Slot.partition == PARTITION_ROOT)
+        {
+            partition_root_add();
+        }
+        char status = iec_select_partition(Slot.device, Slot.partition);
+        if (cfg.verbose || status)
+        {
+            dwin_printf(&console, cfg.colors.text, "Partition %u -> ", Slot.partition);
+            dwin_put_string(&console, DOSstatus, status ? cfg.colors.error : cfg.colors.ok);
+            dwin_put_char(&console, '\n', cfg.colors.text);
+        }
+        if (status)
+        {
+            errorexit("Selecting the partition failed.");
+        }
+    }
+
     if (Slot.path[0])
     {
         // Change to the program's directory (as v4: also for BOOT slots,
         // which have no file name); show the drive's reply and stop on an
         // error instead of letting RUN or BOOT fail later.
-        // "cd:/..." is relative on the SoftIEC drive, so first return to
-        // the root, as v4 did before every overlay load (the file browser
-        // may have left the drive in a subdirectory)
-        drive_root_reset();
         char status = cmd(Slot.device, Slot.path);
         if (cfg.verbose || status)
         {
