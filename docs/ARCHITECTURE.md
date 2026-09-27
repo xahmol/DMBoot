@@ -3,7 +3,7 @@
 How the rebuilt DMBoot is put together, as implemented. The reasons behind
 the design and the phase history are in [REBUILD_PLAN.md](REBUILD_PLAN.md);
 this document describes the result. Numbers are from the build of
-2026-09-25 (`build/dmboot.map`); check the map after changes.
+2026-09-27 (`build/dmboot.map`); check the map after changes.
 
 ## 1. Programs and files
 
@@ -50,11 +50,11 @@ function ROM at `$8000`), and the GEOS RAM boot `geos_boot`
 
 | # | File | Source | Contents | Size |
 |---|---|---|---|---|
-| 1 | `dmbovl1` | `src/slotmenu.c` | Main menu, auto-boot countdown | 1.2 KB |
-| 2 | `dmbovl2` | `src/slotedit.c` | Slot editor (F3) | 4.2 KB |
-| 3 | `dmbovl3` | `src/browse.c` | File browser (F1), slot picking | 8.0 KB |
-| 4 | `dmbovl4` | `src/config.c` | NTP update, configuration (F4), information (F2) | 5.8 KB |
-| 5 | `dmbovl5` | `src/exec.c` | Slot start, go 64, exit, GEOS RAM boot (F6) | 4.5 KB |
+| 1 | `dmbovl1` | `src/slotmenu.c` | Main menu, auto-boot countdown | 1.4 KB |
+| 2 | `dmbovl2` | `src/slotedit.c` | Slot editor (F3) | 4.7 KB |
+| 3 | `dmbovl3` | `src/browse.c` | File browser (F1), slot picking, partitions (F4) | 9.0 KB |
+| 4 | `dmbovl4` | `src/config.c` | NTP update, configuration (F4), information (F2) | 6.8 KB |
+| 5 | `dmbovl5` | `src/exec.c` | Slot start, go 64, exit, GEOS RAM boot (F6) | 4.7 KB |
 | 6 | `dmbovl6` | `src/splash.c` | Splash screen (F2), packed data from `assets/splash.petmate` | 2.6 KB |
 
 Sizes include the overlay's own variables. The slot is 10 KB
@@ -82,9 +82,9 @@ changes. `tools/splashgen.py` created the first design.
 | `$0B00`-`$0BFF` | Test mailbox (test builds) |
 | `$1300`-`$1AFF` | LMC |
 | `$1C01`-`$1C7F` | BASIC stub and Oscar64 start-up |
-| `$1C80`-`$6885` | Resident code and data (~19 KB) |
-| `$6886`-`$78BF` | Resident variables (~4 KB) |
-| `$78C0`-`$87FF` | Heap (~3.9 KB; used by the UCI library's `malloc`) |
+| `$1C80`-`$6DBC` | Resident code and data (~20.3 KB) |
+| `$6DBD`-`$80A7` | Resident variables (~4.9 KB) |
+| `$80A8`-`$87FF` | Heap (~1.9 KB; unused since the UCI library has no `malloc`) |
 | `$8800`-`$97FF` | Stacks |
 | `$9800`-`$BFFF` | Overlay load slot |
 | `$C000`-`$E7FF` | Store of overlay 5 (RAM under the KERNAL ROM) |
@@ -161,3 +161,63 @@ step of a slot start, and nothing returns to the menu afterwards.
   Interface). `make test-build` adds the test mailbox at `$0B00` for
   c64bridge. Rules: REST memory access only at 1 MHz, keys through the
   keyboard buffer, and ask before resets or writes (plan §7.1, CLAUDE.md).
+
+## 7. Code size: cc65 (v4) and Oscar64 (v5)
+
+Measured 2026-09-27 with cc65 V2.19 (v4's compiler) and Oscar64 v1.32.273
+(the official release DMBoot v5 is built with).
+
+### Same source, both compilers
+
+Three hardware-independent modules of v5 (the host-tested ones), compiled
+unchanged by both compilers:
+
+| Module | cc65 `-Or` | Oscar64 `-O2` |
+|---|---|---|
+| `src/dirparse.c` | 2069 | |
+| `src/timeconv.c` | 489 | |
+| `src/petconv.c` | 568 | |
+| **Total** | **3126**, without the cc65 runtime and string functions | **2386**, including runtime, string functions and 32-bit division |
+
+Oscar64 is at least 24% smaller on the same code; more in practice,
+because the cc65 figure leaves out the runtime routines it calls.
+
+How it was measured:
+- cc65: `cl65 -c -t c128 -Or --standard c99`, sizes from
+  `od65 --dump-segsize` (CODE + RODATA). Only two adaptations: a wrapper
+  that includes `<stdbool.h>`, and in `dirparse.c` one declaration moved
+  to the start of its block (cc65 has no declarations after statements).
+- Oscar64: `-tm=c128e -O2 -dNOFLOAT`, a program calling every public
+  function (with `volatile` arguments) minus the same program without the
+  modules: 2561 - 175 bytes.
+
+### Libraries
+
+cc65 links whole object files, used or not. Oscar64 keeps only the
+functions that are used and inlines small ones into their callers:
+
+| | v4 (cc65) | v5 (Oscar64) |
+|---|---|---|
+| UCI library (`ultimate_*_lib.c`, 4 modules), code | 3613 bytes | 1743 bytes in separate functions |
+| Of which the network library | 1596 bytes | 1 of 18 functions left as a function |
+
+The v5 library is not identical (malloc-free, some functions added), and
+part of its code is inlined into the callers, so this row shows the effect
+of dead-code removal rather than a one-to-one comparison.
+
+### Whole program (file sizes on the stick)
+
+| | v4 (cc65) | v5 (Oscar64) |
+|---|---|---|
+| Program and overlays | 46.5 KB: `autostart.128.prg` 23327, `dmb-menu` 7171, `dmb-fb` 7294, `dmb-util` 7071, `dmb-lowc` 927, `dmb-exec` 569, `dmb-geos` 160 | 51.2 KB: `autostart.128.prg` 20926, `dmblmc` 545, `dmbovl1`-`6` 29770 |
+| Of which splash screen data | - | 2.3 KB |
+| Of which firmware 3.15 partition support | - | about 1.5 KB |
+| Upgrade tool | 4.9 KB (`dmb-confupd-3-4`) | 7.2 KB (`dmbupd45`) |
+
+v5 does noticeably more in that space: the complete 40/80 column window
+library (DualWin with the VDC library, where v4 used cc65's `conio` and a
+small VDC module), the incremental-redraw slot editor and configuration
+screen with three NTP servers, start-up modes, the 40/80 switch (F8), the
+PETSCII splash screen, the upgrade hand-over to BASIC and the firmware
+3.15 partitions. The resident part is even smaller than v4's
+(20.9 KB against 23.3 KB) while carrying the window library.
