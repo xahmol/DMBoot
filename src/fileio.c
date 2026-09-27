@@ -253,7 +253,8 @@ void writeconfigfile(void)
 // rows above the command.
 #define UPGRADE_CMD_ROW     5
 #define BASIC_READY_ROWS    2
-#define UPGRADE_COMMAND_MAX 24      // run"dmbupd45",u<id> plus terminator
+#define UPGRADE_COMMAND_MAX 28      // run"11:dmbupd45",u<id> plus terminator
+#define DMBOOT_PARTITION    11      // Partition of the DMBoot directory
 #define CHR_HOME            0x13
 #define CHR_DOWN            0x11
 #define CHR_LOWERCASE       0x0e
@@ -294,7 +295,9 @@ static void upgrade_exit(void)
     char command[UPGRADE_COMMAND_MAX];
 
     drive_select_dmboot();
-    sprintf(command, "run\"dmbupd45\",u%u", sysinfo.bootdevice);
+    // With the partition in the name: BASIC puts "0:" (partition 0) before
+    // a name without one, which misses the file even with 11 selected
+    sprintf(command, "run\"%u:dmbupd45\",u%u", DMBOOT_PARTITION, sysinfo.bootdevice);
 
     cpu_set_fast(false);
     dwin_exit();

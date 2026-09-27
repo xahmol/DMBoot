@@ -59,7 +59,7 @@ A complete rebuild in the Oscar64 C compiler, along the lines of the C64 sibling
 v4 stored its slots in `dmbootconf.prg` and its NTP/GEOS settings in `DMBCFGFILE`. v5 does not read them directly, but the upgrade tool converts them. The v4 files are not changed, so you can go back.
 
 1. Copy the v5 files into the `11` directory (keep a copy of your v4 `autostart.128.prg` if you want to go back).
-2. Reset. DMBoot v5 finds your v4 slots but no v5 files, and asks whether to start with empty slots. Press **N**: DMBoot exits to BASIC with the command for the upgrade tool (`run"dmbupd45",u11`) on the screen and the cursor on it. Press **RETURN**.
+2. Reset. DMBoot v5 finds your v4 slots but no v5 files, and asks whether to start with empty slots. Press **N**: DMBoot exits to BASIC with the command for the upgrade tool (`run"11:dmbupd45",u11`) on the screen and the cursor on it. Press **RETURN**.
 3. The upgrade tool shows the converted slots and writes `dmbslots.cfg` and `dmbconf.cfg`. If v5 files already exist, it asks first.
 4. Reset: the Device Manager ROM starts DMBoot v5 with your slots.
 
