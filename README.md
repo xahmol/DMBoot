@@ -16,7 +16,7 @@ DMBoot is a boot menu and file browser for the Commodore 128 with an Ultimate II
 
 ### Changelog
 
-**Version 5.0.0** (in development, branch `Oscar64Rebuild`)
+**Version 5.0.0 alpha 1** ([release](https://github.com/xahmol/DMBoot/releases/tag/v5.0.0-alpha1))
 
 A complete rebuild in the Oscar64 C compiler, along the lines of the C64 sibling project [UBoot64](https://github.com/xahmol/UBoot64-v2). Changes compared with v4:
 

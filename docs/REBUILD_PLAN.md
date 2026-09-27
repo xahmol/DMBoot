@@ -1,6 +1,6 @@
 # DMBoot 128 v5: design and decisions
 
-Branch: `Oscar64Rebuild` · Version 5.0.0
+Branch: `main` · Version 5.0.0 (alpha 1 published)
 
 DMBoot v5 is a rebuild from scratch in Oscar64 for the C128. It carries the
 functionality and conventions of the sibling project **UBoot64-v2**

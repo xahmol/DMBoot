@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-DMBoot 128 v5: boot menu / file browser for the Commodore 128, rebuilt from scratch in **Oscar64** (C, target `c128e`) on branch `Oscar64Rebuild`. It runs as `autostart.128.prg` from `/usb*/11/` on an **Ultimate II+** and is autostarted by Bart van Leeuwen's **C128 Device Manager ROM**. It is a normal PRG plus overlay files, not a cartridge. The previous cc65 version (called v4, builds named `v391-*`) is preserved on branch `legacy-cc65`.
+DMBoot 128 v5: boot menu / file browser for the Commodore 128, rebuilt from scratch in **Oscar64** (C, target `c128e`), on branch `main` (developed on `Oscar64Rebuild`, moved to `main` on 2026-09-27). It runs as `autostart.128.prg` from `/usb*/11/` on an **Ultimate II+** and is autostarted by Bart van Leeuwen's **C128 Device Manager ROM**. It is a normal PRG plus overlay files, not a cartridge. The previous cc65 version (called v4, builds named `v391-*`) is preserved on branch `legacy-cc65`.
 
 **Read `docs/REBUILD_PLAN.md` first** (design and decisions: memory model, data formats, firmware 3.15, hardware test rules), then `docs/ARCHITECTURE.md` (modules, memory map, slot start flow). Phase status (2026-09-27): Phases 0-6 done and hardware-verified in 40 and 80 columns on both test machines (.237: 16 KB VDC, .23: 64 KB VDC); built with the official Oscar64 release v1.32.273. Phase 7 (screenshots, release) waits for the firmware 3.15 functions, which wait for a Device Manager ROM that works with 3.15. See the plan's §12.
 
