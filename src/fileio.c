@@ -10,6 +10,7 @@ DMBoot config is larger than the 512 byte UCI data queue), REU writes
 capped at the slot area, success checks with UII_SUCCESS, C128 REU access.
 */
 
+#include <stdio.h>
 #include <string.h>
 #include <petscii.h>
 #include <c64/vic.h>
@@ -21,6 +22,8 @@ capped at the slot area, success checks with UII_SUCCESS, C128 REU access.
 #include "core.h"
 #include "fileio.h"
 #include "cfgdefaults.h"
+#include "banking.h"
+#include "basicexit.h"
 
 #pragma code(code)
 #pragma data(data)
@@ -244,6 +247,68 @@ void writeconfigfile(void)
     uii_close_file();
 }
 
+// Upgrade hand-over on the BASIC screen (after CINT): explanation on rows
+// 0-2, the command on UPGRADE_CMD_ROW. BASIC prints READY. on the row after
+// the cursor and leaves the cursor one row lower, so the cursor is put two
+// rows above the command.
+#define UPGRADE_CMD_ROW     5
+#define BASIC_READY_ROWS    2
+#define UPGRADE_COMMAND_MAX 24      // run"dmbupd45",u<id> plus terminator
+#define CHR_HOME            0x13
+#define CHR_DOWN            0x11
+#define CHR_LOWERCASE       0x0e
+
+// ---------------------------------------------------------------------------
+// Title:       Print on the BASIC screen
+// Description: Prints a string through the KERNAL, at the start of a row
+//              (HOME, then cursor down).
+// Syntax:      static void basic_print_at(char row, const char *text);
+// Input:       row  - screen row
+//              text - PETSCII text, at most one screen line
+// Output:      None
+// ---------------------------------------------------------------------------
+static void basic_print_at(char row, const char *text)
+{
+    kernal_chrout(CHR_HOME);
+    for (char r = 0; r < row; r++)
+    {
+        kernal_chrout(CHR_DOWN);
+    }
+    while (*text)
+    {
+        kernal_chrout(*text++);
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Title:       Exit to BASIC for the upgrade tool
+// Description: Selects the DMBoot directory on the boot drive, exits to
+//              BASIC and leaves the command that starts the upgrade tool
+//              on the screen with the cursor on it: RETURN starts it.
+// Syntax:      static void upgrade_exit(void);
+// Input:       sysinfo.bootdevice
+// Output:      Does not return
+// ---------------------------------------------------------------------------
+static void upgrade_exit(void)
+{
+    char command[UPGRADE_COMMAND_MAX];
+
+    drive_select_dmboot();
+    sprintf(command, "run\"dmbupd45\",u%u", sysinfo.bootdevice);
+
+    cpu_set_fast(false);
+    dwin_exit();
+    kernal_chrout(CHR_LOWERCASE);
+    basic_print_at(0, "DMBoot v4 slots found. To convert them");
+    basic_print_at(1, "to v5, press RETURN on the line below");
+    basic_print_at(2, "(upgrade tool DMBUPD45).");
+    basic_print_at(UPGRADE_CMD_ROW, command);
+    basic_print_at(UPGRADE_CMD_ROW - BASIC_READY_ROWS, "");
+
+    bnk_exit();
+    dmb_exit();
+}
+
 // ---------------------------------------------------------------------------
 // Title:       Read the config file
 // Description: Reads the config file into cfg in chunks. Writes a default
@@ -281,7 +346,7 @@ void readconfigfile(void)
             } while (key != 'y' && key != 'Y' && key != 'n' && key != 'N');
             if (key == 'n' || key == 'N')
             {
-                errorexit("Load and run DMBUPD45 from partition 11.");
+                upgrade_exit();
             }
         }
         else

@@ -21,6 +21,8 @@ void progress(const char *text);
 char dosCommand(char lfn, char device, char secaddr, const char *command);
 char cmd(char device, const char *command);
 void drive_root_reset(void);
+void drive_select_dmboot(void);
+void kernal_chrout(char ch);
 // IEC scan results (iec_scan)
 #define IEC_OTHER           0x01    // A non-Ultimate device on the bus
 #define IEC_HYPERSPEED      0x80    // Device Manager hyperspeed drive

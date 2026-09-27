@@ -342,6 +342,14 @@ bool dmb_startup(void)
     tm_init();
     tm_set_screen(TM_SCREEN_STARTUP);
     detect_mode();
+
+    // The drive DMBoot was loaded from (the Device Manager ROM loads it
+    // from the hyperspeed drive); read before any other IEC access
+    sysinfo.bootdevice = *(volatile char *)ZP_CURRENT_DEVICE;
+    if (sysinfo.bootdevice < IEC_ID_FIRST || sysinfo.bootdevice >= IEC_ID_FIRST + IEC_ID_COUNT - 1)
+    {
+        sysinfo.bootdevice = BOOT_DEVICE_DEFAULT;
+    }
     config_defaults();
 
     // The low-memory code is needed by DualWin, so load it first

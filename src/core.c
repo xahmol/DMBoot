@@ -262,6 +262,38 @@ void drive_root_reset(void)
 }
 
 // ---------------------------------------------------------------------------
+// Title:       Select the DMBoot directory on the boot drive
+// Description: Makes partition 11 of the boot drive (the DMBoot directory)
+//              the working partition, at its root, so BASIC can load the
+//              DMBoot programs (e.g. the upgrade tool) by name.
+// Syntax:      void drive_select_dmboot(void);
+// Input:       None
+// Output:      None
+// ---------------------------------------------------------------------------
+void drive_select_dmboot(void)
+{
+    cmd(sysinfo.bootdevice, cmd_cp11);
+    cmd(sysinfo.bootdevice, cmd_cdroot);
+}
+
+// ---------------------------------------------------------------------------
+// Title:       KERNAL character out
+// Description: Prints one character through the KERNAL screen editor (for
+//              output after dwin_exit, on the BASIC screen).
+// Syntax:      void kernal_chrout(char ch);
+// Input:       ch - PETSCII character or control code
+// Output:      None
+// ---------------------------------------------------------------------------
+void kernal_chrout(char ch)
+{
+    __asm
+    {
+        lda ch
+        jsr $ffd2
+    }
+}
+
+// ---------------------------------------------------------------------------
 // Title:       IEC scan index to device ID
 // Description: Converts an index of the IEC scan array to a device ID.
 // Syntax:      char iec_index_to_id(char index);
