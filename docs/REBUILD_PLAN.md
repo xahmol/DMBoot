@@ -554,6 +554,7 @@ Each phase ends with a build, a deploy to hardware (`192.168.1.237`), a c64bridg
   - DMBoot v5 without v5 files but with `dmbootconf.prg`: asks whether to start with empty slots or to run the upgrader first (plan §10 point 6).
   - Shared modules for this: `petconv.c`, `cfgdefaults.c`, `basicexit.c` (clean return to BASIC 7 for both programs).
 
+- **Phase 7: waiting (decided 2026-09-27).** Screenshots and the release come after the firmware 3.15 functions (§9: partitions), which wait for a Device Manager ROM that works with firmware 3.15. Until then the v5 build is feature-complete for firmware up to 3.14 and hardware-verified.
 ## 13. Risks and verification items
 
 1. **Memory budget.** 31 KB resident has to hold both UI backends, the VDC library, the UCI library and globals. Measure in Phase 1 before building features. Fallbacks are in §4.5.
