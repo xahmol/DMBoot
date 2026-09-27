@@ -18,6 +18,8 @@ https://github.com/xahmol/DMBoot
 #include "dualwin.h"
 #include "testmode.h"
 #include "core.h"
+#include "dmpaths.h"
+#include "petconv.h"
 
 #pragma code(code)
 #pragma data(data)
@@ -237,6 +239,8 @@ char cmd(char device, const char *command)
     return dosCommand(DOS_COMMAND_CHANNEL, device, DOS_COMMAND_CHANNEL, command);
 }
 
+#define CD_COMMAND_MAX      64      // "cd:" + DMBoot directory path
+
 // v4 drive commands as raw PETSCII bytes, so no charmap can alter them.
 // $FF after "cd:" is what DMBoot v4 sent to go to the partition root.
 static const char cmd_cp11[]   = {0x43, 0x50, 0x31, 0x31, 0x00};       // "cp11"
@@ -263,17 +267,32 @@ void drive_root_reset(void)
 
 // ---------------------------------------------------------------------------
 // Title:       Select the DMBoot directory on the boot drive
-// Description: Makes partition 11 of the boot drive (the DMBoot directory)
-//              the working partition, at its root, so BASIC can load the
-//              DMBoot programs (e.g. the upgrade tool) by name.
+// Description: Makes the DMBoot directory the current directory of
+//              partition 0 of the boot drive, as a slot start does with its
+//              path: root reset, then "cd:" + the absolute path, read from
+//              the Ultimate (configpath may be the "/usb*/11/" wildcard).
+//              BASIC puts "0:" (partition 0) before every file name, also
+//              before one with a partition ("0:11:name" is not found), so
+//              selecting partition 11 does not work.
 // Syntax:      void drive_select_dmboot(void);
-// Input:       None
+// Input:       configpath, sysinfo.bootdevice
 // Output:      None
 // ---------------------------------------------------------------------------
 void drive_select_dmboot(void)
 {
-    cmd(sysinfo.bootdevice, cmd_cp11);
-    cmd(sysinfo.bootdevice, cmd_cdroot);
+    static const char cd_prefix[] = { 0x43, 0x44, 0x3a, 0x00 };    // "cd:"
+    char command[CD_COMMAND_MAX];
+
+    drive_root_reset();
+    uii_change_dir(configpath);
+    uii_get_path();
+    if (!UII_SUCCESS || strlen(uii_data) >= sizeof(command) - sizeof(cd_prefix))
+    {
+        return;
+    }
+    strcpy(command, cd_prefix);
+    asc2pet(command + strlen(cd_prefix), uii_data, sizeof(command) - strlen(cd_prefix));
+    cmd(sysinfo.bootdevice, command);
 }
 
 // ---------------------------------------------------------------------------
