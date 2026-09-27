@@ -498,7 +498,7 @@ Each phase ends with a build, a deploy to hardware (`192.168.1.237`), a c64bridg
   - Open:
     - 40-column hardware test (user, weekend).
     - Freezing `OVERLAYSIZE`: the overlays are still Phase 0 dummies, so this moves to Phase 2 when the first real overlays exist.
-- **Phase 2: in progress.**
+- **Phase 2: done**, verified on hardware (40 and 80 columns, both test machines).
   - Verified on the C128 (80 columns):
     - The 36-slot menu.
     - Slot start with path + command + RUN on the hyperspeed drive (`cd:/usb1/11/`, `print"cmd ok"`, `RUN"DMBTEST",U11` → `RUN OK`).
@@ -528,11 +528,11 @@ Each phase ends with a build, a deploy to hardware (`192.168.1.237`), a c64bridg
     - A Colour Spectrum boots the same way but hangs in Krill's loader: that loader needs real drive emulation (drive code upload) and a single drive on the bus. Slot changed by hand to "mount on drive A (ID 8) + demo mode + BOOT" (runboot `0x51`): works. Demo mode + mount + BOOT verified.
   - Compared with v4 on the same stick: R Keynes shows nothing on the 80-column screen in v4 too (a 40-column program). A Colour Spectrum hangs in Krill's loader in v4 (cd + BOOT); v5 runs it with mount + demo mode. Everything that worked in v4 works in v5.
   - To test: drive power-on from off; C64 mode (C, D, F5) later.
-- **Phase 3: implemented, not yet hardware-tested.**
+- **Phase 3: done**, verified on hardware (2026-09-26/27: editor, re-order incl. page jumps, timeout, default, rename, command, delete).
   - Slot list drawing and slot picking moved to the resident `slotlist.c`, shared by the main menu (overlay 1) and the editor (overlay 2, `slotedit.c`, 4.3 KB).
   - Editor (F3 in the main menu): F1 rename, F2 command (an empty slot becomes a command-only slot), F3 re-order with cursor keys (wrap-around, cancel restores from an REU backup at `$10000`), F4 auto-boot timeout (off/1/3/5/10 s), F5 delete, F6 default slot, F7 back (saves slots and/or config when changed).
   - UBoot64 bug not carried over: `editmenuoptions` overwrote its "changes made" flag per action, so an earlier edit could stay unsaved.
-- **Phase 4: implemented, not yet hardware-tested.** Overlay 3 `browse.c` (9.0 KB of 10 KB including buffers):
+- **Phase 4: done**, verified on hardware (2026-09-27: navigation, run, dirtrace slots, F5 boot dir, C64 mode, A/B mounts, M, REU image). Overlay 3 `browse.c` (9.0 KB of 10 KB including buffers):
   - IEC only. Starts on the Device Manager hyperspeed drive (else the first active device); `+`/`-` step through the active devices from `iec_scan`.
   - Directory as a linked list in the REU from `$10000` to the top of the REU. Storage is isolated in `dir_load`/`dir_store_meta`, so the list could move (for example to bank 1) by changing only those.
   - One index-based navigation routine for cursor, page (`P`/`U`), top/end (`T`/HOME, `E`) and the 80-column column switch. 80 columns: two columns of 19 entries.
@@ -540,15 +540,15 @@ Each phase ends with a build, a deploy to hardware (`192.168.1.237`), a c64bridg
   - Dirtrace off: RETURN/F5/`6` start directly (request in `browsereq`, started by overlay 5 `exec_browse`). Dirtrace on: the choice goes to a slot (`browse_pick`, as UBoot64 `pickmenuslot`).
   - Mounts, run-from-image and REU images need the dirtrace on the SoftIEC/hyperspeed drive, because slots store them as Ultimate paths (`/` + trace, PETSCII to ASCII).
   - UBoot64 bug not carried over: block counts were stored in a `char` (sizes shown modulo 256).
-- **Phase 5: implemented except the GEOS RAM boot (F6), not yet hardware-tested.** Overlay 4 `config.c` (4.7 KB):
+- **Phase 5: done**, verified on hardware (2026-09-27: NTP servers, colours, GEOS settings, F6 GEOS RAM boot, information, splash). Overlay 4 `config.c` (4.7 KB):
   - NTP time sync at start-up (after the drive detection, before the optional key wait), as UBoot64 `get_ntp_time`; the converted time is kept in a static buffer (UBoot64 returned a pointer to a local array).
   - Configuration (main menu F4): NTP on/off, start-up feedback (silent / show messages / show messages + wait), UTC offset (validated, ±14 h), auto-boot timeout, NTP server (stored in ASCII, edited in PETSCII), colour editor with live preview and undo from a copy taken on entry.
   - Information (main menu F2): text logo (one function, replaceable by PETSCII art), version, Ultimate/REU/DM API info, credits.
   - `pet2asc` moved to the resident `core.c` (browser and configuration use it).
   - GEOS RAM boot (F6): Bart van Leeuwen's routine in the LMC (`geosboot.c`), started by `exec_geos` in overlay 5 after mounting A/B and loading the GEOS REU image last; settings in the configuration (F8), ASCII stored. The v4 "no REU" error path left the ROMs switched in; fixed.
-- Found while reviewing: C64 mode typed `SYS 0` since Phase 2 (Oscar64 dropped the address-only `__asm dm_run64` and folded its address to 0). Fixed; see the Oscar64 manual. Needs a hardware test of C/D/F5.
+- Found while reviewing: C64 mode typed `SYS 0` since Phase 2 (Oscar64 dropped the address-only `__asm dm_run64` and folded its address to 0). Fixed; see the Oscar64 manual. Verified on hardware (C/D/F5).
 - Slot start sends v4's drive root reset before the slot path (`cd:/...` is relative on the SoftIEC drive; the browser may leave the drive in a subdirectory). v4 did this before every overlay load.
-- **Phase 6: implemented, not yet hardware-tested.** `dmbupd45.prg` (7.4 KB, built with `make build`/`test-build`, deployed with the rest):
+- **Phase 6: done**, verified on hardware (2026-09-27: v4 detection, hand-over to BASIC, dmbupd45 output identical to the reference converter). `dmbupd45.prg` (7.4 KB, built with `make build`/`test-build`, deployed with the rest):
   - Reads `dmbootconf.prg` (36 × 512 B, two 256-byte pages per slot) and `DMBCFGFILE` (328 B) from the DMBoot directory, asks before overwriting existing v5 files, writes `dmbslots.cfg` and `dmbconf.cfg`; the v4 files stay as backup.
   - Same rules as `tests/tools/convert_v4_slots.py`; GEOS images without a path get the DMBoot directory (with a note).
   - DMBoot v5 without v5 files but with `dmbootconf.prg`: asks whether to start with empty slots or to run the upgrader first (plan §10 point 6).
