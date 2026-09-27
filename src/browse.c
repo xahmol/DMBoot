@@ -30,6 +30,7 @@ Code and resources from others used:
 #include "testmode.h"
 #include "ultimate_common_lib.h"
 #include "ultimate_dos_lib.h"
+#include "ultimate_softiec_lib.h"
 #include "core.h"
 #include "fileio.h"
 #include "slotlist.h"
@@ -587,7 +588,7 @@ static bool browse_hostpath(void)
 {
     static const char dirname[] = { 0x24, 0x00 };  // "$"
 
-    uii_get_fatname(0, dirname);
+    uii_softiec_get_fatname(0, dirname);
     return UII_SUCCESS && uii_data[0] == '/' && strlen(uii_data) < MAXPATHLEN - HOSTPATH_MARGIN;
 }
 

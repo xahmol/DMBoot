@@ -96,6 +96,7 @@ MAIN_SRCS = src/main.c \
             include/ultimate_dos_lib.c include/ultimate_dos_lib.h \
             include/ultimate_time_lib.c include/ultimate_time_lib.h \
             include/ultimate_network_lib.c include/ultimate_network_lib.h \
+            include/ultimate_softiec_lib.c include/ultimate_softiec_lib.h \
             include/defines.h \
             include/banking.c include/banking.h \
             include/dmapi.c include/dmapi.h \

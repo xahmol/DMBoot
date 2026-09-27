@@ -7,7 +7,7 @@ DualWin gives one character-window API for both C128 text screens. You write a s
 
 Written for DMBoot 128 v5 (Oscar64, target `c128e`). Files: `include/dualwin.h`, `include/dualwin.c`.
 
-Status (2026-09-25): 80 column mode is verified on a real C128. 40 column mode is not yet verified on hardware.
+Status: verified on real C128s in 40 and 80 columns (8563 VDC with 16 KB and with 64 KB VDC RAM).
 
 ---
 

@@ -10,29 +10,41 @@ Written in 2020-2026 by Xander Mol
 
 DMBoot is a boot menu and file browser for the Commodore 128 with an Ultimate II+ cartridge. The C128 Device Manager ROM starts it automatically. It offers 36 menu slots that start a program, boot a disk, or run a command, with optional disk image mounts and an REU image per slot. It also has a file browser to set these up, NTP time, and GEOS RAM boot. It works in 40 and 80 columns.
 
-> **Draft for v5.0.0.** This README describes the rebuilt v5. Screenshots are still from v4 and will be replaced.
+> **Draft for v5.0.0.** This manual describes the rebuilt v5.
+>
+> **Screenshots are pending an update:** v5 screenshots will be added for the release (together with the firmware 3.15 functions). Until then this manual has none.
 
 ### Changelog
 
 **Version 5.0.0** (in development, branch `Oscar64Rebuild`)
 
-A complete rebuild in the Oscar64 C compiler, along the lines of the C64 sibling project [UBoot64](https://github.com/xahmol/UBoot64-v2).
+A complete rebuild in the Oscar64 C compiler, along the lines of the C64 sibling project [UBoot64](https://github.com/xahmol/UBoot64-v2). Changes compared with v4:
 
-* Works in both 40 and 80 columns. The screen that is active at start-up is used; F8 in the main menu switches to the other one. In 40 columns the 36 slots are shown on two pages (cursor left/right).
-* Long names and paths: menu names up to 30 characters, file names up to 50, paths up to 255.
-* Directory listings are stored in the REU, so large directories (thousands of entries) fit.
-* Mount paths and REU image paths are stored per slot, separately (v4 had to share one path between the drive A image and the REU file).
-* If a disk image or REU file is not found on the USB port stored in the slot, the other USB ports are tried (for when the stick moved).
-* Default slot with an auto-boot countdown (off, 1, 3, 5 or 10 seconds): a fully unattended start from power-on.
-* Command-only slots, and slots that only mount images.
-* Demo mode: before starting, Ultimate drives not on ID 8 are switched off, and other devices are listed for switching off by hand (or ignored, for loaders such as Krill's that silence them themselves).
-* `,1` load option, for machine language programs.
-* Ultimate drives A/B are switched on automatically when a slot needs them.
-* Start-up feedback: silent, show messages, or show messages and wait for a key. Shows the Ultimate drives and all active IEC devices with their drive type (via the Device Manager API).
-* Configurable colours, one scheme for 40 and 80 columns.
-* NTP time sync with three servers, tried in turn; off by default, as firmware 3.14d and later sync the clock themselves.
-* Upgrade tool `dmbupd45` converts the v4 slots and settings.
-* Bug fixes compared with v4, among others: C64 mode, BASIC programs with variables after a slot start (zero page), locked files in the directory listing, BOOT slots without a file name.
+* **40 and 80 columns, both complete.** The screen that is active at start-up is used. In 40 columns the 36 slots are shown on two pages (cursor left/right). F8 in the main menu switches to the other screen; that screen stays active for the program you start and for BASIC.
+* **Splash screen** in PETSCII art for 40 and 80 columns (F2), followed by the information screen.
+* **Long names and paths:** menu names up to 30 characters, file names up to 50, paths up to 255.
+* **Large directories:** listings are kept in the REU, so directories with thousands of entries fit.
+* **Separate paths per slot** for the drive A image, the drive B image and the REU image (v4 had to share one path between the drive A image and the REU file).
+* **USB port reroute:** if a disk image or REU file is not found on the USB port stored in the slot, the other ports are tried, with an "insert USB stick" prompt as last resort.
+* **Default slot with an auto-boot countdown** (off, 1, 3, 5 or 10 seconds): a fully unattended start from power-on.
+* **Command-only and mount-only slots.**
+* **Slot editor** (F3): rename, command, re-order (also to the other page), auto-boot timeout, delete, default slot.
+* **Demo mode:** before starting, Ultimate drives not on ID 8 are switched off, and other devices are listed for switching off by hand (or ignored, for loaders such as Krill's that silence them themselves).
+* **`,1` load** option for machine language programs.
+* **Ultimate drives A and B are switched on** automatically when a slot needs them.
+* **Start-up feedback:** silent, show messages, or show messages and wait for a key. Shows the Ultimate drives and all active IEC devices with their drive type (via the Device Manager API).
+* **Configuration screen** (F4) with configurable colours (one scheme for 40 and 80 columns).
+* **NTP time sync with three servers**, tried in turn; off by default, as firmware 3.14d and later sync the clock themselves.
+* **File browser:** cursor left goes up a directory, `↑` goes to the root, `T`/`E` first/last entry, `Q` quits, a progress bar while reading, and the directory is kept in the REU.
+* **Firmware 3.15 partitions** are supported (partition list with F4 in the browser, root partition option, slots that work whichever partition you browsed in, no dirtrace path needed). They become usable once the Device Manager ROM runs on firmware 3.15.
+* **Ultimate Command Interface** is switched on automatically on firmware 3.15 and later when it is off.
+* **64 KB VDC RAM** is used in 64 KB mode while DMBoot runs and set back to the power-on 16 KB mode on exit, as programs such as CP/M expect.
+* **Faster:** all program parts are loaded once at start-up; v4 went back to disk for every part.
+* **Upgrading from v4:** the upgrade tool `dmbupd45` converts the v4 slots and settings, and DMBoot puts the command to start it on the screen when it finds only v4 files.
+* **Fixes compared with v4:**
+  * Slot start in 40 columns: v4 put each statement on its own line and BASIC's `READY.` overwrote the next one; v5 puts them on one line.
+  * Locked files and unknown file types in a directory listing are no longer taken for the disk header.
+  * v4 slots whose image path did not start with `cd:` got a broken path; the upgrade tool converts them correctly.
 
 **Older versions:** see [the changelog of v1.99 to v4](#older-versions) at the end.
 
@@ -42,14 +54,14 @@ A complete rebuild in the Oscar64 C compiler, along the lines of the C64 sibling
 * REU enabled in the Ultimate, at least 128 KB. DMBoot keeps its slots and directory listings in the REU and overwrites what is in it at start-up. Slots that need specific REU contents load their own REU image.
 * C128 Device Manager ROM by Bart van Leeuwen as cartridge ROM on the Ultimate II+: <https://www.bartsplace.net/content/publications/devicemanager128.shtml>. Starting in C64 mode needs Device Manager API version 2 or newer.
 
-**Firmware 3.15 and newer:** SoftIEC partitions are not supported yet. DMBoot uses the `/11/` convention of the Device Manager ROM and waits for a Device Manager update for 3.15.
+**Firmware 3.15 and newer:** the Device Manager ROM does not run on firmware 3.15 yet. DMBoot supports the SoftIEC partitions of 3.15 (see F1 and F4) for when it does.
 
 ### Installation
 
 * Create a directory called `11` on your USB stick and unzip the DMBoot ZIP into it. The Device Manager ROM starts `autostart.128.prg` from there.
 * Files:
   * `autostart.128.prg`: DMBoot itself.
-  * `dmblmc.prg`, `dmbovl1.prg` to `dmbovl5.prg`: program parts loaded at start-up (not programs of their own).
+  * `dmblmc.prg`, `dmbovl1.prg` to `dmbovl6.prg`: program parts loaded at start-up (not programs of their own).
   * `dmbupd45.prg`: upgrade tool for DMBoot v4 settings.
   * `README.pdf`: this manual.
 * DMBoot writes its settings to `dmbconf.cfg` and its slots to `dmbslots.cfg` in the same directory.
@@ -88,7 +100,7 @@ Notes on the conversion:
 
 With a default slot and an auto-boot timeout, a countdown starts that slot. Any key opens the menu instead.
 
-**Starting a slot** does, in this order: switch on and mount the drive A and B images, load the REU image (last: after that DMBoot cannot return to the menu, because the REU is overwritten), change to the slot's directory, then put the slot's command and the RUN/BOOT/LOAD statement on one BASIC line (joined with `:`) and exit to BASIC to run it. The command therefore must not end the line itself (for example with `RUN` or `GOTO`).
+**Starting a slot** does, in this order: switch on and mount the drive A and B images, load the REU image (last: after that DMBoot cannot return to the menu, because the REU is overwritten), select the slot's partition (if it has one) and change to its directory, then put the slot's command and the RUN/BOOT/LOAD statement on one BASIC line (joined with `:`) and exit to BASIC to run it. The command therefore must not end the line itself (for example with `RUN` or `GOTO`).
 
 ### F1: File browser
 
@@ -179,6 +191,8 @@ Uses code from:
 * GRB128, GEOS 128 RAM boot, by Bart van Leeuwen (public domain)
 * cc65 (C128 function key handling): <https://github.com/cc65/cc65>
 
+Splash screen made in Petmate9 by wbochar: <https://github.com/wbochar/petmate9>
+
 Built with the Oscar64 C compiler by DrMortalWombat: <https://github.com/drmortalwombat/oscar64>
 
 Requires and made possible by the C128 Device Manager ROM, created by Bart van Leeuwen: <https://www.bartsplace.net/content/publications/devicemanager128.shtml>
@@ -195,7 +209,7 @@ The changelog of DMBoot v1.99 to v4 (`v391` builds). These versions were built w
 
 **Version v391-20231011-1210:**
 
-[Link to build of version](https://github.com/xahmol/DMBoot/raw/main/DMBoot-v391-20231011-1210.zip)
+[Link to build of version](https://github.com/xahmol/DMBoot/raw/legacy-cc65/DMBoot-v391-20231011-1210.zip)
 
 * Fix of a serious bug causing changing directories to fail via UCI on mounting images or loading a REU file. This causes that mounting images and REU files only succeeded if they were placed in the present working directory (which is usally /11)
 * Made F7 exit in the main menu for consistency throughout the program, so F3 became Edit/Reorder/Rename/Delete slots
@@ -204,7 +218,7 @@ The changelog of DMBoot v1.99 to v4 (`v391` builds). These versions were built w
 
 **Version v391-20230819-1737:**
 
-[Link to build of version](https://github.com/xahmol/DMBoot/raw/main/DMBoot-v391-20230819-1737.zip)
+[Link to build of version](https://github.com/xahmol/DMBoot/raw/legacy-cc65/DMBoot-v391-20230819-1737.zip)
 
 * Second public alpha of DMBoot v4 with a completely new filebrowser.
 * The file browser part that in previous version was just a slightly adapted DraBrowse has now for a large part been rewritten to be able to store the directory entries in free VDC memory. On C128s with 16 KB VDC memory this already solves memory issues I had, causing the maximum amount of direntries that could be loaded to be too low for my taste (less than 70 entries). Now it loads up to 175 entries, IMHO perfectly acceptable.
@@ -220,13 +234,13 @@ Removed the option in 80 column mode to show two drives at once. Maybe looked co
 
 **Version v3.91 - 20230627-0852:**
 
-[Link to build of version](https://github.com/xahmol/DMBoot/blob/main/DMBoot-v391-20230627-0852.zip)
+[Link to build of version](https://github.com/xahmol/DMBoot/raw/legacy-cc65/DMBoot-v391-20230627-0852.zip)
 
 * New version with small bugfix reparing that configuration is not saved after deleting a slot.
 
 **Version v391-20230608-1541:**
 
-[Link to build of version](https://github.com/xahmol/DMBoot/raw/main/DMBoot-v391-20230608-1541.zip)
+[Link to build of version](https://github.com/xahmol/DMBoot/raw/legacy-cc65/DMBoot-v391-20230608-1541.zip)
 
 * First alpha version of v4 of DMBoot.
 * Added the possibility to add mounting disk images for both the A and B drives of the UII+ and loading a REU file to every menu slot.
@@ -249,14 +263,14 @@ I personally think these limitations are acceptable as setting up the configirat
 
 **Version v299-20220812-0958:**
 
- [Link to build of version](https://github.com/xahmol/DMBoot/raw/main/DMBoot-v299-20220812-0958.zip)
+ [Link to build of version](https://github.com/xahmol/DMBoot/raw/legacy-cc65/DMBoot-v299-20220812-0958.zip)
 
  * Added Load in C64 mode option with key '6' in the filebrowser. Works on directly executing programs from the filebrowser, as well as adding programs to load in 64 mode as slots in the bootmenu. Keeps supporting user defined commands and disk mounts. Requires Device Manager ROM API v2, so at least c128dm-200-alpha-20409. Thanks to Bart van Leeuwen providing API functionality to his Load 64 program function.
  * Minor other improvements / fixes
 
 **Version v299-20210909-1708:**
 
- [Link to build of version](https://github.com/xahmol/DMBoot/raw/main/DMBoot-v299-20210909-1708.zip)
+ [Link to build of version](https://github.com/xahmol/DMBoot/raw/legacy-cc65/DMBoot-v299-20210909-1708.zip)
 
 * Complete redesign of internal memory structure creating more working memory space
 * This enabled placing eveything in one menu again instead of having to start seperate programs for the NTP time and GEOS utilities.
@@ -276,7 +290,7 @@ I personally think these limitations are acceptable as setting up the configirat
 
 **Version v299-20210726-1019:**
 
- [Link to build of version](https://github.com/xahmol/DMBoot/raw/main/DMBoot-v299-20210726-1019.zip)
+ [Link to build of version](https://github.com/xahmol/DMBoot/raw/legacy-cc65/DMBoot-v299-20210726-1019.zip)
 
 * Changed configuration file for main program from a sequential file to a binary blob, which loads much faster, so shortening boot time.
 * Added dmb-confupd-2-3.prg: Utility to migrate the old sequential config file to the new format
@@ -286,7 +300,7 @@ I personally think these limitations are acceptable as setting up the configirat
 
 **Version v199-20210125-2234:**
 
- [Link to build of version](https://github.com/xahmol/DMBoot/raw/main/DMBoot-v199-20210125-2234.zip)
+ [Link to build of version](https://github.com/xahmol/DMBoot/raw/legacy-cc65/DMBoot-v199-20210125-2234.zip)
 
 * Menuslots now are stored in bank 1 memory, giving much more available memory, enabling all other changes below
 * Increased possible number of memory slots from 10 to 36, accessable via 0-9 and a-z keys (suggested by Bart van Leeuwen ). Visible in two columns in 80 column mode, in 40 column mode only the first 15 options are shown (did not go for scrolling, at least not yet). Suggest to use therefore the right column for 80 column suported programs.

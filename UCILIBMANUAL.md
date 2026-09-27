@@ -5,11 +5,12 @@
 Based on the Ultimate II Dos Lib by Scott Hutter and Francesco Sblendorio.
 Adapted for Oscar64 by Xander Mol.
 
-**Status (2026-09-25):** the library wraps every command of released
-firmware (3.14/3.15a) that works on an Ultimate II+, except the HTTP target
-that is new in 3.15 (deferred). §17 lists every firmware command and how the
-library covers it. The UBoot64-v2 copy is the authoritative base; the
-additions of 2026-09-25 (marked *new*) were made in DMBoot 128 v5.
+**Status:** the library wraps every command of released firmware
+(3.14/3.15a) that works on an Ultimate II+, except the HTTP target that is
+new in 3.15 (left out). §17 lists every firmware command and how the
+library covers it. It uses no dynamic allocation (§18). The UBoot64-v2 copy
+is the authoritative base; the functions marked *new* were added for
+DMBoot 128 v5.
 
 Original documentation: `ultimate_dos-1.2.docx` and `command interface.docx`
 https://github.com/markusC64/1541ultimate2/tree/master/doc
@@ -1377,7 +1378,7 @@ void uii_load_reu(char size);
 
 **Status:** `"00,OK"`, `"02,REQUEST TRUNCATED"` (file shorter than requested REU size), or a filesystem error.
 
-**Notes (both functions):** they always use REU address 0. A `size` index above 7 is ignored (nothing is sent) since 2026-09-25; it used to read past the internal size table.
+**Notes (both functions):** they always use REU address 0. A `size` index above 7 is ignored (nothing is sent).
 
 ---
 
@@ -2142,7 +2143,7 @@ Checked against the released firmware v3.15a (GideonZ/1541ultimate:
 
 - **DMA and 2 MHz:** the Ultimate reaches computer memory by DMA for its REST
   memory access and for the SoftIEC load/save commands. A C128 running at
-  2 MHz crashed on such DMA (confirmed on hardware 2026-09-25); REU transfers
+  2 MHz crashes on such DMA (confirmed on hardware); REU transfers
   that the CPU starts itself worked at 2 MHz, but keep them at 1 MHz as a
   margin. Switch to 1 MHz (`$D030` bit 0) around any DMA.
 - **DMA bank:** DMA reaches bank 0 RAM (and does not see I/O).

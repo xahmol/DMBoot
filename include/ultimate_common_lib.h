@@ -77,7 +77,6 @@ struct UII_WRITE
 #define SOFTIEC_CMD_CHKOUT        0x16
 #define SOFTIEC_CMD_ADD_PARTITION 0x20
 #define SOFTIEC_CMD_DEL_PARTITION 0x21
-#define SOFTIEC_CMD_GET_FATNAME   0x22  // Firmware 3.15+: host path of an IEC open name
 #define SOFTIEC_CMD_GET_FATNAME   0x22
 #define SOFTIEC_CMD_GET_IECNAME   0x23
 
@@ -207,7 +206,6 @@ char *uii_command_buffer(unsigned length);  // Shared command buffer, NULL if to
 char uii_send_with_name(char target, const char *header, char headerlen, const char *name);
 void uii_freeze(void);
 void uii_add_partition(char index, const char *name, const char *path);
-void uii_get_fatname(char channel, const char *iecname);  // Reply (host path, ASCII) in uii_data
 // SOFTIEC_CMD_DEL_PARTITION exists in the firmware protocol but a
 // uii_del_partition() wrapper is deliberately not provided: confirmed on
 // real hardware (even from a clean power-cycle) that it does not actually

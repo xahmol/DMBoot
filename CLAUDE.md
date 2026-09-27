@@ -4,9 +4,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-DMBoot 128 v5: boot menu / file browser for the Commodore 128, being rebuilt from scratch in **Oscar64** (C, target `c128e`) on branch `Oscar64Rebuild`. It runs as `autostart.128.prg` from `/usb*/11/` on an **Ultimate II+** and is autostarted by Bart van Leeuwen's **C128 Device Manager ROM**. It is a normal PRG plus overlay files, not a cartridge. The previous cc65 version (called v4, builds named `v391-*`) is preserved on branch `legacy-cc65`.
+DMBoot 128 v5: boot menu / file browser for the Commodore 128, rebuilt from scratch in **Oscar64** (C, target `c128e`) on branch `Oscar64Rebuild`. It runs as `autostart.128.prg` from `/usb*/11/` on an **Ultimate II+** and is autostarted by Bart van Leeuwen's **C128 Device Manager ROM**. It is a normal PRG plus overlay files, not a cartridge. The previous cc65 version (called v4, builds named `v391-*`) is preserved on branch `legacy-cc65`.
 
-**Read `docs/REBUILD_PLAN.md` first.** It holds the full architecture, the memory model, all design decisions, the phase plan, and the hardware test rules. Phase status (2026-09-27): Phases 0-6 done and hardware-verified in 40 and 80 columns on both test machines (.237: 16 KB VDC, .23: 64 KB VDC); built with the official Oscar64 release v1.32.273. Phase 7 (screenshots, release) waits for the firmware 3.15 functions, which wait for a Device Manager ROM that works with 3.15. See the plan's phase status section.
+**Read `docs/REBUILD_PLAN.md` first** (design and decisions: memory model, data formats, firmware 3.15, hardware test rules), then `docs/ARCHITECTURE.md` (modules, memory map, slot start flow). Phase status (2026-09-27): Phases 0-6 done and hardware-verified in 40 and 80 columns on both test machines (.237: 16 KB VDC, .23: 64 KB VDC); built with the official Oscar64 release v1.32.273. Phase 7 (screenshots, release) waits for the firmware 3.15 functions, which wait for a Device Manager ROM that works with 3.15. See the plan's §12.
 
 Sibling/reference projects (all by the same author): UBoot64-v2 (`/home/xahmol/git/UBoot64-v2`, C64 cartridge version of the same boot menu: **prefer its routines over v4 legacy code**), VDC Screen Editor 2 (`/home/xahmol/VDCScreenEditor2`, overlay/banking/VDC library pattern), vdcmaniac (`/home/xahmol/git/vdcmaniac`).
 
@@ -31,7 +31,7 @@ make docs / zip / clean
   - Inject keys via `$034A` (buffer) + `$D0` (count), not c64bridge's C64 key helpers.
   - Ask the user before any reset, memory write or drive command.
 
-## Architecture (see plan §3-§5 for detail)
+## Architecture (see plan §3-§9 and ARCHITECTURE.md for detail)
 
 - **Memory:**
   - Resident program `$1C80`–`$97FF` (region `dmboot`).
@@ -39,11 +39,13 @@ make docs / zip / clean
   - Low-memory code (LMC) at `$1300`–`$1AFF` in 8 KB common RAM (`xmmu.rcr = 0x06`, restored by `bnk_exit()`).
 - **Overlays (VDCSE pattern):**
   - Each overlay source starts with `#pragma overlay(dmbovlN, N+1)` + section/region pragmas.
-  - All overlay files are loaded once at startup, then copied to stores in bank 1 (`$4000`+) or in bank 0 under ROM (`$C000`). `loadoverlay(n)` copies the image into the slot, with no disk access.
+  - Six overlays plus the LMC. All overlay files are loaded once at startup, then copied to stores in bank 1 (`$4000`+; overlay 6 in the small store at `$E000`, at most `$1F00` bytes) or in bank 0 under ROM (`$C000`, overlay 5). `loadoverlay(n)` copies the image into the slot (copy size per overlay), with no disk access.
   - Overlays must never call each other. Functions called from resident code are `__noinline`.
 - **LMC:** the `bnk_*` banked access routines and the Device Manager ROM API (`dmapi.c`). The API runs with `$FF00 = $2A`, where only RAM below `$8000` is visible, so those routines must not touch memory at `$8000` or above.
-- **REU:** required (at least 128 KB). All DMA goes through `reu128_load`/`reu128_store`, which drop to 1 MHz. Size detection uses the probe barrier.
-- **UCI library** in `include/ultimate_*`, taken from UBoot64-v2.
+- **REU:** required (at least 128 KB). All DMA goes through `reu128_load`/`reu128_store` (`__noinline`, 1 MHz). The size detection uses inline DMA and the probe barrier (Oscar64 pitfalls, see `oscar64manual.md`).
+- **VDC:** a 64 KB VDC runs in 64 KB addressing while DMBoot runs and goes back to 16 KB on exit (`dwin_setup`/`dwin_exit`).
+- **Device Manager layout** (changes with a DM ROM for firmware 3.15): `DM_PARTITION_PREFIX` in `defines.h`, `drive_root_reset()`/`drive_select_dmboot()` in `core.c`, storage paths in `dmpaths.c`. Firmware 3.15 partitions: plan §9.
+- **UCI library** in `include/ultimate_*`, taken from UBoot64-v2, malloc-free (`uii_command_buffer`).
 - **VDC library suite** copy in `include/vdc_core.*`/`vdc_win.*` (from VDC Screen Editor 2). Keep it byte-identical to the canonical VDCSE files; fix bugs in both (see DUALWINMANUAL.md §9).
 
 ## Code conventions (mandatory)
@@ -56,5 +58,5 @@ make docs / zip / clean
 - Debug/test hooks that compile to nothing in release must still evaluate their arguments (`((void)(x))`).
 - **Credits:**
   - Third parties only (Oscar64, ultimateii-dos-lib, DraBrowse/doj, Device Manager ROM/GEOS routine by Bart van Leeuwen).
-  - Never credit the author's own work. Refer to his GitHub projects as his where relevant.
+  - Never credit the author's own work. Refer to the author's GitHub projects where relevant.
 - Apply the Oscar64 quirk workarounds from UBoot64-v2 `ARCHITECTURE.md` §12.

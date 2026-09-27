@@ -1,8 +1,8 @@
 # DMBoot 128 v5: architecture
 
-How the rebuilt DMBoot is put together, as implemented. The reasons behind
-the design and the phase history are in [REBUILD_PLAN.md](REBUILD_PLAN.md);
-this document describes the result. Numbers are from the build of
+How DMBoot v5 is put together. The decisions and the reasons behind them
+are in [REBUILD_PLAN.md](REBUILD_PLAN.md); this document describes the
+result module by module. Numbers are from the build of
 2026-09-27 (`build/dmboot.map`); check the map after changes.
 
 ## 1. Programs and files
@@ -23,19 +23,19 @@ this document describes the result. Numbers are from the build of
 | Module | Job |
 |---|---|
 | `src/main.c` | Start-up, overlay table and loading, main loop |
-| `src/core.c` | Error exit, delay, header line, DOS commands, slot keys, IEC bus scan, drive root reset |
+| `src/core.c` | Error exit, delay, spinner, header line, DOS commands, slot keys, IEC bus scan, Device Manager directory handling (`drive_root_reset`, `drive_select_dmboot`), partition selection and DMBoot's root partition, KERNAL output for the BASIC screen |
 | `src/basicexit.c` | Clean return to BASIC 7: zero page save/restore, function key expansion off/on |
-| `src/fileio.c` | Config and slot files (UCI, chunked) <-> REU |
+| `src/fileio.c` | Config and slot files (UCI, chunked) <-> REU; v4 detection and hand-over to the upgrade tool |
 | `src/cfgdefaults.c` | Default configuration (shared with dmbupd45) |
-| `src/dmpaths.c` | Storage path search (`/usb*/11/` etc.) and file names (identity charmap) |
+| `src/dmpaths.c` | Storage path search (`/usb*/11/` etc.), file names and the partition strings (identity charmap) |
 | `src/petconv.c` | ASCII <-> PETSCII (Ultimate file system <-> screen) |
 | `src/slotlist.c` | Slot list drawing and slot picking, shared by overlays 1, 2 and 3 |
-| `src/dirparse.c` | Directory line parsing, image names, dirtrace path (browser, host-tested) |
+| `src/dirparse.c` | Directory line parsing, image names, dirtrace paths (browser fallback, host-tested) |
 | `src/timeconv.c` | UNIX time to Ultimate RTC time (NTP, host-tested) |
-| `include/dualwin.c` | 40/80 column window library (see `DUALWINMANUAL.md`) |
+| `include/dualwin.c` | 40/80 column window library, screen switch, VIC charset (see `DUALWINMANUAL.md`) |
 | `include/vdc_core.c`, `vdc_win.c` | VDC library (copy of VDC Screen Editor 2's) |
 | `include/reu128.c` | REU DMA at 1 MHz, size detection |
-| `include/ultimate_*.c` | Ultimate Command Interface library (see `UCILIBMANUAL.md`) |
+| `include/ultimate_*.c` | Ultimate Command Interface library, malloc-free (see `UCILIBMANUAL.md`) |
 | `include/testmode.c` | Test mailbox at `$0B00` (test builds only) |
 
 ### Low-memory code (`$1300`-`$1AFF`, common RAM)
@@ -120,8 +120,11 @@ step of a slot start, and nothing returns to the menu afterwards.
 1. Switch on Ultimate drive A/B when needed (wait 2 s), mount the images
    (other USB ports are tried when an image is not found).
 2. Load the REU image (last).
-3. Drive root reset, then the slot's path command (`cd:/...` on the
-   hyperspeed drive is relative to the current directory).
+3. Drive root reset (v4 sequence on the boot drive), then the slot's
+   partition when it has one (partition 254, DMBoot's root partition, is
+   created again first: it is not kept in flash), then the slot's path
+   command (`cd:/...` on the hyperspeed drive is relative to the current
+   directory).
 4. `execute`: demo mode, Force 8 (Device Manager API), then the start
    line: the slot command, then `RUN"file",U<id>`, `BOOT U<id>`,
    `LOAD"file",<id>,1` or `SYS <dm_run64>` for C64 mode, all joined with
@@ -129,12 +132,25 @@ step of a slot start, and nothing returns to the menu afterwards.
    `LOAD ...,1`, `RUN` + RETURN are typed from the keyboard buffer.
 5. `exec_to_basic`: prints the start line, puts one RETURN (plus any extra
    keys) in the keyboard buffer (`$034A`, count `$D0`), restores the screen
-   (`CINT`), the MMU and BASIC's zero page, and returns to BASIC, which runs
-   the line. One line instead of v4's one line per statement: in 40 columns
-   BASIC prints a command's output on a new line (in 80 columns on the same
+   (VDC back to 16 KB addressing, `CINT`, the screen the user chose), 1 MHz,
+   the MMU and BASIC's zero page, and returns to BASIC, which runs the line.
+   One line instead of v4's one line per statement: in 40 columns BASIC
+   prints a command's output on a new line (in 80 columns on the same
    line), so READY. overwrote the next statement line.
 
-## 5. Conventions
+## 5. File browser paths
+
+- On the SoftIEC drive with firmware 3.15+, the browser asks the drive for
+  the host path of its current directory (`SOFTIEC_CMD_GET_FATNAME`). Slots
+  store DMBoot's partition 254 plus `cd:` + that path; mounts and REU
+  images store the host path. No dirtrace path is needed.
+- Otherwise (older firmware, other drives, partition 254 in use by the
+  user) the paths come from the dirtrace: `cd:/` + trace on the SoftIEC
+  drive, `cd//` + trace on other drives, `/` + trace for mounts and REU
+  images.
+- F4 shows the partition list (`"$=P"`); details in REBUILD_PLAN.md §9.
+
+## 6. Conventions
 
 - Every function has a comment block: Title, Description, Syntax, Input,
   Output.
@@ -151,7 +167,7 @@ step of a slot start, and nothing returns to the menu afterwards.
   stores in `__asm` not seen by the optimiser, code used only through its
   address.
 
-## 6. Testing
+## 7. Testing
 
 - **On the PC:** `make test` builds the hardware-independent modules with
   gcc as under Oscar64 and checks them (`tests/host/README.md`):
@@ -162,7 +178,7 @@ step of a slot start, and nothing returns to the menu afterwards.
   c64bridge. Rules: REST memory access only at 1 MHz, keys through the
   keyboard buffer, and ask before resets or writes (plan §7.1, CLAUDE.md).
 
-## 7. Code size: cc65 (v4) and Oscar64 (v5)
+## 8. Code size: cc65 (v4) and Oscar64 (v5)
 
 Measured 2026-09-27 with cc65 V2.19 (v4's compiler) and Oscar64 v1.32.273
 (the official release DMBoot v5 is built with).

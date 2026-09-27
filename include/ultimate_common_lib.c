@@ -165,35 +165,6 @@ void uii_add_partition(char index, const char *name, const char *path)
 	uii_accept();
 }
 
-void uii_get_fatname(char channel, const char *iecname)
-// Ask the SoftIEC drive which host file system path an IEC open name would
-// use on a channel: "$" gives the current directory of the current
-// partition, a file name the full path of that file. Firmware 3.15+ (added
-// with the IEC partitions); older firmware rejects the command. Wire format:
-// $05 $22 <channel> <PETSCII name> -- see software/io/command_interface/
-// softiec_target.cc's cmd_get_fatname() in github.com/GideonZ/1541ultimate.
-// Input: channel - IEC channel the name would be opened on (0 for "$")
-//        iecname - PETSCII open name
-// Output: uii_data - host path (ASCII), uii_status - "00" when known
-{
-	unsigned x = 0;
-	unsigned namelen = strlen(iecname);
-	char *fullcmd = uii_command_buffer(namelen + 3);
-	if (!fullcmd) return;
-	fullcmd[0] = 0x00;
-	fullcmd[1] = SOFTIEC_CMD_GET_FATNAME;
-	fullcmd[2] = channel;
-	for (x = 0; x < namelen; x++)
-		fullcmd[x + 3] = iecname[x];
-
-	uii_settarget(TARGET_SOFTIEC);
-	uii_sendcommand(fullcmd, namelen + 3);
-
-	uii_readdata();
-	uii_readstatus();
-	uii_accept();
-}
-
 void uii_getpalette(void)
 // Read the current 16-color VIC palette into uii_data[0..47] (16x RGB
 // triplets). Shipped in firmware 3.15/3.15a.
