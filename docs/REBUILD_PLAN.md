@@ -379,6 +379,7 @@ Old version remains runnable, and the upgrade tool can read the old files and wr
 > - **Robust slots on 3.15+:** a browser slot on the SoftIEC drive stores partition 254 (DMBoot's own, at `/`, created with `uii_add_partition` when needed, not kept in flash) plus `cd:` + host path. Independent of the user's partitions and of the dirtrace. Fallback (older firmware, other drives, 254 used by the user): the browsed partition + dirtrace path. The capability check (`GET_FATNAME` works, 254 free or DMBoot's, create accepted) runs once per device in the browser.
 > - **Config F8:** the browser starts in partition 254 (whole file system from the top).
 > - **Slot start:** root reset, then (partition 254: create again) `cp<n>`, then the path.
+> - **Regression test on firmware 3.14d (.23, 2026-09-27):** browser starts as before (the unknown GET_FATNAME is answered cleanly), F4 says "No partitions on this drive.", D + slot creation and start work via the dirtrace, configuration F8 toggles. The 3.15 paths themselves wait for a Device Manager ROM that runs on 3.15.
 
 - **`dmpaths.c` is the only place that knows about the DM layout**:
   - `dm_config_dir()` returns `/usb*/11/`.
