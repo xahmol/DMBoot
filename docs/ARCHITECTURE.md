@@ -141,8 +141,9 @@ step of a slot start, and nothing returns to the menu afterwards.
 ## 5. File browser paths
 
 - On the SoftIEC drive with firmware 3.15+, the browser asks the drive for
-  the host path of its current directory (`SOFTIEC_CMD_GET_FATNAME`). Slots
-  store DMBoot's partition 254 plus `cd:` + that path; mounts and REU
+  the host path of its current directory (`SOFTIEC_CMD_GET_FATNAME`; binary
+  status, checked with `UII_SOFTIEC_OK`). Slots store DMBoot's partition 254
+  plus `cd:/` + that path (`cd://USB0/DIR/`, absolute); mounts and REU
   images store the host path. No dirtrace path is needed.
 - Otherwise (older firmware, other drives, partition 254 in use by the
   user) the paths come from the dirtrace: `cd:/` + trace on the SoftIEC
