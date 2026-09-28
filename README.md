@@ -1,4 +1,4 @@
-## DMBoot 128
+# DMBoot 128
 
 Device Manager Boot Menu for the Commodore 128
 
@@ -14,7 +14,44 @@ DMBoot is a boot menu and file browser for the Commodore 128 with an Ultimate II
 >
 > **Screenshots are pending an update:** v5 screenshots will be added for the release (together with the firmware 3.15 functions). Until then this manual has none.
 
-### Changelog
+## Contents
+
+[Version history and download](#version-history-and-download)
+
+[Building from source](#building-from-source)
+
+[Instructions](#instructions)
+
+- [Requirements](#requirements)
+
+- [Installation](#installation)
+
+- [Upgrading from DMBoot v4](#upgrading-from-dmboot-v4)
+
+- [Main menu](#main-menu)
+
+- [F1: File browser](#f1-file-browser)
+
+- [F2: Information](#f2-information)
+
+- [F3: Edit, re-order and delete](#f3-edit-re-order-and-delete)
+
+- [F4: Configuration](#f4-configuration)
+
+- [F5: C64 mode](#f5-c64-mode)
+
+- [F6: GEOS RAM boot](#f6-geos-ram-boot)
+
+- [F7: Quit to BASIC](#f7-quit-to-basic)
+
+[Credits](#credits)
+
+[Older versions](#older-versions)
+
+## Version history and download
+([Back to contents](#contents))
+
+All releases, with their ZIP, are on the [releases page](https://github.com/xahmol/DMBoot/releases).
 
 **Version 5.0.0 alpha 1** ([release](https://github.com/xahmol/DMBoot/releases/tag/v5.0.0-alpha1))
 
@@ -47,6 +84,59 @@ A complete rebuild in the Oscar64 C compiler, along the lines of the C64 sibling
   * v4 slots whose image path did not start with `cd:` got a broken path; the upgrade tool converts them correctly.
 
 **Older versions:** see [the changelog of v1.99 to v4](#older-versions) at the end.
+
+## Building from source
+([Back to contents](#contents))
+
+### Build tooling
+
+| Tool | Purpose | Install |
+| --- | --- | --- |
+| [Oscar64](https://github.com/drmortalwombat/oscar64) | C cross-compiler for the 6502; DMBoot is built with the official release `v1.32.273` | Clone, `git checkout v1.32.273`, then `make compiler` in its `make` directory. Set the path in the Makefile (`CC`) or with `make CC=/path/to/oscar64/bin/oscar64` |
+| `python3` | Generates the splash screen data (`tools/petmate2c.py`) and runs the host tests | `sudo apt install python3` |
+| `gcc` | Host tests (`make test`) | `sudo apt install gcc` |
+| `zip` | Bundles the release ZIP | `sudo apt install zip` |
+| `wput` | FTP upload for `make deploy` | `sudo apt install wput` |
+| `curl` | Reachability check before deploy | `sudo apt install curl` |
+| `pandoc` | Regenerates `README.pdf` from `README.md` (optional: `make all` warns and skips if absent) | `sudo apt install pandoc texlive-xetex` |
+
+The splash screen is designed in [Petmate9](https://github.com/wbochar/petmate9): edit `assets/splash.petmate` there, and `make` regenerates `src/splashdata.c`.
+
+### Deployment configuration
+
+`make deploy` uploads the built files straight to the `11` directory of the USB stick in your Ultimate II+ over FTP. The device IP is kept out of git in a local `.env` file:
+
+```
+# .env  (gitignored, never committed)
+ULTIP1 = 192.168.1.xx
+```
+
+Optionally override the USB directory name (default `Usb1`), and add a second machine for `make deploy2`:
+
+```
+ULTUSB  = Usb0
+ULTIP2  = 192.168.1.yy
+ULTUSB2 = USB1
+```
+
+### Make targets
+
+| Target | Effect |
+| --- | --- |
+| `make all` | Release build, regenerates `README.pdf` and bundles the release ZIP, all into `build/` |
+| `make build` | Release build: `autostart.128.prg`, `dmblmc.prg`, `dmbovl1.prg` to `dmbovl6.prg` and `dmbupd45.prg` in `build/` |
+| `make test-build` | The same files with the test mailbox for hardware testing (stays at 1 MHz); `make build` goes back to the release build |
+| `make test` | Host tests of the hardware-independent modules (gcc) |
+| `make docs` | Regenerates `README.pdf` only |
+| `make zip` | Bundles the release ZIP |
+| `make clean` | Removes everything in `build/` |
+| `make check-deploy` / `check-deploy2` | Checks that the Ultimate (first / second machine) answers, without deploying |
+| `make deploy` / `deploy2` | Uploads the built files to the first / second machine via FTP (requires `.env`). This overwrites `autostart.128.prg`: keep a copy of an older version you want to go back to |
+
+The design and the code structure are described in [docs/REBUILD_PLAN.md](docs/REBUILD_PLAN.md) and [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md); the libraries in [docs/DUALWIN_MANUAL.md](docs/DUALWIN_MANUAL.md), [docs/UCILIB_MANUAL.md](docs/UCILIB_MANUAL.md) and [docs/VDCLIB_MANUAL.md](docs/VDCLIB_MANUAL.md).
+
+## Instructions
+([Back to contents](#contents))
 
 ### Requirements
 
@@ -180,7 +270,9 @@ Demonstration of booting GEOS via DMBoot v4 (click the picture for the video on 
 
 Clears the BASIC program area (`SCNCLR:NEW`) and returns to BASIC in SLOW mode.
 
-### Credits
+## Credits
+([Back to contents](#contents))
+
 
 Based on DraBrowse: DraBrowse (db*) is a simple file browser, originally created 2009 by Sascha Bader. Used version adapted by Dirk Jagdmann (doj). <https://github.com/doj/dracopy>
 
@@ -203,7 +295,9 @@ The code can be used freely as long as you retain a notice describing original s
 
 THE PROGRAMS ARE DISTRIBUTED IN THE HOPE THAT THEY WILL BE USEFUL, BUT WITHOUT ANY WARRANTY. USE THEM AT YOUR OWN RISK!
 
-### Older versions
+## Older versions
+([Back to contents](#contents))
+
 
 The changelog of DMBoot v1.99 to v4 (`v391` builds). These versions were built with cc65; their source is on branch `legacy-cc65`.
 

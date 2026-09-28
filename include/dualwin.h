@@ -16,7 +16,7 @@ Code and resources from others used:
 -   Oscar64 cross compiler and its CharWin library
     https://github.com/drmortalwombat/oscar64
 
-Design (see DUALWINMANUAL.md for the full manual):
+Design (see docs/DUALWIN_MANUAL.md for the full manual):
 - Colours are logical C64/VIC colour numbers (0-15, VCOL_* in <c64/vic.h>).
   In 80 columns they are translated to VDC colours by dwin_vdc_colors[],
   which an application may change.

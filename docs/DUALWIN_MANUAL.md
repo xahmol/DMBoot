@@ -3,7 +3,7 @@
 DualWin gives one character-window API for both C128 text screens. You write a screen once and it runs in 40 columns (VIC-IIe) and in 80 columns (VDC 8563). DualWin picks the backend at run time from the screen that is active when the program starts.
 
 - 40 columns: Oscar64's `CharWin` (`<c64/charwin.h>`).
-- 80 columns: `vdc_win`/`vdc_core` from the VDC library suite of my VDC Screen Editor 2 project (https://github.com/xahmol/VDCScreenEditor2, see `vdclib_manual.md`).
+- 80 columns: `vdc_win`/`vdc_core` from the VDC library suite of my VDC Screen Editor 2 project (https://github.com/xahmol/VDCScreenEditor2, see `VDCLIB_MANUAL.md`).
 
 Written for DMBoot 128 v5 (Oscar64, target `c128e`). Files: `include/dualwin.h`, `include/dualwin.c`.
 

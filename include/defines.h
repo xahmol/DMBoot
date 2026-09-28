@@ -174,7 +174,7 @@ struct SlotStruct
 };
 typedef char slot_size_check[(sizeof(struct SlotStruct) == SLOTSIZE) ? 1 : -1];
 
-// Colour scheme (logical C64/VIC colour numbers, see DUALWINMANUAL.md)
+// Colour scheme (logical C64/VIC colour numbers, see docs/DUALWIN_MANUAL.md)
 struct ColorPalette
 {
     char background;

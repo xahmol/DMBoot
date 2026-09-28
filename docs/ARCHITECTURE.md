@@ -32,10 +32,10 @@ result module by module. Numbers are from the build of
 | `src/slotlist.c` | Slot list drawing and slot picking, shared by overlays 1, 2 and 3 |
 | `src/dirparse.c` | Directory line parsing, image names, dirtrace paths (browser fallback, host-tested) |
 | `src/timeconv.c` | UNIX time to Ultimate RTC time (NTP, host-tested) |
-| `include/dualwin.c` | 40/80 column window library, screen switch, VIC charset (see `DUALWINMANUAL.md`) |
+| `include/dualwin.c` | 40/80 column window library, screen switch, VIC charset (see `DUALWIN_MANUAL.md`) |
 | `include/vdc_core.c`, `vdc_win.c` | VDC library (copy of VDC Screen Editor 2's) |
 | `include/reu128.c` | REU DMA at 1 MHz, size detection |
-| `include/ultimate_*.c` | Ultimate Command Interface library, malloc-free (see `UCILIBMANUAL.md`) |
+| `include/ultimate_*.c` | Ultimate Command Interface library, malloc-free (see `UCILIB_MANUAL.md`) |
 | `include/testmode.c` | Test mailbox at `$0B00` (test builds only) |
 
 ### Low-memory code (`$1300`-`$1AFF`, common RAM)
@@ -162,7 +162,7 @@ step of a slot start, and nothing returns to the menu afterwards.
   (`PET_LC()` in `dirparse.c`).
 - Credits: third parties only; the author's own projects are referred to
   by their GitHub links.
-- Oscar64 pitfalls met in this project are in `oscar64manual.md` (C128
+- Oscar64 pitfalls met in this project are in `OSCAR64_MANUAL.md` (C128
   gotchas): among others zero page and BASIC 7, function key expansion,
   stores in `__asm` not seen by the optimiser, code used only through its
   address.

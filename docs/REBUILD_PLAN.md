@@ -43,7 +43,7 @@ by module.
 | Screen | VIC, Oscar64 `CharWin` | VIC and VDC behind one library, DualWin (§6) |
 | Extra platform | - | DM ROM API (hyperspeed ID, drive types, run in C64 mode), GEOS 128 RAM boot, FAST mode, `GO 64`, 64 KB VDC |
 | Browser | UCI and IEC mode | IEC mode only; host paths from the drive on firmware 3.15+ (§9) |
-| UCI library | `include/ultimate_*` | The same library (malloc-free, with the SoftIEC target, see `UCILIBMANUAL.md`) |
+| UCI library | `include/ultimate_*` | The same library (malloc-free, with the SoftIEC target, see `UCILIB_MANUAL.md`) |
 
 ---
 
@@ -161,7 +161,7 @@ the upgrade tool `dmbupd45` with `v4convert`.
 
 ## 6. 40/80 columns: DualWin
 
-A reusable library (`include/dualwin.c/h`, manual `DUALWINMANUAL.md`) over
+A reusable library (`include/dualwin.c/h`, manual `DUALWIN_MANUAL.md`) over
 Oscar64's VIC `CharWin` and the VDC window layer of the VDC library suite.
 All screens are written once against `dwin_*`:
 - Mode detection from `$D7` bit 7; a state-only VDC set-up (no register
@@ -189,7 +189,7 @@ left/right); browser two columns of 19 entries (80) or one (40).
 `ultimate_softiec_lib`; the HTTP target is left out, DMBoot only uses the
 network for NTP). No dynamic allocation: one shared command buffer
 (`uii_command_buffer`, 520 bytes), status `99` for a command that does not
-fit. `UCILIBMANUAL.md` has the full reference.
+fit. `UCILIB_MANUAL.md` has the full reference.
 
 **Build** (`Makefile`): `make build` (release), `make test-build` (same file
 names, `-dTESTMODE`), `make test` (host tests), `make deploy` / `deploy2`
@@ -367,7 +367,7 @@ NTP time sync; the v4 directory root reset before a slot start.
   drives, or compared with their data, use an identity charmap, raw byte
   arrays or numeric PETSCII constants.
 - Redraw only what changed.
-- Oscar64 pitfalls (details in `oscar64manual.md`): stores inside `__asm`
+- Oscar64 pitfalls (details in `OSCAR64_MANUAL.md`): stores inside `__asm`
   not seen by the optimiser (`volatile`); code used only through its address
   dropped (`#pragma reference`); REU load/store kept `__noinline` so reads
   of loaded data are not moved before the DMA; the REU size probe uses

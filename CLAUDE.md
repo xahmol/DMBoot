@@ -10,7 +10,7 @@ DMBoot 128 v5: boot menu / file browser for the Commodore 128, rebuilt from scra
 
 Sibling/reference projects (all by the same author): UBoot64-v2 (`/home/xahmol/git/UBoot64-v2`, C64 cartridge version of the same boot menu: **prefer its routines over v4 legacy code**), VDC Screen Editor 2 (`/home/xahmol/VDCScreenEditor2`, overlay/banking/VDC library pattern), vdcmaniac (`/home/xahmol/git/vdcmaniac`).
 
-This is an Oscar64 project: use `oscar64manual.md` as the compiler reference (see the global instructions for keeping it updated). The 40/80 column screen layer is the project's own **DualWin** library (`include/dualwin.c/h`, manual `DUALWINMANUAL.md`): all UI output goes through `dwin_*`, never `printf` after start-up. Other references in the repo root: `UCILIBMANUAL.md` (Ultimate Command Interface library), `vdclib_manual.md` (VDC library suite).
+This is an Oscar64 project: use `docs/OSCAR64_MANUAL.md` as the compiler reference (see the global instructions for keeping it updated; in this project the copy lives in `docs/`, not the repo root, all docs having uniform upper-case names: `cp /home/xahmol/git/UltimateDemo2026/oscar64manual.md docs/OSCAR64_MANUAL.md`). The 40/80 column screen layer is the project's own **DualWin** library (`include/dualwin.c/h`, manual `docs/DUALWIN_MANUAL.md`): all UI output goes through `dwin_*`, never `printf` after start-up. Other references in `docs/`: `docs/UCILIB_MANUAL.md` (Ultimate Command Interface library), `docs/VDCLIB_MANUAL.md` (VDC library suite).
 
 ## Build, deploy, test
 
@@ -42,11 +42,11 @@ make docs / zip / clean
   - Six overlays plus the LMC. All overlay files are loaded once at startup, then copied to stores in bank 1 (`$4000`+; overlay 6 in the small store at `$E000`, at most `$1F00` bytes) or in bank 0 under ROM (`$C000`, overlay 5). `loadoverlay(n)` copies the image into the slot (copy size per overlay), with no disk access.
   - Overlays must never call each other. Functions called from resident code are `__noinline`.
 - **LMC:** the `bnk_*` banked access routines and the Device Manager ROM API (`dmapi.c`). The API runs with `$FF00 = $2A`, where only RAM below `$8000` is visible, so those routines must not touch memory at `$8000` or above.
-- **REU:** required (at least 128 KB). All DMA goes through `reu128_load`/`reu128_store` (`__noinline`, 1 MHz). The size detection uses inline DMA and the probe barrier (Oscar64 pitfalls, see `oscar64manual.md`).
+- **REU:** required (at least 128 KB). All DMA goes through `reu128_load`/`reu128_store` (`__noinline`, 1 MHz). The size detection uses inline DMA and the probe barrier (Oscar64 pitfalls, see `docs/OSCAR64_MANUAL.md`).
 - **VDC:** a 64 KB VDC runs in 64 KB addressing while DMBoot runs and goes back to 16 KB on exit (`dwin_setup`/`dwin_exit`).
 - **Device Manager layout** (changes with a DM ROM for firmware 3.15): `DM_PARTITION_PREFIX` in `defines.h`, `drive_root_reset()`/`drive_select_dmboot()` in `core.c`, storage paths in `dmpaths.c`. Firmware 3.15 partitions: plan §9.
 - **UCI library** in `include/ultimate_*`, taken from UBoot64-v2, malloc-free (`uii_command_buffer`).
-- **VDC library suite** copy in `include/vdc_core.*`/`vdc_win.*` (from VDC Screen Editor 2). Keep it byte-identical to the canonical VDCSE files; fix bugs in both (see DUALWINMANUAL.md §9).
+- **VDC library suite** copy in `include/vdc_core.*`/`vdc_win.*` (from VDC Screen Editor 2). Keep it byte-identical to the canonical VDCSE files; fix bugs in both (see docs/DUALWIN_MANUAL.md §9).
 
 ## Code conventions (mandatory)
 
