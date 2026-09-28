@@ -313,9 +313,11 @@ static void upgrade_exit(void)
 // ---------------------------------------------------------------------------
 // Title:       Read the config file
 // Description: Reads the config file into cfg in chunks. Writes a default
-//              config when there is none. A shorter (older) file leaves the
-//              newer fields zero. Stops when the file has an older format
-//              version.
+//              config when there is none. Starts from the defaults, so a
+//              shorter (older) file keeps the defaults for the fields added
+//              later (e.g. NTP servers 2 and 3; zeroing first left them
+//              empty, as UBoot64-v2 also found). Stops when the file has an
+//              older format version.
 // Syntax:      void readconfigfile(void);
 // Input:       None
 // Output:      cfg
@@ -361,7 +363,7 @@ void readconfigfile(void)
         return;
     }
 
-    memset(&cfg, 0, sizeof(cfg));
+    config_defaults();                  // Tail fields of an older file keep these
     uii_read_file(sizeof(cfg));
     while (uii_isdataavailable() || uii_ismoredataavailable())
     {

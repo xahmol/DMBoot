@@ -63,7 +63,8 @@ static bool ends_with(const char *line, char len, char a, char b, char c)
 //              CBM_T_FREE; unknown types CBM_T_OTHER (DraBrowse/UBoot64
 //              took every unknown type, and locked "PRG<" files, for the
 //              header). Trailing blanks and shifted spaces are ignored; the
-//              name is taken between the first pair of quotes.
+//              name is taken between the first pair of quotes; a line
+//              without two quotes is skipped (a byte lost on the bus).
 // Syntax:      char dir_parse_line(const char *line, char len,
 //                                  struct DirElement *element,
 //                                  char *diskid);
@@ -110,6 +111,19 @@ char dir_parse_line(const char *line, char len, struct DirElement *element, char
             header = true;
         }
     }
+    // An entry has an opening and a closing quote. A line with fewer lost a
+    // byte on the bus (seen once in UBoot64-v2: the name was then taken from
+    // after the closing quote): skip it instead of listing a wrong name
+    char closing = i + 1;
+    while (closing < len && line[closing] != PET_QUOTE)
+    {
+        closing++;
+    }
+    if (i >= len || closing >= len)
+    {
+        return DIRPARSE_SKIP;
+    }
+
     n = 0;
     for (i++; i < len && line[i] != PET_QUOTE && n < sizeof(element->name) - 1; i++)
     {

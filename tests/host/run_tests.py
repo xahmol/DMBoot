@@ -50,6 +50,13 @@ def test_timeconv(exe):
     cases = [(0, 0), (951782400, 0), (951868799, 0), (1709164800, 7200), (1735689599, 3600),
              (1735689600, -3600), (4102444799, 0), (4102444800, 0), (1790000000, -50400),
              (1790000000, 50400)]
+    # Every day around the turn of leap years (and 2100, no leap year): the
+    # window where UBoot64-v2's old estimate-then-correct year was a day off
+    for year in (1972, 2000, 2024, 2028, 2096, 2100):
+        start = datetime.datetime(year, 12, 20, 12, 0, 0)
+        for day in range(14):
+            moment = start + datetime.timedelta(days=day)
+            cases.append((int((moment - datetime.datetime(1970, 1, 1)).total_seconds()), 0))
     cases += [(rng.randrange(0, 2 ** 32 - 60000), rng.randrange(-50400, 50401)) for _ in range(3000)]
     cases = [(e, o) for e, o in cases if 0 <= e + o < 2 ** 32]
     stdin = "".join("%d %d\n" % c for c in cases)
@@ -130,6 +137,10 @@ def test_dirparse(exe):
         ("blocks free.             ", 0, FREE, "", ""),
         ("BLOCKS FREE.", 0, FREE, "", ""),
         ("ab", 2, None, "", ""),
+        # A byte lost on the bus (seen once in UBoot64-v2): no opening quote,
+        # or no quote at all -> skipped, not listed with a wrong name
+        ('  big 1000"   prg', 2, None, "", ""),
+        ("   loader   prg", 2, None, "", ""),
     ]
     images = [("game.d64", 1), ("GAME.D64", 1), ("x.g64", 1), ("a.d71", 1), ("a.g71", 1), ("a.d81", 1),
               ("a.g81", 1), ("a.dnp", 1), ("cpm.reu", 2), ("CPM.REU", 2), ("a.d82", 0), (".d64", 0),
