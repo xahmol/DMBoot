@@ -60,6 +60,10 @@ static inline void reu128_restore_speed(char previous)
 // ---------------------------------------------------------------------------
 // Title:       Store to REU
 // Description: Copies a block from C128 bank 0 memory to the REU at 1 MHz.
+//              Not inlined, and with a read of the source as a barrier:
+//              Oscar64 still looks into a __noinline body, sees only REU
+//              register writes and could move writes to the source after
+//              the call (DMBoot issue #8, found in UBoot64-v2).
 // Syntax:      __noinline void reu128_store(unsigned long raddr,
 //                                const volatile char *src, unsigned length);
 // Input:       raddr  - REU destination address
@@ -67,8 +71,9 @@ static inline void reu128_restore_speed(char previous)
 //              length - number of bytes (1..65535)
 // Output:      None
 // ---------------------------------------------------------------------------
-void reu128_store(unsigned long raddr, const volatile char *src, unsigned length)
+__noinline void reu128_store(unsigned long raddr, const volatile char *src, unsigned length)
 {
+    volatile char barrier = src[0];     // Tells the optimiser this call reads *src
     char speed = reu128_slow();
     reu_store(raddr, src, length);
     reu128_restore_speed(speed);
@@ -77,7 +82,10 @@ void reu128_store(unsigned long raddr, const volatile char *src, unsigned length
 // ---------------------------------------------------------------------------
 // Title:       Load from REU
 // Description: Copies a block from the REU to C128 bank 0 memory at 1 MHz.
-// Syntax:      void reu128_load(unsigned long raddr, volatile char *dst,
+//              Not inlined, and with a write to the destination as a
+//              barrier, so reads and writes of the loaded data stay on
+//              their side of the DMA (DMBoot issue #8).
+// Syntax:      __noinline void reu128_load(unsigned long raddr, volatile char *dst,
 //                               unsigned length);
 // Input:       raddr  - REU source address
 //              dst    - bank 0 destination address
@@ -89,6 +97,7 @@ __noinline void reu128_load(unsigned long raddr, volatile char *dst, unsigned le
     char speed = reu128_slow();
     reu_load(raddr, dst, length);
     reu128_restore_speed(speed);
+    dst[0] = dst[0];                    // Tells the optimiser this call writes *dst
 }
 
 // ---------------------------------------------------------------------------

@@ -333,7 +333,7 @@ bool partition_root_add(void)
     static const char rootpath[] = { 0x2f, 0x00 };  // "/"
 
     uii_add_partition(PARTITION_ROOT, partition_root_name, rootpath);
-    return UII_SUCCESS;
+    return UII_SOFTIEC_OK;                          // Binary status on the SoftIEC target
 }
 
 // ---------------------------------------------------------------------------

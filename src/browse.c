@@ -64,7 +64,7 @@ Code and resources from others used:
 #define DIR_HEADER_MAX      (16 + 1 + DISK_ID_LEN + 1)
 #define BLOCKS_SHOWN_MAX    9999
 #define DEVICE_NONE         0
-#define HOSTPATH_MARGIN     5       // Room for "cd:" and a closing '/'
+#define HOSTPATH_MARGIN     5       // Room for "cd:/" and the terminator
 
 // What a slot is made from (browse_pick)
 #define PICK_PROGRAM        1       // Run a file from the traced directory
@@ -589,14 +589,16 @@ static bool browse_hostpath(void)
     static const char dirname[] = { 0x24, 0x00 };  // "$"
 
     uii_softiec_get_fatname(0, dirname);
-    return UII_SUCCESS && uii_data[0] == '/' && strlen(uii_data) < MAXPATHLEN - HOSTPATH_MARGIN;
+    return UII_SOFTIEC_OK && uii_data[0] == '/' && strlen(uii_data) < MAXPATHLEN - HOSTPATH_MARGIN;
 }
 
 // ---------------------------------------------------------------------------
 // Title:       Build the slot path
 // Description: The DOS command that changes to the current directory for a
 //              slot. On the SoftIEC drive with firmware 3.15+ (bs.rootok):
-//              "cd:" + the host path, used from DMBoot's root partition at
+//              "cd:/" + the host path ("cd://USB0/DIR/": the double slash
+//              is absolute on the 3.15 parser, a single one is relative;
+//              tested in UBoot64-v2), used from DMBoot's root partition at
 //              "/" (the slot records PARTITION_ROOT), so no dirtrace is
 //              needed. Otherwise the dirtrace: "cd:/" + trace on the
 //              SoftIEC drive, "cd//" + trace on other drives (as DMBoot v4
@@ -607,7 +609,7 @@ static bool browse_hostpath(void)
 // ---------------------------------------------------------------------------
 static const char *browse_pathconcat(void)
 {
-    static const char cd_prefix[] = { 0x43, 0x44, 0x3a, 0x00 };    // "cd:"
+    static const char cd_prefix[] = { 0x43, 0x44, 0x3a, 0x2f, 0x00 };  // "cd:/"
 
     if (bs.rootok && browse_hostpath())
     {

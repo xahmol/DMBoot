@@ -1294,6 +1294,8 @@ char uii_parse_deviceinfo(void);
 
 **Populates `uii_devinfo[]`:** See §3 for field descriptions.
 
+**Firmware bug (3.14d, 3.15, 3.15a and `master`, reported as GideonZ/1541ultimate#941):** the SoftIEC drive and the printer never arrive, so `uii_devinfo[2]` and `[3]` stay empty. `control_target.cc` adds 3 to the reply length for each of drive A and B, but `IecInterface::info()` (`software/io/iec/iec_interface.cc`), which appends the SoftIEC and printer entries, increments the count byte and then does `offs += 3` where `msg.length += 3` was meant. The entries are written past the reply length and are not sent (and each skips 3 extra bytes). Seen with firmware 3.15a: the count byte says more devices than the 7 bytes that arrive. Consequence: a caller cannot tell the SoftIEC drive's ID from this command; a program that lists the SoftIEC drive and the printer from this reply (UBoot64, DMBoot) never shows them.
+
 **Data format parsed:**
 
 | Offset | Content |
@@ -1829,6 +1831,13 @@ Firmware 3.15+, file `ultimate_softiec_lib.c/h` (*new*). Wire formats from
 firmware write or read computer memory itself by DMA. On a C128 this is only
 reliable at 1 MHz and reaches bank 0 RAM (see §18).
 
+**Status is binary for this target.** SoftIEC commands answer with a one-byte
+status, `0x00` = OK, `0x01`-`0x09` = error codes (`c_status_all_ok`,
+`c_status_file_not_found` ... in `softiec_target.cc`), not the `"00,OK"` text
+of the DOS and control targets. `UII_SUCCESS` therefore fails even on success:
+check `UII_SOFTIEC_OK` (`ultimate_common_lib.h`) instead. Seen with firmware 3.15a: `uii_add_partition()` left
+`uii_status` as `"\0"`.
+
 ### `uii_softiec_identify`
 
 ```c
@@ -1911,7 +1920,11 @@ void uii_softiec_get_fatname(char channel, const char *iecname);
 
 **Purpose:** Which file on the Ultimate file system an IEC name would open on a channel. Turns IEC paths (for example `"//GAMES/:FILE"`, or a name with a partition number) into full paths for DOS target commands such as mount and open.
 
-**Data returned:** full path in `uii_data` (`/buffer`, `/partitions` for special streams). **Status:** OK, invalid name, invalid partition or invalid directory.
+**Data returned:** full path in `uii_data` (`/buffer`, `/partitions` for special streams). **Status:** binary (see above; check `UII_SOFTIEC_OK`): OK, invalid name, invalid partition or invalid directory.
+
+**Behaviour seen on firmware 3.15a:**
+- `"$"` on channel 0 returns the host path of the drive's current directory, in any partition (e.g. `/USB0/DEV/`, in upper case). Reliable; UBoot64 uses it for mount, REU and slot paths.
+- A file name does **not** resolve to the existing file: the firmware builds the name it would *create* (`IecChannel::ConstructPath()`). On channel 0/1 a name without type becomes `name.prg`; on channel 2 (read, any type) `name.???`. For `UBTEST.D64` (an existing `ubtest.d64`) that gave `/USB0/DEV/UBTEST.D64.prg` and `.../UBTEST.D64.???`. Use `"$"` for the directory and the IEC name for the file instead (as UBoot64 and DMBoot do); names the listing truncates to 16 characters cannot be resolved that way.
 
 ---
 

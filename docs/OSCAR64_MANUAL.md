@@ -719,6 +719,20 @@ the `JSR` (verified in the `.asm`). Rule: never let `reu_load`/`reu_store`
 be inlined into code that uses the transferred data; wrap them once in
 `__noinline` functions and use only those.
 
+**`__noinline` alone does not make the call opaque (UBoot64-v2, 2026-09-28,
+Oscar64 1.32.273).** The optimizer still analyses the body of a
+non-inlined function: a wrapper that only calls the inline `reu_load` is
+seen as writing nothing but the REU registers, not the buffer. In a
+load-modify-store sequence (`store(a, &m); load(b, &m); m.next = x;
+store(b, &m);`) the `.asm` wrote `m.next` byte 0 *before* the first store
+and the load; the DMA then overwrote it and the first store wrote a wrong
+link. **Fix: a barrier access in the wrapper** that makes the buffer access
+visible — `dp[0] = dp[0];` after `reu_load` (the call "writes" the buffer),
+`volatile char barrier = sp[0];` before `reu_store` (the call "reads" it).
+With the barrier all bytes of `m.next` were written after the load and
+before the store (verified in the `.asm`). The optimizer treated the
+one-byte access as touching the whole object.
+
 **Follow-up trap of the `__noinline` fix (DMBoot v5, 2026-09-26, Oscar64
 1.32.273 at both f38a1f2 and 546b627): register-parameter tracking across
 calls in a loop.** With the REU wrappers no longer inlined, the size probe
