@@ -280,10 +280,13 @@ in place for when it does, and is inactive on older firmware.
   firmware 3.15+, added together with the partitions) returns the host path
   of the SoftIEC drive's current directory in any partition. It is the only
   source of the path: 3.15a lists partition *names*, and `G-P` only returns
-  the name. Older firmware answers "unknown command".
+  the name. Older firmware answers "unknown command". The SoftIEC target
+  answers with a binary status byte (`0x00` = OK), not the `"00,OK"` text of
+  the DOS target: checked with `UII_SOFTIEC_OK`, not `UII_SUCCESS`.
 - **Slots on the SoftIEC drive with firmware 3.15+:** partition 254
   (DMBoot's own, at `/`, created with `uii_add_partition`; not kept in flash,
-  so created again when needed) plus `cd:` + the host path. Independent of
+  so created again when needed) plus `cd:/` + the host path
+  (`cd://USB0/DIR/`: the double slash is absolute on the 3.15 parser). Independent of
   the user's partitions and without a dirtrace path. Mounts and REU images
   get the host path too. The check (host path available, 254 free or
   DMBoot's, create accepted) runs once per device in the browser. Fallback
@@ -390,7 +393,11 @@ NTP time sync; the v4 directory root reset before a slot start.
 | 7 | Screenshots and release | Waits for the firmware 3.15 functions to be testable (DM ROM for 3.15) |
 
 Open points:
-- The firmware 3.15 paths (§9) are regression-tested on 3.14d only.
+- The firmware 3.15 paths (§9) are regression-tested on 3.14d only in
+  DMBoot; the same code was verified on firmware 3.15a in UBoot64-v2.
+- Firmware bug: `CTRL_CMD_GET_DRVINFO` never returns the SoftIEC drive and
+  the printer (GideonZ/1541ultimate#941), so the start-up drive list cannot
+  show them.
 - Screenshots in the README are still from v4.
 - Publishing v5 as a GitHub Release, as UBoot64 does, is to be decided at
   release.
