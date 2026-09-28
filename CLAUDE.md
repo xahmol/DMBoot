@@ -10,7 +10,7 @@ DMBoot 128 v5: boot menu / file browser for the Commodore 128, rebuilt from scra
 
 Sibling/reference projects (all by the same author): UBoot64-v2 (`/home/xahmol/git/UBoot64-v2`, C64 cartridge version of the same boot menu: **prefer its routines over v4 legacy code**), VDC Screen Editor 2 (`/home/xahmol/VDCScreenEditor2`, overlay/banking/VDC library pattern), vdcmaniac (`/home/xahmol/git/vdcmaniac`).
 
-This is an Oscar64 project: use `docs/OSCAR64_MANUAL.md` as the compiler reference (see the global instructions for keeping it updated; in this project the copy lives in `docs/`, not the repo root, all docs having uniform upper-case names: `cp /home/xahmol/git/UltimateDemo2026/oscar64manual.md docs/OSCAR64_MANUAL.md`). The 40/80 column screen layer is the project's own **DualWin** library (`include/dualwin.c/h`, manual `docs/DUALWIN_MANUAL.md`): all UI output goes through `dwin_*`, never `printf` after start-up. Other references in `docs/`: `docs/UCILIB_MANUAL.md` (Ultimate Command Interface library), `docs/VDCLIB_MANUAL.md` (VDC library suite).
+This is an Oscar64 project: use `docs/OSCAR64_MANUAL.md` as the compiler reference (see the global instructions for keeping it updated; all docs live in `docs/` with upper-case names, per the global documentation convention). The 40/80 column screen layer is the project's own **DualWin** library (`include/dualwin.c/h`, manual `docs/DUALWIN_MANUAL.md`): all UI output goes through `dwin_*`, never `printf` after start-up. Other references in `docs/`: `docs/UCILIB_MANUAL.md` (Ultimate Command Interface library), `docs/VDCLIB_MANUAL.md` (VDC library suite).
 
 ## Build, deploy, test
 
