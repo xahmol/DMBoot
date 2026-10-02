@@ -30,6 +30,7 @@ make docs / zip / clean
   - Only access memory while mailbox `idle == 1`. After a test key that runs at 2 MHz, wait instead of polling.
   - Inject keys via `$034A` (buffer) + `$D0` (count), not c64bridge's C64 key helpers.
   - Ask the user before any reset, memory write or drive command.
+  - Note (2026-10-02): c64bridge's newer options do **not** apply to this C128 setup: the VIC video stream (`capture_frame`) and real keyboard-matrix input (`c64_input keyboard`, `machine:input`) are Ultimate 64 / C64U features, not available through the U2+ cartridge, and the 80-column VDC output isn't in any stream. What does carry over is the structure of mandelbrot-upic's automated end-to-end test (`~/git/mandelbrot-upic/tests/e2e/`): a Python-stdlib script that drives each step over REST, waits for a stable state, and compares against committed golden files -- here that would be screen/VDC-RAM dumps read through the test mailbox, under the 1 MHz/idle rules above.
 
 ## Architecture (see plan §3-§9 and ARCHITECTURE.md for detail)
 
